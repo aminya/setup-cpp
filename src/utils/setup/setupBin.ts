@@ -5,11 +5,15 @@ import { existsSync } from "fs"
 import * as hasha from "hasha"
 import { tmpdir } from "os"
 
+/** A type that describes a package */
 export type PackageInfo = {
+  /** url to download the package */
   url: string
-  binRelativeDir: string
-  /** The top folder name once it is extracted */
+  /** The top folder name once it is extracted. It can be `""` if there is no top folder */
   extractedFolderName: string
+  /** The relative directory in which the binary is located. It can be `""` if the exe is in the top folder */
+  binRelativeDir: string
+  /** the function to extract the downloaded archive */
   extractFunction: {
     (url: string, outputPath: string): Promise<string>
   }

@@ -6,11 +6,11 @@ jest.setTimeout(30 * 1000)
 
 describe("setup-ninja", () => {
   beforeEach(async () => {
-    await setupTmpDir("setup-cmake")
+    await setupTmpDir("setup-ninja")
   })
 
   afterAll(async () => {
-    await cleanupTmpDir("setup-cmake")
+    await cleanupTmpDir("setup-ninja")
   }, 100000)
 
   it("should setup Ninja", async () => {
