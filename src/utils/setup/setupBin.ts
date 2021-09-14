@@ -19,6 +19,12 @@ export type PackageInfo = {
   }
 }
 
+export type InstallationInfo = {
+  /** The top install dir */
+  installDir: string
+  binDir: string
+}
+
 /**
  * A function that:
  *
@@ -33,35 +39,39 @@ export async function setupPackage(
   version: string,
   getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo | Promise<PackageInfo>,
   setupCppDir: string
-): Promise<string> {
+): Promise<InstallationInfo> {
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
+
+  const { url, binRelativeDir, extractedFolderName, extractFunction } = await getPackageInfo(version, process.platform)
 
   // Restore from cache (if found).
   const dir = find(name, version)
   if (dir) {
     info(`${name} ${version} was found in the cache.`)
     addPath(dir)
-    return dir
-  }
 
-  const { url, binRelativeDir, extractedFolderName, extractFunction } = await getPackageInfo(version, process.platform)
+    const installDir = join(dir, extractedFolderName)
+    return { installDir, binDir: join(installDir, binRelativeDir) }
+  }
 
   // Get an unique output directory name from the URL.
   const key: string = await hasha.async(url)
-  const installDir = join(setupCppDir, key)
+  const rootDir = join(setupCppDir, key)
 
   // download ane extract the package into the installation directory.
-  if (!existsSync(installDir)) {
+  if (!existsSync(rootDir)) {
     await group(`Download and extract ${name} ${version}`, async () => {
       const downloaded = await downloadTool(url)
-      await extractFunction?.(downloaded, installDir)
+      await extractFunction?.(downloaded, rootDir)
     })
   }
+
+  const installDir = join(rootDir, extractedFolderName)
+  const binDir = join(installDir, binRelativeDir)
 
   // Adding the bin dir to the path
   try {
     /** The directory which the tool is installed to */
-    const binDir = join(installDir, extractedFolderName, binRelativeDir)
     startGroup(`Add ${binDir} to PATH`)
     addPath(binDir)
   } finally {
@@ -70,10 +80,10 @@ export async function setupPackage(
 
   // check if inside Github Actions. If so, cache the installation
   if (typeof process.env.RUNNER_TOOL_CACHE === "string") {
-    await cacheDir(installDir, name, version)
+    await cacheDir(rootDir, name, version)
   }
 
-  return installDir
+  return { installDir, binDir }
 }
 /** Add bin extension to a binary. This will be `.exe` on Windows. */
 export function addBinExtension(name: string) {

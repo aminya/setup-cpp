@@ -17,11 +17,11 @@ describe("setup-ninja", () => {
   }, 100000)
 
   it("should setup Ninja", async () => {
-    const ninjaPath = await setupNinja("1.10.2", directory)
-    expect(ninjaPath).toBeDefined()
-    expect(ninjaPath).not.toHaveLength(0)
+    const { binDir } = await setupNinja("1.10.2", directory)
+    expect(binDir).toBeDefined()
+    expect(binDir).not.toHaveLength(0)
 
-    const ninjaBin = join(ninjaPath, addBinExtension("ninja"))
+    const ninjaBin = join(binDir, addBinExtension("ninja"))
 
     const { status } = spawn(ninjaBin, ["--version"], {
       encoding: "utf8",

@@ -17,11 +17,11 @@ describe("setup-cmake", () => {
   }, 100000)
 
   it("should setup CMake", async () => {
-    const cmakePath = await setupCmake("3.20.2", directory)
-    expect(cmakePath).toBeDefined()
-    expect(cmakePath).not.toHaveLength(0)
+    const { binDir } = await setupCmake("3.20.2", directory)
+    expect(binDir).toBeDefined()
+    expect(binDir).not.toHaveLength(0)
 
-    const cmakeBin = join(cmakePath, addBinExtension("cmake"))
+    const cmakeBin = join(binDir, addBinExtension("cmake"))
 
     const { status, error } = spawn(cmakeBin, ["--version"], {
       encoding: "utf8",
