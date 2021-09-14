@@ -1,10 +1,9 @@
 import * as core from "@actions/core"
-import * as exec from "@actions/exec"
-import * as io from "@actions/io"
 import * as tc from "@actions/tool-cache"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import { isValidUrl } from "../utils/http/validate_url"
+import { PackageInfo, setupPackage } from "../utils/setup/setupBin"
 
 //================================================
 // Version
@@ -263,32 +262,23 @@ export async function getSpecificVersionAndUrl(platform: string, version: string
 const DEFAULT_NIX_DIRECTORY = "./llvm"
 const DEFAULT_WIN32_DIRECTORY = "C:/Program Files/LLVM"
 
-async function install(version: string, directory: string): Promise<void> {
-  const platform = process.platform
+async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): Promise<PackageInfo> {
   const [specificVersion, url] = await getSpecificVersionAndUrl(platform, version)
   core.setOutput("version", specificVersion)
-
-  core.info(`Installing LLVM and Clang ${version} (${specificVersion})...`)
-  core.info(`Downloading and extracting '${url}'...`)
-  const archive = await tc.downloadTool(url)
-
-  let exit
-  if (platform === "win32") {
-    exit = await exec.exec("7z", ["x", archive, `-o${directory}`])
-  } else {
-    await io.mkdirP(directory)
-    exit = await exec.exec("tar", ["xf", archive, "-C", directory, "--strip-components=1"])
+  return {
+    url,
+    extractedFolderName: "",
+    binRelativeDir: "bin",
+    extractFunction:
+      platform === "win32"
+        ? tc.extractZip
+        : (file: string, dest: string) => {
+            return tc.extractTar(file, dest, "--strip-components=1")
+          },
   }
-
-  if (exit !== 0) {
-    throw new Error("Could not extract LLVM and Clang binaries.")
-  }
-
-  core.info(`Installed LLVM and Clang ${version} (${specificVersion})!`)
-  core.info(`Install location: ${directory}`)
 }
 
-export async function setupLLVM(version: string, directoryGiven?: string, cached: boolean = false): Promise<void> {
+export async function setupLLVM(version: string, directoryGiven?: string): Promise<void> {
   let directory = directoryGiven
   if (directory === "" || directory === undefined) {
     directory = process.platform === "win32" ? DEFAULT_WIN32_DIRECTORY : DEFAULT_NIX_DIRECTORY
@@ -296,16 +286,10 @@ export async function setupLLVM(version: string, directoryGiven?: string, cached
 
   directory = path.resolve(directory)
 
-  if (cached) {
-    core.info(`Using cached LLVM and Clang ${version}...`)
-  } else {
-    await install(version, directory)
-  }
+  await setupPackage("llvm", version, getLLVMPackageInfo, directory)
 
-  const bin = path.join(directory, "bin")
+  // Adding environment variables
   const lib = path.join(directory, "lib")
-
-  core.addPath(bin)
 
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""

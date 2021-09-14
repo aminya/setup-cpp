@@ -2,7 +2,7 @@ import { extractZip, extractTar } from "@actions/tool-cache"
 import { getInput } from "@actions/core"
 import semverLte from "semver/functions/lte"
 import semverCoerce from "semver/functions/coerce"
-import { setupBin, PackageInfo } from "../utils/setup/setupBin"
+import { setupPackage, PackageInfo } from "../utils/setup/setupBin"
 
 /** Get the platform data for cmake */
 function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): PackageInfo {
@@ -60,5 +60,5 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
 
 /** Setup cmake */
 export function setupCmake(version: string, setupCppDir: string): Promise<string> {
-  return setupBin("cmake", version, getCmakePackageInfo, setupCppDir)
+  return setupPackage("cmake", version, getCmakePackageInfo, setupCppDir)
 }

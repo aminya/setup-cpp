@@ -28,7 +28,7 @@ export type PackageInfo = {
  *
  * @returns The installation directory
  */
-export async function setupBin(
+export async function setupPackage(
   name: string,
   version: string,
   getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo | Promise<PackageInfo>,
