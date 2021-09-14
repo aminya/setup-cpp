@@ -1,0 +1,22 @@
+name: "Setup Cpp"
+description: "Install all the tools required for building and testing C++/C projects."
+author: "Amin Yahyaabadi"
+
+inputs:
+  compiler:
+    description: "The compiler and its version."
+    required: false
+  cmake:
+    description: "The cmake version to install."
+    required: false
+  ninja:
+    description: "The ninja version to install."
+    required: false
+
+runs:
+  using: "node12"
+  main: "dist/index.js"
+
+branding:
+  icon: 'award'
+  color: 'blue'

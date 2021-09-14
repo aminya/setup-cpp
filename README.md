@@ -1,6 +1,6 @@
 # setup-cpp
 
-Install all the tools required for building and testing C++ projects.
+Install all the tools required for building and testing C++/C projects.
 
 The last setup-cpp action that you need.
 
