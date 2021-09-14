@@ -7,14 +7,14 @@ import { tmpdir } from "os"
 
 /** A type that describes a package */
 export type PackageInfo = {
-  /** url to download the package */
+  /** Url to download the package */
   url: string
   /** The top folder name once it is extracted. It can be `""` if there is no top folder */
   extractedFolderName: string
   /** The relative directory in which the binary is located. It can be `""` if the exe is in the top folder */
   binRelativeDir: string
-  /** the function to extract the downloaded archive */
-  extractFunction: {
+  /** The function to extract the downloaded archive. It can be `undefined`, if the binary itself is downloaded directly. */
+  extractFunction?: {
     (url: string, outputPath: string): Promise<string>
   }
 }
@@ -47,7 +47,7 @@ export async function setupBin(
   if (!existsSync(workDir)) {
     await group(`Download and extract ${name}`, async () => {
       const downloaded = await downloadTool(url)
-      await extractFunction(downloaded, workDir)
+      await extractFunction?.(downloaded, workDir)
     })
   }
 
