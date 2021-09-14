@@ -16,6 +16,11 @@ async function testUrl(version: string) {
 }
 
 describe("setup-llvm", () => {
+  let directory: string
+  beforeAll(async () => {
+    directory = await setupTmpDir("setup-llvm")
+  })
+
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
@@ -39,15 +44,6 @@ describe("setup-llvm", () => {
     )
   })
 
-  let directory: string
-  beforeAll(async () => {
-    directory = await setupTmpDir("setup-llvm")
-  })
-
-  afterAll(async () => {
-    await cleanupTmpDir("setup-llvm")
-  }, 100000)
-
   it("should setup LLVM", async () => {
     const { binDir } = await setupLLVM("12.0.0", directory)
     expect(binDir).toBeDefined()
@@ -60,4 +56,8 @@ describe("setup-llvm", () => {
     })
     expect(status).toBe(0)
   })
+
+  afterAll(async () => {
+    await cleanupTmpDir("setup-llvm")
+  }, 100000)
 })
