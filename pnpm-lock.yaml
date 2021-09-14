@@ -5,6 +5,7 @@ importers:
   .:
     specifiers:
       '@actions/core': ^1.5.0
+      '@actions/exec': ^1.1.0
       '@actions/io': ^1.1.1
       '@actions/tool-cache': ^1.7.1
       '@types/jest': ^27.0.1
@@ -24,6 +25,7 @@ importers:
       typescript: ^4.4.3
     dependencies:
       '@actions/core': 1.5.0
+      '@actions/exec': 1.1.0
       '@actions/io': 1.1.1
       '@actions/tool-cache': 1.7.1
       hasha: 5.2.2
@@ -8112,6 +8114,7 @@ packages:
   /type-fest/0.8.1:
     resolution: {integrity: sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==}
     engines: {node: '>=8'}
+    dev: false
 
   /typedarray-to-buffer/3.1.5:
     resolution: {integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==}

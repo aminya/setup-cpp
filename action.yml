@@ -3,11 +3,11 @@ description: "Install all the tools required for building and testing C++/C proj
 author: "Amin Yahyaabadi"
 
 inputs:
-  compiler:
-    description: "The compiler and its version."
-    required: false
   architecture:
     description: "The CPU architecture"
+    required: false
+  llvm:
+    description: "The llvm version to install"
     required: false
   cmake:
     description: "The cmake version to install."

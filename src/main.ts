@@ -25,6 +25,12 @@ export async function main(): Promise<number> {
     if (ninjaVersion !== undefined) {
       await setupNinja(ninjaVersion, setupCppDir)
     }
+
+    // setup llvm
+    const llvmVersion = maybeGetInput("llvm")
+    if (llvmVersion !== undefined) {
+      await setupLLVM(llvmVersion, setupCppDir)
+    }
   } catch (err) {
     core.error(err as string | Error)
     core.setFailed("install-cpp failed")
