@@ -5,8 +5,9 @@ import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
 jest.setTimeout(100000)
 
 describe("setup-ninja", () => {
+  let directory: string
   beforeEach(async () => {
-    await setupTmpDir("setup-ninja")
+    directory = await setupTmpDir("setup-ninja")
   })
 
   afterAll(async () => {
@@ -14,7 +15,7 @@ describe("setup-ninja", () => {
   }, 100000)
 
   it("should setup Ninja", async () => {
-    const ninjaPath = await setupNinja("1.10.2")
+    const ninjaPath = await setupNinja("1.10.2", directory)
     expect(ninjaPath).toBeDefined()
     expect(ninjaPath).not.toHaveLength(0)
 

@@ -59,6 +59,6 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
 }
 
 /** Setup cmake */
-export function setupCmake(version: string): Promise<string> {
-  return setupBin("cmake", version, getCmakePackageInfo)
+export function setupCmake(version: string, setupCppDir: string): Promise<string> {
+  return setupBin("cmake", version, getCmakePackageInfo, setupCppDir)
 }

@@ -5,8 +5,9 @@ import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
 jest.setTimeout(100000)
 
 describe("setup-cmake", () => {
+  let directory: string
   beforeEach(async () => {
-    await setupTmpDir("setup-cmake")
+    directory = await setupTmpDir("setup-cmake")
   })
 
   afterAll(async () => {
@@ -14,7 +15,7 @@ describe("setup-cmake", () => {
   }, 100000)
 
   it("should setup CMake", async () => {
-    const cmakePath = await setupCmake("3.20.2")
+    const cmakePath = await setupCmake("3.20.2", directory)
     expect(cmakePath).toBeDefined()
     expect(cmakePath).not.toHaveLength(0)
 

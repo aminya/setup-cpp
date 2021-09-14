@@ -23,9 +23,9 @@ export type PackageInfo = {
 export async function setupBin(
   name: string,
   version: string,
-  getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo
+  getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo,
+  setupCppDir: string
 ): Promise<string> {
-  const setupCppDir = process.env.SETUP_CPP_DIR ?? "~/setup_cpp"
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
   process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? join(setupCppDir, "ToolCache")
 

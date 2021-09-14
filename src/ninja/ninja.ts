@@ -26,6 +26,6 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform): Packag
   }
 }
 
-export function setupNinja(version: string): Promise<string> {
-  return setupBin("ninja", version, getNinjaPackageInfo)
+export function setupNinja(version: string, setupCppDir: string): Promise<string> {
+  return setupBin("ninja", version, getNinjaPackageInfo, setupCppDir)
 }

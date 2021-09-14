@@ -9,7 +9,7 @@ Settting up a **cross-platform** enviroment for building and testing C++/C proje
 
 This package is designed to be fully **modular** and as **minimal** as possible. This will allow you to only install the tools you want.
 
-The package will be usable locally or inside GitHub Actions. Stay tuned for the stable release.
+The package will be usable from any environment (locally, GitHub Actions, etc). Stay tuned for the stable release.
 
 # Features (WIP)
 

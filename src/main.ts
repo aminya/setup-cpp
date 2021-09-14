@@ -1,5 +1,6 @@
 import * as core from "@actions/core"
 import { setupCmake } from "./cmake/cmake"
+import { setupLLVM } from "./llvm/llvm"
 import { setupNinja } from "./ninja/ninja"
 
 function maybeGetInput(key: string) {
@@ -11,17 +12,18 @@ function maybeGetInput(key: string) {
 }
 
 export async function main(): Promise<number> {
+  const setupCppDir = process.env.SETUP_CPP_DIR ?? "~/setup_cpp"
   try {
     // setup cmake
     const cmakeVersion = maybeGetInput("cmake")
     if (cmakeVersion !== undefined) {
-      await setupCmake(cmakeVersion)
+      await setupCmake(cmakeVersion, setupCppDir)
     }
 
     // setup ninja
     const ninjaVersion = maybeGetInput("ninja")
     if (ninjaVersion !== undefined) {
-      await setupNinja(ninjaVersion)
+      await setupNinja(ninjaVersion, setupCppDir)
     }
   } catch (err) {
     core.error(err as string | Error)
