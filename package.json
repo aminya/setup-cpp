@@ -1,0 +1,62 @@
+{
+  "name": "setup-cpp",
+  "version": "0.1.0",
+  "author": "Amin Yahyaabadi",
+  "description": "Install all the tools required for building and testing C++ projects.",
+  "repository": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "scripts": {
+    "format": "prettier --write .",
+    "test.format": "prettier . --check",
+    "lint": "eslint . --fix",
+    "test.lint": "eslint .",
+    "clean": "shx rm -rf dist",
+    "tsc": "tsc -p src/tsconfig.json || echo done",
+    "dev": "cross-env NODE_ENV=development parcel watch",
+    "build": "cross-env NODE_ENV=production parcel build",
+    "prepare": "npm run build"
+  },
+  "engines": {
+    "node": ">=12.x"
+  },
+  "main": "./dist/main.js",
+  "source": "./src/main.ts",
+  "targets": {
+    "main": {
+      "context": "node",
+      "includeNodeModules": true
+    }
+  },
+  "prettier": "prettier-config-atomic",
+  "devDependencies": {
+    "@types/node": "^16.9.1",
+    "cross-env": "7.0.3",
+    "eslint-config-atomic": "^1.16.2",
+    "prettier-config-atomic": "^2.0.5",
+    "shx": "0.3.3",
+    "terser-config-atomic": "^0.1.1",
+    "typescript": "^4.4.3"
+  },
+  "keywords": [
+    "github-actions",
+    "actions",
+    "github",
+    "setup-cpp",
+    "c++",
+    "cpp",
+    "cxx",
+    "cc",
+    "llvm",
+    "clang",
+    "gcc",
+    "mingw",
+    "msvc",
+    "cl",
+    "cmake",
+    "ninja",
+    "meson"
+  ],
+  "dependencies": {
+    "parcel": "^2.0.0-rc.0"
+  }
+}
