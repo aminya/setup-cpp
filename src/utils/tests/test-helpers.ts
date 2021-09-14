@@ -8,6 +8,7 @@ export async function setupTmpDir(testName: string) {
   await io.rmRF(tempDirectory)
   await io.mkdirP(tempDirectory)
   process.env.SETUP_CPP_DIR = tempDirectory
+  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? path.join(tempDirectory, "ToolCache")
   return tempDirectory
 }
 

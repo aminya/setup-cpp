@@ -27,7 +27,6 @@ export async function setupBin(
   setupCppDir: string
 ): Promise<string> {
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
-  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? join(setupCppDir, "ToolCache")
 
   // Build artifact name
   const binName = process.platform === "win32" ? `${name}.exe` : name
@@ -62,7 +61,10 @@ export async function setupBin(
     endGroup()
   }
 
-  await cacheDir(workDir, name, version)
+  // check if inside Github Actions. If so, cache the installation
+  if (typeof process.env.RUNNER_TOOL_CACHE === "string") {
+    await cacheDir(workDir, name, version)
+  }
 
   return join(binDir, binName)
 }
