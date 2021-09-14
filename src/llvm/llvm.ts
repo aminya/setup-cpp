@@ -1,4 +1,5 @@
 import * as core from "@actions/core"
+import { exec } from "@actions/exec"
 import * as tc from "@actions/tool-cache"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
@@ -271,7 +272,13 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
     binRelativeDir: "bin",
     extractFunction:
       platform === "win32"
-        ? tc.extractZip
+        ? async (file: string, dest: string) => {
+            const exit = await exec("7z", ["x", file, `-o${dest}`])
+            if (exit !== 0) {
+              throw new Error(`Failed to extract ${file} to ${dest} with 7z`)
+            }
+            return dest
+          }
         : (file: string, dest: string) => {
             return tc.extractTar(file, dest, "--strip-components=1")
           },
