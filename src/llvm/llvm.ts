@@ -247,7 +247,8 @@ export async function getSpecificVersionAndUrl(platform: string, version: string
   for (const specificVersion of getSpecificVersions(version)) {
     // eslint-disable-next-line no-await-in-loop
     const url = await getUrl(platform, specificVersion)
-    if (url !== null) {
+    // eslint-disable-next-line no-await-in-loop
+    if (url !== null && (await isValidUrl(url))) {
       return [specificVersion, url]
     }
   }
