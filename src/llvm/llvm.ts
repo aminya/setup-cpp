@@ -5,6 +5,7 @@ import * as tc from "@actions/tool-cache"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import semverLt from "semver/functions/lt"
+import { isValidUrl } from "../utils/http/validate_url"
 
 //================================================
 // Version
@@ -200,22 +201,32 @@ function getLinuxUrl(versionGiven: string): string {
 const WIN32_MISSING: Set<string> = new Set(["10.0.1"])
 
 /** Gets an LLVM download URL for the Windows platform. */
-function getWin32Url(version: string): string | null {
+async function getWin32Url(version: string): Promise<string | null> {
   if (WIN32_MISSING.has(version)) {
     return null
   }
 
   const prefix = "LLVM-"
   const suffix = semverLte(version, "3.7.0") ? "-win32.exe" : "-win64.exe"
-  if (semverLte(version, "9.0.1")) {
-    return getReleaseUrl(version, prefix, suffix)
-  } else {
-    return getGitHubUrl(version, prefix, suffix)
+
+  const olderThan9_1 = semverLte(version, "9.0.1")
+  let url: string
+  let fallback = false
+  if (olderThan9_1) {
+    url = getReleaseUrl(version, prefix, suffix)
+    if (!(await isValidUrl(url))) {
+      fallback = true // fallback to github
+    }
   }
+  if (fallback || !olderThan9_1) {
+    url = getGitHubUrl(version, prefix, suffix)
+  }
+
+  return url!
 }
 
 /** Gets an LLVM download URL. */
-function getUrl(platform: string, version: string): string | null {
+function getUrl(platform: string, version: string): string | null | Promise<string | null> {
   switch (platform) {
     case "darwin":
       return getDarwinUrl(version)
@@ -229,13 +240,14 @@ function getUrl(platform: string, version: string): string | null {
 }
 
 /** Gets the most recent specific LLVM version for which there is a valid download URL. */
-export function getSpecificVersionAndUrl(platform: string, version: string): [string, string] {
+export async function getSpecificVersionAndUrl(platform: string, version: string): Promise<[string, string]> {
   if (!VERSIONS.has(version)) {
     throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
   }
 
   for (const specificVersion of getSpecificVersions(version)) {
-    const url = getUrl(platform, specificVersion)
+    // eslint-disable-next-line no-await-in-loop
+    const url = await getUrl(platform, specificVersion)
     if (url !== null) {
       return [specificVersion, url]
     }
@@ -253,7 +265,7 @@ const DEFAULT_WIN32_DIRECTORY = "C:/Program Files/LLVM"
 
 async function install(version: string, directory: string): Promise<void> {
   const platform = process.platform
-  const [specificVersion, url] = getSpecificVersionAndUrl(platform, version)
+  const [specificVersion, url] = await getSpecificVersionAndUrl(platform, version)
   core.setOutput("version", specificVersion)
 
   core.info(`Installing LLVM and Clang ${version} (${specificVersion})...`)
