@@ -11,9 +11,9 @@
     "lint": "eslint . --fix",
     "test.lint": "eslint .",
     "clean": "shx rm -rf dist",
-    "tsc": "tsc -p src/tsconfig.json || echo done",
+    "test.tsc": "tsc -p src/tsconfig.json --noEmit",
     "dev": "cross-env NODE_ENV=development parcel watch",
-    "build": "cross-env NODE_ENV=production parcel build",
+    "build": "cross-env NODE_ENV=production parcel build --detailed-report",
     "prepare": "npm run build"
   },
   "engines": {
@@ -24,7 +24,8 @@
   "targets": {
     "main": {
       "context": "node",
-      "includeNodeModules": true
+      "includeNodeModules": true,
+      "optimize": true
     }
   },
   "prettier": "prettier-config-atomic",
