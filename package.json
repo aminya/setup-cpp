@@ -14,8 +14,8 @@
     "prepare": "npm run build",
     "test.format": "prettier . --check",
     "test.lint": "eslint .",
-    "test.tsc": "tsc -p src/tsconfig.json --noEmit",
     "test": "run-p test.format test.lint test.tsc"
+    "test.tsc": "tsc --noEmit",
   },
   "engines": {
     "node": ">=12.x"

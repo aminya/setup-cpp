@@ -6,6 +6,7 @@ import semverLte from "semver/functions/lte"
 import semverCoerce from "semver/functions/coerce"
 import * as hasha from "hasha"
 import { tmpdir } from "os"
+import { URL } from "url"
 
 interface PackageInfo {
   url: string

@@ -16,7 +16,6 @@
     "inlineSources": true,
     "preserveSymlinks": true,
     "removeComments": false,
-    "jsx": "react",
     "lib": ["ES2018", "dom"],
     "target": "ES2018",
     "allowJs": true,
@@ -25,7 +24,8 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "importHelpers": false,
-    "outDir": "../dist"
+    "outDir": "./dist"
   },
-  "compileOnSave": false
+  "compileOnSave": false,
+  "include": ["./src"]
 }
