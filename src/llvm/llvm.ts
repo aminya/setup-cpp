@@ -4,7 +4,7 @@ import { mkdirP } from "@actions/io"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import { isValidUrl } from "../utils/http/validate_url"
-import { InstallationInfo, PackageInfo, setupPackage } from "../utils/setup/setupBin"
+import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 
 //================================================
 // Version
@@ -298,7 +298,7 @@ export async function setupLLVM(version: string, directoryGiven?: string): Promi
 
   directory = path.resolve(directory)
 
-  const installationInfo = await setupPackage("llvm", version, getLLVMPackageInfo, directory)
+  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, directory)
 
   // Adding environment variables
   const lib = path.join(directory, "lib")

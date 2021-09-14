@@ -1,5 +1,5 @@
 import { extractZip } from "@actions/tool-cache"
-import { setupPackage, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
+import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 
 /** Get the platform name Ninja uses in their download links */
 function getNinjaPlatform(platform: NodeJS.Platform) {
@@ -27,5 +27,5 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform): Packag
 }
 
 export function setupNinja(version: string, setupCppDir: string): Promise<InstallationInfo> {
-  return setupPackage("ninja", version, getNinjaPackageInfo, setupCppDir)
+  return setupBin("ninja", version, getNinjaPackageInfo, setupCppDir)
 }
