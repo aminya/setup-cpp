@@ -1,4 +1,5 @@
 import * as core from "@actions/core"
+import { setupChocolatey } from "./chocolatey/chocolatey"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
 import { setupGcovr } from "./gcovr/gcovr"
@@ -59,6 +60,12 @@ export async function main(): Promise<number> {
     const llvmVersion = maybeGetInput("llvm")
     if (llvmVersion !== undefined) {
       await setupLLVM(llvmVersion, setupCppDir)
+    }
+
+    // setup chocolatey (required for installing msvc)
+    const chocoVersion = maybeGetInput("choco")
+    if (chocoVersion !== undefined) {
+      await setupChocolatey()
     }
   } catch (err) {
     core.error(err as string | Error)
