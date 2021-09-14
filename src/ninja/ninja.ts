@@ -5,11 +5,25 @@ import { existsSync } from "fs"
 import * as hasha from "hasha"
 import { tmpdir } from "os"
 
+/** Get the platform name Ninja uses in their download links */
+function getNinjaPlatform(platform: NodeJS.Platform) {
+  switch (platform) {
+    case "win32":
+      return "win"
+    case "darwin":
+      return "mac"
+    case "linux":
+      return "linux"
+    default:
+      throw new Error(`Unsupported platform '${platform}'`)
+  }
+}
+
 export async function setupNinja(version: string): Promise<string> {
-  const platform = process.platform
+  const platform = getNinjaPlatform(process.platform)
 
   // Build artifact name
-  const ninjaBin = platform === "win32" ? "ninja.exe" : "ninja"
+  const ninjaBin = platform === "win" ? "ninja.exe" : "ninja"
 
   // Restore from cache (if found).
   const ninjaDir = find("ninja", version)
