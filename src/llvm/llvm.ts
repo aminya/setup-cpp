@@ -1,6 +1,6 @@
 import * as core from "@actions/core"
 import { exec } from "@actions/exec"
-import * as tc from "@actions/tool-cache"
+import { mkdirP } from "@actions/io"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import { isValidUrl } from "../utils/http/validate_url"
@@ -279,8 +279,13 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
             }
             return dest
           }
-        : (file: string, dest: string) => {
-            return tc.extractTar(file, dest, "--strip-components=1")
+        : async (file: string, dest: string) => {
+            await mkdirP(dest)
+            const exit = await exec("tar", ["xf", file, "-C", dest, "--strip-components=1"])
+            if (exit !== 0) {
+              throw new Error(`Failed to extract ${file} to ${dest} with tar`)
+            }
+            return dest
           },
   }
 }
