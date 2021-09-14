@@ -4,6 +4,7 @@ import * as io from "@actions/io"
 import * as tc from "@actions/tool-cache"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
+import semverLt from "semver/functions/lt"
 
 //================================================
 // Version
@@ -187,7 +188,7 @@ function getLinuxUrl(versionGiven: string): string {
   }
 
   const prefix = "clang+llvm-"
-  const suffix = `-x86_64-linux-gnu${ubuntu}.tar.xz`
+  const suffix = semverLt(version, "6.0.0") ? `linux-x86_64${ubuntu}.tar.xz` : `-x86_64-linux-gnu${ubuntu}.tar.xz`
   if (semverLte(version, "9.0.1")) {
     return getReleaseUrl(version, prefix, suffix)
   } else {
