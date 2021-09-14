@@ -23,6 +23,9 @@ inputs:
   meson:
     description: "The meson version to install."
     required: false
+  gcovr:
+    description: "The gcovr version to install."
+    required: false
 
 runs:
   using: "node12"

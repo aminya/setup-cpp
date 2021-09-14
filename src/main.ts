@@ -1,6 +1,7 @@
 import * as core from "@actions/core"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
+import { setupGcovr } from "./gcovr/gcovr"
 import { setupLLVM } from "./llvm/llvm"
 import { setupMeson } from "./meson/meson"
 import { setupNinja } from "./ninja/ninja"
@@ -38,6 +39,12 @@ export async function main(): Promise<number> {
     const mesonVersion = maybeGetInput("meson")
     if (mesonVersion !== undefined) {
       await setupMeson(mesonVersion)
+    }
+
+    // setup gcovr
+    const gcovrVersion = maybeGetInput("gcovr")
+    if (gcovrVersion !== undefined) {
+      await setupGcovr(gcovrVersion)
     }
 
     // setup llvm

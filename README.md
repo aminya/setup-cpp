@@ -18,10 +18,10 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup llvm
 - [x] setup conan
 - [x] setup meson
+- [x] setup gcovr
 - [ ] setup msvc
 - [ ] setup gcc/mingw
 - [ ] setup vcpkg
-- [ ] setup gcovr
 - [ ] setup OpenCppCoverage
 - [ ] setup cppcheck
 - [ ] setup doxygen
