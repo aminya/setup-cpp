@@ -3,6 +3,7 @@ import { addPath, group, startGroup, endGroup } from "@actions/core"
 import { join } from "path"
 import { existsSync } from "fs"
 import * as hasha from "hasha"
+import { tmpdir } from "os"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -24,6 +25,10 @@ export async function setupBin(
   version: string,
   getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo
 ): Promise<string> {
+  const setupCppDir = process.env.SETUP_CPP_DIR ?? "~/setup_cpp"
+  process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
+  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? join(setupCppDir, "ToolCache")
+
   // Build artifact name
   const binName = process.platform === "win32" ? `${name}.exe` : name
 
@@ -38,7 +43,7 @@ export async function setupBin(
 
   // Get an unique output directory name from the URL.
   const key: string = await hasha.async(url)
-  const workDir = join(process.env.SETUP_CPP_DIR ?? "~/setup_cpp", key)
+  const workDir = join(setupCppDir, key)
 
   /** The directory which the tool is installed to */
   const binDir = join(workDir, extractedFolderName, binRelativeDir)
