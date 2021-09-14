@@ -36,25 +36,25 @@ export async function setupNinja(version: string): Promise<string> {
 
   // Get an unique output directory name from the URL.
   const key: string = await hasha.async(url)
-  const outputDir = join(process.env.RUNNER_TEMP ?? tmpdir(), key)
+  const finalDir = join(process.env.RUNNER_TEMP ?? tmpdir(), key)
 
-  const ninjaPath = join(outputDir, ninjaBin)
+  const finalBinPath = join(finalDir, ninjaBin)
 
-  if (!existsSync(outputDir)) {
-    await group("Download and extract ninja-build", async () => {
+  if (!existsSync(finalDir)) {
+    await group("Download and extract ninja", async () => {
       const downloaded = await downloadTool(url)
-      await extractZip(downloaded, outputDir)
+      await extractZip(downloaded, finalDir)
     })
   }
 
   try {
-    startGroup("Add ninja-build to PATH")
-    addPath(outputDir)
+    startGroup("Add ninja to PATH")
+    addPath(finalDir)
   } finally {
     endGroup()
   }
 
-  await cacheFile(ninjaPath, ninjaBin, "ninja", version)
+  await cacheFile(finalBinPath, ninjaBin, "ninja", version)
 
-  return ninjaPath
+  return finalBinPath
 }

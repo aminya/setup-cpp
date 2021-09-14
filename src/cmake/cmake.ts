@@ -10,7 +10,7 @@ import { URL } from "url"
 
 interface PackageInfo {
   url: string
-  binPath: string
+  binRelativePath: string
   extractFunction: {
     (url: string, outputPath: string): Promise<string>
   }
@@ -32,7 +32,7 @@ function getCmakePlatformData(version: string, platform?: NodeJS.Platform): Pack
         osArchStr = isOld ? "win64-x64" : "windows-x86_64"
       }
       return {
-        binPath: "bin/",
+        binRelativePath: "bin/",
         dropSuffix: ".zip",
         extractFunction: extractZip,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}-${osArchStr}.zip`,
@@ -42,7 +42,7 @@ function getCmakePlatformData(version: string, platform?: NodeJS.Platform): Pack
       const isOld = semverLte(semVersion, "v3.19.1")
       const osArchStr = isOld ? "Darwin-x86_64" : "macos-universal"
       return {
-        binPath: "CMake.app/Contents/bin/",
+        binRelativePath: "CMake.app/Contents/bin/",
         dropSuffix: ".tar.gz",
         extractFunction: extractTar,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}-${osArchStr}.tar.gz`,
@@ -57,7 +57,7 @@ function getCmakePlatformData(version: string, platform?: NodeJS.Platform): Pack
         osArchStr = isOld ? "Linux-x86_64" : "linux-x86_64"
       }
       return {
-        binPath: "bin/",
+        binRelativePath: "bin/",
         dropSuffix: ".tar.gz",
         extractFunction: extractTar,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}-${osArchStr}.tar.gz`,
@@ -70,38 +70,43 @@ function getCmakePlatformData(version: string, platform?: NodeJS.Platform): Pack
 
 /** Setup cmake */
 export async function setupCmake(version: string): Promise<string> {
+  // Build artifact name
+  const cmakeBin = process.platform === "win32" ? "cmake.exe" : "cmake"
+
   // Restore from cache (if found).
   const cmakeDir = find("cmake", version)
   if (cmakeDir) {
     addPath(cmakeDir)
-    return join(cmakeDir, process.platform === "win32" ? "cmake.exe" : "cmake")
+    return join(cmakeDir, cmakeBin)
   }
 
-  const data = getCmakePlatformData(version, process.platform)
+  const { url, dropSuffix, binRelativePath: binPath, extractFunction } = getCmakePlatformData(version, process.platform)
 
   // Get an unique output directory name from the URL.
-  const key: string = await hasha.async(data.url)
-  const cmakePath = join(process.env.RUNNER_TEMP ?? tmpdir(), key)
+  const key: string = await hasha.async(url)
+  const finalDir = join(process.env.RUNNER_TEMP ?? tmpdir(), key)
 
-  const { pathname } = new URL(data.url)
+  const { pathname } = new URL(url)
   const dirName = basename(pathname)
-  const outputPath = join(cmakePath, dirName.replace(data.dropSuffix, ""), data.binPath)
+  const finalPath = join(finalDir, dirName.replace(dropSuffix, ""), binPath)
 
-  if (!existsSync(cmakePath)) {
+  const finalBinPath = join(finalPath, cmakeBin)
+
+  if (!existsSync(finalDir)) {
     await group("Download and extract CMake", async () => {
-      const downloaded = await downloadTool(data.url)
-      await data.extractFunction(downloaded, cmakePath)
+      const downloaded = await downloadTool(url)
+      await extractFunction(downloaded, finalDir)
     })
   }
 
   try {
     startGroup(`Add CMake to PATH`)
-    addPath(outputPath)
+    addPath(finalPath)
   } finally {
     endGroup()
   }
 
-  await cacheDir(cmakePath, "cmake", version)
+  await cacheDir(finalDir, "cmake", version)
 
-  return join(outputPath, process.platform === "win32" ? "cmake.exe" : "cmake")
+  return finalBinPath
 }
