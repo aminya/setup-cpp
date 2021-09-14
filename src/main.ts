@@ -1,5 +1,6 @@
 import * as core from "@actions/core"
 import { setupCmake } from "./cmake/cmake"
+import { setupConan } from "./conan/conan"
 import { setupLLVM } from "./llvm/llvm"
 import { setupNinja } from "./ninja/ninja"
 
@@ -24,6 +25,12 @@ export async function main(): Promise<number> {
     const ninjaVersion = maybeGetInput("ninja")
     if (ninjaVersion !== undefined) {
       await setupNinja(ninjaVersion, setupCppDir)
+    }
+
+    // setup conan
+    const conanVersion = maybeGetInput("conan")
+    if (conanVersion !== undefined) {
+      await setupConan(conanVersion)
     }
 
     // setup llvm

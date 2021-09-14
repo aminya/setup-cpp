@@ -16,7 +16,10 @@ inputs:
   ninja:
     description: "The ninja version to install."
     default: "1.10.2"
-    required: true
+    required: false
+  conan:
+    description: "The concan version to install."
+    required: false
 
 runs:
   using: "node12"

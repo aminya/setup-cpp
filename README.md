@@ -16,9 +16,9 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup cmake
 - [x] setup ninja
 - [x] setup llvm
+- [x] setup conan
 - [ ] setup gcc/mingw
 - [ ] setup msvc
-- [ ] setup conan
 - [ ] setup meson
 - [ ] setup vcpkg
 - [ ] setup gcovr
