@@ -1,5 +1,9 @@
-import { getSpecificVersionAndUrl } from "../llvm"
+import { getSpecificVersionAndUrl, setupLLVM } from "../llvm"
 import { isValidUrl } from "../../utils/http/validate_url"
+import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
+import { addBinExtension } from "../../utils/setup/setupBin"
+import { join } from "path"
+import { spawnSync as spawn } from "child_process"
 
 jest.setTimeout(100000)
 
@@ -33,5 +37,27 @@ describe("setup-llvm", () => {
         "4",
       ].map((version) => testUrl(version))
     )
+  })
+
+  let directory: string
+  beforeAll(async () => {
+    directory = await setupTmpDir("setup-llvm")
+  })
+
+  afterAll(async () => {
+    await cleanupTmpDir("setup-llvm")
+  }, 100000)
+
+  it("should setup LLVM", async () => {
+    const { binDir } = await setupLLVM("12.0.0", directory)
+    expect(binDir).toBeDefined()
+    expect(binDir).not.toHaveLength(0)
+
+    const clangBin = join(binDir, addBinExtension("clang"))
+
+    const { status } = spawn(clangBin, ["--version"], {
+      encoding: "utf8",
+    })
+    expect(status).toBe(0)
   })
 })
