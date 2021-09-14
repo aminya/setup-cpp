@@ -1,0 +1,18 @@
+setup-cpp reused some code from the following projects:
+
+- [install-llvm-action](https://github.com/KyleMayes/install-llvm-action/blob/master/LICENSE.txt): Apach-2.0
+- [install-cmake](https://github.com/Symbitic/install-cmake/blob/master/LICENSE.md): MIT
+- [get-cmake](https://github.com/lukka/get-cmake/blob/main/LICENSE.txt): MIT
+- [gha-setup-ninja](https://github.com/seanmiddleditch/gha-setup-ninja): MIT
+
+This package also uses the depedencies listed in package.json. You can get the list of their licenses using the following command:
+```
+npm install -g license-checker
+license-checker --summary --production
+```
+
+```
+├─ MIT: 4
+├─ ISC: 1
+└─ Apache-2.0: 1
+```
