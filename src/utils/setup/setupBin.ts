@@ -1,5 +1,5 @@
 import { find, downloadTool, cacheDir } from "@actions/tool-cache"
-import { addPath, group, startGroup, endGroup } from "@actions/core"
+import { addPath, group, startGroup, endGroup, info } from "@actions/core"
 import { join } from "path"
 import { existsSync } from "fs"
 import * as hasha from "hasha"
@@ -15,47 +15,54 @@ export type PackageInfo = {
   binRelativeDir: string
   /** The function to extract the downloaded archive. It can be `undefined`, if the binary itself is downloaded directly. */
   extractFunction?: {
-    (url: string, outputPath: string): Promise<string>
+    (file: string, dest: string): Promise<string>
   }
 }
 
-/** A function that downloads and installs a tool. Then it caches it in the tool-cache. */
+/**
+ * A function that:
+ *
+ * - Downlodas and extracts a package
+ * - Adds the bin path of the package to PATH
+ * - Caches the dowloaded directory into tool cache for usage from other sessions
+ *
+ * @returns The installation directory
+ */
 export async function setupBin(
   name: string,
   version: string,
-  getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo,
+  getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo | Promise<PackageInfo>,
   setupCppDir: string
 ): Promise<string> {
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
 
-  // Build artifact name
-  const binName = process.platform === "win32" ? `${name}.exe` : name
-
   // Restore from cache (if found).
   const dir = find(name, version)
   if (dir) {
+    info(`${name} ${version} was found in the cache.`)
     addPath(dir)
-    return join(dir, binName)
+    return dir
   }
 
-  const { url, binRelativeDir, extractedFolderName, extractFunction } = getPackageInfo(version, process.platform)
+  const { url, binRelativeDir, extractedFolderName, extractFunction } = await getPackageInfo(version, process.platform)
 
   // Get an unique output directory name from the URL.
   const key: string = await hasha.async(url)
-  const workDir = join(setupCppDir, key)
+  const installDir = join(setupCppDir, key)
 
-  /** The directory which the tool is installed to */
-  const binDir = join(workDir, extractedFolderName, binRelativeDir)
-
-  if (!existsSync(workDir)) {
-    await group(`Download and extract ${name}`, async () => {
+  // download ane extract the package into the installation directory.
+  if (!existsSync(installDir)) {
+    await group(`Download and extract ${name} ${version}`, async () => {
       const downloaded = await downloadTool(url)
-      await extractFunction?.(downloaded, workDir)
+      await extractFunction?.(downloaded, installDir)
     })
   }
 
+  // Adding the bin dir to the path
   try {
-    startGroup(`Add ${name} to PATH`)
+    /** The directory which the tool is installed to */
+    const binDir = join(installDir, extractedFolderName, binRelativeDir)
+    startGroup(`Add ${binDir} to PATH`)
     addPath(binDir)
   } finally {
     endGroup()
@@ -63,8 +70,8 @@ export async function setupBin(
 
   // check if inside Github Actions. If so, cache the installation
   if (typeof process.env.RUNNER_TOOL_CACHE === "string") {
-    await cacheDir(workDir, name, version)
+    await cacheDir(installDir, name, version)
   }
 
-  return join(binDir, binName)
+  return installDir
 }
