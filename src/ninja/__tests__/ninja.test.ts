@@ -1,6 +1,8 @@
 import { setupNinja } from "../ninja"
 import { spawnSync as spawn } from "child_process"
 import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
+import { addBinExtension } from "../../utils/setup/setupBin"
+import { join } from "path"
 
 jest.setTimeout(100000)
 
@@ -19,7 +21,9 @@ describe("setup-ninja", () => {
     expect(ninjaPath).toBeDefined()
     expect(ninjaPath).not.toHaveLength(0)
 
-    const { status } = spawn(ninjaPath, ["--version"], {
+    const ninjaBin = join(ninjaPath, addBinExtension("ninja"))
+
+    const { status } = spawn(ninjaBin, ["--version"], {
       encoding: "utf8",
     })
     expect(status).toBe(0)

@@ -1,6 +1,8 @@
 import { setupCmake } from "../cmake"
 import { spawnSync as spawn } from "child_process"
 import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
+import { addBinExtension } from "../../utils/setup/setupBin"
+import { join } from "path"
 
 jest.setTimeout(100000)
 
@@ -19,7 +21,9 @@ describe("setup-cmake", () => {
     expect(cmakePath).toBeDefined()
     expect(cmakePath).not.toHaveLength(0)
 
-    const { status, error } = spawn(cmakePath, ["--version"], {
+    const cmakeBin = join(cmakePath, addBinExtension("cmake"))
+
+    const { status, error } = spawn(cmakeBin, ["--version"], {
       encoding: "utf8",
     })
     expect(error).toBeUndefined()

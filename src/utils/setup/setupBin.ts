@@ -75,3 +75,10 @@ export async function setupPackage(
 
   return installDir
 }
+/** Add bin extension to a binary. This will be `.exe` on Windows. */
+export function addBinExtension(name: string) {
+  if (process.platform === "win32") {
+    return `${name}.exe`
+  }
+  return name
+}
