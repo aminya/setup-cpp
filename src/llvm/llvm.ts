@@ -3,7 +3,7 @@ import * as tc from "@actions/tool-cache"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import { isValidUrl } from "../utils/http/validate_url"
-import { PackageInfo, setupPackage } from "../utils/setup/setupBin"
+import { InstallationInfo, PackageInfo, setupPackage } from "../utils/setup/setupBin"
 
 //================================================
 // Version
@@ -278,7 +278,7 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
   }
 }
 
-export async function setupLLVM(version: string, directoryGiven?: string): Promise<void> {
+export async function setupLLVM(version: string, directoryGiven?: string): Promise<InstallationInfo> {
   let directory = directoryGiven
   if (directory === "" || directory === undefined) {
     directory = process.platform === "win32" ? DEFAULT_WIN32_DIRECTORY : DEFAULT_NIX_DIRECTORY
@@ -286,7 +286,7 @@ export async function setupLLVM(version: string, directoryGiven?: string): Promi
 
   directory = path.resolve(directory)
 
-  await setupPackage("llvm", version, getLLVMPackageInfo, directory)
+  const installationInfo = await setupPackage("llvm", version, getLLVMPackageInfo, directory)
 
   // Adding environment variables
   const lib = path.join(directory, "lib")
@@ -297,4 +297,6 @@ export async function setupLLVM(version: string, directoryGiven?: string): Promi
   core.exportVariable("LLVM_PATH", directory)
   core.exportVariable("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
   core.exportVariable("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
+
+  return installationInfo
 }
