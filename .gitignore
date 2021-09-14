@@ -1,0 +1,14 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules
+package-lock.json
+
+# TypeScript
+*.tsbuildinfo
+
+# Build directories
+dist
+.parcel-cache
