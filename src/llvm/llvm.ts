@@ -181,7 +181,7 @@ function getLinuxUrl(versionGiven: string): string {
   // ubuntu-version is specified
   if (version.includes("ubuntu")) {
     ubuntu = version
-  } else if (version !== "") {
+  } else if (version !== "" && version in UBUNTU) {
     ubuntu = UBUNTU[version]
   } else {
     // default to the maximum vresion
