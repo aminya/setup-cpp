@@ -4,6 +4,7 @@ importers:
 
   .:
     specifiers:
+      '@actions/core': ^1.5.0
       '@types/node': ^16.9.1
       cross-env: 7.0.3
       eslint-config-atomic: ^1.16.2
@@ -13,6 +14,7 @@ importers:
       terser-config-atomic: ^0.1.1
       typescript: ^4.4.3
     dependencies:
+      '@actions/core': 1.5.0
       parcel: 2.0.0-rc.0
     devDependencies:
       '@types/node': 16.9.1
@@ -24,6 +26,10 @@ importers:
       typescript: 4.4.3
 
 packages:
+
+  /@actions/core/1.5.0:
+    resolution: {integrity: sha512-eDOLH1Nq9zh+PJlYLqEMkS/jLQxhksPNmUGNBHfa4G+tQmnIhzpctxmchETtVGyBOvXgOVVpYuE40+eS4cUnwQ==}
+    dev: false
 
   /@aminya/eslint-plugin-only-warn/1.2.2:
     resolution: {integrity: sha512-0VdfoicL+dorb0WrbbhsFsH8xH+8X2Y6CrO/3br68kimkMNOJB/5DFGRraVDYHfCIQgMnlv5Q9GX1yI7V4GcgQ==}
