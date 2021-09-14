@@ -27,5 +27,6 @@
     "outDir": "./dist"
   },
   "compileOnSave": false,
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["./src/python/setup-python"]
 }

@@ -19,6 +19,7 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup conan
 - [x] setup meson
 - [x] setup gcovr
+- [x] setup python
 - [ ] setup msvc
 - [ ] setup gcc/mingw
 - [ ] setup vcpkg

@@ -1,4 +1,4 @@
 {
   "extends": "eslint-config-atomic",
-  "ignorePatterns": ["dist/", "node_modules/"]
+  "ignorePatterns": ["dist/", "node_modules/", "src/python/setup-python/"]
 }

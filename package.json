@@ -11,7 +11,7 @@
     "clean": "shx rm -rf dist",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "build": "cross-env NODE_ENV=production parcel build --detailed-report",
-    "prepare": "npm run build",
+    "prepare": "git submodule update --init --recursive && npm run build",
     "test.format": "prettier . --check",
     "test.lint": "eslint .",
     "test.tsc": "tsc --noEmit",

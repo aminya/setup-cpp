@@ -5,6 +5,7 @@ import { setupGcovr } from "./gcovr/gcovr"
 import { setupLLVM } from "./llvm/llvm"
 import { setupMeson } from "./meson/meson"
 import { setupNinja } from "./ninja/ninja"
+import { setupPython } from "./python/python"
 
 function maybeGetInput(key: string) {
   const value = core.getInput(key)
@@ -15,6 +16,7 @@ function maybeGetInput(key: string) {
 }
 
 export async function main(): Promise<number> {
+  const arch = core.getInput("architecture") || process.arch
   const setupCppDir = process.env.SETUP_CPP_DIR ?? "~/setup_cpp"
   try {
     // setup cmake
@@ -27,6 +29,12 @@ export async function main(): Promise<number> {
     const ninjaVersion = maybeGetInput("ninja")
     if (ninjaVersion !== undefined) {
       await setupNinja(ninjaVersion, setupCppDir)
+    }
+
+    // setup python (required for conan, meson, gcovr, etc.)
+    const pythonVersion = maybeGetInput("python")
+    if (pythonVersion !== undefined) {
+      await setupPython(pythonVersion, arch)
     }
 
     // setup conan

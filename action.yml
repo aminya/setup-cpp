@@ -26,6 +26,10 @@ inputs:
   gcovr:
     description: "The gcovr version to install."
     required: false
+  python:
+    description: "The pyhon version to install."
+    default: "3.x"
+    required: false
 
 runs:
   using: "node12"

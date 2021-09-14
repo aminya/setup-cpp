@@ -4,3 +4,4 @@ package-lock.json
 CHANGELOG.md
 dist
 stats.html
+src/python/setup-python/

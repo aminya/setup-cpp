@@ -1,0 +1,4 @@
+[submodule "src/python/setup-python"]
+	path = src/python/setup-python
+	url = https://github.com/actions/setup-python
+	branch = main
