@@ -1,25 +1,25 @@
 import { find, downloadTool, cacheDir } from "@actions/tool-cache"
 import { addPath, group, startGroup, endGroup } from "@actions/core"
-import { join, basename } from "path"
+import { join } from "path"
 import { existsSync } from "fs"
 import * as hasha from "hasha"
 import { tmpdir } from "os"
-import { URL } from "url"
 
 export type PackageInfo = {
   url: string
   binRelativeDir: string
+  /** The top folder name once it is extracted */
+  extractedFolderName: string
   extractFunction: {
     (url: string, outputPath: string): Promise<string>
   }
-  dropSuffix: string
 }
 
 /** A function that downloads and installs a tool. Then it caches it in the tool-cache. */
 export async function setupBin(
   name: string,
   version: string,
-  getPlatformData: (version: string, platform: NodeJS.Platform) => PackageInfo
+  getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo
 ): Promise<string> {
   // Build artifact name
   const binName = process.platform === "win32" ? `${name}.exe` : name
@@ -31,17 +31,14 @@ export async function setupBin(
     return join(dir, binName)
   }
 
-  const { url, dropSuffix, binRelativeDir: binRelativePath, extractFunction } = getPlatformData(version, process.platform)
+  const { url, binRelativeDir, extractedFolderName, extractFunction } = getPackageInfo(version, process.platform)
 
   // Get an unique output directory name from the URL.
   const key: string = await hasha.async(url)
   const workDir = join(process.env.RUNNER_TEMP ?? tmpdir(), key)
 
-  const { pathname } = new URL(url)
-  const dirName = basename(pathname)
-
   /** The directory which the tool is installed to */
-  const binDir = join(workDir, dirName.replace(dropSuffix, ""), binRelativePath)
+  const binDir = join(workDir, extractedFolderName, binRelativeDir)
 
   if (!existsSync(workDir)) {
     await group(`Download and extract ${name}`, async () => {

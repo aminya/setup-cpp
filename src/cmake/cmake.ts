@@ -2,10 +2,10 @@ import { extractZip, extractTar } from "@actions/tool-cache"
 import { getInput } from "@actions/core"
 import semverLte from "semver/functions/lte"
 import semverCoerce from "semver/functions/coerce"
-import { setupBin, PackageInfo } from "../utils/setup/setup"
+import { setupBin, PackageInfo } from "../utils/setup/setupBin"
 
 /** Get the platform data for cmake */
-function getCmakePlatformData(version: string, platform?: NodeJS.Platform): PackageInfo {
+function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): PackageInfo {
   const semVersion = semverCoerce(version) ?? version
   const platformStr = platform ?? process.platform
   const arch = getInput("architecture") || process.arch
@@ -18,21 +18,23 @@ function getCmakePlatformData(version: string, platform?: NodeJS.Platform): Pack
       } else {
         osArchStr = isOld ? "win64-x64" : "windows-x86_64"
       }
+      const folderName = `cmake-${version}-${osArchStr}`
       return {
         binRelativeDir: "bin/",
-        dropSuffix: ".zip",
+        extractedFolderName: folderName,
         extractFunction: extractZip,
-        url: `https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}-${osArchStr}.zip`,
+        url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.zip`,
       }
     }
     case "darwin": {
       const isOld = semverLte(semVersion, "v3.19.1")
       const osArchStr = isOld ? "Darwin-x86_64" : "macos-universal"
+      const folderName = `cmake-${version}-${osArchStr}`
       return {
         binRelativeDir: "CMake.app/Contents/bin/",
-        dropSuffix: ".tar.gz",
+        extractedFolderName: folderName,
         extractFunction: extractTar,
-        url: `https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}-${osArchStr}.tar.gz`,
+        url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.tar.gz`,
       }
     }
     case "linux": {
@@ -43,11 +45,12 @@ function getCmakePlatformData(version: string, platform?: NodeJS.Platform): Pack
       } else {
         osArchStr = isOld ? "Linux-x86_64" : "linux-x86_64"
       }
+      const folderName = `cmake-${version}-${osArchStr}`
       return {
         binRelativeDir: "bin/",
-        dropSuffix: ".tar.gz",
+        extractedFolderName: ".tar.gz",
         extractFunction: extractTar,
-        url: `https://github.com/Kitware/CMake/releases/download/v${version}/cmake-${version}-${osArchStr}.tar.gz`,
+        url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.tar.gz`,
       }
     }
     default:
@@ -57,5 +60,5 @@ function getCmakePlatformData(version: string, platform?: NodeJS.Platform): Pack
 
 /** Setup cmake */
 export function setupCmake(version: string): Promise<string> {
-  return setupBin("cmake", version, getCmakePlatformData)
+  return setupBin("cmake", version, getCmakePackageInfo)
 }
