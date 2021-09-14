@@ -6,8 +6,12 @@ inputs:
   compiler:
     description: "The compiler and its version."
     required: false
+  architecture:
+    description: "The CPU architecture"
+    required: false
   cmake:
     description: "The cmake version to install."
+    default: '3.20.2'
     required: false
   ninja:
     description: "The ninja version to install."

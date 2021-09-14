@@ -1,8 +1,13 @@
 import * as core from "@actions/core"
+import { setupCmake } from "./cmake/cmake"
 
 export async function main(): Promise<number> {
   try {
-    // TODO
+    // setup cmake
+    const cmakeVersion = core.getInput("cmake")
+    if (cmakeVersion !== "false" && cmakeVersion !== "") {
+      await setupCmake(cmakeVersion)
+    }
   } catch (err) {
     core.error(err as string | Error)
     core.setFailed("install-cpp failed")
@@ -18,6 +23,7 @@ main()
     process.exitCode = ret
   })
   .catch((error) => {
-    core.error("main() failed!", error)
+    core.error("main() failed!")
+    core.error(error as string | Error)
     process.exitCode = 1
   })
