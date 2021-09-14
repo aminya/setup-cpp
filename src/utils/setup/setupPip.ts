@@ -1,5 +1,6 @@
 import { exec } from "@actions/exec"
 import which from "which"
+import { addPath, startGroup, endGroup } from "@actions/core"
 
 /** A function that installs a package using pip */
 export async function setupPip(name: string, version?: string) {
@@ -9,5 +10,14 @@ export async function setupPip(name: string, version?: string) {
   const exit = await exec(pip, ["install", version !== undefined ? `${name}==${version}` : name])
   if (exit !== 0) {
     throw new Error(`Failed to install ${name} ${version}`)
+  }
+
+  if (process.platform === "linux") {
+    try {
+      startGroup(`Add /home/runner/.local/bin to PATH`)
+      addPath("/home/runner/.local/bin/")
+    } finally {
+      endGroup()
+    }
   }
 }
