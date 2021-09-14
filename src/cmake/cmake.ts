@@ -48,7 +48,7 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
       const folderName = `cmake-${version}-${osArchStr}`
       return {
         binRelativeDir: "bin/",
-        extractedFolderName: ".tar.gz",
+        extractedFolderName: folderName,
         extractFunction: extractTar,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.tar.gz`,
       }

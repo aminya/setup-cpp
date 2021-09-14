@@ -2,7 +2,7 @@ import { setupCmake } from "../cmake"
 import { spawnSync as spawn } from "child_process"
 import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
 
-jest.setTimeout(30 * 1000)
+jest.setTimeout(100000)
 
 describe("setup-cmake", () => {
   beforeEach(async () => {
