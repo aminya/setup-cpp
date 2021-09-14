@@ -1,12 +1,27 @@
 import * as core from "@actions/core"
 import { setupCmake } from "./cmake/cmake"
+import { setupNinja } from "./ninja/ninja"
+
+function maybeGetInput(key: string) {
+  const value = core.getInput(key)
+  if (value !== "false" && value !== "") {
+    return value
+  }
+  return undefined
+}
 
 export async function main(): Promise<number> {
   try {
     // setup cmake
-    const cmakeVersion = core.getInput("cmake")
-    if (cmakeVersion !== "false" && cmakeVersion !== "") {
+    const cmakeVersion = maybeGetInput("cmake")
+    if (cmakeVersion !== undefined) {
       await setupCmake(cmakeVersion)
+    }
+
+    // setup ninja
+    const ninjaVersion = maybeGetInput("ninja")
+    if (ninjaVersion !== undefined) {
+      await setupNinja(ninjaVersion)
     }
   } catch (err) {
     core.error(err as string | Error)

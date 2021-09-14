@@ -11,11 +11,12 @@ inputs:
     required: false
   cmake:
     description: "The cmake version to install."
-    default: '3.20.2'
+    default: "3.20.2"
     required: false
   ninja:
     description: "The ninja version to install."
-    required: false
+    default: "1.10.2"
+    required: true
 
 runs:
   using: "node12"
