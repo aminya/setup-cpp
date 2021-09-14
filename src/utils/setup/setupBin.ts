@@ -3,7 +3,6 @@ import { addPath, group, startGroup, endGroup } from "@actions/core"
 import { join } from "path"
 import { existsSync } from "fs"
 import * as hasha from "hasha"
-import { tmpdir } from "os"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -39,7 +38,7 @@ export async function setupBin(
 
   // Get an unique output directory name from the URL.
   const key: string = await hasha.async(url)
-  const workDir = join(process.env.RUNNER_TEMP ?? tmpdir(), key)
+  const workDir = join(process.env.SETUP_CPP_DIR ?? "~/setup_cpp", key)
 
   /** The directory which the tool is installed to */
   const binDir = join(workDir, extractedFolderName, binRelativeDir)
