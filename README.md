@@ -17,9 +17,9 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup ninja
 - [x] setup llvm
 - [x] setup conan
-- [ ] setup gcc/mingw
+- [x] setup meson
 - [ ] setup msvc
-- [ ] setup meson
+- [ ] setup gcc/mingw
 - [ ] setup vcpkg
 - [ ] setup gcovr
 - [ ] setup OpenCppCoverage

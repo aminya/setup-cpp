@@ -18,7 +18,10 @@ inputs:
     default: "1.10.2"
     required: false
   conan:
-    description: "The concan version to install."
+    description: "The conan version to install."
+    required: false
+  meson:
+    description: "The meson version to install."
     required: false
 
 runs:

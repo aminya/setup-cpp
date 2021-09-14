@@ -2,6 +2,7 @@ import * as core from "@actions/core"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
 import { setupLLVM } from "./llvm/llvm"
+import { setupMeson } from "./meson/meson"
 import { setupNinja } from "./ninja/ninja"
 
 function maybeGetInput(key: string) {
@@ -31,6 +32,12 @@ export async function main(): Promise<number> {
     const conanVersion = maybeGetInput("conan")
     if (conanVersion !== undefined) {
       await setupConan(conanVersion)
+    }
+
+    // setup meson
+    const mesonVersion = maybeGetInput("meson")
+    if (mesonVersion !== undefined) {
+      await setupMeson(mesonVersion)
     }
 
     // setup llvm
