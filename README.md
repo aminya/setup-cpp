@@ -22,7 +22,7 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup python
 - [ ] setup msvc
 - [ ] setup gcc/mingw
-- [ ] setup vcpkg
 - [ ] setup OpenCppCoverage
 - [ ] setup cppcheck
 - [ ] setup doxygen
+- [ ] setup vcpkg
