@@ -39,8 +39,11 @@ export async function setupMSVC(
       exportVariable("VCTargetsPath", VCTargetsPath)
     }
   } else if (version === "2017") {
-    toolset = "15.0.26228.20170424"
-    await setupChocoPack("visualcpp-build-tools", toolset, ["--ignore-dependencies", "--params", "'/IncludeRequired'"])
+    toolset = "15.9.38.0"
+    await setupChocoPack("visualstudio2017buildtools", toolset, [
+      "--package-parameters",
+      "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive",
+    ])
   } else if (version === "2019") {
     toolset = "16.11.2.0"
     await setupChocoPack("visualstudio2019buildtools", toolset, [
