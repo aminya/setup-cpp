@@ -20,7 +20,7 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup meson
 - [x] setup gcovr
 - [x] setup python
-- [ ] setup msvc
+- [x] setup msvc
 - [ ] setup gcc/mingw
 - [ ] setup OpenCppCoverage
 - [ ] setup cppcheck

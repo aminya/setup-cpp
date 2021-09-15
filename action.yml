@@ -9,6 +9,9 @@ inputs:
   llvm:
     description: "The llvm version to install"
     required: false
+  msvc:
+    description: "The msvc version to install"
+    required: false
   cmake:
     description: "The cmake version to install."
     default: "3.20.2"

@@ -5,3 +5,4 @@ CHANGELOG.md
 dist
 stats.html
 src/python/setup-python/
+src/msvc/msvc-dev-cmd/

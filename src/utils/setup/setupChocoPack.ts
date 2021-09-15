@@ -6,7 +6,7 @@ import { setupChocolatey } from "../../chocolatey/chocolatey"
 let hasChoco = false
 
 /** A function that installs a package using choco */
-export async function setupChocoPack(name: string, version?: string) {
+export async function setupChocoPack(name: string, version?: string, args: string[] = []) {
   if (!hasChoco || which.sync("choco", { nothrow: true }) === null) {
     await setupChocolatey()
     hasChoco = true
@@ -14,9 +14,9 @@ export async function setupChocoPack(name: string, version?: string) {
 
   let exit
   if (version === undefined) {
-    exit = await exec("choco", ["install", name])
+    exit = await exec("choco", ["install", name, ...args])
   } else {
-    exit = await exec("choco", ["install", name, `--version=${version}`])
+    exit = await exec("choco", ["install", name, `--version=${version}`, ...args])
   }
 
   if (exit !== 0) {

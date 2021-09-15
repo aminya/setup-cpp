@@ -5,6 +5,7 @@ import { setupConan } from "./conan/conan"
 import { setupGcovr } from "./gcovr/gcovr"
 import { setupLLVM } from "./llvm/llvm"
 import { setupMeson } from "./meson/meson"
+import { setupMSVC } from "./msvc/msvc"
 import { setupNinja } from "./ninja/ninja"
 import { setupPython } from "./python/python"
 
@@ -66,6 +67,12 @@ export async function main(): Promise<number> {
     const chocoVersion = maybeGetInput("choco")
     if (chocoVersion !== undefined) {
       await setupChocolatey()
+    }
+
+    // setup msvc
+    const msvcVersion = maybeGetInput("msvc")
+    if (msvcVersion !== undefined) {
+      await setupMSVC(msvcVersion)
     }
   } catch (err) {
     core.error(err as string | Error)
