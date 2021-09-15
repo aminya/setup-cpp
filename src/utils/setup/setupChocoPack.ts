@@ -14,9 +14,9 @@ export async function setupChocoPack(name: string, version?: string, args: strin
 
   let exit
   if (version === undefined) {
-    exit = await exec("choco", ["install", name, ...args])
+    exit = await exec("choco", ["install", "-y", name, ...args])
   } else {
-    exit = await exec("choco", ["install", name, `--version=${version}`, ...args])
+    exit = await exec("choco", ["install", "-y", name, `--version=${version}`, ...args])
   }
 
   if (exit !== 0) {
