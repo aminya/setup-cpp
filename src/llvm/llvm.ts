@@ -1,10 +1,9 @@
 import * as core from "@actions/core"
-import { exec } from "@actions/exec"
-import { mkdirP } from "@actions/io"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import { isValidUrl } from "../utils/http/validate_url"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
+import { extractExe, extractTarByExe } from "../utils/setup/extract"
 
 //================================================
 // Version
@@ -270,23 +269,7 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
     url,
     extractedFolderName: "",
     binRelativeDir: "bin",
-    extractFunction:
-      platform === "win32"
-        ? async (file: string, dest: string) => {
-            const exit = await exec("7z", ["x", file, `-o${dest}`])
-            if (exit !== 0) {
-              throw new Error(`Failed to extract ${file} to ${dest} with 7z`)
-            }
-            return dest
-          }
-        : async (file: string, dest: string) => {
-            await mkdirP(dest)
-            const exit = await exec("tar", ["xf", file, "-C", dest, "--strip-components=1"])
-            if (exit !== 0) {
-              throw new Error(`Failed to extract ${file} to ${dest} with tar`)
-            }
-            return dest
-          },
+    extractFunction: platform === "win32" ? extractExe : extractTarByExe,
   }
 }
 
