@@ -4,7 +4,7 @@ import semverLte from "semver/functions/lte"
 import { isValidUrl } from "../utils/http/validate_url"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
-import { getSpecificVersions, getVersions } from "../utils/setup/version"
+import { getSpecificVersionAndUrl, getVersions } from "../utils/setup/version"
 
 //================================================
 // Version
@@ -212,24 +212,6 @@ function getUrl(platform: string, version: string): string | null | Promise<stri
   }
 }
 
-/** Gets the most recent specific LLVM version for which there is a valid download URL. */
-export async function getSpecificVersionAndUrl(platform: string, version: string): Promise<[string, string]> {
-  if (!VERSIONS.has(version)) {
-    throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
-  }
-
-  for (const specificVersion of getSpecificVersions(VERSIONS, version)) {
-    // eslint-disable-next-line no-await-in-loop
-    const url = await getUrl(platform, specificVersion)
-    // eslint-disable-next-line no-await-in-loop
-    if (url !== null && (await isValidUrl(url))) {
-      return [specificVersion, url]
-    }
-  }
-
-  throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
-}
-
 //================================================
 // Action
 //================================================
@@ -238,7 +220,7 @@ const DEFAULT_NIX_DIRECTORY = "./llvm"
 const DEFAULT_WIN32_DIRECTORY = "C:/Program Files/LLVM"
 
 async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): Promise<PackageInfo> {
-  const [specificVersion, url] = await getSpecificVersionAndUrl(platform, version)
+  const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, platform, version, getUrl)
   core.setOutput("version", specificVersion)
   return {
     url,
