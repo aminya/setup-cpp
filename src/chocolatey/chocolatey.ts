@@ -2,6 +2,10 @@ import { exec } from "@actions/exec"
 import which from "which"
 
 export async function setupChocolatey() {
+  if (process.platform !== "win32") {
+    return
+  }
+
   if (which.sync("choco", { nothrow: true }) !== null) {
     return
   }

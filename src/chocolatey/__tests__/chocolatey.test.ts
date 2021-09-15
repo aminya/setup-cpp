@@ -5,6 +5,9 @@ jest.setTimeout(100000)
 
 describe("setup-chocolatey", () => {
   it("should setup chocolatey", async () => {
+    if (process.platform !== "win32") {
+      return
+    }
     await setupChocolatey()
 
     const { status } = spawn("choco", ["--version"], {
