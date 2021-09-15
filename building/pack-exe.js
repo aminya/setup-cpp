@@ -19,9 +19,9 @@ function main() {
   if (process.platform === "win32") {
     exes = [".exe"]
   } else if (process.platform === "darwin") {
-    exes = [".app", ".sh"]
+    exes = [""]
   } else {
-    exes = ["", ".sh"]
+    exes = [""]
   }
 
   return Promise.all(
