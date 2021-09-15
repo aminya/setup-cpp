@@ -4,25 +4,11 @@ import semverLte from "semver/functions/lte"
 import { isValidUrl } from "../utils/http/validate_url"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
+import { getSpecificVersions, getVersions } from "../utils/setup/version"
 
 //================================================
 // Version
 //================================================
-
-/**
- * Gets the specific and minimum LLVM versions that can be used to refer to the supplied specific LLVM versions (e.g.,
- * `3`, `3.5`, `3.5.2` for `3.5.2`).
- */
-function getVersions(specific: string[]): Set<string> {
-  const versions = new Set(specific)
-
-  for (const version of specific) {
-    versions.add(/^\d+/.exec(version)![0])
-    versions.add(/^\d+\.\d+/.exec(version)![0])
-  }
-
-  return versions
-}
 
 /** The specific and minimum LLVM versions supported by this action. */
 const VERSIONS: Set<string> = getVersions([
@@ -60,17 +46,6 @@ const VERSIONS: Set<string> = getVersions([
   "12.0.0",
   "12.0.1",
 ])
-
-/**
- * Gets the specific LLVM versions supported by this action compatible with the supplied (specific or minimum) LLVM
- * version in descending order of release (e.g., `5.0.2`, `5.0.1`, and `5.0.0` for `5`).
- */
-function getSpecificVersions(version: string): string[] {
-  return Array.from(VERSIONS)
-    .filter((v) => /^\d+\.\d+\.\d+$/.test(v) && v.startsWith(version))
-    .sort()
-    .reverse()
-}
 
 //================================================
 // URL
@@ -243,7 +218,7 @@ export async function getSpecificVersionAndUrl(platform: string, version: string
     throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
   }
 
-  for (const specificVersion of getSpecificVersions(version)) {
+  for (const specificVersion of getSpecificVersions(VERSIONS, version)) {
     // eslint-disable-next-line no-await-in-loop
     const url = await getUrl(platform, specificVersion)
     // eslint-disable-next-line no-await-in-loop
