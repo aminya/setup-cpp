@@ -11,7 +11,7 @@ import { getSpecificVersionAndUrl, getVersions } from "../utils/setup/version"
 //================================================
 
 /** The specific and minimum LLVM versions supported by this action. */
-const VERSIONS: Set<string> = getVersions([
+export const VERSIONS: Set<string> = getVersions([
   "3.5.0",
   "3.5.1",
   "3.5.2",
@@ -199,7 +199,7 @@ async function getWin32Url(version: string): Promise<string | null> {
 }
 
 /** Gets an LLVM download URL. */
-function getUrl(platform: string, version: string): string | null | Promise<string | null> {
+export function getUrl(platform: string, version: string): string | null | Promise<string | null> {
   switch (platform) {
     case "darwin":
       return getDarwinUrl(version)

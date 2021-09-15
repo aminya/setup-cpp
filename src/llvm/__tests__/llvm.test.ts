@@ -1,4 +1,5 @@
-import { getSpecificVersionAndUrl, setupLLVM } from "../llvm"
+import { setupLLVM, VERSIONS, getUrl } from "../llvm"
+import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
 import { addBinExtension } from "../../utils/setup/setupBin"
@@ -7,7 +8,7 @@ import { spawnSync as spawn } from "child_process"
 
 jest.setTimeout(200000)
 async function testUrl(version: string) {
-  const [specificVersion, url] = await getSpecificVersionAndUrl(process.platform, version)
+  const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, process.platform, version, getUrl)
 
   if (!(await isValidUrl(url))) {
     throw new Error(`Failed to install Version: ${version} => ${specificVersion} \n URL: ${url}`)
