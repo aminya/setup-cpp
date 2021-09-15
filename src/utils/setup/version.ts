@@ -51,10 +51,10 @@ export async function getSpecificVersionAndUrl(
   throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
 }
 
-export const versionRegex = /v(\d\S*)\s/
+export const defaultVersionRegex = /v?(\d\S*)/
 
 /** Get the version of a binary */
-export async function getBinVersion(file: string) {
+export async function getBinVersion(file: string, versionRegex: RegExp = defaultVersionRegex) {
   try {
     const { stderr, stdout } = await getExecOutput(file, ["--version"])
     const version = stdout.match(versionRegex)?.[1] ?? stderr.match(versionRegex)?.[1]
@@ -66,8 +66,12 @@ export async function getBinVersion(file: string) {
 }
 
 /** Check if the given bin is up to date against the target version */
-export async function isBinUptoDate(givenFile: string, targetVersion: string) {
-  const givenVersion = await getBinVersion(givenFile)
+export async function isBinUptoDate(
+  givenFile: string,
+  targetVersion: string,
+  versionRegex: RegExp = defaultVersionRegex
+) {
+  const givenVersion = await getBinVersion(givenFile, versionRegex)
   if (
     typeof givenVersion === "string" &&
     typeof targetVersion === "string" &&
