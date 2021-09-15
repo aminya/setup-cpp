@@ -1,5 +1,5 @@
-import { setupPip } from "../utils/setup/setupPip"
+import { setupPipPack } from "../utils/setup/setupPipPack"
 
 export async function setupGcovr(version?: string) {
-  await setupPip("gcovr", version)
+  await setupPipPack("gcovr", version)
 }

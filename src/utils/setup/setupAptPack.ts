@@ -1,7 +1,7 @@
 import { exec } from "@actions/exec"
 
 /** A function that installs a package using apt */
-export async function setupApt(name: string, version?: string, updateRepositories: boolean = true) {
+export async function setupAptPack(name: string, version?: string, updateRepositories: boolean = true) {
   if (updateRepositories) {
     await exec("apt-get", ["update"])
   }

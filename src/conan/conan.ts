@@ -1,5 +1,5 @@
-import { setupPip } from "../utils/setup/setupPip"
+import { setupPipPack } from "../utils/setup/setupPipPack"
 
 export async function setupConan(version?: string) {
-  await setupPip("conan", version)
+  await setupPipPack("conan", version)
 }

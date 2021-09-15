@@ -1,5 +1,5 @@
-import { setupPip } from "../utils/setup/setupPip"
+import { setupPipPack } from "../utils/setup/setupPipPack"
 
 export async function setupMeson(version?: string) {
-  await setupPip("meson", version)
+  await setupPipPack("meson", version)
 }

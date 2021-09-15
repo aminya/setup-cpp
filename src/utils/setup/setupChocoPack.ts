@@ -3,7 +3,7 @@ import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 
 /** A function that installs a package using choco */
-export async function setupChoco(name: string, version?: string) {
+export async function setupChocoPack(name: string, version?: string) {
   if (which.sync("choco", { nothrow: true }) === null) {
     await setupChocolatey()
   }

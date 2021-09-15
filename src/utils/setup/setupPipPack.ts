@@ -3,7 +3,7 @@ import which from "which"
 import { addPath, startGroup, endGroup } from "@actions/core"
 
 /** A function that installs a package using pip */
-export async function setupPip(name: string, version?: string) {
+export async function setupPipPack(name: string, version?: string) {
   // check if it exists
   const pip = which.sync("pip3", { nothrow: true }) !== null ? "pip3" : "pip"
 
