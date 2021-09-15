@@ -1,8 +1,7 @@
 import { setupChocolatey } from "../chocolatey"
 import { spawnSync as spawn } from "child_process"
 
-jest.setTimeout(100000)
-
+jest.setTimeout(200000)
 describe("setup-chocolatey", () => {
   it("should setup chocolatey", async () => {
     if (process.platform !== "win32") {

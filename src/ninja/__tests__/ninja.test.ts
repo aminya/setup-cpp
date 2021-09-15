@@ -1,8 +1,7 @@
 import { setupNinja } from "../ninja"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 
-jest.setTimeout(100000)
-
+jest.setTimeout(200000)
 async function testNinja(directory: string) {
   const { binDir } = await setupNinja("1.10.2", directory)
   testBin("ninja", binDir)

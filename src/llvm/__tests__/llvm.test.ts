@@ -5,8 +5,7 @@ import { addBinExtension } from "../../utils/setup/setupBin"
 import { join } from "path"
 import { spawnSync as spawn } from "child_process"
 
-jest.setTimeout(100000)
-
+jest.setTimeout(200000)
 async function testUrl(version: string) {
   const [specificVersion, url] = await getSpecificVersionAndUrl(process.platform, version)
 

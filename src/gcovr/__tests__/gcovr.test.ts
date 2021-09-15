@@ -1,8 +1,7 @@
 import { setupGcovr } from "../gcovr"
 import { spawnSync as spawn } from "child_process"
 
-jest.setTimeout(100000)
-
+jest.setTimeout(200000)
 describe("setup-gcovr", () => {
   it("should setup gcovr", async () => {
     await setupGcovr("5.0")
