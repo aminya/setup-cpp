@@ -1,4 +1,6 @@
 import { isValidUrl } from "../http/validate_url"
+import semverCompare from "semver/functions/compare"
+import { getExecOutput } from "@actions/exec"
 
 /**
  * Gets the specific versions supported by this action compatible with the supplied (specific or minimum) version in
@@ -47,4 +49,34 @@ export async function getSpecificVersionAndUrl(
   }
 
   throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
+}
+
+export const versionRegex = /v(\d\S*)\s/
+
+/** Get the version of a binary */
+export async function getBinVersion(file: string) {
+  try {
+    const { stderr, stdout } = await getExecOutput(file, ["--version"])
+    const version = stdout.match(versionRegex)?.[1] ?? stderr.match(versionRegex)?.[1]
+    return version
+  } catch (e) {
+    console.error(e)
+    return undefined
+  }
+}
+
+/** Check if the given bin is up to date against the target version */
+export async function isBinUptoDate(givenFile: string, targetVersion: string) {
+  const givenVersion = await getBinVersion(givenFile)
+  if (
+    typeof givenVersion === "string" &&
+    typeof targetVersion === "string" &&
+    givenVersion !== "" &&
+    targetVersion !== ""
+  ) {
+    return semverCompare(givenVersion, targetVersion) !== -1
+  } else {
+    // assume given version is old
+    return false
+  }
 }
