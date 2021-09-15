@@ -8,7 +8,7 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --fix",
-    "clean": "shx rm -rf dist",
+    "clean": "shx rm -rf dist exe",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "build": "cross-env NODE_ENV=production parcel build --detailed-report",
     "prepare": "git submodule update --init --recursive && npm run build",
@@ -16,7 +16,8 @@
     "test.lint": "eslint .",
     "test.tsc": "tsc --noEmit",
     "test.unit": "jest",
-    "test": "run-p test.format test.lint test.tsc test.unit"
+    "test": "run-p test.format test.lint test.tsc test.unit",
+    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./building/pack-exe.js"
   },
   "engines": {
     "node": ">=12.x"
@@ -45,6 +46,7 @@
     "@types/node": "^16.9.1",
     "@types/semver": "^7.3.8",
     "@types/which": "^2.0.1",
+    "caxa": "^2.1.0",
     "cross-env": "7.0.3",
     "eslint-config-atomic": "^1.16.2",
     "jest": "^27.2.0",

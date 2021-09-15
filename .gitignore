@@ -13,3 +13,4 @@ temp-*
 # Build directories
 dist
 .parcel-cache
+exe

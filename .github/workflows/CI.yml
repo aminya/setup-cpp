@@ -21,6 +21,8 @@ jobs:
           - 14 # installed on the images
         pnpm:
           - 6
+        cache_reset_counter:
+          - 0
     steps:
       - uses: actions/checkout@v2
         with:
@@ -32,7 +34,7 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
-          key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}-${{ matrix.cache_reset_counter }}"
           restore-keys: |
             "setupcpp-cache-OS:${{ matrix.os }}"
 
@@ -52,4 +54,17 @@ jobs:
 
       - name: Test
         run: |
-          pnpm test
+          pnpm run test
+
+      # Create self-contained executable that bundles Nodejs
+      - name: Create Executable
+        run: |
+          pnpm run pack.exe
+
+      - name: Upload Executable
+        uses: actions/upload-artifact@v2
+        with:
+          path: |
+            ./exe
+            ./dist
+          retention-days: 1
