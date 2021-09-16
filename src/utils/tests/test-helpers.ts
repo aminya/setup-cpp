@@ -47,6 +47,4 @@ export async function testBin(name: string, args: string[] = ["--version"], binD
   expect(status).toBe(0)
 
   expect(await io.which(name, true)).toBe(bin)
-
-  return binDir
 }
