@@ -121,7 +121,7 @@ export async function main(): Promise<number> {
     // setup brew
     const brewVersion = maybeGetInput("brew")
     if (brewVersion !== undefined) {
-      await setupBrew()
+      setupBrew()
     }
 
     // setup ccache

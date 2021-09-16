@@ -4,7 +4,7 @@ import { exportVariable } from "@actions/core"
 import { existsSync } from "fs"
 import { arch as osArch } from "os"
 
-type MSVCVersion = "2015" | "2017" | "2019" | string
+type MSVCVersion = "2015" | "2017" | "2019" | "true" | string
 
 function getArch(arch: string): string {
   switch (arch) {
@@ -22,13 +22,16 @@ function getArch(arch: string): string {
   }
 }
 
+const default_msvc_version = "2019"
+
 export async function setupMSVC(
-  version: MSVCVersion,
+  versionGiven: MSVCVersion,
   sdk?: string,
   uwp?: boolean,
   spectre?: boolean,
   arch = osArch()
 ): Promise<void> {
+  const version = versionGiven === "true" ? default_msvc_version : versionGiven
   if (process.platform !== "win32") {
     return
   }
