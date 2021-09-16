@@ -48,10 +48,10 @@ export async function setupBin(
   const dir = find(name, version)
   if (dir) {
     info(`${name} ${version} was found in the cache.`)
-    addPath(dir)
-
     const installDir = join(dir, extractedFolderName)
-    return { installDir, binDir: join(installDir, binRelativeDir) }
+    const binDir = join(installDir, binRelativeDir)
+    addPath(binDir)
+    return { installDir, binDir }
   }
 
   // Get an unique output directory name from the URL.
