@@ -7,6 +7,7 @@ const DefaultVersions: Record<string, string> = {
   conan: "1.40.1",
   meson: "0.59.1",
   python: "3.x",
+  gcc: "11.2.0",
 }
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */

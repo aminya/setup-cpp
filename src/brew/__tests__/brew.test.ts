@@ -1,6 +1,5 @@
 import { setupBrew } from "../brew"
 import { testBin } from "../../utils/tests/test-helpers"
-import { InstallationInfo } from "../../utils/setup/setupBin"
 
 jest.setTimeout(200000)
 describe("setup-brew", () => {
