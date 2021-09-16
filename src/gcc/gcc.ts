@@ -1,4 +1,5 @@
 import { addPath } from "@actions/core"
+import { existsSync } from "fs"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
@@ -12,11 +13,11 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
       }
       await setupChocoPack("mingw", version)
       let binDir: string | undefined
-      if (arch === "x64") {
+      if (arch === "x64" && existsSync("C:\\tools\\mingw64\\bin")) {
         binDir = "C:\\tools\\mingw64\\bin"
         addPath(binDir)
         return { binDir }
-      } else if (arch === "ia32") {
+      } else if (arch === "ia32" && existsSync("C:\\tools\\mingw32\\bin")) {
         binDir = "C:\\tools\\mingw32\\bin"
         addPath(binDir)
         return { binDir }
