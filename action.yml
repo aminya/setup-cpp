@@ -17,11 +17,9 @@ inputs:
     required: false
   cmake:
     description: "The cmake version to install."
-    default: "3.20.2"
     required: false
   ninja:
     description: "The ninja version to install."
-    default: "1.10.2"
     required: false
   conan:
     description: "The conan version to install."

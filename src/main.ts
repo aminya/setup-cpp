@@ -20,7 +20,7 @@ function maybeGetInput(key: string) {
   if (value !== "false" && value !== "") {
     return value
   }
-  return undefined
+  return undefined // skip installation
 }
 
 export async function main(): Promise<number> {

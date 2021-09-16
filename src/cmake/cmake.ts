@@ -58,7 +58,9 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
   }
 }
 
+const default_cmake_version = "3.20.2"
+
 /** Setup cmake */
 export function setupCmake(version: string, setupCppDir: string): Promise<InstallationInfo> {
-  return setupBin("cmake", version, getCmakePackageInfo, setupCppDir)
+  return setupBin("cmake", version === "true" ? default_cmake_version : version, getCmakePackageInfo, setupCppDir)
 }
