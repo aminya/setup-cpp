@@ -1,4 +1,5 @@
 import { execFileSync } from "child_process"
+import { dirname } from "path"
 import which from "which"
 
 let binDir: string | undefined
@@ -14,7 +15,7 @@ export function setupBrew(_version: string, _setupCppDir: string, _arch: string)
 
   const maybeBinDir = which.sync("brew", { nothrow: true })
   if (maybeBinDir !== null) {
-    binDir = maybeBinDir
+    binDir = dirname(maybeBinDir)
     return { binDir }
   }
 
