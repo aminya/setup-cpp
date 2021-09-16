@@ -21,8 +21,8 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup gcovr
 - [x] setup python
 - [x] setup msvc
+- [x] setup cppcheck
 - [ ] setup gcc/mingw
 - [ ] setup OpenCppCoverage
-- [ ] setup cppcheck
 - [ ] setup doxygen
 - [ ] setup vcpkg
