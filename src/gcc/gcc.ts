@@ -4,6 +4,7 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import semverMajor from "semver/functions/major"
+import semverCoerce from "semver/functions/coerce"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGcc(version: string, _setupCppDir: string, arch: string) {
@@ -50,7 +51,7 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
     }
   }
   if (binDir !== undefined) {
-    const majorVersion = semverMajor(version)
+    const majorVersion = semverMajor(semverCoerce(version) ?? version)
 
     // TODO
     // const ld = process.env.LD_LIBRARY_PATH ?? ""
