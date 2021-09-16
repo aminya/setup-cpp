@@ -21,7 +21,7 @@ export async function setupPipPack(name: string, version?: string) {
     }
   }
 
-  const exit = await exec(pip, ["install", version !== undefined ? `${name}==${version}` : name])
+  const exit = await exec(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name])
   if (exit !== 0) {
     throw new Error(`Failed to install ${name} ${version}`)
   }

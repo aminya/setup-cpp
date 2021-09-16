@@ -13,7 +13,7 @@ export async function setupAptPack(name: string, version?: string, updateReposit
     didUpdate = true
   }
 
-  const exit = await exec(apt, ["install", version !== undefined ? `${name}=${version}` : name])
+  const exit = await exec(apt, ["install", version !== undefined && version !== "" ? `${name}=${version}` : name])
 
   if (exit !== 0) {
     throw new Error(`Failed to install ${name} ${version}`)

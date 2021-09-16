@@ -13,5 +13,7 @@ export function setupBrewPack(name: string, version?: string) {
   }
 
   // brew is not thread-safe
-  execFileSync("brew", ["install", version !== undefined ? `${name}@${version}` : name], { stdio: "inherit" })
+  execFileSync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name], {
+    stdio: "inherit",
+  })
 }

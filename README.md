@@ -12,6 +12,7 @@ This package is designed to be fully **modular** and as **minimal** as possible.
 The package will be usable from any environment (locally, GitHub Actions, etc). Stay tuned for the stable release.
 
 # Features (WIP)
+
 - setup cmake
 - setup ninja
 - setup llvm
