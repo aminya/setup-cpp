@@ -7,7 +7,7 @@ describe("setup-msvc", () => {
     if (process.platform !== "win32") {
       return
     }
-    await setupMSVC("2017")
+    await setupMSVC("2019", "", "")
 
     const { status } = spawn("cl", {
       encoding: "utf8",

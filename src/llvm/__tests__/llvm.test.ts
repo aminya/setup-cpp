@@ -46,7 +46,7 @@ describe("setup-llvm", () => {
   })
 
   it("should setup LLVM", async () => {
-    const { binDir } = await setupLLVM("12.0.0", directory)
+    const { binDir } = await setupLLVM("11.0.0", directory, "")
     expect(binDir).toBeDefined()
     expect(binDir).not.toHaveLength(0)
 

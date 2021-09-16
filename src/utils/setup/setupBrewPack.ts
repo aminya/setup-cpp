@@ -8,7 +8,7 @@ let hasBrew = false
 /** A function that installs a package using brew */
 export function setupBrewPack(name: string, version?: string) {
   if (!hasBrew || which.sync("brew", { nothrow: true }) === null) {
-    setupBrew()
+    setupBrew("", "", "")
     hasBrew = true
   }
 

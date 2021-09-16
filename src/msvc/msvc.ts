@@ -2,7 +2,6 @@ import { setupMSVCDevCmd } from "./msvc-dev-cmd/index"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { exportVariable } from "@actions/core"
 import { existsSync } from "fs"
-import { arch as osArch } from "os"
 
 type MSVCVersion = "2015" | "2017" | "2019" | string
 

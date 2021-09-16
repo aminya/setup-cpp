@@ -7,7 +7,7 @@ describe("setup-OpenCppCoverage", () => {
     if (process.platform !== "win32") {
       return
     }
-    await setupOpencppcoverage()
+    await setupOpencppcoverage("", "", "")
 
     const { status } = spawn("OpenCppCoverage", ["--version"], {
       encoding: "utf8",

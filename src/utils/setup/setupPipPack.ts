@@ -16,7 +16,7 @@ export async function setupPipPack(name: string, version?: string) {
     } else if (which.sync("pip", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
       pip = "pip"
     } else {
-      await setupPython("3.x")
+      await setupPython("3.x", "", "")
       pip = "pip3"
     }
   }

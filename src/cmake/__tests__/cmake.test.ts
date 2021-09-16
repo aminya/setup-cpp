@@ -3,7 +3,7 @@ import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-help
 
 jest.setTimeout(200000)
 async function testCmake(directory: string) {
-  const { binDir } = await setupCmake("3.20.2", directory)
+  const { binDir } = await setupCmake("3.20.2", directory, "")
   testBin("cmake", binDir)
   return binDir
 }

@@ -7,7 +7,7 @@ describe("setup-brew", () => {
     if (process.platform !== "darwin") {
       return
     }
-    await setupBrew()
+    await setupBrew("", "", "")
 
     const { status } = spawn("brew", ["--version"], {
       encoding: "utf8",

@@ -7,7 +7,7 @@ describe("setup-chocolatey", () => {
     if (process.platform !== "win32") {
       return
     }
-    await setupChocolatey()
+    await setupChocolatey("", "", "")
 
     const { status } = spawn("choco", ["--version"], {
       encoding: "utf8",
