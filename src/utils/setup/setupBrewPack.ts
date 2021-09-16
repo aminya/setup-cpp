@@ -1,5 +1,5 @@
 /* eslint-disable require-atomic-updates */
-import { exec } from "@actions/exec"
+import { execFileSync } from "child_process"
 import which from "which"
 import { setupBrew } from "../../brew/brew"
 
@@ -12,9 +12,6 @@ export async function setupBrewPack(name: string, version?: string) {
     hasBrew = true
   }
 
-  const exit = await exec("brew", ["install", version !== undefined ? `${name}@${version}` : name])
-
-  if (exit !== 0) {
-    throw new Error(`Failed to install ${name} ${version}`)
-  }
+  // brew is not thread-safe
+  execFileSync("brew", ["install", version !== undefined ? `${name}@${version}` : name], { stdio: "inherit" })
 }
