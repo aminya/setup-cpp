@@ -1,5 +1,5 @@
 import { find, downloadTool, cacheDir } from "@actions/tool-cache"
-import { addPath, group, startGroup, endGroup, info } from "@actions/core"
+import { addPath, info } from "@actions/core"
 import { join } from "path"
 import { existsSync } from "fs"
 import * as hasha from "hasha"
@@ -60,23 +60,18 @@ export async function setupBin(
 
   // download ane extract the package into the installation directory.
   if (!existsSync(rootDir)) {
-    await group(`Download and extract ${name} ${version}`, async () => {
-      const downloaded = await downloadTool(url)
-      await extractFunction?.(downloaded, rootDir)
-    })
+    info(`Download and extract ${name} ${version}`)
+    const downloaded = await downloadTool(url)
+    await extractFunction?.(downloaded, rootDir)
   }
 
   const installDir = join(rootDir, extractedFolderName)
   const binDir = join(installDir, binRelativeDir)
 
   // Adding the bin dir to the path
-  try {
-    /** The directory which the tool is installed to */
-    startGroup(`Add ${binDir} to PATH`)
-    addPath(binDir)
-  } finally {
-    endGroup()
-  }
+  /** The directory which the tool is installed to */
+  info(`Add ${binDir} to PATH`)
+  addPath(binDir)
 
   // check if inside Github Actions. If so, cache the installation
   if (typeof process.env.RUNNER_TOOL_CACHE === "string") {

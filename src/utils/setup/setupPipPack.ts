@@ -1,7 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import { exec, getExecOutput } from "@actions/exec"
 import which from "which"
-import { addPath, startGroup, endGroup } from "@actions/core"
+import { addPath, info } from "@actions/core"
 import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
 
@@ -36,12 +36,8 @@ export async function setupPipPack(name: string, version?: string) {
     } else {
       binDir = (await getExecOutput("python -c 'import sys; print(sys.base_exec_prefix)'")).stdout
     }
-    try {
-      startGroup(`${binDir} to PATH`)
-      addPath(binDir)
-    } finally {
-      endGroup()
-    }
+    info(`${binDir} to PATH`)
+    addPath(binDir)
   }
 
   return { binDir }
