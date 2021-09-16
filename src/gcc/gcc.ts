@@ -11,10 +11,15 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
         await setupChocoPack("gcc-arm-embedded", version)
       }
       await setupChocoPack("mingw", version)
+      let binDir: string | undefined
       if (arch === "x64") {
-        addPath("C:\\tools\\mingw64\\bin")
+        binDir = "C:\\tools\\mingw64\\bin"
+        addPath(binDir)
+        return { binDir }
       } else if (arch === "ia32") {
-        addPath("C:\\tools\\mingw32\\bin")
+        binDir = "C:\\tools\\mingw32\\bin"
+        addPath(binDir)
+        return { binDir }
       }
       return undefined
     }
