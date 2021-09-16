@@ -33,16 +33,20 @@ export async function cleanupTmpDir(testName: string) {
   }
 }
 
-export function testBin(binName: string, binDir: string) {
-  expect(binDir).toBeDefined()
-  expect(binDir).not.toHaveLength(0)
+export async function testBin(name: string, args: string[] = ["--version"], binDir: string | undefined = undefined) {
+  let bin = name
+  if (binDir !== undefined) {
+    expect(binDir).toBeDefined()
+    expect(binDir).not.toHaveLength(0)
+    bin = join(binDir, addBinExtension(name))
+  }
 
-  const cmakeBin = join(binDir, addBinExtension(binName))
-
-  const { status } = spawn(cmakeBin, ["--version"], {
+  const { status } = spawn(bin, args, {
     encoding: "utf8",
   })
   expect(status).toBe(0)
+
+  expect(await io.which(name, true)).toBe(bin)
 
   return binDir
 }
