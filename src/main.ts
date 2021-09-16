@@ -13,6 +13,7 @@ import { setupMSVC } from "./msvc/msvc"
 import { setupNinja } from "./ninja/ninja"
 import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
 import { setupPython } from "./python/python"
+import semverValid from "semver/functions/valid"
 
 function maybeGetInput(key: string) {
   const value = core.getInput(key.toLowerCase())
@@ -26,6 +27,43 @@ export async function main(): Promise<number> {
   const arch = core.getInput("architecture") || process.arch
   const setupCppDir = process.env.SETUP_CPP_DIR ?? "~/setup_cpp"
   try {
+    const maybeCompiler = maybeGetInput("compiler")
+    if (maybeCompiler !== undefined) {
+      const compilerAndMaybeVersion = maybeCompiler.split("-")
+      const compiler = compilerAndMaybeVersion[0]
+      let version: string | undefined
+      if (1 in compilerAndMaybeVersion) {
+        const maybeVersion = compilerAndMaybeVersion[1]
+        if (semverValid(maybeVersion) !== null) {
+          version = maybeVersion
+        } else {
+          core.error(`Invalid version ${maybeVersion} used for the compiler. Using the default version...`)
+        }
+      }
+
+      switch (compiler) {
+        case "llvm":
+        case "clang":
+        case "clang++": {
+          await setupLLVM(version ?? "11", setupCppDir)
+          break
+        }
+        case "cl":
+        case "msvc":
+        case "msbuild":
+        case "vs":
+        case "visualstudio":
+        case "visualcpp":
+        case "visualc++": {
+          await setupMSVC(version ?? "2019", setupCppDir)
+          break
+        }
+        default: {
+          core.error(`Unsupported compiler ${compiler}`)
+        }
+      }
+    }
+
     // setup cmake
     const cmakeVersion = maybeGetInput("cmake")
     if (cmakeVersion !== undefined) {

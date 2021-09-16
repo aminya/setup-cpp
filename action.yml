@@ -3,6 +3,9 @@ description: "Install all the tools required for building and testing C++/C proj
 author: "Amin Yahyaabadi"
 
 inputs:
+  compiler:
+    description: "The compiler to use and its optinal version separated by - e.g. llvm-11"
+    required: false
   architecture:
     description: "The CPU architecture"
     required: false
