@@ -15,7 +15,7 @@ import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
 import { setupPython } from "./python/python"
 
 function maybeGetInput(key: string) {
-  const value = core.getInput(key)
+  const value = core.getInput(key.toLowerCase())
   if (value !== "false" && value !== "") {
     return value
   }
@@ -65,7 +65,7 @@ export async function main(): Promise<number> {
     // setup opencppCoverage
     const opencppCoverageVersion = maybeGetInput("opencppcoverage")
     if (opencppCoverageVersion !== undefined) {
-      await setupOpencppcoverage(gcovrVersion)
+      await setupOpencppcoverage(opencppCoverageVersion)
     }
 
     // setup llvm

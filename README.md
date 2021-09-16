@@ -24,6 +24,6 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup cppcheck
 - [x] setup doxygen
 - [x] setup ccache
+- [x] setup OpenCppCoverage
 - [ ] setup gcc/mingw
-- [ ] setup OpenCppCoverage
 - [ ] setup vcpkg
