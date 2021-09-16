@@ -29,6 +29,9 @@ export async function setupMSVC(
   spectre?: boolean,
   arch = osArch()
 ): Promise<void> {
+  if (process.platform !== "win32") {
+    return
+  }
   let toolset: string | undefined
   let VCTargetsPath: string | undefined
   if (version === "2015") {
