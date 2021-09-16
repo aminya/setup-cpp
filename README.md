@@ -13,17 +13,24 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 
 # Features (WIP)
 
-- [x] setup cmake
-- [x] setup ninja
-- [x] setup llvm
-- [x] setup conan
-- [x] setup meson
-- [x] setup gcovr
-- [x] setup python
-- [x] setup msvc
-- [x] setup cppcheck
-- [x] setup doxygen
-- [x] setup ccache
-- [x] setup OpenCppCoverage
+- setup cmake
+- setup ninja
+- setup llvm
+- setup conan
+- setup meson
+- setup gcovr
+- setup python
+- setup msvc
+- setup cppcheck
+- setup doxygen
+- setup ccache
+- setup OpenCppCoverage
+
+### Incomplete
+
+- [ ] setup msvc. See [this issue](https://github.com/aminya/setup-cpp/issues/1)
+
+### TODO
+
 - [ ] setup gcc/mingw
 - [ ] setup vcpkg
