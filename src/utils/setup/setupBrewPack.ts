@@ -6,9 +6,9 @@ import { setupBrew } from "../../brew/brew"
 let hasBrew = false
 
 /** A function that installs a package using brew */
-export async function setupBrewPack(name: string, version?: string) {
+export function setupBrewPack(name: string, version?: string) {
   if (!hasBrew || which.sync("brew", { nothrow: true }) === null) {
-    await setupBrew()
+    setupBrew()
     hasBrew = true
   }
 

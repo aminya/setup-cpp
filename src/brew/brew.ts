@@ -1,7 +1,7 @@
-import { exec } from "@actions/exec"
+import { execFileSync } from "child_process"
 import which from "which"
 
-export async function setupBrew() {
+export function setupBrew() {
   if (!["darwin", "linux"].includes(process.platform)) {
     return
   }
@@ -10,11 +10,8 @@ export async function setupBrew() {
     return
   }
 
-  const exit = await exec(
-    `/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`
-  )
-
-  if (exit !== 0) {
-    throw new Error(`Failed to install brew`)
-  }
+  // brew is not thread-safe
+  execFileSync(`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`, {
+    stdio: "inherit",
+  })
 }
