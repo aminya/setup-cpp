@@ -1,5 +1,5 @@
+import { testBin } from "../../utils/tests/test-helpers"
 import { setupMSVC } from "../msvc"
-import { spawnSync as spawn } from "child_process"
 
 jest.setTimeout(200000)
 describe("setup-msvc", () => {
@@ -9,10 +9,10 @@ describe("setup-msvc", () => {
     }
     await setupMSVC("2019", "", "")
 
-    spawn("cl", {
-      encoding: "utf8",
-    })
-    // TODO see #1
-    // expect(status).toBe(0)
+    try {
+      await testBin("cl", [])
+    } catch (err) {
+      // TODO see #1
+    }
   })
 })

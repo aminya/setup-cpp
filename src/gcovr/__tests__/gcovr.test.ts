@@ -1,14 +1,11 @@
 import { setupGcovr } from "../gcovr"
-import { spawnSync as spawn } from "child_process"
+import { testBin } from "../../utils/tests/test-helpers"
 
 jest.setTimeout(200000)
 describe("setup-gcovr", () => {
   it("should setup gcovr", async () => {
     await setupGcovr("5.0", "", "")
 
-    const { status } = spawn("gcovr", ["--version"], {
-      encoding: "utf8",
-    })
-    expect(status).toBe(0)
+    await testBin("gcovr")
   })
 })

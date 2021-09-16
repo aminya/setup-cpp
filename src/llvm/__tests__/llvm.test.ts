@@ -1,11 +1,7 @@
 import { setupLLVM, VERSIONS, getUrl } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
-import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
-import { addBinExtension } from "../../utils/setup/setupBin"
-import { join } from "path"
-import { spawnSync as spawn } from "child_process"
-import { which } from "@actions/io"
+import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 
 jest.setTimeout(200000)
 async function testUrl(version: string) {
@@ -47,17 +43,7 @@ describe("setup-llvm", () => {
 
   it("should setup LLVM", async () => {
     const { binDir } = await setupLLVM("11.0.0", directory, "")
-    expect(binDir).toBeDefined()
-    expect(binDir).not.toHaveLength(0)
-
-    const clangBin = join(binDir, addBinExtension("clang"))
-
-    const { status } = spawn(clangBin, ["--version"], {
-      encoding: "utf8",
-    })
-    expect(status).toBe(0)
-
-    expect(await which("clang", true)).toBe(clangBin)
+    await testBin("clang++", ["--version"], binDir)
   })
 
   afterAll(async () => {

@@ -1,5 +1,5 @@
+import { testBin } from "../../utils/tests/test-helpers"
 import { setupChocolatey } from "../chocolatey"
-import { spawnSync as spawn } from "child_process"
 
 jest.setTimeout(200000)
 describe("setup-chocolatey", () => {
@@ -8,10 +8,6 @@ describe("setup-chocolatey", () => {
       return
     }
     await setupChocolatey("", "", "")
-
-    const { status } = spawn("choco", ["--version"], {
-      encoding: "utf8",
-    })
-    expect(status).toBe(0)
+    await testBin("choco")
   })
 })
