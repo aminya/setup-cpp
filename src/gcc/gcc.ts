@@ -30,8 +30,9 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
     case "linux": {
       if (arch === "x64") {
         binDir = (await setupAptPack("g++", version, "ppa:ubuntu-toolchain-r/test")).binDir
+      } else {
+        binDir = (await setupAptPack("g++-multilib", version, "ppa:ubuntu-toolchain-r/test")).binDir
       }
-      binDir = (await setupAptPack("g++-multilib", version, "ppa:ubuntu-toolchain-r/test")).binDir
       break
     }
     // TODO support bare-metal
