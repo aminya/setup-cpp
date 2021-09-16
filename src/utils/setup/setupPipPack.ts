@@ -34,7 +34,7 @@ export async function setupPipPack(name: string, version?: string) {
     } else if (process.platform === "darwin") {
       binDir = "/usr/local/bin/"
     } else {
-      binDir = (await getExecOutput("python -c 'import sys; print(sys.base_exec_prefix)'")).stdout
+      binDir = (await getExecOutput("python -c 'import sys\nprint(sys.base_exec_prefix)'")).stdout
     }
     info(`${binDir} to PATH`)
     addPath(binDir)
