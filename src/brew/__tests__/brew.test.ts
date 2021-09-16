@@ -9,6 +9,6 @@ describe("setup-brew", () => {
       return
     }
     const installInfo = setupBrew("", "", "")
-    await testBin("brew", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
+    await testBin("brew", ["--version"], installInfo?.binDir)
   })
 })

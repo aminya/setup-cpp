@@ -1,9 +1,9 @@
 import * as io from "@actions/io"
 import { tmpdir } from "os"
 import * as path from "path"
-import { spawnSync as spawn } from "child_process"
 import { addBinExtension } from "../setup/setupBin"
 import { join } from "path"
+import { exec } from "@actions/exec"
 
 export async function setupTmpDir(testName: string) {
   const tempDirectory = path.join(tmpdir(), "setup-cpp", testName)
@@ -41,9 +41,7 @@ export async function testBin(name: string, args: string[] = ["--version"], binD
     bin = join(binDir, addBinExtension(name))
   }
 
-  const { status } = spawn(bin, args, {
-    encoding: "utf8",
-  })
+  const status = await exec(bin, args)
   expect(status).toBe(0)
 
   expect(await io.which(name, true)).toBe(bin)
