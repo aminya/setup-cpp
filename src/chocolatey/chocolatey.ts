@@ -1,4 +1,5 @@
 import { exec } from "@actions/exec"
+import { existsSync } from "fs"
 import which from "which"
 import { InstallationInfo } from "../utils/setup/setupBin"
 
@@ -35,5 +36,11 @@ export async function setupChocolatey(
     throw new Error(`Failed to install chocolatey`)
   }
 
-  return { binDir: which.sync("choco", { nothrow: true }) ?? "C:\\ProgramData\\Chocolatey\\bin\\" }
+  // eslint-disable-next-line require-atomic-updates
+  binDir = which.sync("choco", { nothrow: true }) ?? "C:\\ProgramData\\Chocolatey\\bin\\"
+
+  if (existsSync(binDir)) {
+    return { binDir }
+  }
+  return undefined
 }
