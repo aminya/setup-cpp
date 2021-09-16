@@ -15,11 +15,13 @@ export async function setupAptPack(
 
   let exit = 0
 
+  if (typeof repository === "string") {
+    exit = await exec(mightSudo("add-apt-repository"), ["--update", repository])
+  }
+
   if (!didUpdate || repository === true) {
     await exec(apt, ["update"])
     didUpdate = true
-  } else if (typeof repository === "string") {
-    exit = await exec(mightSudo("add-apt-repository"), ["--update", repository])
   }
 
   exit = await exec(apt, ["install", version !== undefined && version !== "" ? `${name}=${version}` : name])
