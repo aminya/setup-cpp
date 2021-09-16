@@ -33,6 +33,9 @@ inputs:
     description: "The pyhon version to install."
     default: "3.x"
     required: false
+  ccache:
+    description: "The ccache version to install."
+    required: false
 
 runs:
   using: "node12"

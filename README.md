@@ -22,6 +22,8 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 - [x] setup python
 - [x] setup msvc
 - [x] setup cppcheck
+- [x] setup doxygen
+- [x] setup ccache
 - [ ] setup gcc/mingw
 - [ ] setup OpenCppCoverage
 - [ ] setup doxygen
