@@ -36,9 +36,15 @@ export async function setupPipPack(name: string, version?: string) {
       binDir = "/usr/local/bin/"
     } else {
       try {
-        binDir = join((await getExecOutput('python3 -c "import sys;print(sys.base_exec_prefix);"')).stdout, "Scripts")
+        binDir = join(
+          (await getExecOutput('python3 -c "import sys;print(sys.base_exec_prefix);"')).stdout.trim(),
+          "Scripts"
+        )
       } catch {
-        binDir = join((await getExecOutput('python -c "import sys;print(sys.base_exec_prefix);"')).stdout, "Scripts")
+        binDir = join(
+          (await getExecOutput('python -c "import sys;print(sys.base_exec_prefix);"')).stdout.trim(),
+          "Scripts"
+        )
       }
     }
     info(`${binDir} to PATH`)
