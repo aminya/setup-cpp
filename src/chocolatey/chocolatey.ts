@@ -1,5 +1,7 @@
+/* eslint-disable require-atomic-updates */
 import { exec } from "@actions/exec"
 import { existsSync } from "fs"
+import { dirname } from "path"
 import which from "which"
 import { InstallationInfo } from "../utils/setup/setupBin"
 
@@ -36,8 +38,12 @@ export async function setupChocolatey(
     throw new Error(`Failed to install chocolatey`)
   }
 
-  // eslint-disable-next-line require-atomic-updates
-  binDir = which.sync("choco", { nothrow: true }) ?? "C:\\ProgramData\\Chocolatey\\bin\\"
+  const maybeChoco = which.sync("choco", { nothrow: true })
+  if (maybeChoco !== null) {
+    binDir = dirname(maybeChoco)
+  } else {
+    binDir = "C:\\ProgramData\\Chocolatey\\bin\\"
+  }
 
   if (existsSync(binDir)) {
     return { binDir }
