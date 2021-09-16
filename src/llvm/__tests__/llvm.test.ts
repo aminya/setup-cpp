@@ -5,6 +5,7 @@ import { setupTmpDir, cleanupTmpDir } from "../../utils/tests/test-helpers"
 import { addBinExtension } from "../../utils/setup/setupBin"
 import { join } from "path"
 import { spawnSync as spawn } from "child_process"
+import { which } from "@actions/io"
 
 jest.setTimeout(200000)
 async function testUrl(version: string) {
@@ -55,6 +56,8 @@ describe("setup-llvm", () => {
       encoding: "utf8",
     })
     expect(status).toBe(0)
+
+    expect(await which("clang", true)).toBe(clangBin)
   })
 
   afterAll(async () => {

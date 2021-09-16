@@ -1,10 +1,12 @@
 import * as core from "@actions/core"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
+import semverMajor from "semver/functions/major"
 import { isValidUrl } from "../utils/http/validate_url"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
 import { getSpecificVersionAndUrl, getVersions } from "../utils/setup/version"
+import { getExecOutput } from "@actions/exec"
 
 //================================================
 // Version
@@ -246,9 +248,33 @@ export async function setupLLVM(version: string, directoryGiven?: string): Promi
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  core.exportVariable("LLVM_PATH", directory)
+  core.exportVariable("LLVM_PATH", directory) // the output of this action
+
+  const llvmMajor = semverMajor(version)
+
+  // Setup LLVM as the compiler
   core.exportVariable("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
   core.exportVariable("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
+
+  core.exportVariable("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+
+  core.exportVariable("LDFLAGS", `-L${directory}/lib`)
+  core.exportVariable("CPPFLAGS", `-I${directory}/include`)
+
+  core.exportVariable("CC", `${directory}/bin/clang`)
+  core.exportVariable("CXX", `${directory}/bin/clang++`)
+
+  core.exportVariable("LIBRARY_PATH", `${directory}/lib`)
+
+  if (process.platform === "darwin") {
+    try {
+      const xcrun = await getExecOutput("xcrun --sdk macos --show-sdk-path")
+      const sdkroot = xcrun.stdout || xcrun.stderr
+      core.exportVariable("SDKROOT", sdkroot)
+    } catch (e) {
+      core.error(e as Error | string)
+    }
+  }
 
   return installationInfo
 }
