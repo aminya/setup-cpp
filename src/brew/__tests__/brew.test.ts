@@ -1,5 +1,6 @@
 import { setupBrew } from "../brew"
 import { testBin } from "../../utils/tests/test-helpers"
+import { InstallationInfo } from "../../utils/setup/setupBin"
 
 jest.setTimeout(200000)
 describe("setup-brew", () => {
@@ -7,7 +8,7 @@ describe("setup-brew", () => {
     if (process.platform !== "darwin") {
       return
     }
-    setupBrew("", "", "")
-    await testBin("brew")
+    const installInfo = setupBrew("", "", "")
+    await testBin("brew", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })
 })
