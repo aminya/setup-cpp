@@ -4,6 +4,7 @@ const DefaultVersions: Record<string, string> = {
   ninja: "1.10.2",
   cmake: "3.20.2",
   gcovr: "5.0",
+  conan: "1.40.1",
   meson: "0.59.1",
   python: "3.x",
 }

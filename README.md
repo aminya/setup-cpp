@@ -12,19 +12,19 @@ This package is designed to be fully **modular** and as **minimal** as possible.
 The package will be usable from any environment (locally, GitHub Actions, etc). Stay tuned for the stable release.
 
 # Features (WIP)
-
 - setup cmake
 - setup ninja
 - setup llvm
 - setup conan
 - setup meson
 - setup gcovr
-- setup python
-- setup msvc
 - setup cppcheck
 - setup doxygen
 - setup ccache
 - setup OpenCppCoverage
+- setup python
+- setup choco
+- setup brew
 
 ### Incomplete
 
