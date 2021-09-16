@@ -15,7 +15,7 @@
     "test.format": "prettier . --check",
     "test.lint": "eslint .",
     "test.tsc": "tsc --noEmit",
-    "test.unit": "jest",
+    "test.unit": "jest --runInBand",
     "test": "run-p test.format test.lint test.tsc test.unit",
     "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./building/pack-exe.js"
   },
