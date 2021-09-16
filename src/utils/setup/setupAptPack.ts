@@ -1,11 +1,16 @@
 /* eslint-disable require-atomic-updates */
 import { exec } from "@actions/exec"
+import { InstallationInfo } from "./setupBin"
 import { mightSudo } from "./sudo"
 
 let didUpdate: boolean = false
 
 /** A function that installs a package using apt */
-export async function setupAptPack(name: string, version?: string, repository: boolean | string = true) {
+export async function setupAptPack(
+  name: string,
+  version?: string,
+  repository: boolean | string = true
+): Promise<InstallationInfo> {
   const apt = mightSudo("apt-get")
 
   let exit = 0
@@ -22,4 +27,6 @@ export async function setupAptPack(name: string, version?: string, repository: b
   if (exit !== 0) {
     throw new Error(`Failed to install ${name} ${version}`)
   }
+
+  return { binDir: "/usr/bin/" }
 }

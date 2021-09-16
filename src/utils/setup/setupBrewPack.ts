@@ -2,11 +2,12 @@
 import { execFileSync } from "child_process"
 import which from "which"
 import { setupBrew } from "../../brew/brew"
+import { InstallationInfo } from "./setupBin"
 
 let hasBrew = false
 
 /** A function that installs a package using brew */
-export function setupBrewPack(name: string, version?: string) {
+export function setupBrewPack(name: string, version?: string): InstallationInfo {
   if (!hasBrew || which.sync("brew", { nothrow: true }) === null) {
     setupBrew("", "", "")
     hasBrew = true
@@ -16,4 +17,6 @@ export function setupBrewPack(name: string, version?: string) {
   execFileSync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name], {
     stdio: "inherit",
   })
+
+  return { binDir: "/usr/local/bin/" }
 }

@@ -11,7 +11,7 @@ export async function setupDoxygen(version: string | undefined, _setupCppDir: st
       await setupChocoPack("doxygen.install", version)
       addPath("C:\\Program Files\\Graphviz\\bin")
       addPath("C:\\Program Files\\doxygen\\bin")
-      break
+      return undefined
     }
     case "darwin": {
       setupBrewPack("graphviz", version)

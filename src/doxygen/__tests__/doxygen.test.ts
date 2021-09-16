@@ -1,11 +1,12 @@
 import { setupDoxygen } from "../doxygen"
 import { testBin } from "../../utils/tests/test-helpers"
+import { InstallationInfo } from "../../utils/setup/setupBin"
 
 jest.setTimeout(200000)
 describe("setup-doxygen", () => {
   it("should setup doxygen", async () => {
-    await setupDoxygen("", "", "")
+    const installInfo = await setupDoxygen("", "", "")
 
-    await testBin("doxygen")
+    await testBin("doxygen", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })
 })

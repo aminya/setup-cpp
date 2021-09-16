@@ -35,7 +35,7 @@ export async function cleanupTmpDir(testName: string) {
 
 export async function testBin(name: string, args: string[] = ["--version"], binDir: string | undefined = undefined) {
   let bin = name
-  if (binDir !== undefined) {
+  if (typeof binDir === "string") {
     expect(binDir).toBeDefined()
     expect(binDir).not.toHaveLength(0)
     bin = join(binDir, addBinExtension(name))

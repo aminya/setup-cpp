@@ -21,7 +21,7 @@ export type PackageInfo = {
 
 export type InstallationInfo = {
   /** The top install dir */
-  installDir: string
+  installDir?: string
   binDir: string
 }
 

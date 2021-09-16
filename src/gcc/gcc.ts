@@ -16,7 +16,7 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
       } else if (arch === "ia32") {
         addPath("C:\\tools\\mingw32\\bin")
       }
-      break
+      return undefined
     }
     case "darwin": {
       return setupBrewPack("gcc", version)
