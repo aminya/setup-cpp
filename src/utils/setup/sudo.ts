@@ -10,8 +10,12 @@ export function isRoot(): boolean {
 }
 
 export function mightSudo(command: string) {
-  if (isRoot()) {
-    return `sudo ${command}`
+  try {
+    if (isRoot()) {
+      return `sudo ${command}`
+    }
+  } catch {
+    // ignore
   }
   return command
 }

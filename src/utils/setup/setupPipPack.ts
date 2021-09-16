@@ -5,6 +5,7 @@ import { addPath, info } from "@actions/core"
 import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
 import { join } from "path"
+import { mightSudo } from "./sudo"
 
 let pip: string | undefined
 
@@ -24,7 +25,10 @@ export async function setupPipPack(name: string, version?: string) {
     }
   }
 
-  const exit = await exec(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name])
+  const exit = await exec(mightSudo(pip), [
+    "install",
+    version !== undefined && version !== "" ? `${name}==${version}` : name,
+  ])
   if (exit !== 0) {
     throw new Error(`Failed to install ${name} ${version}`)
   }
