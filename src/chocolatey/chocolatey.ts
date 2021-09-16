@@ -1,7 +1,8 @@
 import { exec } from "@actions/exec"
 import which from "which"
 
-export async function setupChocolatey() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function setupChocolatey(_version: string, _setupCppDir: string, _arch: string) {
   if (process.platform !== "win32") {
     return
   }

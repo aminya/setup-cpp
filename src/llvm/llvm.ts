@@ -233,8 +233,13 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
   }
 }
 
-export async function setupLLVM(version: string, directoryGiven?: string): Promise<InstallationInfo> {
-  let directory = directoryGiven
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function setupLLVM(
+  version: string,
+  _setupCppDir: string | undefined,
+  _arch: string
+): Promise<InstallationInfo> {
+  let directory = _setupCppDir
   if (directory === "" || directory === undefined) {
     directory = process.platform === "win32" ? DEFAULT_WIN32_DIRECTORY : DEFAULT_NIX_DIRECTORY
   }

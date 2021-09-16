@@ -26,6 +26,7 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform): Packag
   }
 }
 
-export function setupNinja(version: string, setupCppDir: string): Promise<InstallationInfo> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function setupNinja(version: string, setupCppDir: string, _arch: string): Promise<InstallationInfo> {
   return setupBin("ninja", version, getNinjaPackageInfo, setupCppDir)
 }

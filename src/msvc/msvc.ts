@@ -24,10 +24,11 @@ function getArch(arch: string): string {
 
 export async function setupMSVC(
   version: MSVCVersion,
+  _setupCppDir: string,
+  arch: string,
   sdk?: string,
   uwp?: boolean,
-  spectre?: boolean,
-  arch = osArch()
+  spectre?: boolean
 ): Promise<void> {
   if (process.platform !== "win32") {
     return

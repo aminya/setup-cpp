@@ -2,7 +2,8 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 
-export function setupCppcheck(version?: string) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function setupCppcheck(version: string | undefined, _setupCppDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
       return setupChocoPack("cppcheck", version)

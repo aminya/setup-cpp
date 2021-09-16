@@ -2,7 +2,8 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 
-export async function setupDoxygen(version?: string) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function setupDoxygen(version: string | undefined, _setupCppDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("graphviz", version)

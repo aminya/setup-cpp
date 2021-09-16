@@ -7,7 +7,7 @@ const DefaultVersions: Record<string, string> = {
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined) {
-  if (version === "true" || version === undefined) {
+  if (version === "true" || (version === undefined && name in DefaultVersions)) {
     return DefaultVersions[name]
   } else {
     return version

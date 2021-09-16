@@ -1,7 +1,8 @@
 import { execFileSync } from "child_process"
 import which from "which"
 
-export function setupBrew() {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function setupBrew(_version: string, _setupCppDir: string, _arch: string) {
   if (!["darwin", "linux"].includes(process.platform)) {
     return
   }
