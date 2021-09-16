@@ -6,7 +6,7 @@ describe("setup-gcc", () => {
   it("should setup gcc", async () => {
     await setupGcc("", "", "")
 
-    const { status } = spawn("gcc", {
+    const { status } = spawn("g++", ["--version"], {
       encoding: "utf8",
     })
     expect(status).toBe(0)
