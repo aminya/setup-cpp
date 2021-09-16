@@ -1,4 +1,5 @@
 import * as core from "@actions/core"
+import { setupBrew } from "./brew/brew"
 import { setupChocolatey } from "./chocolatey/chocolatey"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
@@ -67,6 +68,12 @@ export async function main(): Promise<number> {
     const chocoVersion = maybeGetInput("choco")
     if (chocoVersion !== undefined) {
       await setupChocolatey()
+    }
+
+    // setup brew
+    const brewVersion = maybeGetInput("brew")
+    if (brewVersion !== undefined) {
+      await setupBrew()
     }
 
     // setup msvc
