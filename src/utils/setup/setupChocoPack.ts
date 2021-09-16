@@ -9,7 +9,7 @@ let hasChoco = false
 /** A function that installs a package using choco */
 export async function setupChocoPack(name: string, version?: string, args: string[] = []): Promise<InstallationInfo> {
   if (!hasChoco || which.sync("choco", { nothrow: true }) === null) {
-    await setupChocolatey("", "", "")
+    await setupChocolatey("", "", process.arch)
     hasChoco = true
   }
 

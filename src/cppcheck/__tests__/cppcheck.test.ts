@@ -5,7 +5,7 @@ import { InstallationInfo } from "../../utils/setup/setupBin"
 jest.setTimeout(200000)
 describe("setup-cppcheck", () => {
   it("should setup cppcheck", async () => {
-    const installInfo = await setupCppcheck("", "", "")
+    const installInfo = await setupCppcheck("", "", process.arch)
 
     await testBin("cppcheck", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })

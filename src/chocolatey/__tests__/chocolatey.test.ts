@@ -8,7 +8,7 @@ describe("setup-chocolatey", () => {
     if (process.platform !== "win32") {
       return
     }
-    const { binDir } = (await setupChocolatey("", "", "")) as InstallationInfo
+    const { binDir } = (await setupChocolatey("", "", process.arch)) as InstallationInfo
     await testBin("choco", ["--version"], binDir)
   })
 })

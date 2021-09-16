@@ -7,7 +7,7 @@ describe("setup-msvc", () => {
     if (process.platform !== "win32") {
       return
     }
-    await setupMSVC("2019", "", "")
+    await setupMSVC("2019", "", process.arch)
 
     try {
       await testBin("cl", [])
