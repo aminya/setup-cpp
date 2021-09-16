@@ -44,5 +44,5 @@ export async function setupPipPack(name: string, version?: string) {
     }
   }
 
-  return binDir
+  return { binDir }
 }
