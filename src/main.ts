@@ -11,6 +11,7 @@ import { setupLLVM } from "./llvm/llvm"
 import { setupMeson } from "./meson/meson"
 import { setupMSVC } from "./msvc/msvc"
 import { setupNinja } from "./ninja/ninja"
+import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
 import { setupPython } from "./python/python"
 
 function maybeGetInput(key: string) {
@@ -59,6 +60,12 @@ export async function main(): Promise<number> {
     const gcovrVersion = maybeGetInput("gcovr")
     if (gcovrVersion !== undefined) {
       await setupGcovr(gcovrVersion)
+    }
+
+    // setup opencppCoverage
+    const opencppCoverageVersion = maybeGetInput("opencppcoverage")
+    if (opencppCoverageVersion !== undefined) {
+      await setupOpencppcoverage(gcovrVersion)
     }
 
     // setup llvm
