@@ -4,6 +4,8 @@ import { setupCcache } from "./ccache/ccache"
 import { setupChocolatey } from "./chocolatey/chocolatey"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
+import { setupCppcheck } from "./cppcheck/cppcheck"
+import { setupDoxygen } from "./doxygen/doxygen"
 import { setupGcovr } from "./gcovr/gcovr"
 import { setupLLVM } from "./llvm/llvm"
 import { setupMeson } from "./meson/meson"
@@ -81,6 +83,18 @@ export async function main(): Promise<number> {
     const ccacheVersion = maybeGetInput("ccache")
     if (ccacheVersion !== undefined) {
       await setupCcache(ccacheVersion)
+    }
+
+    // setup doxygen
+    const doxygenVersion = maybeGetInput("doxygen")
+    if (doxygenVersion !== undefined) {
+      await setupDoxygen(doxygenVersion)
+    }
+
+    // setup cppCheck
+    const cppCheckVersion = maybeGetInput("cppcheck")
+    if (cppCheckVersion !== undefined) {
+      await setupCppcheck(cppCheckVersion)
     }
 
     // setup msvc

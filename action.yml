@@ -36,6 +36,12 @@ inputs:
   ccache:
     description: "The ccache version to install."
     required: false
+  doxygen:
+    description: "The doxygen version to install."
+    required: false
+  cppcheck:
+    description: "The cppcheck version to install."
+    required: false
 
 runs:
   using: "node12"
