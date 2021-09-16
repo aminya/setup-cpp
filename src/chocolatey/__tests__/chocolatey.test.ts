@@ -1,3 +1,4 @@
+import { InstallationInfo } from "../../utils/setup/setupBin"
 import { testBin } from "../../utils/tests/test-helpers"
 import { setupChocolatey } from "../chocolatey"
 
@@ -7,7 +8,7 @@ describe("setup-chocolatey", () => {
     if (process.platform !== "win32") {
       return
     }
-    await setupChocolatey("", "", "")
-    await testBin("choco")
+    const { binDir } = (await setupChocolatey("", "", "")) as InstallationInfo
+    await testBin("choco", ["--version"], binDir)
   })
 })

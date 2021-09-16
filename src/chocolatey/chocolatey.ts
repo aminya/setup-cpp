@@ -1,14 +1,29 @@
 import { exec } from "@actions/exec"
 import which from "which"
+import { InstallationInfo } from "../utils/setup/setupBin"
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupChocolatey(_version: string, _setupCppDir: string, _arch: string) {
+let binDir: string | undefined
+
+export async function setupChocolatey(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _version: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _setupCppDir: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _arch: string
+): Promise<InstallationInfo | undefined> {
   if (process.platform !== "win32") {
-    return
+    return undefined
   }
 
-  if (which.sync("choco", { nothrow: true }) !== null) {
-    return
+  if (typeof binDir === "string") {
+    return { binDir }
+  }
+
+  const maybeBinDir = which.sync("choco", { nothrow: true })
+  if (maybeBinDir !== null) {
+    binDir = maybeBinDir
+    return { binDir }
   }
 
   // https://docs.chocolatey.org/en-us/choco/setup#install-with-cmd.exe
@@ -19,4 +34,6 @@ export async function setupChocolatey(_version: string, _setupCppDir: string, _a
   if (exit !== 0) {
     throw new Error(`Failed to install chocolatey`)
   }
+
+  return { binDir: which.sync("choco", { nothrow: true }) ?? "C:\\ProgramData\\Chocolatey\\bin\\" }
 }
