@@ -4,6 +4,7 @@ import which from "which"
 import { addPath, info } from "@actions/core"
 import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
+import { join } from "path"
 
 let pip: string | undefined
 
@@ -34,7 +35,11 @@ export async function setupPipPack(name: string, version?: string) {
     } else if (process.platform === "darwin") {
       binDir = "/usr/local/bin/"
     } else {
-      binDir = (await getExecOutput("python -c 'import sys\nprint(sys.base_exec_prefix)'")).stdout
+      try {
+        binDir = join((await getExecOutput('python3 -c "import sys;print(sys.base_exec_prefix);"')).stdout, "Scripts")
+      } catch {
+        binDir = join((await getExecOutput('python -c "import sys;print(sys.base_exec_prefix);"')).stdout, "Scripts")
+      }
     }
     info(`${binDir} to PATH`)
     addPath(binDir)
