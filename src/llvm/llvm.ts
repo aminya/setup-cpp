@@ -233,10 +233,11 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupLLVM(
   version: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _setupCppDir: string | undefined,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _arch: string
 ): Promise<InstallationInfo> {
   let directory = _setupCppDir

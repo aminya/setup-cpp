@@ -17,6 +17,26 @@ import { setupPython } from "./python/python"
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
 import { InstallationInfo } from "./utils/setup/setupBin"
+import { setupGcc } from "./gcc/gcc"
+import { assert } from "console"
+
+const tools = [
+  "cmake",
+  "ninja",
+  "python",
+  "conan",
+  "meson",
+  "gcovr",
+  "opencppcoverage",
+  "llvm",
+  "gcc",
+  "choco",
+  "brew",
+  "ccache",
+  "doxygen",
+  "cppcheck",
+  "msvc",
+]
 
 const setups = {
   cmake: setupCmake,
@@ -27,6 +47,7 @@ const setups = {
   gcovr: setupGcovr,
   opencppcoverage: setupOpencppcoverage,
   llvm: setupLLVM,
+  gcc: setupGcc,
   choco: setupChocolatey,
   brew: setupBrew,
   ccache: setupCcache,
@@ -75,6 +96,13 @@ export async function main(): Promise<number> {
           await setupLLVM(getVersion("llvm", version) as string, setupCppDir, arch)
           break
         }
+        case "gcc":
+        case "mingw":
+        case "cygwin":
+        case "msys": {
+          await setupGcc(getVersion("gcc", version) as string, setupCppDir, arch)
+          break
+        }
         case "cl":
         case "msvc":
         case "msbuild":
@@ -91,22 +119,8 @@ export async function main(): Promise<number> {
       }
     }
 
-    for (const tool of [
-      "cmake",
-      "ninja",
-      "python",
-      "conan",
-      "meson",
-      "gcovr",
-      "opencppcoverage",
-      "llvm",
-      "choco",
-      "brew",
-      "ccache",
-      "doxygen",
-      "cppcheck",
-      "msvc",
-    ]) {
+    for (const tool of tools) {
+      assert(tool in setups)
       const version = maybeGetInput(tool)
       if (version !== undefined) {
         const setupFunction = setups[tool]

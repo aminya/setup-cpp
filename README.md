@@ -13,15 +13,16 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 
 # Features (WIP)
 
+- setup llvm
+- setup gcc/mingw
 - setup cmake
 - setup ninja
-- setup llvm
-- setup conan
 - setup meson
-- setup gcovr
+- setup conan
+- setup ccache
 - setup cppcheck
 - setup doxygen
-- setup ccache
+- setup gcovr
 - setup OpenCppCoverage
 - setup python
 - setup choco
@@ -33,5 +34,4 @@ The package will be usable from any environment (locally, GitHub Actions, etc). 
 
 ### TODO
 
-- [ ] setup gcc/mingw
 - [ ] setup vcpkg
