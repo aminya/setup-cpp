@@ -1,15 +1,22 @@
+import { addPath } from "@actions/core"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupGcc(version: string, _setupCppDir: string, arch: string) {
+export async function setupGcc(version: string, _setupCppDir: string, arch: string) {
   switch (process.platform) {
     case "win32": {
       if (arch === "arm" || arch === "arm64") {
-        return setupChocoPack("gcc-arm-embedded", version)
+        await setupChocoPack("gcc-arm-embedded", version)
       }
-      return setupChocoPack("mingw", version)
+      await setupChocoPack("mingw", version)
+      if (arch === "x64") {
+        addPath("C:\\tools\\mingw64\\bin")
+      } else if (arch === "ia32") {
+        addPath("C:\\tools\\mingw32\\bin")
+      }
+      break
     }
     case "darwin": {
       return setupBrewPack("gcc", version)

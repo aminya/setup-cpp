@@ -1,3 +1,4 @@
+import { addPath } from "@actions/core"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
@@ -7,10 +8,13 @@ export async function setupDoxygen(version: string | undefined, _setupCppDir: st
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("graphviz", version)
-      return setupChocoPack("doxygen.install", version)
+      await setupChocoPack("doxygen.install", version)
+      addPath("C:\\Program Files\\Graphviz\\bin")
+      addPath("C:\\Program Files\\doxygen\\bin")
+      break
     }
     case "darwin": {
-      await setupBrewPack("graphviz", version)
+      setupBrewPack("graphviz", version)
       return setupBrewPack("doxygen", version)
     }
     case "linux": {
