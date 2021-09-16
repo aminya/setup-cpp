@@ -26,8 +26,6 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform): Packag
   }
 }
 
-const default_ninja_version = "1.10.2"
-
 export function setupNinja(version: string, setupCppDir: string): Promise<InstallationInfo> {
-  return setupBin("ninja", version === "true" ? default_ninja_version : version, getNinjaPackageInfo, setupCppDir)
+  return setupBin("ninja", version, getNinjaPackageInfo, setupCppDir)
 }

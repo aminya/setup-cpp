@@ -14,6 +14,7 @@ import { setupNinja } from "./ninja/ninja"
 import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
 import { setupPython } from "./python/python"
 import semverValid from "semver/functions/valid"
+import { getVersion } from "./default_versions"
 
 function maybeGetInput(key: string) {
   const value = core.getInput(key.toLowerCase())
@@ -45,7 +46,7 @@ export async function main(): Promise<number> {
         case "llvm":
         case "clang":
         case "clang++": {
-          await setupLLVM(version ?? "11", setupCppDir)
+          await setupLLVM(getVersion("llvm", version), setupCppDir)
           break
         }
         case "cl":
@@ -55,7 +56,7 @@ export async function main(): Promise<number> {
         case "visualstudio":
         case "visualcpp":
         case "visualc++": {
-          await setupMSVC(version ?? "2019", setupCppDir)
+          await setupMSVC(getVersion("msvc", version), setupCppDir)
           break
         }
         default: {
@@ -67,49 +68,49 @@ export async function main(): Promise<number> {
     // setup cmake
     const cmakeVersion = maybeGetInput("cmake")
     if (cmakeVersion !== undefined) {
-      await setupCmake(cmakeVersion, setupCppDir)
+      await setupCmake(getVersion("cmake", cmakeVersion), setupCppDir)
     }
 
     // setup ninja
     const ninjaVersion = maybeGetInput("ninja")
     if (ninjaVersion !== undefined) {
-      await setupNinja(ninjaVersion, setupCppDir)
+      await setupNinja(getVersion("ninja", ninjaVersion), setupCppDir)
     }
 
     // setup python (required for conan, meson, gcovr, etc.)
     const pythonVersion = maybeGetInput("python")
     if (pythonVersion !== undefined) {
-      await setupPython(pythonVersion, arch)
+      await setupPython(getVersion("python", pythonVersion), arch)
     }
 
     // setup conan
     const conanVersion = maybeGetInput("conan")
     if (conanVersion !== undefined) {
-      await setupConan(conanVersion)
+      await setupConan(getVersion("conan", conanVersion))
     }
 
     // setup meson
     const mesonVersion = maybeGetInput("meson")
     if (mesonVersion !== undefined) {
-      await setupMeson(mesonVersion)
+      await setupMeson(getVersion("meson", mesonVersion))
     }
 
     // setup gcovr
     const gcovrVersion = maybeGetInput("gcovr")
     if (gcovrVersion !== undefined) {
-      await setupGcovr(gcovrVersion)
+      await setupGcovr(getVersion("gcovr", gcovrVersion))
     }
 
     // setup opencppCoverage
     const opencppCoverageVersion = maybeGetInput("opencppcoverage")
     if (opencppCoverageVersion !== undefined) {
-      await setupOpencppcoverage(opencppCoverageVersion)
+      await setupOpencppcoverage(getVersion("opencppcoverage", opencppCoverageVersion))
     }
 
     // setup llvm
     const llvmVersion = maybeGetInput("llvm")
     if (llvmVersion !== undefined) {
-      await setupLLVM(llvmVersion, setupCppDir)
+      await setupLLVM(getVersion("llvm", llvmVersion), setupCppDir)
     }
 
     // setup chocolatey (required for installing msvc)
@@ -127,25 +128,25 @@ export async function main(): Promise<number> {
     // setup ccache
     const ccacheVersion = maybeGetInput("ccache")
     if (ccacheVersion !== undefined) {
-      await setupCcache(ccacheVersion)
+      await setupCcache(getVersion("ccache", ccacheVersion))
     }
 
     // setup doxygen
     const doxygenVersion = maybeGetInput("doxygen")
     if (doxygenVersion !== undefined) {
-      await setupDoxygen(doxygenVersion)
+      await setupDoxygen(getVersion("doxygen", doxygenVersion))
     }
 
     // setup cppCheck
     const cppCheckVersion = maybeGetInput("cppcheck")
     if (cppCheckVersion !== undefined) {
-      await setupCppcheck(cppCheckVersion)
+      await setupCppcheck(getVersion("cppcheck", cppCheckVersion))
     }
 
     // setup msvc
     const msvcVersion = maybeGetInput("msvc")
     if (msvcVersion !== undefined) {
-      await setupMSVC(msvcVersion)
+      await setupMSVC(getVersion("msvc", msvcVersion))
     }
   } catch (err) {
     core.error(err as string | Error)
