@@ -1,4 +1,4 @@
-import { addPath, exportVariable } from "@actions/core"
+import { addPath, exportVariable, info } from "@actions/core"
 import { existsSync } from "fs"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
@@ -31,6 +31,7 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
       if (arch === "x64") {
         binDir = (await setupAptPack("g++", version, "ppa:ubuntu-toolchain-r/test")).binDir
       } else {
+        info(`Install g++-multilib because gcc for ${arch} was requested`)
         binDir = (await setupAptPack("g++-multilib", version, "ppa:ubuntu-toolchain-r/test")).binDir
       }
       break
