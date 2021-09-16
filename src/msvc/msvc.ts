@@ -38,7 +38,7 @@ export async function setupMSVC(
     toolset = "14.0.25420.1"
     await setupChocoPack("visualcpp-build-tools", toolset, ["--ignore-dependencies", "--params", "'/IncludeRequired'"])
 
-    VCTargetsPath = "C:\\Program Files (x86)\\MSBuild\\Microsoft.Cpp\\v4.0\\v140"
+    VCTargetsPath = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/v140"
     if (existsSync(VCTargetsPath)) {
       exportVariable("VCTargetsPath", VCTargetsPath)
     }
@@ -48,14 +48,14 @@ export async function setupMSVC(
       "--package-parameters",
       "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive",
     ])
-    VCTargetsPath = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2017\\BuildTools\\MSBuild\\Microsoft\\VC\\v150"
+    VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/MSBuild/Microsoft/VC/v150"
   } else if (version === "2019") {
     toolset = "16.11.2.0"
     await setupChocoPack("visualstudio2019buildtools", toolset, [
       "--package-parameters",
       "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive",
     ])
-    VCTargetsPath = "C:\\Program Files (x86)\\Microsoft Visual Studio\\2019\\BuildTools\\MSBuild\\Microsoft\\VC\\v160"
+    VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Microsoft/VC/v160"
   }
   if (VCTargetsPath !== undefined && existsSync(VCTargetsPath)) {
     exportVariable("VCTargetsPath", VCTargetsPath)

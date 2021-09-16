@@ -24,5 +24,5 @@ export async function setupChocoPack(name: string, version?: string, args: strin
     throw new Error(`Failed to install ${name} ${version}`)
   }
 
-  return { binDir: "C:\\ProgramData\\Chocolatey\\bin\\" }
+  return { binDir: "C:/ProgramData/Chocolatey/bin/" }
 }

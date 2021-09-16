@@ -42,7 +42,7 @@ export async function setupChocolatey(
   if (maybeChoco !== null) {
     binDir = dirname(maybeChoco)
   } else {
-    binDir = "C:\\ProgramData\\Chocolatey\\bin\\"
+    binDir = "C:/ProgramData/Chocolatey/bin/"
   }
 
   if (existsSync(binDir)) {
