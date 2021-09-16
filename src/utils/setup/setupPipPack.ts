@@ -26,12 +26,18 @@ export async function setupPipPack(name: string, version?: string) {
     throw new Error(`Failed to install ${name} ${version}`)
   }
 
+  let binDir: string | undefined
   if (process.platform === "linux") {
     try {
-      startGroup(`Add /home/runner/.local/bin to PATH`)
-      addPath("/home/runner/.local/bin/")
+      binDir = "/home/runner/.local/bin/"
+      startGroup(`${binDir} to PATH`)
+      addPath(binDir)
     } finally {
       endGroup()
     }
+  } else if (process.platform === "darwin") {
+    binDir = "/usr/local/bin/"
   }
+
+  return binDir
 }

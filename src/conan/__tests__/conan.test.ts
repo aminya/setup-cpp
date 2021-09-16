@@ -1,11 +1,12 @@
 import { setupConan } from "../conan"
 import { testBin } from "../../utils/tests/test-helpers"
+import { InstallationInfo } from "../../utils/setup/setupBin"
 
 jest.setTimeout(200000)
 describe("setup-conan", () => {
   it("should setup conan", async () => {
-    await setupConan("1.40.1", "", "")
+    const installInfo = await setupConan("", "", "")
 
-    await testBin("conan")
+    await testBin("conan", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })
 })
