@@ -7,6 +7,7 @@ import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
 import { getSpecificVersionAndUrl, getVersions } from "../utils/setup/version"
 import { getExecOutput } from "@actions/exec"
+import { existsSync } from "fs"
 
 //================================================
 // Version
@@ -268,9 +269,11 @@ export async function setupLLVM(version: string, directoryGiven?: string): Promi
 
   if (process.platform === "darwin") {
     try {
-      const xcrun = await getExecOutput("xcrun --sdk macos --show-sdk-path")
+      const xcrun = await getExecOutput("xcrun --sdk macosx --show-sdk-path")
       const sdkroot = xcrun.stdout || xcrun.stderr
-      core.exportVariable("SDKROOT", sdkroot)
+      if (existsSync(sdkroot)) {
+        core.exportVariable("SDKROOT", sdkroot)
+      }
     } catch (e) {
       core.error(e as Error | string)
     }
