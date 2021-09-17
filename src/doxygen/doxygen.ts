@@ -7,20 +7,20 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 export async function setupDoxygen(version: string | undefined, _setupCppDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
-      await setupChocoPack("graphviz", version)
       await setupChocoPack("doxygen.install", version)
+      await setupChocoPack("graphviz", version)
       addPath("C:/Program Files/Graphviz/bin")
       const binDir = "C:/Program Files/doxygen/bin"
       addPath(binDir)
       return { binDir }
     }
     case "darwin": {
-      setupBrewPack("graphviz", version)
-      return setupBrewPack("doxygen", version)
+      setupBrewPack("doxygen", version)
+      return setupBrewPack("graphviz", version)
     }
     case "linux": {
-      await setupAptPack("graphviz", version)
-      return setupAptPack("doxygen", version)
+      await setupAptPack("doxygen", version)
+      return setupAptPack("graphviz", version)
     }
     default: {
       throw new Error(`Unsupported platform`)
