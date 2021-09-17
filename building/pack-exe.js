@@ -27,7 +27,7 @@ function main() {
   return Promise.all(
     exes.map((exe) =>
       exec(
-        `./node_modules/.bin/caxa --input ./dist --output ./exe/setup_cpp_${getPlatformName()}${exe} -- "{{caxa}}/node_modules/.bin/node${exe}" "{{caxa}}/main.js"`
+        `./node_modules/.bin/caxa --input ./dist --output ./exe/setup_cpp_${getPlatformName()}${exe} -- "{{caxa}}/node_modules/.bin/node${exe}" "{{caxa}}/setup_cpp.js"`
       )
     )
   )

@@ -22,7 +22,11 @@
   "engines": {
     "node": ">=12.x"
   },
-  "main": "./dist/main.js",
+  "main": "./dist/setup_cpp.js",
+  "bin": {
+    "setup_cpp": "./dist/setup_cpp.js",
+    "setup-cpp": "./dist/setup_cpp.js"
+  },
   "source": "./src/main.ts",
   "targets": {
     "main": {

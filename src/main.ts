@@ -174,7 +174,7 @@ export async function main(args: string[]): Promise<number> {
   successMessages.forEach((tool) => core.info(tool))
   errorMessages.forEach((tool) => core.error(tool))
 
-  core.info("setup-cpp finished")
+  core.info("setup_cpp finished")
   return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
 }
 // Run main
@@ -190,8 +190,8 @@ main(process.argv)
 
 function printHelp() {
   core.info(`
-setup-cpp [options]
-setup-cpp --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+setup_cpp [options]
+setup_cpp --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
 
 Install all the tools required for building and testing C++/C projects.
 
