@@ -25,7 +25,7 @@ export async function setupChocolatey(
 
   const maybeBinDir = which.sync("choco", { nothrow: true })
   if (maybeBinDir !== null) {
-    binDir = maybeBinDir
+    binDir = dirname(maybeBinDir)
     return { binDir }
   }
 
