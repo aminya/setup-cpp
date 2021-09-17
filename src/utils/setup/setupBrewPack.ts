@@ -1,5 +1,5 @@
 /* eslint-disable require-atomic-updates */
-import { execFileSync } from "child_process"
+import spawn from "cross-spawn"
 import which from "which"
 import { setupBrew } from "../../brew/brew"
 import { InstallationInfo } from "./setupBin"
@@ -14,7 +14,7 @@ export function setupBrewPack(name: string, version?: string): InstallationInfo 
   }
 
   // brew is not thread-safe
-  execFileSync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name], {
+  spawn.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name], {
     stdio: "inherit",
   })
 

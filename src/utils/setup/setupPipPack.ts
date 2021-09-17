@@ -1,5 +1,6 @@
 /* eslint-disable require-atomic-updates */
-import { exec, getExecOutput } from "@actions/exec"
+import { getExecOutput } from "@actions/exec"
+import spawn from "cross-spawn"
 import which from "which"
 import { addPath, info } from "@actions/core"
 import { setupPython } from "../../python/python"
@@ -24,7 +25,9 @@ export async function setupPipPack(name: string, version?: string) {
     }
   }
 
-  const exit = await exec(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name])
+  const exit = spawn.sync(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
+    stdio: "inherit",
+  }).status
   if (exit !== 0) {
     throw new Error(`Failed to install ${name} ${version}`)
   }

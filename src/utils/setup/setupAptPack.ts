@@ -1,37 +1,33 @@
 /* eslint-disable require-atomic-updates */
-import { exec } from "@actions/exec"
+import spawn from "cross-spawn"
 import { InstallationInfo } from "./setupBin"
 import { mightSudo } from "./sudo"
 
 let didUpdate: boolean = false
 
 /** A function that installs a package using apt */
-export async function setupAptPack(
-  name: string,
-  version?: string,
-  repository: boolean | string = true
-): Promise<InstallationInfo> {
+export function setupAptPack(name: string, version?: string, repository: boolean | string = true): InstallationInfo {
   const apt = mightSudo("apt-get")
 
-  let exit = 0
+  let exit: number | null = 0
 
   if (typeof repository === "string") {
-    exit = await exec(mightSudo("add-apt-repository"), ["--update", repository])
+    exit = spawn.sync(mightSudo("add-apt-repository"), ["--update", repository], { stdio: "inherit" }).status
   }
 
   if (!didUpdate || repository === true) {
-    await exec(apt, ["update"])
+    exit = spawn.sync(apt, ["update"], { stdio: "inherit" }).status
     didUpdate = true
   }
 
   if (version !== undefined && version !== "") {
     try {
-      exit = await exec(apt, ["install", `${name}=${version}`])
+      exit = spawn.sync(apt, ["install", `${name}=${version}`], { stdio: "inherit" }).status
     } catch {
-      exit = await exec(apt, ["install", `${name}-${version}`])
+      exit = spawn.sync(apt, ["install", `${name}-${version}`], { stdio: "inherit" }).status
     }
   } else {
-    exit = await exec(apt, ["install", name])
+    exit = spawn.sync(apt, ["install", name], { stdio: "inherit" }).status
   }
 
   if (exit !== 0) {

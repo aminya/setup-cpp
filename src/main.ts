@@ -161,11 +161,11 @@ export async function main(args: string[]): Promise<number> {
         if (installationInfo !== undefined) {
           successMessages.push(getSuccessMessage(tool, installationInfo))
         } else {
-          successMessages.push(`${tool} was successfully installed`)
+          successMessages.push(` ${tool} was successfully installed`)
         }
       } catch (e) {
         // push error message to the logger
-        errorMessages.push(`${tool} failed to install`)
+        errorMessages.push(` ${tool} failed to install`)
       }
     }
   }
@@ -229,7 +229,7 @@ function maybeGetInput(key: string) {
 }
 
 function getSuccessMessage(tool: string, installationInfo: InstallationInfo) {
-  let success = `${tool} was successfully installed`
+  let success = ` ${tool} was successfully installed`
   if ("installDir" in installationInfo) {
     success += `\nThe installation direcotry is ${installationInfo.installDir}`
   }

@@ -1,9 +1,9 @@
 /* eslint-disable require-atomic-updates */
 import { addPath } from "@actions/core"
-import { exec } from "@actions/exec"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"
+import spawn from "cross-spawn"
 
 let hasChoco = false
 
@@ -16,9 +16,9 @@ export async function setupChocoPack(name: string, version?: string, args: strin
 
   let exit
   if (version !== undefined && version !== "") {
-    exit = await exec("choco", ["install", "-y", name, `--version=${version}`, ...args])
+    exit = spawn.sync("choco", ["install", "-y", name, `--version=${version}`, ...args], { stdio: "inherit" }).status
   } else {
-    exit = await exec("choco", ["install", "-y", name, ...args])
+    exit = spawn.sync("choco", ["install", "-y", name, ...args], { stdio: "inherit" }).status
   }
 
   if (exit !== 0) {
