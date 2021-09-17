@@ -18,7 +18,6 @@ import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { setupGcc } from "./gcc/gcc"
-import { assert } from "console"
 
 const tools = [
   "cmake",
@@ -119,22 +118,45 @@ export async function main(): Promise<number> {
       }
     }
 
+    const toolsSucceeded: string[] = []
+    const toolsErrored: string[] = []
     for (const tool of tools) {
-      assert(tool in setups)
       const version = maybeGetInput(tool)
       if (version !== undefined) {
         const setupFunction = setups[tool]
-        // eslint-disable-next-line no-await-in-loop
-        await setupFunction(getVersion(tool, version), setupCppDir, arch)
+
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const installationInfo = await setupFunction(getVersion(tool, version), setupCppDir, arch)
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          if (installationInfo !== undefined) {
+            let success = `${tool} was successfully installed`
+            if (installationInfo.installDir !== undefined) {
+              success += `\nThe installation direcotry is ${installationInfo.installDir}`
+            }
+            if (installationInfo.binDir) {
+              success += `\nThe binary direcotry is ${installationInfo.binDir}`
+            }
+            toolsSucceeded.push(success)
+          } else {
+            toolsSucceeded.push(`${tool} was successfully installed`)
+          }
+        } catch (e) {
+          toolsErrored.push(`${tool} failed to install`)
+        }
       }
     }
+
+    console.log("\n\n\n")
+    toolsSucceeded.forEach((tool) => core.info(tool))
+    toolsErrored.forEach((tool) => core.error(tool))
   } catch (err) {
     core.error(err as string | Error)
     core.setFailed("install-cpp failed")
     return 1
   }
 
-  core.info("install-cpp succeeded")
+  core.info("install-cpp finished")
   return 0
 }
 
