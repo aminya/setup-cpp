@@ -3,10 +3,7 @@ import { tmpdir } from "os"
 import * as path from "path"
 import { addBinExtension } from "../setup/setupBin"
 import { join } from "path"
-import { exec } from "@actions/exec"
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import escape from "escape-path-with-spaces"
+import spawn from "cross-spawn"
 
 export async function setupTmpDir(testName: string) {
   const tempDirectory = path.join(tmpdir(), "setup-cpp", testName)
@@ -49,7 +46,7 @@ export async function testBin(
   }
 
   if (args !== null) {
-    const status = await exec(escape(bin) as string, args)
+    const { status } = spawn.sync(bin, args, { stdio: "inherit" })
     expect(status).toBe(0)
   }
 

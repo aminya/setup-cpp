@@ -11,13 +11,14 @@ importers:
       '@actions/exec': ^1.1.0
       '@actions/io': ^1.1.1
       '@actions/tool-cache': ^1.7.1
+      '@types/cross-spawn': ^6.0.2
       '@types/jest': ^27.0.1
       '@types/node': ^16.9.1
       '@types/semver': ^7.3.8
       '@types/which': ^2.0.1
       caxa: ^2.1.0
       cross-env: 7.0.3
-      escape-path-with-spaces: ^1.0.0
+      cross-spawn: ^7.0.3
       eslint-config-atomic: ^1.16.2
       hasha: ^5.2.2
       jest: ^27.2.0
@@ -39,13 +40,14 @@ importers:
       semver: 7.3.5
       which: 2.0.2
     devDependencies:
+      '@types/cross-spawn': 6.0.2
       '@types/jest': 27.0.1
       '@types/node': 16.9.1
       '@types/semver': 7.3.8
       '@types/which': 2.0.1
       caxa: 2.1.0
       cross-env: 7.0.3
-      escape-path-with-spaces: 1.0.0
+      cross-spawn: 7.0.3
       eslint-config-atomic: 1.16.2
       jest: 27.2.0
       npm-run-all2: 5.0.2
@@ -1478,6 +1480,12 @@ packages:
     resolution: {integrity: sha512-K2waXdXBi2302XUdcHcR1jCeU0LL4TD9HRs/gk0N2Xvrht+G/BfJa4QObBQZfhMdxiCpV3COl5Nfq4uKTeTnJA==}
     dependencies:
       '@babel/types': 7.15.6
+    dev: true
+
+  /@types/cross-spawn/6.0.2:
+    resolution: {integrity: sha512-KuwNhp3eza+Rhu8IFI5HUXRP0LIhqH5cAjubUvGXXthh4YYBuP2ntwEX+Cz8GJoZUHlKo247wPWOfA9LYEq4cw==}
+    dependencies:
+      '@types/node': 16.9.1
     dev: true
 
   /@types/graceful-fs/4.1.5:
@@ -3373,10 +3381,6 @@ packages:
 
   /escape-html/1.0.3:
     resolution: {integrity: sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=}
-    dev: true
-
-  /escape-path-with-spaces/1.0.0:
-    resolution: {integrity: sha512-+98Hh0yzVa0hldJXlzr0M/8B8LVXW9vNT5boC9k6o896Z52DGRplm3NwMGX0590ryGSegzTf/uaUiusFj2SQbQ==}
     dev: true
 
   /escape-string-regexp/1.0.5:
