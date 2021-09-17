@@ -16,7 +16,7 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 `setup-cpp` can install all of these tools:
 
 - llvm
-- gcc and mingw
+- gcc
 - cmake
 - ninja
 - meson
@@ -49,7 +49,6 @@ on:
 
 jobs:
   Test:
-    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -71,11 +70,12 @@ jobs:
           conan: true
           cppcheck: true
           ccache: true
+          # add any tool that you need here...
 ```
 
 In the `compiler` entry, you can specify the version after a `-`. For example, `llvm-11`.
 
-For the tools, instead of `true`, which choses the default version, you can pass a specific version.
+For the tools, instead of `true`, which chooses the default version, you can pass a specific version.
 
 ### Incomplete
 
