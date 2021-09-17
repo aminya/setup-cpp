@@ -1,4 +1,5 @@
 /* eslint-disable require-atomic-updates */
+import { addPath } from "@actions/core"
 import { exec } from "@actions/exec"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
@@ -24,5 +25,7 @@ export async function setupChocoPack(name: string, version?: string, args: strin
     throw new Error(`Failed to install ${name} ${version}`)
   }
 
-  return { binDir: "C:/ProgramData/Chocolatey/bin/" }
+  const binDir = "C:/ProgramData/Chocolatey/bin/"
+  addPath(binDir)
+  return { binDir }
 }

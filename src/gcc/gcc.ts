@@ -21,6 +21,8 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
       } else if (arch === "ia32" && existsSync("C:/tools/mingw32/bin")) {
         binDir = "C:/tools/mingw32/bin"
         addPath(binDir)
+      } else if (existsSync("C:/ProgramData/Chocolatey/bin/g++.exe")) {
+        binDir = "C:/ProgramData/Chocolatey/bin/g++.exe"
       }
       break
     }
