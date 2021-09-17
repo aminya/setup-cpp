@@ -30,7 +30,7 @@ export function setupAptPack(name: string, version?: string, repository: boolean
     exit = spawn.sync(apt, ["install", name], { stdio: "inherit" }).status
   }
 
-  if (exit !== 0) {
+  if (exit !== 0 && exit !== null) {
     throw new Error(`Failed to install ${name} ${version}`)
   }
 
