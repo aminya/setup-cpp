@@ -14,10 +14,6 @@ export async function setupTmpDir(testName: string) {
     console.log("Failed to remove test directories")
   }
   process.env.SETUP_CPP_DIR = tempDirectory
-
-  const toolCache = path.join(tmpdir(), "setup-cpp", "ToolCache")
-  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? toolCache
-
   return tempDirectory
 }
 
