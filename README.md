@@ -32,6 +32,26 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 
 # Usage
 
+## From Command Prompt
+
+You should download the exe file or the js file (if have Nodejs installed) and then run it.
+
+Tip: You can automate downloading using `wget`, `curl` or other similar tools.
+
+### Executable
+
+```
+./setup_cpp.exe --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+```
+
+### With Nodejs
+
+Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/blob/master/dist/main.js), and run it
+
+```
+node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+```
+
 ## Inside GitHub Actions
 
 Here is a complete cross-platform example that tests llvm and gcc. It also uses cmake, ninja, conan, cppcheck, and ccache.
