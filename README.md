@@ -82,7 +82,7 @@ jobs:
           - gcc
     steps:
       - name: Setup Cpp
-        uses: aminya/setup-cpp@master
+        uses: aminya/setup-cpp@v1
         with:
           compiler: ${{ matrix.compiler }}
           cmake: true
