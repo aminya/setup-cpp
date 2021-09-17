@@ -21,7 +21,7 @@ export async function setupChocoPack(name: string, version?: string, args: strin
     exit = spawn.sync("choco", ["install", "-y", name, ...args], { stdio: "inherit" }).status
   }
 
-  if (exit !== 0 && exit !== null) {
+  if (exit !== 0) {
     throw new Error(`Failed to install ${name} ${version}`)
   }
 
