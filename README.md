@@ -34,19 +34,23 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 
 ## From Command Prompt
 
-You should download the exe file or the js file (if have Nodejs installed) and then run it.
+You should download the exe file or the js file (if have Nodejs installed), and run it with the available options.
 
 Tip: You can automate downloading using `wget`, `curl` or other similar tools.
 
 ### Executable
 
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.1), and run it with the available options.
+
+A Windows example that installs llvm, cmake, ninja, ccache, and conan.
+
 ```
-./setup_cpp.exe --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+./setup_cpp_windows.exe --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
 ```
 
 ### With Nodejs
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/blob/master/dist/main.js), and run it
+Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.1/setup_cpp.js), and run it with the available options.
 
 ```
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
