@@ -1,4 +1,3 @@
-import { setupMSVCDevCmd } from "./msvc-dev-cmd/index"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { error, exportVariable } from "@actions/core"
 import { existsSync } from "fs"
@@ -68,5 +67,9 @@ export async function setupMSVC(
   if (VCTargetsPath !== undefined && existsSync(VCTargetsPath)) {
     exportVariable("VCTargetsPath", VCTargetsPath)
   }
+
+  // lazy load the action so it is not executed
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { setupMSVCDevCmd } = require("./msvc-dev-cmd/index")
   setupMSVCDevCmd(getArch(arch), sdk, toolset, uwp, spectre)
 }
