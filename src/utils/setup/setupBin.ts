@@ -45,13 +45,17 @@ export async function setupBin(
   const { url, binRelativeDir, extractedFolderName, extractFunction } = await getPackageInfo(version, process.platform)
 
   // Restore from cache (if found).
-  const dir = find(name, version)
-  if (dir) {
-    info(`${name} ${version} was found in the cache.`)
-    const installDir = join(dir, extractedFolderName)
-    const binDir = join(installDir, binRelativeDir)
-    addPath(binDir)
-    return { installDir, binDir }
+  try {
+    const dir = find(name, version)
+    if (dir) {
+      info(`${name} ${version} was found in the cache.`)
+      const installDir = join(dir, extractedFolderName)
+      const binDir = join(installDir, binRelativeDir)
+      addPath(binDir)
+      return { installDir, binDir }
+    }
+  } catch {
+    // fails on a local machine?
   }
 
   // Get an unique output directory name from the URL.
