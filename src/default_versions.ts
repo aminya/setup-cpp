@@ -15,6 +15,6 @@ export function getVersion(name: string, version: string | undefined) {
   if (version === "true" || (version === undefined && name in DefaultVersions)) {
     return DefaultVersions[name]
   } else {
-    return version
+    return version ?? ""
   }
 }

@@ -16,26 +16,7 @@ import { setupPython } from "./python/python"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
-import { InstallationInfo } from "./utils/setup/setupBin"
 import { setupGcc } from "./gcc/gcc"
-
-const tools = [
-  "cmake",
-  "ninja",
-  "python",
-  "conan",
-  "meson",
-  "gcovr",
-  "opencppcoverage",
-  "llvm",
-  "gcc",
-  "choco",
-  "brew",
-  "ccache",
-  "doxygen",
-  "cppcheck",
-  "msvc",
-]
 
 const setups = {
   cmake: setupCmake,
@@ -53,16 +34,29 @@ const setups = {
   doxygen: setupDoxygen,
   cppcheck: setupCppcheck,
   msvc: setupMSVC,
-} as Record<
-  string,
-  (
-    version: string | undefined,
-    setupCppDir: string,
-    ...args: unknown[]
-  ) => Promise<InstallationInfo> | Promise<void> | void
->
+}
 
-function maybeGetInput(key: string) {
+const tools: Array<keyof typeof setups> = [
+  "cmake",
+  "ninja",
+  "python",
+  "conan",
+  "meson",
+  "gcovr",
+  "opencppcoverage",
+  "llvm",
+  "gcc",
+  "choco",
+  "brew",
+  "ccache",
+  "doxygen",
+  "cppcheck",
+  "msvc",
+]
+
+type Inputs = "compiler" | keyof typeof setups
+
+function maybeGetInput(key: Inputs) {
   const value = core.getInput(key.toLowerCase())
   if (value !== "false" && value !== "") {
     return value
@@ -131,10 +125,12 @@ export async function main(): Promise<number> {
           // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
           if (installationInfo !== undefined) {
             let success = `${tool} was successfully installed`
-            if (installationInfo.installDir !== undefined) {
+            if ("installDir" in installationInfo) {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              // @ts-ignore typescript is confused about the existence of installDir
               success += `\nThe installation direcotry is ${installationInfo.installDir}`
             }
-            if (installationInfo.binDir) {
+            if (installationInfo.binDir !== "") {
               success += `\nThe binary direcotry is ${installationInfo.binDir}`
             }
             toolsSucceeded.push(success)
