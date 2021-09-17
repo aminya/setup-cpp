@@ -12,22 +12,22 @@ export function setupAptPack(name: string, version?: string, repository: boolean
   let exit: number | null = 0
 
   if (typeof repository === "string") {
-    exit = spawn.sync(mightSudo("add-apt-repository"), ["--update", repository], { stdio: "inherit" }).status
+    exit = spawn.sync(mightSudo("add-apt-repository"), ["--update", "-y", repository], { stdio: "inherit" }).status
   }
 
   if (!didUpdate || repository === true) {
-    exit = spawn.sync(apt, ["update"], { stdio: "inherit" }).status
+    exit = spawn.sync(apt, ["update", "-y"], { stdio: "inherit" }).status
     didUpdate = true
   }
 
   if (version !== undefined && version !== "") {
     try {
-      exit = spawn.sync(apt, ["install", `${name}=${version}`], { stdio: "inherit" }).status
+      exit = spawn.sync(apt, ["install", "-y", `${name}=${version}`], { stdio: "inherit" }).status
     } catch {
-      exit = spawn.sync(apt, ["install", `${name}-${version}`], { stdio: "inherit" }).status
+      exit = spawn.sync(apt, ["install", "-y", `${name}-${version}`], { stdio: "inherit" }).status
     }
   } else {
-    exit = spawn.sync(apt, ["install", name], { stdio: "inherit" }).status
+    exit = spawn.sync(apt, ["install", "-y", name], { stdio: "inherit" }).status
   }
 
   if (exit !== 0 && exit !== null) {
