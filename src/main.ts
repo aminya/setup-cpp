@@ -13,11 +13,14 @@ import { setupMSVC } from "./msvc/msvc"
 import { setupNinja } from "./ninja/ninja"
 import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
 import { setupPython } from "./python/python"
+import mri from "mri"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
+import { InstallationInfo } from "./utils/setup/setupBin"
 
+/** The setup functions */
 const setups = {
   cmake: setupCmake,
   ninja: setupNinja,
@@ -36,6 +39,7 @@ const setups = {
   msvc: setupMSVC,
 }
 
+/** The tools that can be installed */
 const tools: Array<keyof typeof setups> = [
   "cmake",
   "ninja",
@@ -54,22 +58,35 @@ const tools: Array<keyof typeof setups> = [
   "msvc",
 ]
 
-type Inputs = "compiler" | keyof typeof setups
+/** The possible inputs to the program */
+type Inputs = keyof typeof setups | "compiler" | "architecture"
 
-function maybeGetInput(key: Inputs) {
-  const value = core.getInput(key.toLowerCase())
-  if (value !== "false" && value !== "") {
-    return value
-  }
-  return undefined // skip installation
-}
+// an array of possible inputs
+const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 
-export async function main(): Promise<number> {
-  const arch = core.getInput("architecture") || process.arch
+/** The main entry function */
+export async function main(args: string[]): Promise<number> {
+  // parse options using mri or github actions
+  const opts = mri<Record<Inputs, string | undefined>>(args, {
+    string: inputs,
+    default: Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)])),
+  })
+
+  // cpu architecture
+  const arch = opts.architecture ?? process.arch
+
+  // the installation dir for the tools that are downloaded directly
   const setupCppDir = process.env.SETUP_CPP_DIR ?? "~/setup_cpp"
+
+  // report messages
+  const successMessages: string[] = []
+  const errorMessages: string[] = []
+
+  // installing the specified compiler
+  const maybeCompiler = opts.compiler
   try {
-    const maybeCompiler = maybeGetInput("compiler")
     if (maybeCompiler !== undefined) {
+      // detecting the compiler version. Devide the given string by `-` and use the second element as the version
       const compilerAndMaybeVersion = maybeCompiler.split("-")
       const compiler = compilerAndMaybeVersion[0]
       let version: string | undefined
@@ -82,6 +99,7 @@ export async function main(): Promise<number> {
         }
       }
 
+      // install the compiler. We allow some aliases for the compiler name
       switch (compiler) {
         case "llvm":
         case "clang":
@@ -107,61 +125,79 @@ export async function main(): Promise<number> {
           break
         }
         default: {
-          core.error(`Unsupported compiler ${compiler}`)
+          errorMessages.push(`Unsupported compiler ${compiler}`)
         }
       }
     }
-
-    const toolsSucceeded: string[] = []
-    const toolsErrored: string[] = []
-    for (const tool of tools) {
-      const version = maybeGetInput(tool)
-      if (version !== undefined) {
-        const setupFunction = setups[tool]
-
-        try {
-          // eslint-disable-next-line no-await-in-loop
-          const installationInfo = await setupFunction(getVersion(tool, version), setupCppDir, arch)
-          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-          if (installationInfo !== undefined) {
-            let success = `${tool} was successfully installed`
-            if ("installDir" in installationInfo) {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore typescript is confused about the existence of installDir
-              success += `\nThe installation direcotry is ${installationInfo.installDir}`
-            }
-            if (installationInfo.binDir !== "") {
-              success += `\nThe binary direcotry is ${installationInfo.binDir}`
-            }
-            toolsSucceeded.push(success)
-          } else {
-            toolsSucceeded.push(`${tool} was successfully installed`)
-          }
-        } catch (e) {
-          toolsErrored.push(`${tool} failed to install`)
-        }
-      }
-    }
-
-    console.log("\n\n\n")
-    toolsSucceeded.forEach((tool) => core.info(tool))
-    toolsErrored.forEach((tool) => core.error(tool))
-  } catch (err) {
-    core.error(err as string | Error)
-    core.setFailed("install-cpp failed")
-    return 1
+  } catch (e) {
+    errorMessages.push(`Failed to install the ${maybeCompiler}`)
   }
 
-  core.info("install-cpp finished")
-  return 0
-}
+  // installing the specified tools
 
-main()
+  // loop over the tools and run their setup function
+  for (const tool of tools) {
+    // get the version or "true" or undefined for this tool from the options
+    const value = opts[tool]
+
+    // skip if undefined
+    if (value !== undefined) {
+      // get the setup function
+      const setupFunction = setups[tool]
+
+      // runnig the setup function for this tool
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const installationInfo = await setupFunction(getVersion(tool, value), setupCppDir, arch)
+
+        // preparing a report string
+        if (installationInfo !== undefined) {
+          successMessages.push(getSuccessMessage(tool, installationInfo))
+        } else {
+          successMessages.push(`${tool} was successfully installed`)
+        }
+      } catch (e) {
+        // push error message to the logger
+        errorMessages.push(`${tool} failed to install`)
+      }
+    }
+  }
+
+  // report the messages in the end
+  console.log("\n\n\n")
+  successMessages.forEach((tool) => core.info(tool))
+  errorMessages.forEach((tool) => core.error(tool))
+
+  core.info("install-cpp finished")
+  return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
+}
+// Run main
+main(process.argv)
   .then((ret) => {
     process.exitCode = ret
   })
   .catch((error) => {
-    core.error("main() failed!")
+    core.error("main() panicked!")
     core.error(error as string | Error)
     process.exitCode = 1
   })
+
+/** Get an object from github actions */
+function maybeGetInput(key: string) {
+  const value = core.getInput(key.toLowerCase())
+  if (value !== "false" && value !== "") {
+    return value
+  }
+  return undefined // skip installation
+}
+
+function getSuccessMessage(tool: string, installationInfo: InstallationInfo) {
+  let success = `${tool} was successfully installed`
+  if ("installDir" in installationInfo) {
+    success += `\nThe installation direcotry is ${installationInfo.installDir}`
+  }
+  if (installationInfo.binDir !== "") {
+    success += `\nThe binary direcotry is ${installationInfo.binDir}`
+  }
+  return success
+}

@@ -13,6 +13,7 @@ importers:
       '@actions/tool-cache': ^1.7.1
       '@types/cross-spawn': ^6.0.2
       '@types/jest': ^27.0.1
+      '@types/mri': ^1.1.1
       '@types/node': ^16.9.1
       '@types/semver': ^7.3.8
       '@types/which': ^2.0.1
@@ -22,6 +23,7 @@ importers:
       eslint-config-atomic: ^1.16.2
       hasha: ^5.2.2
       jest: ^27.2.0
+      mri: ^1.2.0
       npm-run-all2: ^5.0.2
       parcel: ^2.0.0-rc.0
       prettier-config-atomic: ^2.0.5
@@ -37,11 +39,13 @@ importers:
       '@actions/io': 1.1.1
       '@actions/tool-cache': 1.7.1
       hasha: 5.2.2
+      mri: 1.2.0
       semver: 7.3.5
       which: 2.0.2
     devDependencies:
       '@types/cross-spawn': 6.0.2
       '@types/jest': 27.0.1
+      '@types/mri': 1.1.1
       '@types/node': 16.9.1
       '@types/semver': 7.3.8
       '@types/which': 2.0.1
@@ -1535,6 +1539,10 @@ packages:
     resolution: {integrity: sha512-W864tg/Osz1+9f4lrGTZpCSO5/z4608eUp19tbozkq2HJK6i3z1kT0H9tlADXuYIb1YYOBByU4Jsqkk75q48qA==}
     dependencies:
       '@types/unist': 2.0.6
+    dev: true
+
+  /@types/mri/1.1.1:
+    resolution: {integrity: sha512-nJOuiTlsvmClSr3+a/trTSx4DTuY/VURsWGKSf/eeavh0LRMqdsK60ti0TlwM5iHiGOK3/Ibkxsbr7i9rzGreA==}
     dev: true
 
   /@types/node/16.9.1:
@@ -6096,6 +6104,11 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dev: true
+
+  /mri/1.2.0:
+    resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
+    engines: {node: '>=4'}
+    dev: false
 
   /ms/2.0.0:
     resolution: {integrity: sha1-VgiurfwAvmwpAd9fmGF4jeDVl8g=}

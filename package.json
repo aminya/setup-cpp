@@ -38,6 +38,7 @@
     "@actions/io": "^1.1.1",
     "@actions/tool-cache": "^1.7.1",
     "hasha": "^5.2.2",
+    "mri": "^1.2.0",
     "semver": "^7.3.5",
     "which": "^2.0.2"
   },
@@ -49,6 +50,7 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",
     "@types/jest": "^27.0.1",
+    "@types/mri": "^1.1.1",
     "@types/node": "^16.9.1",
     "@types/semver": "^7.3.8",
     "@types/which": "^2.0.1",
