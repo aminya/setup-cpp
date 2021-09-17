@@ -67,10 +67,17 @@ const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 /** The main entry function */
 export async function main(args: string[]): Promise<number> {
   // parse options using mri or github actions
-  const opts = mri<Record<Inputs, string | undefined>>(args, {
+  const opts = mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
     string: inputs,
     default: Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)])),
+    alias: { h: "help" },
+    boolean: "help",
   })
+
+  // print help
+  if (opts.help) {
+    printHelp()
+  }
 
   // cpu architecture
   const arch = opts.architecture ?? process.arch
@@ -164,11 +171,10 @@ export async function main(args: string[]): Promise<number> {
   }
 
   // report the messages in the end
-  console.log("\n\n\n")
   successMessages.forEach((tool) => core.info(tool))
   errorMessages.forEach((tool) => core.error(tool))
 
-  core.info("install-cpp finished")
+  core.info("setup-cpp finished")
   return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
 }
 // Run main
@@ -181,6 +187,37 @@ main(process.argv)
     core.error(error as string | Error)
     process.exitCode = 1
   })
+
+function printHelp() {
+  core.info(`
+setup-cpp [options]
+setup-cpp --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+
+Install all the tools required for building and testing C++/C projects.
+
+--architecture\t the cpu architecture to install the tools for. By default it uses the current CPU architecture.
+--compiler\t the <compiler> to install.
+          \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-11'
+
+--tool_name\t pass "true" or pass the <version> you would like to install for this tool.
+
+All the available tools:
+--llvm
+--gcc
+--cmake
+--ninja
+--meson
+--conan
+--ccache
+--cppcheck
+--doxygen
+--gcovr
+--opencppcoverage
+--python
+--choco
+--brew
+      `)
+}
 
 /** Get an object from github actions */
 function maybeGetInput(key: string) {
