@@ -3,7 +3,7 @@ import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 
-jest.setTimeout(200000)
+jest.setTimeout(300000)
 async function testUrl(version: string) {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, process.platform, version, getUrl)
 

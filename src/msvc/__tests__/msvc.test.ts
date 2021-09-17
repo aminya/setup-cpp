@@ -1,7 +1,7 @@
 import { testBin } from "../../utils/tests/test-helpers"
 import { setupMSVC } from "../msvc"
 
-jest.setTimeout(200000)
+jest.setTimeout(300000)
 describe("setup-msvc", () => {
   it("should setup msvc", async () => {
     if (process.platform !== "win32") {

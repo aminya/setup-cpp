@@ -1,7 +1,7 @@
 import { setupGcovr } from "../gcovr"
 import { testBin } from "../../utils/tests/test-helpers"
 
-jest.setTimeout(200000)
+jest.setTimeout(300000)
 describe("setup-gcovr", () => {
   it("should setup gcovr", async () => {
     const installInfo = await setupGcovr("", "", process.arch)

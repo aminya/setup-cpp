@@ -1,7 +1,7 @@
 import { setupCmake } from "../cmake"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 
-jest.setTimeout(200000)
+jest.setTimeout(300000)
 
 describe("setup-cmake", () => {
   let directory: string

@@ -2,7 +2,7 @@ import { InstallationInfo } from "../../utils/setup/setupBin"
 import { testBin } from "../../utils/tests/test-helpers"
 import { setupChocolatey } from "../chocolatey"
 
-jest.setTimeout(200000)
+jest.setTimeout(300000)
 describe("setup-chocolatey", () => {
   it("should setup chocolatey", async () => {
     if (process.platform !== "win32") {
