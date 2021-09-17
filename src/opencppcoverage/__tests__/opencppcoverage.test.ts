@@ -7,8 +7,8 @@ describe("setup-OpenCppCoverage", () => {
     if (process.platform !== "win32") {
       return
     }
-    await setupOpencppcoverage("", "", process.arch)
+    const installationInfo = await setupOpencppcoverage("", "", process.arch)
 
-    await testBin("OpenCppCoverage", null) // OpenCppCoverage exits with non-zero even with --help
+    await testBin("OpenCppCoverage", null, installationInfo?.binDir) // OpenCppCoverage exits with non-zero even with --help
   })
 })
