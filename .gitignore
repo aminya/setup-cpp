@@ -11,6 +11,8 @@ temp-*
 *.tsbuildinfo
 
 # Build directories
-dist
+./dist/
+!./dist/main.js
+!./dist/main.js.map
 .parcel-cache
 exe
