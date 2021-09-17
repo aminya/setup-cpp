@@ -46,14 +46,14 @@ export async function setupMSVC(
     toolset = "14.16"
     await setupChocoPack("visualstudio2017buildtools", "15.9.38.0", [
       "--package-parameters",
-      "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive",
+      "--add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive",
     ])
     VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.16" // TODO verify path
   } else if (version === "2019") {
     toolset = "14.29.30133"
     await setupChocoPack("visualstudio2019buildtools", "16.11.2.0", [
       "--package-parameters",
-      "add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive",
+      "--add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive",
     ])
     VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133"
   }
