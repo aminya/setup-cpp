@@ -59,7 +59,7 @@ export async function setupBin(
   }
 
   // Get an unique output directory name from the URL.
-  const key: string = await hasha.async(url)
+  const key: string = await hasha.async(url, { algorithm: "md5" })
   const rootDir = join(setupCppDir, key)
 
   // download ane extract the package into the installation directory.
