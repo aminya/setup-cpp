@@ -9,6 +9,6 @@ describe("setup-OpenCppCoverage", () => {
     }
     await setupOpencppcoverage("", "", process.arch)
 
-    await testBin("OpenCppCoverage")
+    await testBin("OpenCppCoverage", null) // OpenCppCoverage exits with non-zero even with --help
   })
 })

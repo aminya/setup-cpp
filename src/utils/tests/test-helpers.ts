@@ -36,7 +36,11 @@ export async function cleanupTmpDir(testName: string) {
   }
 }
 
-export async function testBin(name: string, args: string[] = ["--version"], binDir: string | undefined = undefined) {
+export async function testBin(
+  name: string,
+  args: string[] | null = ["--version"],
+  binDir: string | undefined = undefined
+) {
   let bin = name
   if (typeof binDir === "string") {
     expect(binDir).toBeDefined()
@@ -44,8 +48,10 @@ export async function testBin(name: string, args: string[] = ["--version"], binD
     bin = join(binDir, addBinExtension(name))
   }
 
-  const status = await exec(escape(bin) as string, args)
-  expect(status).toBe(0)
+  if (args !== null) {
+    const status = await exec(escape(bin) as string, args)
+    expect(status).toBe(0)
+  }
 
   expect(await io.which(name, true)).toBe(bin)
 }
