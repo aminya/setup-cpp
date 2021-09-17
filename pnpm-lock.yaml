@@ -32,6 +32,7 @@ importers:
       terser-config-atomic: ^0.1.1
       ts-jest: ^27.0.5
       typescript: ^4.4.3
+      untildify: ^4.0.0
       which: ^2.0.2
     dependencies:
       '@actions/core': 1.5.0
@@ -41,6 +42,7 @@ importers:
       hasha: 5.2.2
       mri: 1.2.0
       semver: 7.3.5
+      untildify: 4.0.0
       which: 2.0.2
     devDependencies:
       '@types/cross-spawn': 6.0.2
@@ -8430,6 +8432,11 @@ packages:
       has-value: 0.3.1
       isobject: 3.0.1
     dev: true
+
+  /untildify/4.0.0:
+    resolution: {integrity: sha512-KK8xQ1mkzZeg9inewmFVDNkg3l5LUhoq9kN6iWYB/CC9YMG8HA+c1Q8HwDe6dEX7kErrEVNVBO3fWsVq5iDgtw==}
+    engines: {node: '>=8'}
+    dev: false
 
   /uri-js/4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}

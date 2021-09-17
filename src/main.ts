@@ -14,6 +14,7 @@ import { setupNinja } from "./ninja/ninja"
 import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
 import { setupPython } from "./python/python"
 import mri from "mri"
+import untildify from "untildify"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
@@ -83,7 +84,7 @@ export async function main(args: string[]): Promise<number> {
   const arch = opts.architecture ?? process.arch
 
   // the installation dir for the tools that are downloaded directly
-  const setupCppDir = process.env.SETUP_CPP_DIR ?? "~/setup_cpp"
+  const setupCppDir = process.env.SETUP_CPP_DIR ?? untildify("~/setup_cpp")
 
   // report messages
   const successMessages: string[] = []
