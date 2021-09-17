@@ -67,6 +67,8 @@ const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 
 /** The main entry function */
 export async function main(args: string[]): Promise<number> {
+  const isCI = Boolean(process.env.CI)
+
   // parse options using mri or github actions
   const opts = mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
     string: inputs,
@@ -162,18 +164,18 @@ export async function main(args: string[]): Promise<number> {
         if (installationInfo !== undefined) {
           successMessages.push(getSuccessMessage(tool, installationInfo))
         } else {
-          successMessages.push(` ${tool} was successfully installed`)
+          successMessages.push(`${tool} was successfully installed`)
         }
       } catch (e) {
         // push error message to the logger
-        errorMessages.push(` ${tool} failed to install`)
+        errorMessages.push(`${tool} failed to install`)
       }
     }
   }
 
   // report the messages in the end
-  successMessages.forEach((tool) => core.info(tool))
-  errorMessages.forEach((tool) => core.error(tool))
+  successMessages.forEach((tool) => (isCI ? core.info(tool) : console.log(`\x1b[32m${tool}\x1b[0m`)))
+  errorMessages.forEach((tool) => (isCI ? core.error(tool) : console.log(`\x1b[31m${tool}\x1b[0m`)))
 
   core.info("setup_cpp finished")
   return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
@@ -230,7 +232,7 @@ function maybeGetInput(key: string) {
 }
 
 function getSuccessMessage(tool: string, installationInfo: InstallationInfo) {
-  let success = ` ${tool} was successfully installed`
+  let success = `${tool} was successfully installed`
   if ("installDir" in installationInfo) {
     success += `\nThe installation direcotry is ${installationInfo.installDir}`
   }
