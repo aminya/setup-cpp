@@ -4,6 +4,9 @@ import * as path from "path"
 import { addBinExtension } from "../setup/setupBin"
 import { join } from "path"
 import { exec } from "@actions/exec"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import escape from "escape-path-with-spaces"
 
 export async function setupTmpDir(testName: string) {
   const tempDirectory = path.join(tmpdir(), "setup-cpp", testName)
@@ -41,7 +44,7 @@ export async function testBin(name: string, args: string[] = ["--version"], binD
     bin = join(binDir, addBinExtension(name))
   }
 
-  const status = await exec(bin, args)
+  const status = await exec(escape(bin) as string, args)
   expect(status).toBe(0)
 
   expect(await io.which(name, true)).toBe(bin)
