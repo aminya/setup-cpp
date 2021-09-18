@@ -96,6 +96,36 @@ export async function main(args: string[]): Promise<number> {
   const successMessages: string[] = []
   const errorMessages: string[] = []
 
+  // installing the specified tools
+
+  // loop over the tools and run their setup function
+  for (const tool of tools) {
+    // get the version or "true" or undefined for this tool from the options
+    const value = opts[tool]
+
+    // skip if undefined
+    if (value !== undefined) {
+      // get the setup function
+      const setupFunction = setups[tool]
+
+      // runnig the setup function for this tool
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const installationInfo = await setupFunction(getVersion(tool, value), setupCppDir, arch)
+
+        // preparing a report string
+        if (installationInfo !== undefined) {
+          successMessages.push(getSuccessMessage(tool, installationInfo))
+        } else {
+          successMessages.push(`${tool} was successfully installed`)
+        }
+      } catch (e) {
+        // push error message to the logger
+        errorMessages.push(`${tool} failed to install`)
+      }
+    }
+  }
+
   // installing the specified compiler
   const maybeCompiler = opts.compiler
   try {
@@ -145,36 +175,6 @@ export async function main(args: string[]): Promise<number> {
     }
   } catch (e) {
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
-  }
-
-  // installing the specified tools
-
-  // loop over the tools and run their setup function
-  for (const tool of tools) {
-    // get the version or "true" or undefined for this tool from the options
-    const value = opts[tool]
-
-    // skip if undefined
-    if (value !== undefined) {
-      // get the setup function
-      const setupFunction = setups[tool]
-
-      // runnig the setup function for this tool
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const installationInfo = await setupFunction(getVersion(tool, value), setupCppDir, arch)
-
-        // preparing a report string
-        if (installationInfo !== undefined) {
-          successMessages.push(getSuccessMessage(tool, installationInfo))
-        } else {
-          successMessages.push(`${tool} was successfully installed`)
-        }
-      } catch (e) {
-        // push error message to the logger
-        errorMessages.push(`${tool} failed to install`)
-      }
-    }
   }
 
   // report the messages in the end
