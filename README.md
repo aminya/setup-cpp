@@ -32,7 +32,7 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 
 # Usage
 
-## From Command Prompt
+## From Terminal
 
 You should download the exe file or the js file (if have Nodejs installed), and run it with the available options.
 
@@ -40,20 +40,47 @@ Tip: You can automate downloading using `wget`, `curl` or other similar tools.
 
 ### Executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.1), and run it with the available options.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.1.1), and run it with the available options.
 
-A Windows example that installs llvm, cmake, ninja, ccache, and conan.
+An example that installs llvm, cmake, ninja, ccache, and conan.
 
+```ps1
+# windows example (open shell as admin)
+curl -O "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp_windows.exe"
+./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
 ```
-./setup_cpp_windows.exe --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+
+```ps1
+# linux example
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp_linux"
+chmod +x setup_cpp_linux
+sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+```
+
+```ps1
+# mac example
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_mac_linux"
+chmod +x setup_cpp_mac
+sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
 ```
 
 ### With Nodejs
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.1/setup_cpp.js), and run it with the available options.
+Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp.js), and run it with the available options.
 
-```
+On Windows
+
+```ps1
+# open shell as admin
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp_windows.exe"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+```
+
+On Linux or Mac:
+
+```ps1
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp.js"
+sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
 ```
 
 ## Inside GitHub Actions
