@@ -10,7 +10,7 @@ export async function setupAptPack(
   version?: string,
   repository: boolean | string = true
 ): Promise<InstallationInfo> {
-  const apt = "apt-get" // mightSudo
+  const apt = "apt-get"
 
   if (typeof repository === "string") {
     await execaSudo("add-apt-repository", ["--update", "-y", repository])

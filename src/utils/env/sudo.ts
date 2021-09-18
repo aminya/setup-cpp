@@ -20,7 +20,7 @@ export function mightSudo(command: string) {
 
 export function execaSudo(file: string, args: string[]) {
   if (isRoot()) {
-    return execa("sudo", [file, ...args])
+    return execa.command(`sudo ${[file, ...args].join(" ")}`, { shell: true })
   } else {
     return execa(file, args)
   }
