@@ -9,7 +9,7 @@ export async function setupCppcheck(version: string | undefined, _setupCppDir: s
     case "win32": {
       await setupChocoPack("cppcheck", version)
       const binDir = "C:/Program Files/Cppcheck"
-      addPath(binDir)
+      await addPath(binDir)
       return { binDir }
     }
     case "darwin": {
