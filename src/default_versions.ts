@@ -6,7 +6,7 @@ const DefaultVersions: Record<string, string> = {
   gcovr: "5.0",
   conan: "1.40.1",
   meson: "0.59.1",
-  python: "3.x",
+  python: "3.9.7",
   gcc: process.platform === "win32" ? "11.2.0" : "11",
 }
 
