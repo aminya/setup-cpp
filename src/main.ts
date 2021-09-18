@@ -20,6 +20,7 @@ import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
+import { error, success } from "./utils/io/io"
 
 /** The setup functions */
 const setups = {
@@ -121,7 +122,7 @@ export async function main(args: string[]): Promise<number> {
         }
       } catch (e) {
         // push error message to the logger
-        core.error(e as string | Error)
+        error(e as string | Error)
         errorMessages.push(`${tool} failed to install`)
       }
     }
@@ -140,7 +141,7 @@ export async function main(args: string[]): Promise<number> {
         if (semverValid(maybeVersion) !== null) {
           version = maybeVersion
         } else {
-          core.error(`Invalid version ${maybeVersion} used for the compiler. Using the default version...`)
+          error(`Invalid version ${maybeVersion} used for the compiler. Using the default version...`)
         }
       }
 
@@ -175,13 +176,13 @@ export async function main(args: string[]): Promise<number> {
       }
     }
   } catch (e) {
-    core.error(e as string | Error)
+    error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
   }
 
   // report the messages in the end
-  successMessages.forEach((tool) => (isCI ? core.info(tool) : console.log(`\x1b[32m${tool}\x1b[0m`)))
-  errorMessages.forEach((tool) => (isCI ? core.error(tool) : console.log(`\x1b[31m${tool}\x1b[0m`)))
+  successMessages.forEach((tool) => success(tool))
+  errorMessages.forEach((tool) => error(tool))
 
   core.info("setup_cpp finished")
   return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
@@ -191,9 +192,9 @@ main(process.argv)
   .then((ret) => {
     process.exitCode = ret
   })
-  .catch((error) => {
-    core.error("main() panicked!")
-    core.error(error as string | Error)
+  .catch((err) => {
+    error("main() panicked!")
+    error(err as string | Error)
     process.exitCode = 1
   })
 
@@ -238,12 +239,12 @@ function maybeGetInput(key: string) {
 }
 
 function getSuccessMessage(tool: string, installationInfo: InstallationInfo) {
-  let success = `${tool} was successfully installed`
+  let msg = `${tool} was successfully installed`
   if ("installDir" in installationInfo) {
-    success += `\nThe installation direcotry is ${installationInfo.installDir}`
+    msg += `\nThe installation direcotry is ${installationInfo.installDir}`
   }
   if (installationInfo.binDir !== "") {
-    success += `\nThe binary direcotry is ${installationInfo.binDir}`
+    msg += `\nThe binary direcotry is ${installationInfo.binDir}`
   }
-  return success
+  return msg
 }
