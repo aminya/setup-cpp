@@ -1,7 +1,7 @@
 /* eslint-disable require-atomic-updates */
-import { exec } from "@actions/exec"
+import execa from "execa"
 import { InstallationInfo } from "./setupBin"
-import { mightSudo } from "./sudo"
+// import { mightSudo } from "./sudo"
 
 let didUpdate: boolean = false
 
@@ -11,31 +11,25 @@ export async function setupAptPack(
   version?: string,
   repository: boolean | string = true
 ): Promise<InstallationInfo> {
-  const apt = mightSudo("apt-get")
-
-  let exit: number | null = 0
+  const apt = "apt-get" // mightSudo
 
   if (typeof repository === "string") {
-    exit = await exec(mightSudo("add-apt-repository"), ["--update", "-y", repository])
+    await execa("add-apt-repository", ["--update", "-y", repository])
   }
 
   if (!didUpdate || repository === true) {
-    exit = await exec(apt, ["update", "-y"])
+    await execa(apt, ["update", "-y"])
     didUpdate = true
   }
 
   if (version !== undefined && version !== "") {
     try {
-      exit = await exec(apt, ["install", "-y", `${name}=${version}`])
+      await execa(apt, ["install", "-y", `${name}=${version}`])
     } catch {
-      exit = await exec(apt, ["install", "-y", `${name}-${version}`])
+      await execa(apt, ["install", "-y", `${name}-${version}`])
     }
   } else {
-    exit = await exec(apt, ["install", "-y", name])
-  }
-
-  if (exit !== 0) {
-    throw new Error(`Failed to install ${name} ${version}`)
+    await execa(apt, ["install", "-y", name])
   }
 
   return { binDir: "/usr/bin/" }

@@ -1,5 +1,5 @@
 /* eslint-disable require-atomic-updates */
-import spawn from "cross-spawn"
+import execa from "execa"
 import which from "which"
 import { setupBrew } from "../../brew/brew"
 import { InstallationInfo } from "./setupBin"
@@ -14,9 +14,7 @@ export function setupBrewPack(name: string, version?: string): InstallationInfo 
   }
 
   // brew is not thread-safe
-  spawn.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name], {
-    stdio: "inherit",
-  })
+  execa.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name])
 
   return { binDir: "/usr/local/bin/" }
 }

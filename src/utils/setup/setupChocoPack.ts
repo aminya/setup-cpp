@@ -3,7 +3,7 @@ import { addPath } from "../path/addPath"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"
-import spawn from "cross-spawn"
+import execa from "execa"
 
 let hasChoco = false
 
@@ -14,15 +14,10 @@ export async function setupChocoPack(name: string, version?: string, args: strin
     hasChoco = true
   }
 
-  let exit
   if (version !== undefined && version !== "") {
-    exit = spawn.sync("choco", ["install", "-y", name, `--version=${version}`, ...args], { stdio: "inherit" }).status
+    execa.sync("choco", ["install", "-y", name, `--version=${version}`, ...args])
   } else {
-    exit = spawn.sync("choco", ["install", "-y", name, ...args], { stdio: "inherit" }).status
-  }
-
-  if (exit !== 0) {
-    throw new Error(`Failed to install ${name} ${version}`)
+    execa.sync("choco", ["install", "-y", name, ...args])
   }
 
   const binDir = "C:/ProgramData/Chocolatey/bin/"

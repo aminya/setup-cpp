@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { getExecOutput } from "@actions/exec"
-import spawn from "cross-spawn"
+import execa from "execa"
 import which from "which"
 import { info } from "@actions/core"
 import { addPath } from "../path/addPath"
@@ -26,12 +26,7 @@ export async function setupPipPack(name: string, version?: string) {
     }
   }
 
-  const exit = spawn.sync(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
-    stdio: "inherit",
-  }).status
-  if (exit !== 0) {
-    throw new Error(`Failed to install ${name} ${version}`)
-  }
+  execa.sync(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name])
 
   if (binDir === undefined) {
     if (process.platform === "linux") {

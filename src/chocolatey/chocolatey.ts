@@ -1,5 +1,5 @@
 /* eslint-disable require-atomic-updates */
-import spawn from "cross-spawn"
+import execa from "execa"
 import { existsSync } from "fs"
 import { dirname } from "path"
 import which from "which"
@@ -30,14 +30,9 @@ export function setupChocolatey(
   }
 
   // https://docs.chocolatey.org/en-us/choco/setup#install-with-cmd.exe
-  const exit = spawn.sync(
-    `@"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"`,
-    { stdio: "inherit" }
-  ).status
-
-  if (exit !== 0) {
-    throw new Error(`Failed to install chocolatey`)
-  }
+  execa.commandSync(
+    `@"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"`
+  )
 
   const maybeChoco = which.sync("choco", { nothrow: true })
   if (maybeChoco !== null) {
