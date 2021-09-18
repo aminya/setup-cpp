@@ -1,4 +1,5 @@
-import { addPath, exportVariable, info } from "@actions/core"
+import { exportVariable, info } from "@actions/core"
+import { addPath } from "../utils/path/addPath"
 import { existsSync } from "fs"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"

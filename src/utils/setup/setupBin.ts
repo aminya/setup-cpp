@@ -1,5 +1,6 @@
 import { find, downloadTool, cacheDir } from "@actions/tool-cache"
-import { addPath, info } from "@actions/core"
+import { info } from "@actions/core"
+import { addPath } from "../path/addPath"
 import { join } from "path"
 import { existsSync } from "fs"
 import * as hasha from "hasha"

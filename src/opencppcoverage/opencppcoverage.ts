@@ -1,4 +1,4 @@
-import { addPath } from "@actions/core"
+import { addPath } from "../utils/path/addPath"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
