@@ -114,3 +114,5 @@ jobs:
         id: docker_build
         run: |
           pnpm build.docker
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true

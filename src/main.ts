@@ -69,6 +69,10 @@ const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 export async function main(args: string[]): Promise<number> {
   const isCI = Boolean(process.env.CI)
 
+  if (!isCI) {
+    process.env.ACTIONS_ALLOW_UNSECURE_COMMANDS = "true"
+  }
+
   // parse options using mri or github actions
   const opts = mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
     string: inputs,
