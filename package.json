@@ -17,7 +17,9 @@
     "test.tsc": "tsc --noEmit",
     "test.unit": "jest --runInBand",
     "test": "run-p test.format test.lint test.tsc test.unit",
-    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./building/pack-exe.js"
+    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./building/scripts/pack-exe.js",
+    "build.docker": "pnpm build && docker build -f ./building/docker/node.docker -t setup_cpp .",
+    "start.docker": "docker run -t setup_cpp ."
   },
   "engines": {
     "node": ">=12.x"
