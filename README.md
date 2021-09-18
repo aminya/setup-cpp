@@ -134,11 +134,10 @@ Here is an example for using setup_cpp to make a builder image that has the cpp 
 
 ```dockerfile
 # debian
-FROM debian:bullseye
+FROM buildpack-deps:bullseye
 
 # add setup_cpp
 WORKDIR "/"
-RUN apt-get update -qq && apt-get install -y --no-install-recommends wget
 RUN wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 
