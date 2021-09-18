@@ -121,6 +121,7 @@ export async function main(args: string[]): Promise<number> {
         }
       } catch (e) {
         // push error message to the logger
+        core.error(e as string | Error)
         errorMessages.push(`${tool} failed to install`)
       }
     }
@@ -174,6 +175,7 @@ export async function main(args: string[]): Promise<number> {
       }
     }
   } catch (e) {
+    core.error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
   }
 
