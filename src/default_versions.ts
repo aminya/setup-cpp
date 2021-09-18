@@ -1,6 +1,6 @@
 const DefaultVersions: Record<string, string> = {
   msvc: "2019",
-  llvm: "11",
+  llvm: "11.1.0",
   ninja: "1.10.2",
   cmake: "3.20.2",
   gcovr: "5.0",
