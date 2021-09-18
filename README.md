@@ -32,7 +32,7 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 
 # Usage
 
-## From Terminal
+# From Terminal
 
 You should download the exe file or the js file (if have Nodejs installed), and run it with the available options.
 
@@ -83,7 +83,7 @@ wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp.js"
 sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
 ```
 
-## Inside GitHub Actions
+# Inside GitHub Actions
 
 Here is a complete cross-platform example that tests llvm and gcc. It also uses cmake, ninja, conan, cppcheck, and ccache.
 
@@ -127,6 +127,32 @@ jobs:
 In the `compiler` entry, you can specify the version after a `-`. For example, `llvm-11`.
 
 For the tools, instead of `true`, which chooses the default version, you can pass a specific version.
+
+# Inside Docker
+
+Here is an example for using setup_cpp to make a builder image that has the cpp tools you need.
+
+```dockerfile
+# debian with node installed
+FROM node:16
+
+# add setup_cpp.js
+WORKDIR "/"
+RUN wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp.js"
+
+# install llvm, cmake, ninja, ccache, and conan
+RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
+
+ENTRYPOINT [ "/bin/bash" ]
+```
+
+See [this folder](https://github.com/aminya/setup-cpp/tree/master/building/docker), for some dockerfile examples.
+
+If you want to build the ones included, then run (after `-f` use the docker file name):
+
+```ps1
+docker build -f ./building/docker/linux.dockerfile -t setup_cpp .
+```
 
 ### Incomplete
 
