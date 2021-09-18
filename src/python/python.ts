@@ -14,6 +14,10 @@ function isPyPyVersion(versionSpec: string) {
 }
 
 export async function setupPython(version: string, setupCppDir: string, arch: string) {
+  if (process.env.CI === undefined || process.env.CI === "" || process.env.CI === "false") {
+    return setupPythonViaSystem(version, setupCppDir, arch)
+  }
+
   try {
     if (isPyPyVersion(version)) {
       const installed = await finderPyPy.findPyPyVersion(version, arch)
@@ -28,11 +32,11 @@ export async function setupPython(version: string, setupCppDir: string, arch: st
     core.info(`##[add-matcher]${path.join(matchersPath, "python.json")}`)
     return undefined
   } catch (err) {
-    return setupPythonFallback(version, setupCppDir, arch)
+    return setupPythonViaSystem(version, setupCppDir, arch)
   }
 }
 
-export async function setupPythonFallback(version: string, setupCppDir: string, arch: string) {
+export async function setupPythonViaSystem(version: string, setupCppDir: string, arch: string) {
   switch (process.platform) {
     case "win32": {
       // Get an unique output directory name from the URL.

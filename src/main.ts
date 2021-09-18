@@ -67,7 +67,7 @@ const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 
 /** The main entry function */
 export async function main(args: string[]): Promise<number> {
-  const isCI = Boolean(process.env.CI)
+  const isCI = process.env.CI === undefined || process.env.CI === "" || process.env.CI === "false"
 
   if (!isCI) {
     process.env.ACTIONS_ALLOW_UNSECURE_COMMANDS = "true"
