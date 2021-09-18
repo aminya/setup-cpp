@@ -8,13 +8,14 @@ import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import hasha from "hasha"
 import { join } from "path"
+import { isCI } from "../utils/env/isci"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy-")
 }
 
 export async function setupPython(version: string, setupCppDir: string, arch: string) {
-  if (process.env.CI === undefined || process.env.CI === "" || process.env.CI === "false") {
+  if (!isCI()) {
     return setupPythonViaSystem(version, setupCppDir, arch)
   }
 
