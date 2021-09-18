@@ -7,7 +7,7 @@ const DefaultVersions: Record<string, string> = {
   conan: "1.40.1",
   meson: "0.59.1",
   python: "3.x",
-  gcc: process.platform === "win32" ? "10.2.0" : "11",
+  gcc: process.platform === "win32" ? "11.2.0" : "11",
 }
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
