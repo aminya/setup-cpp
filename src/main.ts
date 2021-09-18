@@ -42,20 +42,20 @@ const setups = {
 
 /** The tools that can be installed */
 const tools: Array<keyof typeof setups> = [
+  "choco",
+  "brew",
+  "python",
   "cmake",
   "ninja",
-  "python",
   "conan",
   "meson",
   "gcovr",
   "opencppcoverage",
-  "llvm",
-  "gcc",
-  "choco",
-  "brew",
   "ccache",
   "doxygen",
   "cppcheck",
+  "llvm",
+  "gcc",
   "msvc",
 ]
 
