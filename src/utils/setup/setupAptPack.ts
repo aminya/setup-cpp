@@ -1,7 +1,6 @@
 /* eslint-disable require-atomic-updates */
-import execa from "execa"
 import { InstallationInfo } from "./setupBin"
-// import { mightSudo } from "./sudo"
+import { execaSudo } from "../env/sudo"
 
 let didUpdate: boolean = false
 
@@ -14,22 +13,22 @@ export async function setupAptPack(
   const apt = "apt-get" // mightSudo
 
   if (typeof repository === "string") {
-    await execa("add-apt-repository", ["--update", "-y", repository])
+    await execaSudo("add-apt-repository", ["--update", "-y", repository])
   }
 
   if (!didUpdate || repository === true) {
-    await execa(apt, ["update", "-y"])
+    await execaSudo(apt, ["update", "-y"])
     didUpdate = true
   }
 
   if (version !== undefined && version !== "") {
     try {
-      await execa(apt, ["install", "-y", `${name}=${version}`])
+      await execaSudo(apt, ["install", "-y", `${name}=${version}`])
     } catch {
-      await execa(apt, ["install", "-y", `${name}-${version}`])
+      await execaSudo(apt, ["install", "-y", `${name}-${version}`])
     }
   } else {
-    await execa(apt, ["install", "-y", name])
+    await execaSudo(apt, ["install", "-y", name])
   }
 
   return { binDir: "/usr/bin/" }

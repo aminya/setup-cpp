@@ -1,3 +1,5 @@
+import execa from "execa"
+
 let _issudo: boolean | undefined = undefined
 
 export function isRoot(): boolean {
@@ -14,4 +16,12 @@ export function mightSudo(command: string) {
     return `sudo ${command}`
   }
   return command
+}
+
+export function execaSudo(file: string, args: string[]) {
+  if (isRoot()) {
+    return execa("sudo", [file, ...args])
+  } else {
+    return execa(file, args)
+  }
 }
