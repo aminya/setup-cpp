@@ -2,12 +2,18 @@ import * as core from "@actions/core"
 import * as finder from "./setup-python/src/find-python"
 import * as finderPyPy from "./setup-python/src/find-pypy"
 import * as path from "path"
+import { addPath } from "../utils/path/addPath"
+import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupBrewPack } from "../utils/setup/setupBrewPack"
+import { setupChocoPack } from "../utils/setup/setupChocoPack"
+import hasha from "hasha"
+import { join } from "path"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy-")
 }
 
-export async function setupPython(version: string, _setupCppDir: string, arch: string) {
+export async function setupPython(version: string, setupCppDir: string, arch: string) {
   try {
     if (isPyPyVersion(version)) {
       const installed = await finderPyPy.findPyPyVersion(version, arch)
@@ -20,7 +26,38 @@ export async function setupPython(version: string, _setupCppDir: string, arch: s
     }
     const matchersPath = path.join(__dirname, "..", ".github")
     core.info(`##[add-matcher]${path.join(matchersPath, "python.json")}`)
+    return undefined
   } catch (err) {
-    core.setFailed((err as Error).message)
+    return setupPythonFallback(version, setupCppDir, arch)
+  }
+}
+
+export async function setupPythonFallback(version: string, setupCppDir: string, arch: string) {
+  switch (process.platform) {
+    case "win32": {
+      // Get an unique output directory name from the URL.
+      const key: string = await hasha.async(version + arch, { algorithm: "md5" })
+      const installDir = join(setupCppDir, key, "python")
+      const binDir = installDir
+      await setupChocoPack("python3", version, [`/InstallDir:${installDir}`])
+
+      // Adding the bin dir to the path
+      /** The directory which the tool is installed to */
+      core.info(`Add ${binDir} to PATH`)
+      await addPath(binDir)
+
+      return { installDir, binDir }
+    }
+    case "darwin": {
+      return setupBrewPack("python3", version)
+    }
+    case "linux": {
+      const installInfo = await setupAptPack("python3", version)
+      await setupAptPack("python3-pip")
+      return installInfo
+    }
+    default: {
+      throw new Error(`Unsupported platform`)
+    }
   }
 }
