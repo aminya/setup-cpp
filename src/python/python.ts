@@ -29,7 +29,7 @@ export async function setupPython(version: string, setupCppDir: string, arch: st
       const installed = await finder.findPythonVersion(version, arch)
       core.info(`Successfully setup ${installed.impl} (${installed.version})`)
     }
-    const matchersPath = path.join(__dirname, "..", ".github")
+    const matchersPath = path.join("setup-pthon", ".github")
     core.info(`##[add-matcher]${path.join(matchersPath, "python.json")}`)
     return undefined
   } catch (err) {
