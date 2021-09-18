@@ -16,7 +16,8 @@ function isPyPyVersion(versionSpec: string) {
 
 export async function setupPython(version: string, setupCppDir: string, arch: string) {
   if (!isCI()) {
-    return setupPythonViaSystem(version, setupCppDir, arch)
+    // TODO parse versoin
+    return setupPythonViaSystem("", setupCppDir, arch)
   }
 
   try {
