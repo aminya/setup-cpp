@@ -40,47 +40,50 @@ Tip: You can automate downloading using `wget`, `curl` or other similar tools.
 
 ### Executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.1.1), and run it with the available options.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.2), and run it with the available options.
 
-An example that installs llvm, cmake, ninja, ccache, and conan.
+An example that installs llvm, cmake, ninja, ccache, and conan:
 
 ```ps1
 # windows example (open shell as admin)
-curl -O "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp_windows.exe"
-./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+curl -O "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_windows.exe"
+./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
 ```ps1
 # linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp_linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_linux"
 chmod +x setup_cpp_linux
-sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
 ```ps1
 # mac example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_mac_linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_mac_linux"
 chmod +x setup_cpp_mac
-sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
+
+NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11`.
+For the tools, instead of `true`, which chooses the default version, you can pass a specific version.
 
 ### With Nodejs
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp.js), and run it with the available options.
+Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp.js), and run it with the available options.
 
 On Windows
 
 ```ps1
 # open shell as admin
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp_windows.exe"
-node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_windows.exe"
+node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
 On Linux or Mac:
 
 ```ps1
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp.js"
-sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp.js"
+sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
 # Inside GitHub Actions
@@ -111,6 +114,7 @@ jobs:
         compiler:
           - llvm
           - gcc
+          # you can specify the version after `-` like `llvm-11`.
     steps:
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
@@ -120,39 +124,38 @@ jobs:
           ninja: true
           conan: true
           cppcheck: true
-          ccache: true
+          ccache: true # instead of `true`, which chooses the default version, you can pass a specific version.
           # add any tool that you need here...
 ```
-
-In the `compiler` entry, you can specify the version after a `-`. For example, `llvm-11`.
-
-For the tools, instead of `true`, which chooses the default version, you can pass a specific version.
 
 # Inside Docker
 
 Here is an example for using setup_cpp to make a builder image that has the cpp tools you need.
 
 ```dockerfile
-# debian with node installed
-FROM node:16
+# debian
+FROM debian:bullseye
 
-# add setup_cpp.js
+# add setup_cpp
 WORKDIR "/"
-RUN wget "https://github.com/aminya/setup-cpp/releases/download/v0.1.1/setup_cpp.js"
+RUN wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_linux"
+RUN chmod +x ./setup_cpp_linux
 
 # install llvm, cmake, ninja, ccache, and conan
-RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
+RUN ./setup_cpp --compiler llvm --cmake true --ninja true --ccache true --conan true
 
 ENTRYPOINT [ "/bin/bash" ]
 ```
 
 See [this folder](https://github.com/aminya/setup-cpp/tree/master/building/docker), for some dockerfile examples.
 
-If you want to build the ones included, then run (after `-f` use the docker file name):
+If you want to build the ones included, then run:
 
 ```ps1
-docker build -f ./building/docker/linux.dockerfile -t setup_cpp .
+docker build -f ./building/docker/debian.dockerfile -t setup_cpp .
 ```
+
+After `-f` use the docker file name.
 
 ### Incomplete
 
