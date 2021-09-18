@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - main
+      - dev
 
 jobs:
   Test:
@@ -68,3 +69,48 @@ jobs:
             ./exe
             ./dist
           retention-days: 1
+
+  Docker:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+        node:
+          - 14
+        pnpm:
+          - 6
+        cache_reset_counter:
+          - 0
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.pnpm-store
+            D:\.pnpm-store
+          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}-${{ matrix.cache_reset_counter }}"
+          restore-keys: |
+            "setupcpp-docker-cache-OS:${{ matrix.os }}"
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+
+      - name: Install and build
+        run: |
+          pnpm install
+
+      - name: Build
+        id: docker_build
+        run: |
+          pnpm build.docker
