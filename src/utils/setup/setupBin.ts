@@ -5,6 +5,7 @@ import { join } from "path"
 import { existsSync } from "fs"
 import * as hasha from "hasha"
 import { tmpdir } from "os"
+import { isCI } from "../env/isci"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -47,17 +48,19 @@ export async function setupBin(
   const { url, binRelativeDir, extractedFolderName, extractFunction } = await getPackageInfo(version, process.platform)
 
   // Restore from cache (if found).
-  try {
-    const dir = find(name, version)
-    if (dir) {
-      info(`${name} ${version} was found in the cache.`)
-      const installDir = join(dir, extractedFolderName)
-      const binDir = join(installDir, binRelativeDir)
-      await addPath(binDir)
-      return { installDir, binDir }
+  if (isCI()) {
+    try {
+      const dir = find(name, version)
+      if (dir) {
+        info(`${name} ${version} was found in the cache.`)
+        const installDir = join(dir, extractedFolderName)
+        const binDir = join(installDir, binRelativeDir)
+        await addPath(binDir)
+        return { installDir, binDir }
+      }
+    } catch {
+      // fails on a local machine?
     }
-  } catch {
-    // fails on a local machine?
   }
 
   // Get an unique output directory name from the URL.
@@ -80,7 +83,7 @@ export async function setupBin(
   await addPath(binDir)
 
   // check if inside Github Actions. If so, cache the installation
-  if (typeof process.env.RUNNER_TOOL_CACHE === "string") {
+  if (isCI() && typeof process.env.RUNNER_TOOL_CACHE === "string") {
     await cacheDir(rootDir, name, version)
   }
 
