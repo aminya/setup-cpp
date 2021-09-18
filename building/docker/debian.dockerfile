@@ -1,8 +1,9 @@
 # debian
-FROM buildpack-deps:bullseye
+FROM debian:bullseye
 
 # add setup_cpp
 WORKDIR "/"
+RUN apt-get update -qq && apt-get install -y --no-install-recommends wget
 RUN wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 
