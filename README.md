@@ -40,7 +40,7 @@ Tip: You can automate downloading using `wget`, `curl` or other similar tools.
 
 ### Executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.2), and run it with the available options.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.2.1), and run it with the available options.
 
 An example that installs llvm, cmake, ninja, ccache, and conan:
 
