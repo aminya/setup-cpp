@@ -59,7 +59,7 @@ sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true -
 
 ```ps1
 # mac example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_mac_linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_cpp_mac"
 chmod +x setup_cpp_mac
 sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
