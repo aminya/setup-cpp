@@ -75,7 +75,7 @@ On Windows
 
 ```ps1
 # open shell as admin
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_windows.exe"
+curl "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
