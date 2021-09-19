@@ -46,20 +46,20 @@ An example that installs llvm, cmake, ninja, ccache, and conan:
 
 ```ps1
 # windows example (open shell as admin)
-curl -O "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_windows.exe"
+curl -O "https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_cpp_windows.exe"
 ./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
 ```ps1
 # linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_cpp_linux"
 chmod +x setup_cpp_linux
 sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
 ```ps1
 # mac example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_mac_linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_mac_linux"
 chmod +x setup_cpp_mac
 sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
@@ -69,20 +69,20 @@ For the tools, instead of `true`, which chooses the default version, you can pas
 
 ### With Nodejs
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp.js), and run it with the available options.
+Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_cpp.js), and run it with the available options.
 
 On Windows
 
 ```ps1
 # open shell as admin
-curl "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp.js"
+curl "https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
 On Linux or Mac:
 
 ```ps1
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp.js"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_cpp.js"
 sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
 ```
 
@@ -141,7 +141,7 @@ WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends apt-utils
 RUN apt-get install -y --no-install-recommends ca-certificates wget unzip
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.2/setup_cpp_linux"
+RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.2.1/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 
 # install llvm, cmake, ninja, ccache, and conan
