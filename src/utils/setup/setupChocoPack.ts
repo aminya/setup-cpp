@@ -21,6 +21,6 @@ export async function setupChocoPack(name: string, version?: string, args: strin
   }
 
   const binDir = "C:/ProgramData/Chocolatey/bin/"
-  await addPath(binDir)
+  addPath(binDir)
   return { binDir }
 }

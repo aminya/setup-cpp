@@ -47,7 +47,7 @@ export async function setupPipPack(name: string, version?: string) {
       }
     }
     info(`${binDir} to PATH`)
-    await addPath(binDir)
+    addPath(binDir)
   }
 
   return { binDir }

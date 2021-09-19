@@ -50,7 +50,7 @@ export async function setupPythonViaSystem(version: string, setupCppDir: string,
       // Adding the bin dir to the path
       /** The directory which the tool is installed to */
       core.info(`Add ${binDir} to PATH`)
-      await addPath(binDir)
+      addPath(binDir)
 
       return { installDir, binDir }
     }

@@ -55,7 +55,7 @@ export async function setupBin(
         info(`${name} ${version} was found in the cache.`)
         const installDir = join(dir, extractedFolderName)
         const binDir = join(installDir, binRelativeDir)
-        await addPath(binDir)
+        addPath(binDir)
         return { installDir, binDir }
       }
     } catch {
@@ -80,7 +80,7 @@ export async function setupBin(
   // Adding the bin dir to the path
   /** The directory which the tool is installed to */
   info(`Add ${binDir} to PATH`)
-  await addPath(binDir)
+  addPath(binDir)
 
   // check if inside Github Actions. If so, cache the installation
   if (isCI() && typeof process.env.RUNNER_TOOL_CACHE === "string") {
