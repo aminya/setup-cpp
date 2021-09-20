@@ -8,8 +8,7 @@ export async function setupCppcheck(version: string | undefined, _setupCppDir: s
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("cppcheck", version)
-      const binDir = "C:/Program Files/Cppcheck"
-      addPath(binDir)
+      const binDir = activateWinCppcheck()
       return { binDir }
     }
     case "darwin": {
@@ -22,4 +21,10 @@ export async function setupCppcheck(version: string | undefined, _setupCppDir: s
       throw new Error(`Unsupported platform`)
     }
   }
+}
+
+function activateWinCppcheck() {
+  const binDir = "C:/Program Files/Cppcheck"
+  addPath(binDir)
+  return binDir
 }
