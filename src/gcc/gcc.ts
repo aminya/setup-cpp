@@ -54,29 +54,29 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
     }
   }
   if (binDir !== undefined) {
-    const majorVersion = semverMajor(semverCoerce(version) ?? version)
-
-    // TODO
-    // const ld = process.env.LD_LIBRARY_PATH ?? ""
-    // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
-
-    // // Setup gcc as the compiler
-    // exportVariable("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`)
-    // exportVariable("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`)
-
-    // exportVariable("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`)
-
-    // exportVariable("LDFLAGS", `-L${installDir}/lib`)
-    // exportVariable("CPPFLAGS", `-I${installDir}/include`)
-
-    if (process.platform === "win32") {
-      exportVariable("CC", `${binDir}/gcc`)
-      exportVariable("CXX", `${binDir}/g++`)
-    } else {
-      exportVariable("CC", `${binDir}/gcc-${majorVersion}`)
-      exportVariable("CXX", `${binDir}/g++-${majorVersion}`)
-    }
+    activateGcc(version, binDir)
     return { binDir }
   }
   return undefined
+}
+
+function activateGcc(version: string, binDir: string) {
+  const majorVersion = semverMajor(semverCoerce(version) ?? version)
+
+  // TODO
+  // const ld = process.env.LD_LIBRARY_PATH ?? ""
+  // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
+  // // Setup gcc as the compiler
+  // exportVariable("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`)
+  // exportVariable("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`)
+  // exportVariable("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`)
+  // exportVariable("LDFLAGS", `-L${installDir}/lib`)
+  // exportVariable("CPPFLAGS", `-I${installDir}/include`)
+  if (process.platform === "win32") {
+    exportVariable("CC", `${binDir}/gcc`)
+    exportVariable("CXX", `${binDir}/g++`)
+  } else {
+    exportVariable("CC", `${binDir}/gcc-${majorVersion}`)
+    exportVariable("CXX", `${binDir}/g++-${majorVersion}`)
+  }
 }
