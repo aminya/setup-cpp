@@ -216,11 +216,8 @@ export function getUrl(platform: string, version: string): string | null | Promi
 }
 
 //================================================
-// Action
+// Exports
 //================================================
-
-const DEFAULT_NIX_DIRECTORY = "./llvm"
-const DEFAULT_WIN32_DIRECTORY = "C:/Program Files/LLVM"
 
 async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): Promise<PackageInfo> {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, platform, version, getUrl)
@@ -232,6 +229,9 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
     extractFunction: platform === "win32" ? extractExe : extractTarByExe,
   }
 }
+
+const DEFAULT_NIX_DIRECTORY = "./llvm"
+const DEFAULT_WIN32_DIRECTORY = "C:/Program Files/LLVM"
 
 export async function setupLLVM(
   version: string,
@@ -249,7 +249,11 @@ export async function setupLLVM(
 
   const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, directory)
 
-  // Adding environment variables
+  await activateLLVM(directory, version)
+  return installationInfo
+}
+
+export async function activateLLVM(directory: string, version: string) {
   const lib = path.join(directory, "lib")
 
   const ld = process.env.LD_LIBRARY_PATH ?? ""
@@ -284,6 +288,4 @@ export async function setupLLVM(
       core.error(e as Error | string)
     }
   }
-
-  return installationInfo
 }
