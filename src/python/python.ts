@@ -31,8 +31,7 @@ export async function setupPythonViaSystem(version: string, setupCppDir: string,
 
       // Adding the bin dir to the path
       /** The directory which the tool is installed to */
-      core.info(`Add ${binDir} to PATH`)
-      addPath(binDir)
+      activateWinPython(binDir)
 
       return { installDir, binDir }
     }
@@ -48,4 +47,9 @@ export async function setupPythonViaSystem(version: string, setupCppDir: string,
       throw new Error(`Unsupported platform`)
     }
   }
+}
+
+function activateWinPython(binDir: string) {
+  core.info(`Add ${binDir} to PATH`)
+  addPath(binDir)
 }
