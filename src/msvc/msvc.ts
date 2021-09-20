@@ -64,6 +64,17 @@ export async function setupMSVC(
   } catch (e) {
     error(e as string | Error)
   }
+  activateMSVC(VCTargetsPath, arch, toolset, sdk, uwp, spectre)
+}
+
+function activateMSVC(
+  VCTargetsPath: string | undefined,
+  arch: string,
+  toolset: string | undefined,
+  sdk?: string,
+  uwp?: boolean,
+  spectre?: boolean
+) {
   if (VCTargetsPath !== undefined && existsSync(VCTargetsPath)) {
     exportVariable("VCTargetsPath", VCTargetsPath)
   }
