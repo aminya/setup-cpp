@@ -1,7 +1,4 @@
 import * as core from "@actions/core"
-import * as finder from "./setup-python/src/find-python"
-import * as finderPyPy from "./setup-python/src/find-pypy"
-import * as path from "path"
 import { addPath } from "../utils/path/addPath"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
@@ -9,30 +6,15 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import hasha from "hasha"
 import { join } from "path"
 import { isCI } from "../utils/env/isci"
+import { setupActionsPython } from "./actions_python"
 
-function isPyPyVersion(versionSpec: string) {
-  return versionSpec.startsWith("pypy-")
-}
-
-export async function setupPython(version: string, setupCppDir: string, arch: string) {
+export function setupPython(version: string, setupCppDir: string, arch: string) {
   if (!isCI()) {
     // TODO parse versoin
     return setupPythonViaSystem("", setupCppDir, arch)
   }
-
   try {
-    if (isPyPyVersion(version)) {
-      const installed = await finderPyPy.findPyPyVersion(version, arch)
-      core.info(
-        `Successfully setup PyPy ${installed.resolvedPyPyVersion} with Python (${installed.resolvedPythonVersion})`
-      )
-    } else {
-      const installed = await finder.findPythonVersion(version, arch)
-      core.info(`Successfully setup ${installed.impl} (${installed.version})`)
-    }
-    const matchersPath = path.join("setup-pthon", ".github")
-    core.info(`##[add-matcher]${path.join(matchersPath, "python.json")}`)
-    return undefined
+    return setupActionsPython(version, setupCppDir, arch)
   } catch (err) {
     return setupPythonViaSystem(version, setupCppDir, arch)
   }
