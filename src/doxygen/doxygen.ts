@@ -33,9 +33,7 @@ export async function setupDoxygen(version: string | undefined, _setupCppDir: st
        *       at setupDoxygen (src/doxygen/doxygen.ts:11:27)
        *       at Object.<anonymous> (src/doxygen/__tests__/doxygen.test.ts:8:25)
        */
-      addPath("C:/Program Files/Graphviz/bin")
-      const binDir = "C:/Program Files/doxygen/bin"
-      addPath(binDir)
+      const binDir = activateWinDoxygen()
       return { binDir }
     }
     case "darwin": {
@@ -50,4 +48,11 @@ export async function setupDoxygen(version: string | undefined, _setupCppDir: st
       throw new Error(`Unsupported platform`)
     }
   }
+}
+
+function activateWinDoxygen() {
+  addPath("C:/Program Files/Graphviz/bin")
+  const binDir = "C:/Program Files/doxygen/bin"
+  addPath(binDir)
+  return binDir
 }
