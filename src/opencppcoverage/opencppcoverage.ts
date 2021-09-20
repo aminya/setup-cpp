@@ -7,7 +7,12 @@ export async function setupOpencppcoverage(version: string | undefined, _setupCp
     return
   }
   await setupChocoPack("opencppcoverage", version)
+  const binDir = activateOpencppcoverage()
+  return { binDir }
+}
+
+function activateOpencppcoverage() {
   const binDir = "C:/Program Files/OpenCppCoverage"
   addPath(binDir)
-  return { binDir }
+  return binDir
 }
