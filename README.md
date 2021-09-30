@@ -147,7 +147,7 @@ RUN chmod +x ./setup_cpp_linux
 # install llvm, cmake, ninja, ccache, and conan
 RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --conan true
 
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "/bin/sh" ]
 ```
 
 See [this folder](https://github.com/aminya/setup-cpp/tree/master/building/docker), for some dockerfile examples.
@@ -158,7 +158,13 @@ If you want to build the ones included, then run:
 docker build -f ./building/docker/debian.dockerfile -t setup_cpp .
 ```
 
-After `-f` use the docker file name.
+Where you should use the path to the the docker after `-f`.
+
+After build, run the following to start an interactive shell in your container
+
+```ps1
+docker run -it setup_cpp
+```
 
 ### Incomplete
 

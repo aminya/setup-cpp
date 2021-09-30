@@ -8,4 +8,4 @@ WORKDIR "/"
 # run installation
 RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
 
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "/bin/sh" ]

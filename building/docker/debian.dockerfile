@@ -12,4 +12,4 @@ RUN chmod +x ./setup_cpp_linux
 # install llvm, cmake, ninja, ccache, and conan
 RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --conan true
 
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT [ "/bin/sh" ]
