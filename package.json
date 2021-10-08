@@ -1,41 +1,31 @@
 {
   "name": "setup-cpp",
   "version": "0.1.0",
-  "author": "Amin Yahyaabadi",
   "description": "Install all the tools required for building and testing C++/C projects.",
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/setup_cpp.js",
+  "source": "./src/main.ts",
+  "bin": {
+    "setup-cpp": "./dist/setup_cpp.js",
+    "setup_cpp": "./dist/setup_cpp.js"
+  },
   "scripts": {
-    "format": "prettier --write .",
-    "lint": "eslint . --fix",
+    "build": "cross-env NODE_ENV=production parcel build --detailed-report",
+    "build.docker": "pnpm build && docker build -f ./building/docker/debian.dockerfile -t setup_cpp .",
     "clean": "shx rm -rf dist exe",
     "dev": "cross-env NODE_ENV=development parcel watch",
-    "build": "cross-env NODE_ENV=production parcel build --detailed-report",
+    "format": "prettier --write .",
+    "lint": "eslint . --fix",
+    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./building/scripts/pack-exe.js",
     "prepare": "git submodule update --init --recursive && npm run build",
+    "start.docker": "docker run -t setup_cpp .",
+    "test": "run-p test.format test.lint test.tsc test.unit",
     "test.format": "prettier . --check",
     "test.lint": "eslint .",
     "test.tsc": "tsc --noEmit",
-    "test.unit": "jest --runInBand",
-    "test": "run-p test.format test.lint test.tsc test.unit",
-    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./building/scripts/pack-exe.js",
-    "build.docker": "pnpm build && docker build -f ./building/docker/debian.dockerfile -t setup_cpp .",
-    "start.docker": "docker run -t setup_cpp ."
-  },
-  "engines": {
-    "node": ">=12.x"
-  },
-  "main": "./dist/setup_cpp.js",
-  "bin": {
-    "setup_cpp": "./dist/setup_cpp.js",
-    "setup-cpp": "./dist/setup_cpp.js"
-  },
-  "source": "./src/main.ts",
-  "targets": {
-    "main": {
-      "context": "node",
-      "includeNodeModules": true,
-      "optimize": true
-    }
+    "test.unit": "jest --runInBand"
   },
   "prettier": "prettier-config-atomic",
   "dependencies": {
@@ -50,16 +40,11 @@
     "untildify": "^4.0.0",
     "which": "^2.0.2"
   },
-  "pnpm": {
-    "overrides": {
-      "semver": "7.3.5"
-    }
-  },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",
     "@types/jest": "^27.0.2",
     "@types/mri": "^1.1.1",
-    "@types/node": "^16.10.2",
+    "@types/node": "^16.10.3",
     "@types/semver": "^7.3.8",
     "@types/which": "^2.0.1",
     "caxa": "^2.1.0",
@@ -69,11 +54,14 @@
     "jest": "^27.2.4",
     "npm-run-all2": "^5.0.2",
     "parcel": "^2.0.0-rc.0",
-    "prettier-config-atomic": "^2.0.6",
+    "prettier-config-atomic": "^3.0.1",
     "shx": "0.3.3",
     "terser-config-atomic": "^0.1.1",
     "ts-jest": "^27.0.5",
     "typescript": "^4.4.3"
+  },
+  "engines": {
+    "node": ">=12.x"
   },
   "keywords": [
     "github-actions",
@@ -93,5 +81,17 @@
     "cmake",
     "ninja",
     "meson"
-  ]
+  ],
+  "pnpm": {
+    "overrides": {
+      "semver": "7.3.5"
+    }
+  },
+  "targets": {
+    "main": {
+      "context": "node",
+      "includeNodeModules": true,
+      "optimize": true
+    }
+  }
 }
