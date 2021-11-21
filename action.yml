@@ -4,7 +4,7 @@ author: "Amin Yahyaabadi"
 
 inputs:
   compiler:
-    description: "The compiler to use and its optinal version separated by - e.g. llvm-11"
+    description: "The compiler to use and its optional version separated by - e.g. llvm-13.0.0"
     required: false
   architecture:
     description: "The CPU architecture"

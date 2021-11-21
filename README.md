@@ -115,7 +115,7 @@ jobs:
         compiler:
           - llvm
           - gcc
-          # you can specify the version after `-` like `llvm-11`.
+          # you can specify the version after `-` like `llvm-13.0.0`.
     steps:
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1

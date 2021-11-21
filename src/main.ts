@@ -18,12 +18,14 @@ import untildify from "untildify"
 import { isCI } from "./utils/env/isci"
 
 import semverValid from "semver/functions/valid"
+// import semverCoerce from "semver/functions/coerce"
 import { getVersion } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { error, success } from "./utils/io/io"
 import { setupVcpkg } from "./vcpkg/vcpkg"
 import { join } from "path"
+import { warning } from "@actions/core"
 
 /** The setup functions */
 const setups = {
@@ -135,18 +137,7 @@ export async function main(args: string[]): Promise<number> {
   const maybeCompiler = opts.compiler
   try {
     if (maybeCompiler !== undefined) {
-      // detecting the compiler version. Divide the given string by `-` and use the second element as the version
-      const compilerAndMaybeVersion = maybeCompiler.split("-")
-      const compiler = compilerAndMaybeVersion[0]
-      let version: string | undefined
-      if (1 in compilerAndMaybeVersion) {
-        const maybeVersion = compilerAndMaybeVersion[1]
-        if (semverValid(maybeVersion) !== null) {
-          version = maybeVersion
-        } else {
-          error(`Invalid version ${maybeVersion} used for the compiler. Using the default version...`)
-        }
-      }
+      const { compiler, version } = getCompilerInfo(maybeCompiler)
 
       // install the compiler. We allow some aliases for the compiler name
       switch (compiler) {
@@ -219,6 +210,32 @@ main(process.argv)
     process.exitCode = 1
   })
 
+/** Detecting the compiler version. Divide the given string by `-` and use the second element as the version */
+export function getCompilerInfo(maybeCompiler: string) {
+  const compilerAndMaybeVersion = maybeCompiler.split("-")
+  const compiler = compilerAndMaybeVersion[0]
+  if (1 in compilerAndMaybeVersion) {
+    const maybeVersion = compilerAndMaybeVersion[1]
+    if (semverValid(maybeVersion) !== null) {
+      return { compiler, version: maybeVersion }
+    } else {
+      // version coercion
+      // try {
+      //   // find the semver version of an integer
+      //   const coercedVersion = semverCoerce(maybeVersion)
+      //   if (coercedVersion !== null) {
+      //     return { compiler, version: coercedVersion.version }
+      //   }
+      // } catch (err) {
+      //   // handled in the end
+      // }
+      warning(`Invalid semver version ${maybeVersion} used for the compiler.`)
+      return { compiler, version: maybeVersion }
+    }
+  }
+  return { compiler, version: undefined }
+}
+
 function printHelp() {
   core.info(`
 setup_cpp [options]
@@ -228,7 +245,7 @@ Install all the tools required for building and testing C++/C projects.
 
 --architecture\t the cpu architecture to install the tools for. By default it uses the current CPU architecture.
 --compiler\t the <compiler> to install.
-          \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-11'
+          \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-13.0.0'
 
 --tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
 
