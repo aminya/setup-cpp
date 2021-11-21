@@ -13,7 +13,7 @@ export function setupVcpkg(_version: string, _setupCppDir: string, _arch: string
   if (!hasVCPKG || which.sync("vcpkg", { nothrow: true }) === null) {
     execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: untildify("~/") })
     const vcpkgDir = untildify("~/vcpkg")
-    execa.sync(addShellExtension("./bootstrap-vcpkg"), { cwd: vcpkgDir, shell: true })
+    execa.sync(addShellExtension("bootstrap-vcpkg"), { cwd: vcpkgDir, shell: true })
     addPath(vcpkgDir)
     hasVCPKG = true
     return { binDir: vcpkgDir }
