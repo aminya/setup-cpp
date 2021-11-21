@@ -22,12 +22,14 @@ import { getVersion } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { error, success } from "./utils/io/io"
+import { setupVcpkg } from "./vcpkg/vcpkg"
 
 /** The setup functions */
 const setups = {
   cmake: setupCmake,
   ninja: setupNinja,
   python: setupPython,
+  vcpkg: setupVcpkg,
   conan: setupConan,
   meson: setupMeson,
   gcovr: setupGcovr,
@@ -47,6 +49,7 @@ const tools: Array<keyof typeof setups> = [
   "choco",
   "brew",
   "python",
+  "vcpkg",
   "cmake",
   "ninja",
   "conan",
@@ -233,6 +236,7 @@ All the available tools:
 --gcc
 --cmake
 --ninja
+--vcpkg
 --meson
 --conan
 --ccache

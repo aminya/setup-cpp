@@ -19,6 +19,7 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 - gcc
 - cmake
 - ninja
+- vcpkg
 - meson
 - conan
 - ccache
@@ -168,5 +169,4 @@ docker run -it setup_cpp
 
 ### Incomplete
 
-- [ ] msvc. It is implemented, but has bugs. See [this issue](https://github.com/aminya/cpp/issues/1)
-- [ ] vcpkg (TODO)
+- msvc. It is implemented, but has bugs. See [this issue](https://github.com/aminya/setup-cpp/issues/1)
