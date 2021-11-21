@@ -6,8 +6,7 @@ import { isValidUrl } from "../utils/http/validate_url"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
 import { getSpecificVersionAndUrl, getVersions } from "../utils/setup/version"
-import { getExecOutput } from "@actions/exec"
-import { existsSync } from "fs"
+import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 
 //================================================
 // Version
@@ -271,15 +270,5 @@ export async function activateLLVM(directory: string, version: string) {
 
   core.exportVariable("LIBRARY_PATH", `${directory}/lib`)
 
-  if (process.platform === "darwin") {
-    try {
-      const xcrun = await getExecOutput("xcrun --sdk macosx --show-sdk-path")
-      const sdkroot = xcrun.stdout || xcrun.stderr
-      if (existsSync(sdkroot)) {
-        core.exportVariable("SDKROOT", sdkroot)
-      }
-    } catch (e) {
-      core.error(e as Error | string)
-    }
-  }
+  await setupMacOSSDK()
 }

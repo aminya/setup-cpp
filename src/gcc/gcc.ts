@@ -6,6 +6,7 @@ import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import semverMajor from "semver/functions/major"
 import semverCoerce from "semver/functions/coerce"
+import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGcc(version: string, _setupCppDir: string, arch: string) {
@@ -54,13 +55,13 @@ export async function setupGcc(version: string, _setupCppDir: string, arch: stri
     }
   }
   if (binDir !== undefined) {
-    activateGcc(version, binDir)
+    await activateGcc(version, binDir)
     return { binDir }
   }
   return undefined
 }
 
-function activateGcc(version: string, binDir: string) {
+async function activateGcc(version: string, binDir: string) {
   const majorVersion = semverMajor(semverCoerce(version) ?? version)
 
   // TODO
@@ -79,4 +80,6 @@ function activateGcc(version: string, binDir: string) {
     exportVariable("CC", `${binDir}/gcc-${majorVersion}`)
     exportVariable("CXX", `${binDir}/g++-${majorVersion}`)
   }
+
+  await setupMacOSSDK()
 }
