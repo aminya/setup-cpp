@@ -13,3 +13,11 @@ export function addShellExtension(name: string) {
   }
   return `${name}.sh`
 }
+
+/** Add ./ for unix shell */
+export function addShellHere(name: string) {
+  if (process.platform === "win32") {
+    return name
+  }
+  return `./${name}`
+}
