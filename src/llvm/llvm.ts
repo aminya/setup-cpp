@@ -258,7 +258,10 @@ export async function activateLLVM(directory: string, version: string) {
   core.exportVariable("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
   core.exportVariable("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
 
-  core.exportVariable("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+  if (process.platform !== "win32") {
+    // https://github.com/aminya/setup-cpp/issues/6
+    core.exportVariable("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+  }
 
   core.exportVariable("LDFLAGS", `-L${directory}/lib`)
   core.exportVariable("CPPFLAGS", `-I${directory}/include`)
