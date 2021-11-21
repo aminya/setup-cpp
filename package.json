@@ -42,23 +42,23 @@
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",
-    "@types/jest": "^27.0.2",
+    "@types/jest": "^27.0.3",
     "@types/mri": "^1.1.1",
-    "@types/node": "^16.11.6",
+    "@types/node": "^16.11.9",
     "@types/semver": "^7.3.9",
     "@types/which": "^2.0.1",
     "caxa": "^2.1.0",
     "cross-env": "7.0.3",
     "cross-spawn": "^7.0.3",
-    "eslint-config-atomic": "^1.16.4",
+    "eslint-config-atomic": "^1.16.5",
     "jest": "^27.3.1",
     "npm-run-all2": "^5.0.2",
-    "parcel": "^2.0.0",
+    "parcel": "^2.0.1",
     "prettier-config-atomic": "^3.0.1",
     "shx": "0.3.3",
     "terser-config-atomic": "^0.1.1",
     "ts-jest": "^27.0.7",
-    "typescript": "^4.4.4"
+    "typescript": "^4.5.2"
   },
   "engines": {
     "node": ">=12.x"

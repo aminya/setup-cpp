@@ -19,6 +19,7 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 - gcc
 - cmake
 - ninja
+- vcpkg
 - meson
 - conan
 - ccache
@@ -42,26 +43,26 @@ Tip: You can automate downloading using `wget`, `curl` or other similar tools.
 
 Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.2.2), and run it with the available options.
 
-An example that installs llvm, cmake, ninja, ccache, and conan:
+An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```ps1
 # windows example (open shell as admin)
 curl -O "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp_windows.exe"
-./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --conan true
+./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 ```ps1
 # linux example
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp_linux"
 chmod +x setup_cpp_linux
-sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --conan true
+sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 ```ps1
 # mac example
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp_mac"
 chmod +x setup_cpp_mac
-sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --conan true
+sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11`.
@@ -76,19 +77,19 @@ On Windows
 ```ps1
 # open shell as admin
 curl "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp.js"
-node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
+node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 On Linux or Mac:
 
 ```ps1
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp.js"
-sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
+sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 # Inside GitHub Actions
 
-Here is a complete cross-platform example that tests llvm and gcc. It also uses cmake, ninja, conan, cppcheck, and ccache.
+Here is a complete cross-platform example that tests llvm and gcc. It also uses cmake, ninja, vcpkg, cppcheck, and ccache.
 
 `.github/workflows/ci.yml`:
 
@@ -144,8 +145,8 @@ RUN apt-get install -y --no-install-recommends ca-certificates wget unzip
 RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 
-# install llvm, cmake, ninja, ccache, and conan
-RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --conan true
+# install llvm, cmake, ninja, ccache, and vcpkg
+RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 ENTRYPOINT [ "/bin/sh" ]
 ```
@@ -168,5 +169,4 @@ docker run -it setup_cpp
 
 ### Incomplete
 
-- [ ] msvc. It is implemented, but has bugs. See [this issue](https://github.com/aminya/cpp/issues/1)
-- [ ] vcpkg (TODO)
+- msvc. It is implemented, but has bugs. See [this issue](https://github.com/aminya/setup-cpp/issues/1)

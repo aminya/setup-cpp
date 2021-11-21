@@ -1,13 +1,13 @@
 const DefaultVersions: Record<string, string> = {
   msvc: "2019",
-  llvm: "11.1.0",
+  llvm: "13.0.0",
   ninja: "1.10.2",
-  cmake: "3.20.2",
+  cmake: "3.22.0",
   gcovr: "5.0",
-  conan: "1.40.1",
-  meson: "0.59.1",
-  python: "3.9.7",
-  gcc: process.platform === "win32" ? "11.2.0" : "11",
+  conan: "1.42.1",
+  meson: "0.60.1",
+  python: "3.10.0",
+  gcc: process.platform === "win32" ? "11.2.0.07112021" : "11",
 }
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */

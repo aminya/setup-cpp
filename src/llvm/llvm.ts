@@ -6,8 +6,7 @@ import { isValidUrl } from "../utils/http/validate_url"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
 import { getSpecificVersionAndUrl, getVersions } from "../utils/setup/version"
-import { getExecOutput } from "@actions/exec"
-import { existsSync } from "fs"
+import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 
 //================================================
 // Version
@@ -48,6 +47,7 @@ export const VERSIONS: Set<string> = getVersions([
   "11.1.0",
   "12.0.0",
   "12.0.1",
+  "13.0.0",
 ])
 
 //================================================
@@ -104,7 +104,7 @@ function getDarwinUrl(version: string): string | null {
  * This is useful when there were binaries released for the Linux (Ubuntu) platform for the last RC version but not for
  * the actual release version.
  */
-const UBUNTU_RC: Map<string, string> = new Map([["12.0.1", "12.0.1-rc4"]])
+const UBUNTU_RC: Map<string, string> = new Map()
 
 /** The (latest) Ubuntu versions for each LLVM version. */
 const UBUNTU: { [key: string]: string } = {
@@ -138,11 +138,12 @@ const UBUNTU: { [key: string]: string } = {
   "11.0.1": "-ubuntu-16.04",
   "11.1.0": "-ubuntu-16.04",
   "12.0.0": "-ubuntu-20.04",
-  "12.0.1-rc4": "-ubuntu-21.04",
+  "12.0.1": "-ubuntu-16.04",
+  "13.0.0": "-ubuntu-20.04",
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
-const MAX_UBUNTU: string = "12.0.1-rc4"
+const MAX_UBUNTU: string = "13.0.0"
 
 /** Gets an LLVM download URL for the Linux (Ubuntu) platform. */
 function getLinuxUrl(versionGiven: string): string {
@@ -258,7 +259,10 @@ export async function activateLLVM(directory: string, version: string) {
   core.exportVariable("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
   core.exportVariable("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
 
-  core.exportVariable("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+  if (process.platform !== "win32") {
+    // https://github.com/aminya/setup-cpp/issues/6
+    core.exportVariable("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+  }
 
   core.exportVariable("LDFLAGS", `-L${directory}/lib`)
   core.exportVariable("CPPFLAGS", `-I${directory}/include`)
@@ -268,15 +272,5 @@ export async function activateLLVM(directory: string, version: string) {
 
   core.exportVariable("LIBRARY_PATH", `${directory}/lib`)
 
-  if (process.platform === "darwin") {
-    try {
-      const xcrun = await getExecOutput("xcrun --sdk macosx --show-sdk-path")
-      const sdkroot = xcrun.stdout || xcrun.stderr
-      if (existsSync(sdkroot)) {
-        core.exportVariable("SDKROOT", sdkroot)
-      }
-    } catch (e) {
-      core.error(e as Error | string)
-    }
-  }
+  await setupMacOSSDK()
 }
