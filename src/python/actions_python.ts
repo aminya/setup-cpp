@@ -1,7 +1,7 @@
 import * as core from "@actions/core"
 import * as finder from "./setup-python/src/find-python"
 import * as finderPyPy from "./setup-python/src/find-pypy"
-import * as path from "path"
+// import * as path from "path"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy-")
@@ -17,7 +17,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
     const installed = await finder.findPythonVersion(version, arch)
     core.info(`Successfully setup ${installed.impl} (${installed.version})`)
   }
-  const matchersPath = path.join("setup-pthon", ".github")
-  core.info(`##[add-matcher]${path.join(matchersPath, "python.json")}`)
+  // fails
+  // core.info(`##[add-matcher]${path.join("./.github", "python.json")}`)
   return undefined
 }
