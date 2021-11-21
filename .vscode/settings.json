@@ -1,0 +1,28 @@
+{
+  "cSpell.words": [
+    "buildtools",
+    "ccache",
+    "cmake",
+    "CPATH",
+    "Cppcheck",
+    "CPPFLAGS",
+    "dyld",
+    "eabi",
+    "execa",
+    "gcovr",
+    "Graphviz",
+    "isci",
+    "LDFLAGS",
+    "msbuild",
+    "msvc",
+    "msys",
+    "multilib",
+    "nothrow",
+    "Opencppcoverage",
+    "OSSDK",
+    "untildify",
+    "vcpkg",
+    "visualc",
+    "visualcpp"
+  ]
+}

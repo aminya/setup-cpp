@@ -31,9 +31,9 @@ export type InstallationInfo = {
 /**
  * A function that:
  *
- * - Downlodas and extracts a package
+ * - Downloads and extracts a package
  * - Adds the bin path of the package to PATH
- * - Caches the dowloaded directory into tool cache for usage from other sessions
+ * - Caches the downloaded directory into tool cache for usage from other sessions
  *
  * @returns The installation directory
  */

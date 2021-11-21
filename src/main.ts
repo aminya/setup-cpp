@@ -112,7 +112,7 @@ export async function main(args: string[]): Promise<number> {
       // get the setup function
       const setupFunction = setups[tool]
 
-      // runnig the setup function for this tool
+      // running the setup function for this tool
       try {
         // eslint-disable-next-line no-await-in-loop
         const installationInfo = await setupFunction(getVersion(tool, value), join(setupCppDir, tool), arch)
@@ -135,7 +135,7 @@ export async function main(args: string[]): Promise<number> {
   const maybeCompiler = opts.compiler
   try {
     if (maybeCompiler !== undefined) {
-      // detecting the compiler version. Devide the given string by `-` and use the second element as the version
+      // detecting the compiler version. Divide the given string by `-` and use the second element as the version
       const compilerAndMaybeVersion = maybeCompiler.split("-")
       const compiler = compilerAndMaybeVersion[0]
       let version: string | undefined
@@ -263,10 +263,10 @@ function maybeGetInput(key: string) {
 function getSuccessMessage(tool: string, installationInfo: InstallationInfo) {
   let msg = `${tool} was successfully installed`
   if ("installDir" in installationInfo) {
-    msg += `\nThe installation direcotry is ${installationInfo.installDir}`
+    msg += `\nThe installation directory is ${installationInfo.installDir}`
   }
   if (installationInfo.binDir !== "") {
-    msg += `\nThe binary direcotry is ${installationInfo.binDir}`
+    msg += `\nThe binary directory is ${installationInfo.binDir}`
   }
   return msg
 }

@@ -35,55 +35,55 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 
 # From Terminal
 
-You should download the exe file or the js file (if have Nodejs installed), and run it with the available options.
+You should download the executable file or the js file (if Nodejs installed), and run it with the available options.
 
-Tip: You can automate downloading using `wget`, `curl` or other similar tools.
+Tip: You can automate downloading using `wget`, `curl`, or other similar tools.
 
 ### Executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.2.2), and run it with the available options.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.3.0), and run it with the available options.
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```ps1
 # windows example (open shell as admin)
-curl -O "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp_windows.exe"
+curl -O "https://github.com/aminya/setup-cpp/releases/download/v0.3.0/setup_cpp_windows.exe"
 ./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 ```ps1
 # linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp_linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.3.0/setup_cpp_linux"
 chmod +x setup_cpp_linux
 sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 ```ps1
 # mac example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp_mac"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.3.0/setup_cpp_mac"
 chmod +x setup_cpp_mac
 sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11`.
-For the tools, instead of `true`, which chooses the default version, you can pass a specific version.
+For the tools, instead of `true` that chooses the default version, you can pass a specific version.
 
 ### With Nodejs
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp.js), and run it with the available options.
+Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.3.0/setup_cpp.js), and run it with the available options.
 
 On Windows
 
 ```ps1
 # open shell as admin
-curl "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp.js"
+curl "https://github.com/aminya/setup-cpp/releases/download/v0.3.0/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 On Linux or Mac:
 
 ```ps1
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp.js"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.3.0/setup_cpp.js"
 sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
@@ -131,7 +131,7 @@ jobs:
 
 # Inside Docker
 
-Here is an example for using setup_cpp to make a builder image that has the cpp tools you need.
+Here is an example for using setup_cpp to make a builder image that has the Cpp tools you need.
 
 ```dockerfile
 # debian
@@ -142,7 +142,7 @@ WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends apt-utils
 RUN apt-get install -y --no-install-recommends ca-certificates wget unzip
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.2.2/setup_cpp_linux"
+RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.3.0/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 
 # install llvm, cmake, ninja, ccache, and vcpkg
@@ -159,7 +159,7 @@ If you want to build the ones included, then run:
 docker build -f ./building/docker/debian.dockerfile -t setup_cpp .
 ```
 
-Where you should use the path to the the docker after `-f`.
+Where you should use the path to the docker after `-f`.
 
 After build, run the following to start an interactive shell in your container
 
@@ -169,4 +169,4 @@ docker run -it setup_cpp
 
 ### Incomplete
 
-- msvc. It is implemented, but has bugs. See [this issue](https://github.com/aminya/setup-cpp/issues/1)
+- `msvc`. It is implemented, but it has bugs. See [this issue](https://github.com/aminya/setup-cpp/issues/1)
