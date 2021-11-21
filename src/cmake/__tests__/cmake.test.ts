@@ -6,7 +6,7 @@ jest.setTimeout(300000)
 describe("setup-cmake", () => {
   let directory: string
   beforeAll(async () => {
-    directory = await setupTmpDir("setup-cmake")
+    directory = await setupTmpDir("cmake")
   })
 
   it("should setup CMake", async () => {
@@ -21,6 +21,6 @@ describe("setup-cmake", () => {
   })
 
   afterAll(async () => {
-    await cleanupTmpDir("setup-cmake")
+    await cleanupTmpDir("cmake")
   }, 100000)
 })

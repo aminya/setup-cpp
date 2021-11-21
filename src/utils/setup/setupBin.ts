@@ -14,6 +14,8 @@ export type PackageInfo = {
   extractedFolderName: string
   /** The relative directory in which the binary is located. It can be `""` if the exe is in the top folder */
   binRelativeDir: string
+  /** The main binary file. */
+  binFileName: string
   /** The function to extract the downloaded archive. It can be `undefined`, if the binary itself is downloaded directly. */
   extractFunction?: {
     (file: string, dest: string): Promise<string> | Promise<void>
@@ -42,35 +44,41 @@ export async function setupBin(
   setupDir: string
 ): Promise<InstallationInfo> {
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
-  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? join(tmpdir(), "setup_cpp", "ToolCache")
+  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? join(tmpdir(), "setup-cpp", "ToolCache")
 
-  const { url, binRelativeDir, extractedFolderName, extractFunction } = await getPackageInfo(version, process.platform)
+  const { url, binRelativeDir, binFileName, extractedFolderName, extractFunction } = await getPackageInfo(
+    version,
+    process.platform
+  )
 
   // Restore from cache (if found).
   if (isCI()) {
     try {
       const dir = find(name, version)
       if (dir) {
-        info(`${name} ${version} was found in the cache.`)
         const installDir = join(dir, extractedFolderName)
         const binDir = join(installDir, binRelativeDir)
-        addPath(binDir)
-        return { installDir, binDir }
+        if (existsSync(binDir) && existsSync(join(binRelativeDir, binFileName))) {
+          info(`${name} ${version} was found in the cache.`)
+          addPath(binDir)
+          return { installDir, binDir }
+        }
       }
     } catch {
       // fails on a local machine?
     }
   }
 
+  const installDir = join(setupDir, extractedFolderName)
+  const binDir = join(installDir, binRelativeDir)
+  const binFile = join(binDir, binFileName)
+
   // download ane extract the package into the installation directory.
-  if (!existsSync(setupDir)) {
+  if (!existsSync(binDir) || !existsSync(binFile)) {
     info(`Download and extract ${name} ${version}`)
     const downloaded = await downloadTool(url)
     await extractFunction?.(downloaded, setupDir)
   }
-
-  const installDir = join(setupDir, extractedFolderName)
-  const binDir = join(installDir, binRelativeDir)
 
   // Adding the bin dir to the path
   /** The directory which the tool is installed to */

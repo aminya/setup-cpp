@@ -7,6 +7,7 @@ import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
 import { getSpecificVersionAndUrl, getVersions } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
+import { addBinExtension } from "../utils/extension/extension"
 
 //================================================
 // Version
@@ -227,6 +228,7 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
     url,
     extractedFolderName: "",
     binRelativeDir: "bin",
+    binFileName: addBinExtension("clang"),
     extractFunction: platform === "win32" ? extractExe : extractTarByExe,
   }
 }

@@ -15,7 +15,7 @@ async function testUrl(version: string) {
 describe("setup-llvm", () => {
   let directory: string
   beforeAll(async () => {
-    directory = await setupTmpDir("setup-llvm")
+    directory = await setupTmpDir("llvm")
   })
 
   it("Finds valid LLVM URLs", async () => {

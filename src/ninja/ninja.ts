@@ -1,4 +1,5 @@
 import { extractZip } from "@actions/tool-cache"
+import { addBinExtension } from "../utils/extension/extension"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 
 /** Get the platform name Ninja uses in their download links */
@@ -20,6 +21,7 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform): Packag
   const ninjaPlatform = getNinjaPlatform(platform)
   return {
     binRelativeDir: "",
+    binFileName: addBinExtension("ninja"),
     extractedFolderName: "",
     extractFunction: extractZip,
     url: `https://github.com/ninja-build/ninja/releases/download/v${version}/ninja-${ninjaPlatform}.zip`,

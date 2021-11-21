@@ -3,6 +3,7 @@ import { getInput } from "@actions/core"
 import semverLte from "semver/functions/lte"
 import semverCoerce from "semver/functions/coerce"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
+import { addBinExtension } from "../utils/extension/extension"
 
 /** Get the platform data for cmake */
 function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): PackageInfo {
@@ -21,6 +22,7 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
       const folderName = `cmake-${version}-${osArchStr}`
       return {
         binRelativeDir: "bin/",
+        binFileName: addBinExtension("cmake"),
         extractedFolderName: folderName,
         extractFunction: extractZip,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.zip`,
@@ -32,6 +34,7 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
       const folderName = `cmake-${version}-${osArchStr}`
       return {
         binRelativeDir: "CMake.app/Contents/bin/",
+        binFileName: addBinExtension("cmake"),
         extractedFolderName: folderName,
         extractFunction: extractTar,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.tar.gz`,
@@ -48,6 +51,7 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
       const folderName = `cmake-${version}-${osArchStr}`
       return {
         binRelativeDir: "bin/",
+        binFileName: addBinExtension("cmake"),
         extractedFolderName: folderName,
         extractFunction: extractTar,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.tar.gz`,

@@ -11,7 +11,7 @@ async function testNinja(directory: string) {
 describe("setup-ninja", () => {
   let directory: string
   beforeEach(async () => {
-    directory = await setupTmpDir("setup-ninja")
+    directory = await setupTmpDir("ninja")
   })
 
   it("should setup Ninja", async () => {
