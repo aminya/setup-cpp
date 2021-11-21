@@ -11,7 +11,7 @@ export function setupChocolatey(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _version: string,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _setupCppDir: string,
+  _setupDir: string,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _arch: string
 ): InstallationInfo | undefined {

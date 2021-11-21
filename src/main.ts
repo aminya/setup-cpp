@@ -23,6 +23,7 @@ import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { error, success } from "./utils/io/io"
 import { setupVcpkg } from "./vcpkg/vcpkg"
+import { join } from "path"
 
 /** The setup functions */
 const setups = {
@@ -93,7 +94,7 @@ export async function main(args: string[]): Promise<number> {
   const arch = opts.architecture ?? process.arch
 
   // the installation dir for the tools that are downloaded directly
-  const setupCppDir = process.env.SETUP_CPP_DIR ?? untildify("~/setup_cpp")
+  const setupCppDir = process.env.SETUP_CPP_DIR ?? untildify("~/")
 
   // report messages
   const successMessages: string[] = []
@@ -114,7 +115,7 @@ export async function main(args: string[]): Promise<number> {
       // runnig the setup function for this tool
       try {
         // eslint-disable-next-line no-await-in-loop
-        const installationInfo = await setupFunction(getVersion(tool, value), setupCppDir, arch)
+        const installationInfo = await setupFunction(getVersion(tool, value), join(setupCppDir, tool), arch)
 
         // preparing a report string
         if (installationInfo !== undefined) {
@@ -152,14 +153,14 @@ export async function main(args: string[]): Promise<number> {
         case "llvm":
         case "clang":
         case "clang++": {
-          await setupLLVM(getVersion("llvm", version) as string, setupCppDir, arch)
+          await setupLLVM(getVersion("llvm", version) as string, join(setupCppDir, "llvm"), arch)
           break
         }
         case "gcc":
         case "mingw":
         case "cygwin":
         case "msys": {
-          await setupGcc(getVersion("gcc", version) as string, setupCppDir, arch)
+          await setupGcc(getVersion("gcc", version) as string, join(setupCppDir, "gcc"), arch)
           break
         }
         case "cl":
@@ -169,7 +170,7 @@ export async function main(args: string[]): Promise<number> {
         case "visualstudio":
         case "visualcpp":
         case "visualc++": {
-          await setupMSVC(getVersion("msvc", version) as string, setupCppDir, arch)
+          await setupMSVC(getVersion("msvc", version) as string, join(setupCppDir, "msvc"), arch)
           break
         }
         default: {
@@ -221,7 +222,7 @@ main(process.argv)
 function printHelp() {
   core.info(`
 setup_cpp [options]
-setup_cpp --compiler llvm --cmake true --ninja true --ccache true --conan "1.40.1"
+setup_cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 Install all the tools required for building and testing C++/C projects.
 
@@ -229,7 +230,7 @@ Install all the tools required for building and testing C++/C projects.
 --compiler\t the <compiler> to install.
           \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-11'
 
---tool_name\t pass "true" or pass the <version> you would like to install for this tool.
+--tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
 
 All the available tools:
 --llvm

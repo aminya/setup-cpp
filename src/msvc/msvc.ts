@@ -22,7 +22,7 @@ function getArch(arch: string): string {
 
 export async function setupMSVC(
   version: MSVCVersion,
-  _setupCppDir: string,
+  _setupDir: string,
   arch: string,
   sdk?: string,
   uwp?: boolean,

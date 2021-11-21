@@ -5,7 +5,7 @@ import which from "which"
 let binDir: string | undefined
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupBrew(_version: string, _setupCppDir: string, _arch: string) {
+export function setupBrew(_version: string, _setupDir: string, _arch: string) {
   if (!["darwin", "linux"].includes(process.platform)) {
     return undefined
   }

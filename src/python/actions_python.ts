@@ -7,7 +7,7 @@ function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy-")
 }
 
-export async function setupActionsPython(version: string, _setupCppDir: string, arch: string) {
+export async function setupActionsPython(version: string, _setupDir: string, arch: string) {
   if (isPyPyVersion(version)) {
     const installed = await finderPyPy.findPyPyVersion(version, arch)
     core.info(

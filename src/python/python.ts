@@ -8,24 +8,24 @@ import { join } from "path"
 import { isCI } from "../utils/env/isci"
 import { setupActionsPython } from "./actions_python"
 
-export function setupPython(version: string, setupCppDir: string, arch: string) {
+export function setupPython(version: string, setupDir: string, arch: string) {
   if (!isCI()) {
     // TODO parse versoin
-    return setupPythonViaSystem("", setupCppDir, arch)
+    return setupPythonViaSystem("", setupDir, arch)
   }
   try {
-    return setupActionsPython(version, setupCppDir, arch)
+    return setupActionsPython(version, setupDir, arch)
   } catch (err) {
-    return setupPythonViaSystem(version, setupCppDir, arch)
+    return setupPythonViaSystem(version, setupDir, arch)
   }
 }
 
-export async function setupPythonViaSystem(version: string, setupCppDir: string, arch: string) {
+export async function setupPythonViaSystem(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "win32": {
       // Get an unique output directory name from the URL.
       const key: string = await hasha.async(version + arch, { algorithm: "md5" })
-      const installDir = join(setupCppDir, key, "python")
+      const installDir = join(setupDir, key, "python")
       const binDir = installDir
       await setupChocoPack("python3", version, [`/InstallDir:${installDir}`])
 

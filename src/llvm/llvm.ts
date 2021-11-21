@@ -231,17 +231,14 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
   }
 }
 
-// const DEFAULT_UNIX_DIRECTORY = "./llvm"
-// const DEFAULT_WIN32_DIRECTORY = "C:/Program Files/LLVM"
-
 export async function setupLLVM(
   version: string,
-  setupCppDir: string,
+  setupDir: string,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _arch: string
 ): Promise<InstallationInfo> {
-  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupCppDir)
-  await activateLLVM(setupCppDir, version)
+  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir)
+  await activateLLVM(setupDir, version)
   return installationInfo
 }
 

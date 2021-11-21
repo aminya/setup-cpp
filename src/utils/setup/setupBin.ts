@@ -3,7 +3,6 @@ import { info } from "@actions/core"
 import { addPath } from "../path/addPath"
 import { join } from "path"
 import { existsSync } from "fs"
-import * as hasha from "hasha"
 import { tmpdir } from "os"
 import { isCI } from "../env/isci"
 
@@ -40,7 +39,7 @@ export async function setupBin(
   name: string,
   version: string,
   getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo | Promise<PackageInfo>,
-  setupCppDir: string
+  setupDir: string
 ): Promise<InstallationInfo> {
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
   process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? join(tmpdir(), "setup_cpp", "ToolCache")
@@ -63,18 +62,14 @@ export async function setupBin(
     }
   }
 
-  // Get an unique output directory name from the URL.
-  const key: string = await hasha.async(url, { algorithm: "md5" })
-  const rootDir = join(setupCppDir, key)
-
   // download ane extract the package into the installation directory.
-  if (!existsSync(rootDir)) {
+  if (!existsSync(setupDir)) {
     info(`Download and extract ${name} ${version}`)
     const downloaded = await downloadTool(url)
-    await extractFunction?.(downloaded, rootDir)
+    await extractFunction?.(downloaded, setupDir)
   }
 
-  const installDir = join(rootDir, extractedFolderName)
+  const installDir = join(setupDir, extractedFolderName)
   const binDir = join(installDir, binRelativeDir)
 
   // Adding the bin dir to the path
@@ -84,7 +79,7 @@ export async function setupBin(
 
   // check if inside Github Actions. If so, cache the installation
   if (isCI() && typeof process.env.RUNNER_TOOL_CACHE === "string") {
-    await cacheDir(rootDir, name, version)
+    await cacheDir(setupDir, name, version)
   }
 
   return { installDir, binDir }

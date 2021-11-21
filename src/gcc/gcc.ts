@@ -9,7 +9,7 @@ import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupGcc(version: string, _setupCppDir: string, arch: string) {
+export async function setupGcc(version: string, _setupDir: string, arch: string) {
   let binDir: string | undefined
   switch (process.platform) {
     case "win32": {

@@ -60,6 +60,6 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
 
 /** Setup cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupCmake(version: string, setupCppDir: string, _arch: string): Promise<InstallationInfo> {
-  return setupBin("cmake", version, getCmakePackageInfo, setupCppDir)
+export function setupCmake(version: string, setupDir: string, _arch: string): Promise<InstallationInfo> {
+  return setupBin("cmake", version, getCmakePackageInfo, setupDir)
 }
