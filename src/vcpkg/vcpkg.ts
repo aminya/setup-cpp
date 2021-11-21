@@ -3,6 +3,7 @@ import execa from "execa"
 import path from "path"
 import untildify from "untildify"
 import which from "which"
+import { addShellExtension } from "../utils/extension/extension"
 import { InstallationInfo } from "../utils/setup/setupBin"
 
 let hasVCPKG = false
@@ -12,7 +13,7 @@ export function setupVcpkg(_version: string, _setupCppDir: string, _arch: string
   if (!hasVCPKG || which.sync("vcpkg", { nothrow: true }) === null) {
     execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: untildify("~/") })
     const vcpkgDir = untildify("~/vcpkg")
-    execa.sync("./vcpkg/bootstrap-vcpkg", { cwd: vcpkgDir, shell: true })
+    execa.sync(addShellExtension("./vcpkg/bootstrap-vcpkg"), { cwd: vcpkgDir, shell: true })
     addPath(vcpkgDir)
     hasVCPKG = true
     return { binDir: vcpkgDir }
