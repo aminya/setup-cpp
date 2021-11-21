@@ -6,7 +6,6 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import hasha from "hasha"
 import { join } from "path"
 import { isCI } from "../utils/env/isci"
-import { setupActionsPython } from "./actions_python"
 
 export function setupPython(version: string, setupDir: string, arch: string) {
   if (!isCI()) {
@@ -14,6 +13,8 @@ export function setupPython(version: string, setupDir: string, arch: string) {
     return setupPythonViaSystem("", setupDir, arch)
   }
   try {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const { setupActionsPython } = require("./actions_python") as typeof import("./actions_python")
     return setupActionsPython(version, setupDir, arch)
   } catch (err) {
     return setupPythonViaSystem(version, setupDir, arch)
