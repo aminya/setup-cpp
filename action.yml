@@ -52,7 +52,7 @@ inputs:
 
 runs:
   using: "node12"
-  main: "dist/index.js"
+  main: "dist/setup_cpp.js"
 
 branding:
   icon: "award"
