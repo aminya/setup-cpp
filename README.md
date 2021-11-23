@@ -116,7 +116,24 @@ jobs:
           - llvm
           - gcc
           # you can specify the version after `-` like `llvm-13.0.0`.
+        include:
+          - os: "windows-latest"
+            compiler: "msvc"
     steps:
+      - name: Cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/vcpkg
+            ./build/vcpkg_installed
+            ${{ env.HOME }}/.cache/vcpkg/archives
+            ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
+            ${{ env.LOCALAPPDATA }}\vcpkg\archives
+            ${{ env.APPDATA }}\vcpkg\archives
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ env.BUILD_TYPE }}-${{ hashFiles('**/CMakeLists.txt') }}-${{ hashFiles('./vcpkg.json')}}
+          restore-keys: |
+            ${{ runner.os }}-${{ env.BUILD_TYPE }}
+
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
         with:
@@ -124,8 +141,7 @@ jobs:
           cmake: true
           ninja: true
           vcpkg: true
-          cppcheck: true
-          ccache: true # instead of `true`, which chooses the default version, you can pass a specific version.
+          cppcheck: true # instead of `true`, which chooses the default version, you can pass a specific version.
           # add any tool that you need here...
 ```
 
