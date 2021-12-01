@@ -1,7 +1,7 @@
 import { addPath as ghAddPath } from "@actions/core"
 import { delimiter } from "path"
 import * as core from "@actions/core"
-import * as execa from "execa"
+import execa from "execa"
 
 /** An add path function that works locally or inside GitHub Actions */
 export function addPath(path: string) {
@@ -12,13 +12,13 @@ export function addPath(path: string) {
       core.error(err as Error)
       switch (process.platform) {
         case "win32": {
-          execa.execaSync(`setx PATH=${path};%PATH%`)
+          execa.sync(`setx PATH=${path};%PATH%`)
           return
         }
         case "linux":
         case "darwin": {
-          execa.execaCommandSync(`echo "export PATH=${path}:$PATH" >> ~/.profile`)
-          execa.execaCommandSync(`source ~/.profile`)
+          execa.commandSync(`echo "export PATH=${path}:$PATH" >> ~/.profile`)
+          execa.commandSync(`source ~/.profile`)
           core.info(`${path} was added to ~/.profile`)
           return
         }
