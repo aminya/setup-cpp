@@ -1,5 +1,5 @@
 module.exports = {
-  preset: "ts-jest",
+  preset: "ts-jest/presets/default-esm",
   testEnvironment: "node",
   testMatch: ["**/*.test.ts"],
   testPathIgnorePatterns: ["<rootDir>/src/python/setup-python/"],
