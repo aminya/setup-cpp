@@ -13,7 +13,7 @@ license-checker --summary --production
 ```
 
 ```
-├─ MIT: 5
-├─ ISC: 1
+├─ MIT: 8
+├─ ISC: 2
 └─ Apache-2.0: 1
 ```
