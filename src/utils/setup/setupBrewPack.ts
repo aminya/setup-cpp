@@ -1,5 +1,5 @@
 /* eslint-disable require-atomic-updates */
-import execa from "execa"
+import * as execa from "execa"
 import which from "which"
 import { setupBrew } from "../../brew/brew"
 import { InstallationInfo } from "./setupBin"
@@ -14,7 +14,7 @@ export function setupBrewPack(name: string, version?: string): InstallationInfo 
   }
 
   // brew is not thread-safe
-  execa.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name])
+  execa.execaSync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name])
 
   return { binDir: "/usr/local/bin/" }
 }

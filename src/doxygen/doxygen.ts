@@ -19,9 +19,9 @@ export async function setupDoxygen(version: string | undefined, _setupDir: strin
        *      See the log for details (C:\ProgramData\chocolatey\logs\chocolatey.log).
        *     The process cannot access the file 'C:\ProgramData\chocolatey\lib\Graphviz\.chocolateyPending' because it is being used by another process.
        *
-       *       18 |     execa.sync("choco", ["install", "-y", name, `--version=${version}`, ...args])
+       *       18 |     execa.execaSync("choco", ["install", "-y", name, `--version=${version}`, ...args])
        *       19 |   } else {
-       *     > 20 |     execa.sync("choco", ["install", "-y", name, ...args])
+       *     > 20 |     execa.execaSync("choco", ["install", "-y", name, ...args])
        *          |           ^
        *       21 |   }
        *       22 |

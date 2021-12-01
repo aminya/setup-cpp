@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { getExecOutput } from "@actions/exec"
-import execa from "execa"
+import * as execa from "execa"
 import which from "which"
 import { info } from "@actions/core"
 import { addPath } from "../path/addPath"
@@ -26,7 +26,7 @@ export async function setupPipPack(name: string, version?: string) {
     }
   }
 
-  execa.sync(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name])
+  execa.execaSync(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name])
 
   if (binDir === undefined) {
     if (process.platform === "linux") {

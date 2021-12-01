@@ -1,4 +1,4 @@
-import execa from "execa"
+import * as execa from "execa"
 import which from "which"
 
 let _issudo: boolean | undefined = undefined
@@ -21,8 +21,8 @@ export function mightSudo(command: string) {
 
 export function execaSudo(file: string, args: string[]) {
   if (isRoot()) {
-    return execa.command(`sudo ${[file, ...args].join(" ")}`, { shell: true })
+    return execa.execaCommand(`sudo ${[file, ...args].join(" ")}`, { shell: true })
   } else {
-    return execa(file, args)
+    return execa.execa(file, args)
   }
 }
