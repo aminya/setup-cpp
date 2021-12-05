@@ -15,10 +15,11 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 
 `setup-cpp` can install all of these tools:
 
-- llvm
-- gcc
 - cmake
 - ninja
+- llvm
+- gcc
+- msvc
 - vcvarsall
 - vcpkg
 - meson

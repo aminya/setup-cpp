@@ -22,7 +22,7 @@ export async function setupMSVC(
   // https://github.com/aminya/setup-cpp/issues/1
   try {
     if (version === "2015") {
-      // toolset = "14.0.25420.1"
+      toolset = "14.0.25420.1"
       await setupChocoPack("visualcpp-build-tools", toolset, [
         "--ignore-dependencies",
         "--params",
@@ -34,14 +34,14 @@ export async function setupMSVC(
         exportVariable("VCTargetsPath", VCTargetsPath)
       }
     } else if (version === "2017") {
-      // toolset = "14.16"
+      toolset = "14.16"
       await setupChocoPack("visualstudio2017buildtools", "15.9.41.0", [
         "--package-parameters",
         "'--add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive'",
       ])
       // VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.16" // TODO verify path
     } else if (version === "2019") {
-      // toolset = "14.29.30133"
+      toolset = "14.29"
       await setupChocoPack("visualstudio2019buildtools", "16.11.7.0", [
         "--package-parameters",
         "'--add Microsoft.VisualStudio.Workload.NativeDesktop --includeRecommended --passive'",
