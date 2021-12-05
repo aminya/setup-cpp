@@ -28,5 +28,5 @@
   },
   "compileOnSave": false,
   "include": ["./src"],
-  "exclude": ["./src/python/setup-python", "src/msvc/msvc-dev-cmd/"]
+  "exclude": ["./src/python/setup-python", "src/msvc-dev-cmd/msvc-dev-cmd"]
 }

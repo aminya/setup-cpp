@@ -1,8 +1,0 @@
-[submodule "src/python/setup-python"]
-	path = src/python/setup-python
-	url = https://github.com/actions/setup-python
-	branch = main
-[submodule "src/msvc/msvc-dev-cmd"]
-	path = src/msvc/msvc-dev-cmd
-	url = https://github.com/ilammy/msvc-dev-cmd
-	branch = lib
