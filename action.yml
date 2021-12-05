@@ -18,6 +18,9 @@ inputs:
   msvc:
     description: "The msvc version to install"
     required: false
+  vcvarsall:
+    description: "If should run vcvarsall?"
+    required: false
   cmake:
     description: "The cmake version to install."
     required: false

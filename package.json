@@ -36,11 +36,11 @@
     "execa": "^5.1.1",
     "hasha": "^5.2.2",
     "mri": "^1.2.0",
+    "msvc-dev-cmd": " https://github.com/ilammy/msvc-dev-cmd",
     "semver": "^7.3.5",
-    "untildify": "^4.0.0",
-    "which": "^2.0.2",
     "setup-python": "https://github.com/actions/setup-python",
-    "msvc-dev-cmd": " https://github.com/ilammy/msvc-dev-cmd"
+    "untildify": "^4.0.0",
+    "which": "^2.0.2"
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",

@@ -4,16 +4,17 @@ setup-cpp reused some code from the following projects:
 - [install-cmake](https://github.com/Symbitic/install-cmake/blob/master/LICENSE.md): MIT
 - [get-cmake](https://github.com/lukka/get-cmake/blob/main/LICENSE.txt): MIT
 - [gha-setup-ninja](https://github.com/seanmiddleditch/gha-setup-ninja): MIT
-- [setup-python](https://github.com/actions/setup-python): MIT
 
 This package also uses the depedencies listed in package.json. You can get the list of their licenses using the following command:
 ```
 npm install -g license-checker
-license-checker --summary --production
+license-checker --summary --production --excludePackages "setup-python@2.2.2"
 ```
 
 ```
-├─ MIT: 8
+├─ MIT: 9
 ├─ ISC: 2
 └─ Apache-2.0: 1
 ```
+
+setup-python@2.2.2 is MIT license.

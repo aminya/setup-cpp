@@ -2,7 +2,7 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { error, exportVariable, warning } from "@actions/core"
 import { existsSync } from "fs"
 import { isCI } from "../utils/env/isci"
-import { activateMSVC } from "../vcvarsall/vcvarsall"
+import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 
 type MSVCVersion = "2015" | "2017" | "2019" | string
 
@@ -56,5 +56,5 @@ export async function setupMSVC(
     }
   }
   // run vcvarsall.bat environment variables
-  activateMSVC(VCTargetsPath, arch, toolset, sdk, uwp, spectre)
+  setupVCVarsall(VCTargetsPath, arch, toolset, sdk, uwp, spectre)
 }

@@ -17,7 +17,7 @@ function getArch(arch: string): string {
   }
 }
 
-export function activateMSVC(
+export function setupVCVarsall(
   VCTargetsPath: string | undefined,
   arch: string,
   toolset: string | undefined,

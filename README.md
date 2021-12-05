@@ -19,6 +19,7 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 - gcc
 - cmake
 - ninja
+- vcvarsall
 - vcpkg
 - meson
 - conan
