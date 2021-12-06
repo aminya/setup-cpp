@@ -92,7 +92,7 @@ sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true
 
 # Inside GitHub Actions
 
-Here is a complete cross-platform example that tests llvm and gcc. It also uses cmake, ninja, vcpkg, cppcheck, and ccache.
+Here is a complete cross-platform example that tests llvm, gcc, and msvc. It also uses cmake, ninja, vcpkg, and cppcheck.
 
 `.github/workflows/ci.yml`:
 
