@@ -43,7 +43,7 @@ dependencies:
   execa: 5.1.1
   hasha: 5.2.2
   mri: 1.2.0
-  msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/5f5bfe1350e719f8dd9634cb2dc945e808e65327
+  msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1c3d12ea8156d8d0e53543791491291aec
   semver: 7.3.5
   setup-python: github.com/actions/setup-python/f38219332975fe8f9c04cca981d674bf22aea1d3
   untildify: 4.0.0
@@ -8619,8 +8619,8 @@ packages:
       semver: 7.3.5
     dev: false
 
-  github.com/aminya/msvc-dev-cmd/5f5bfe1350e719f8dd9634cb2dc945e808e65327:
-    resolution: {tarball: https://codeload.github.com/aminya/msvc-dev-cmd/tar.gz/5f5bfe1350e719f8dd9634cb2dc945e808e65327}
+  github.com/aminya/msvc-dev-cmd/9f672c1c3d12ea8156d8d0e53543791491291aec:
+    resolution: {tarball: https://codeload.github.com/aminya/msvc-dev-cmd/tar.gz/9f672c1c3d12ea8156d8d0e53543791491291aec}
     name: msvc-dev-cmd
     version: 1.1.1
     dependencies:
