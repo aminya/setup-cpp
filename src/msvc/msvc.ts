@@ -22,7 +22,6 @@ export async function setupMSVC(
 
   let toolset: string | undefined
   let VCTargetsPath: string | undefined
-  // TODO enable this code path once its bugs are fixed
   // https://github.com/aminya/setup-cpp/issues/1
   try {
     if (version === "14.0") {
@@ -41,13 +40,7 @@ export async function setupMSVC(
       error(`The given MSVC versions ${versionGiven} is not supported yet.`)
     }
   } catch (e) {
-    if (
-      !(e as string | Error)
-        .toString()
-        .includes("Item has already been added. Key in dictionary: 'Path'  Key being added: 'PATH'")
-    ) {
-      error(e as string | Error)
-    }
+    error(e as string | Error)
   }
   // run vcvarsall.bat environment variables
   setupVCVarsall(version, VCTargetsPath, arch, toolset, sdk, uwp, spectre)

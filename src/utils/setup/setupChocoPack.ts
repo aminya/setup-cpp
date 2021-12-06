@@ -14,10 +14,18 @@ export async function setupChocoPack(name: string, version?: string, args: strin
     hasChoco = true
   }
 
+  // https://github.com/jberezanski/ChocolateyPackages/issues/97#issuecomment-986825694
+  const PATH = process.env.PATH
+  const env = { ...process.env }
+  delete env.TMP
+  delete env.TEMP
+  delete env.Path
+  env.PATH = PATH
+
   if (version !== undefined && version !== "") {
-    execa.sync("choco", ["install", "-y", name, `--version=${version}`, ...args])
+    execa.sync("choco", ["install", "-y", name, `--version=${version}`, ...args], { env, extendEnv: false })
   } else {
-    execa.sync("choco", ["install", "-y", name, ...args])
+    execa.sync("choco", ["install", "-y", name, ...args], { env, extendEnv: false })
   }
 
   const binDir = "C:/ProgramData/Chocolatey/bin/"
