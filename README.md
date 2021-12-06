@@ -15,10 +15,12 @@ The package can be used locally or from CI services like GitHub Actions. Stay tu
 
 `setup-cpp` can install all of these tools:
 
-- llvm
-- gcc
 - cmake
 - ninja
+- llvm
+- gcc
+- msvc
+- vcvarsall
 - vcpkg
 - meson
 - conan
@@ -182,7 +184,3 @@ After build, run the following to start an interactive shell in your container
 ```ps1
 docker run -it setup_cpp
 ```
-
-### Incomplete
-
-- `msvc`. It is implemented, but it has bugs. See [this issue](https://github.com/aminya/setup-cpp/issues/1)

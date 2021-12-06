@@ -19,7 +19,7 @@
     "format": "prettier --write .",
     "lint": "eslint . --fix",
     "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./building/scripts/pack-exe.js",
-    "prepare": "git submodule update --init --recursive && npm run build",
+    "prepare": "npm run build",
     "start.docker": "docker run -t setup_cpp .",
     "test": "run-p test.format test.lint test.tsc test.unit",
     "test.format": "prettier . --check",
@@ -36,7 +36,9 @@
     "execa": "^5.1.1",
     "hasha": "^5.2.2",
     "mri": "^1.2.0",
+    "msvc-dev-cmd": " https://github.com/aminya/msvc-dev-cmd",
     "semver": "^7.3.5",
+    "setup-python": "https://github.com/actions/setup-python",
     "untildify": "^4.0.0",
     "which": "^2.0.2"
   },

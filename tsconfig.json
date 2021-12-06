@@ -27,6 +27,5 @@
     "outDir": "./dist"
   },
   "compileOnSave": false,
-  "include": ["./src"],
-  "exclude": ["./src/python/setup-python", "src/msvc/msvc-dev-cmd/"]
+  "include": ["./src"]
 }

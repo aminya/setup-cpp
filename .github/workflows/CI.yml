@@ -53,6 +53,9 @@ jobs:
         run: |
           pnpm install
 
+      # - name: Setup SSH debugging session
+      #   uses: mxschmitt/action-tmate@v3
+
       - name: Test
         run: |
           pnpm run test

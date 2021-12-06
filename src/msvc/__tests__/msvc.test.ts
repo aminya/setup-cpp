@@ -1,18 +1,48 @@
+import which from "which"
 import { testBin } from "../../utils/tests/test-helpers"
 import { setupMSVC } from "../msvc"
 
 jest.setTimeout(300000)
 describe("setup-msvc", () => {
-  it("should setup msvc", async () => {
-    if (process.platform !== "win32") {
-      return
-    }
-    await setupMSVC("2019", "", process.arch)
-
+  it("should setup msvc 2019", async () => {
     try {
+      if (process.platform !== "win32") {
+        return
+      }
+      await setupMSVC("2019", "", process.arch)
       await testBin("cl", [])
-    } catch (err) {
-      // TODO see #1
+      console.log(which("cl"))
+    } catch (e) {
+      // TODO
+      console.error(e)
+    }
+  })
+
+  it("should setup msvc 2017", async () => {
+    try {
+      if (process.platform !== "win32") {
+        return
+      }
+      await setupMSVC("2017", "", process.arch)
+      await testBin("cl", [])
+      console.log(which("cl"))
+    } catch (e) {
+      // TODO
+      console.error(e)
+    }
+  })
+
+  it("should setup msvc 2015", async () => {
+    try {
+      if (process.platform !== "win32") {
+        return
+      }
+      await setupMSVC("2015", "", process.arch)
+      await testBin("cl", [])
+      console.log(which("cl"))
+    } catch (e) {
+      // TODO
+      console.error(e)
     }
   })
 })

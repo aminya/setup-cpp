@@ -26,6 +26,7 @@ import { error, success } from "./utils/io/io"
 import { setupVcpkg } from "./vcpkg/vcpkg"
 import { join } from "path"
 import { warning } from "@actions/core"
+import { setupVCVarsall } from "./vcvarsall/vcvarsall"
 
 /** The setup functions */
 const setups = {
@@ -45,6 +46,7 @@ const setups = {
   doxygen: setupDoxygen,
   cppcheck: setupCppcheck,
   msvc: setupMSVC,
+  vcvarsall: setupVCVarsall,
 }
 
 /** The tools that can be installed */
@@ -65,6 +67,7 @@ const tools: Array<keyof typeof setups> = [
   "llvm",
   "gcc",
   "msvc",
+  "vcvarsall",
 ]
 
 /** The possible inputs to the program */
@@ -111,14 +114,19 @@ export async function main(args: string[]): Promise<number> {
 
     // skip if undefined
     if (value !== undefined) {
-      // get the setup function
-      const setupFunction = setups[tool]
-
       // running the setup function for this tool
       try {
-        // eslint-disable-next-line no-await-in-loop
-        const installationInfo = await setupFunction(getVersion(tool, value), join(setupCppDir, tool), arch)
+        let installationInfo: InstallationInfo | undefined | void
+        if (tool === "vcvarsall") {
+          // eslint-disable-next-line no-await-in-loop
+          setupVCVarsall(getVersion(tool, value), undefined, arch, undefined, undefined, false, false)
+        } else {
+          // get the setup function
+          const setupFunction = setups[tool]
 
+          // eslint-disable-next-line no-await-in-loop
+          installationInfo = await setupFunction(getVersion(tool, value), join(setupCppDir, tool), arch)
+        }
         // preparing a report string
         if (installationInfo !== undefined) {
           successMessages.push(getSuccessMessage(tool, installationInfo))
@@ -252,6 +260,7 @@ Install all the tools required for building and testing C++/C projects.
 All the available tools:
 --llvm
 --gcc
+--vcvarsall
 --cmake
 --ninja
 --vcpkg

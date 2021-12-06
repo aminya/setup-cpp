@@ -1,6 +1,6 @@
 import * as core from "@actions/core"
-import * as finder from "./setup-python/src/find-python"
-import * as finderPyPy from "./setup-python/src/find-pypy"
+import * as finder from "setup-python/src/find-python"
+import * as finderPyPy from "setup-python/src/find-pypy"
 // import * as path from "path"
 
 function isPyPyVersion(versionSpec: string) {
