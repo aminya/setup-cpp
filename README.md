@@ -184,3 +184,25 @@ After build, run the following to start an interactive shell in your container
 ```ps1
 docker run -it setup_cpp
 ```
+
+# Inside Docker inside GitHub Actions
+
+You can use the docker file discussed in the previous section inside GitHub Actions like the following:
+
+```yaml
+jobs:
+  Docker:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        id: docker_build
+        run: |
+          docker build -f ./building/docker/debian.dockerfile -t setup_cpp .
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+```
