@@ -3,6 +3,7 @@ import execa from "execa"
 import { existsSync } from "fs"
 import { dirname } from "path"
 import which from "which"
+import { addPath } from "../utils/path/addPath"
 import { InstallationInfo } from "../utils/setup/setupBin"
 
 let binDir: string | undefined
@@ -29,10 +30,27 @@ export function setupChocolatey(
     return { binDir }
   }
 
+  let powershell = "powershell.exe"
+  const maybePowerShell = which.sync(`${process.env.SystemRoot}\\System32\\WindowsPowerShell\\v1.0\\powershell.exe`, {
+    nothrow: true,
+  })
+  if (maybePowerShell !== null) {
+    powershell = maybePowerShell
+  }
+
   // https://docs.chocolatey.org/en-us/choco/setup#install-with-cmd.exe
-  execa.commandSync(
-    `@"%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\\chocolatey\\bin"`
-  )
+  execa.sync(powershell, [
+    "-NoProfile",
+    "-InputFormat",
+    "None",
+    "-ExecutionPolicy",
+    "Bypass",
+    "-Command",
+    "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+  ])
+
+  const chocoPath = `${process.env.ALLUSERSPROFILE}\\chocolatey\\bin`
+  addPath(chocoPath)
 
   const maybeChoco = which.sync("choco", { nothrow: true })
   if (maybeChoco !== null) {
