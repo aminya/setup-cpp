@@ -1,7 +1,6 @@
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { error } from "@actions/core"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall"
-import { readFileSync } from "fs"
 
 type MSVCVersion = "2015" | "2017" | "2019" | string
 
@@ -35,9 +34,13 @@ export async function setupMSVC(
       VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133"
     }
   } catch (e) {
-    error(e as string | Error)
-    const choco_logs = readFileSync(`${process.env.ALLUSERSPROFILE}\\chocolatey\\logs\\chocolatey.log`, "utf8")
-    console.log(choco_logs)
+    if (
+      !(e as string | Error)
+        .toString()
+        .includes("Item has already been added. Key in dictionary: 'Path'  Key being added: 'PATH'")
+    ) {
+      error(e as string | Error)
+    }
   }
   // run vcvarsall.bat environment variables
   setupVCVarsall(VCTargetsPath, arch, toolset, sdk, uwp, spectre)

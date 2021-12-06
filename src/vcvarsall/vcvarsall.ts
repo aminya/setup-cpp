@@ -1,4 +1,4 @@
-import { exportVariable } from "@actions/core"
+import { exportVariable, info } from "@actions/core"
 import { existsSync } from "fs"
 
 function getArch(arch: string): string {
@@ -26,6 +26,7 @@ export function setupVCVarsall(
   spectre?: boolean
 ) {
   if (VCTargetsPath !== undefined && existsSync(VCTargetsPath)) {
+    info(`Adding ${VCTargetsPath} to PATH`)
     exportVariable("VCTargetsPath", VCTargetsPath)
   }
 
