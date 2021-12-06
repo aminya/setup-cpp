@@ -1,6 +1,7 @@
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { error } from "@actions/core"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall"
+import { readFileSync } from "fs"
 
 type MSVCVersion = "2015" | "2017" | "2019" | string
 
@@ -35,6 +36,8 @@ export async function setupMSVC(
     }
   } catch (e) {
     error(e as string | Error)
+    const choco_logs = readFileSync(`${process.env.ALLUSERSPROFILE}\\chocolatey\\logs\\chocolatey.log`, "utf8")
+    console.log(choco_logs)
   }
   // run vcvarsall.bat environment variables
   setupVCVarsall(VCTargetsPath, arch, toolset, sdk, uwp, spectre)
