@@ -3,7 +3,7 @@ import { error } from "@actions/core"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { vsversion_to_versionnumber } from "msvc-dev-cmd/lib.js"
+import { vsversion_to_versionnumber, findVcvarsall } from "msvc-dev-cmd/lib.js"
 
 type MSVCVersion = "2022" | "17.0" | "2019" | "16.0" | "2017" | "15.0" | "2015" | "14.0" | "2013" | "12.0" | string
 
@@ -20,21 +20,36 @@ export async function setupMSVC(
   }
   const version = vsversion_to_versionnumber(versionGiven) as string
 
+  // check if the given version is already installed
+  let installed = false
+  try {
+    findVcvarsall(version)
+    installed = true
+  } catch {
+    // not installed, try installing
+  }
+
   let toolset: string | undefined
   let VCTargetsPath: string | undefined
   // https://github.com/aminya/setup-cpp/issues/1
   try {
     if (version === "14.0") {
       toolset = "14.0"
-      await setupChocoPack("visualcpp-build-tools", "14.0.25420.1", ["--ignore-dependencies"])
+      if (!installed) {
+        await setupChocoPack("visualcpp-build-tools", "14.0.25420.1", ["--ignore-dependencies"])
+      }
       VCTargetsPath = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/v140"
     } else if (version === "15.0") {
       toolset = "14.16"
-      await setupChocoPack("visualstudio2017buildtools", "15.9.41.0", [])
+      if (!installed) {
+        await setupChocoPack("visualstudio2017buildtools", "15.9.41.0", [])
+      }
       VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.16" // TODO verify path
     } else if (version === "16.0") {
       toolset = "14.29"
-      await setupChocoPack("visualstudio2019buildtools", "16.11.7.0", [])
+      if (!installed) {
+        await setupChocoPack("visualstudio2019buildtools", "16.11.7.0", [])
+      }
       VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133"
     } else {
       error(`The given MSVC versions ${versionGiven} is not supported yet.`)
