@@ -74,11 +74,12 @@ For the tools, instead of `true` that chooses the default version, you can pass 
 
 Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.4.0/setup_cpp.js), and run it with the available options.
 
-On Windows
+On Windows:
 
+Open the shell as admin, download via `curl`, then install
 ```ps1
 # open shell as admin
-curl "https://github.com/aminya/setup-cpp/releases/download/v0.4.0/setup_cpp.js"
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.4.0/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
