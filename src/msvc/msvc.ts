@@ -1,6 +1,5 @@
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { error, exportVariable } from "@actions/core"
-import { existsSync } from "fs"
+import { error } from "@actions/core"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 
 type MSVCVersion = "2015" | "2017" | "2019" | string
@@ -22,21 +21,17 @@ export async function setupMSVC(
   // https://github.com/aminya/setup-cpp/issues/1
   try {
     if (version === "2015") {
-      toolset = "14.0.25420.1"
-      await setupChocoPack("visualcpp-build-tools", toolset, [])
-
+      toolset = "14.0"
+      await setupChocoPack("visualcpp-build-tools", "14.0.25420.1", [])
       VCTargetsPath = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/v140"
-      if (existsSync(VCTargetsPath)) {
-        exportVariable("VCTargetsPath", VCTargetsPath)
-      }
     } else if (version === "2017") {
       toolset = "14.16"
       await setupChocoPack("visualstudio2017buildtools", "15.9.41.0", [])
-      // VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.16" // TODO verify path
+      VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.16" // TODO verify path
     } else if (version === "2019") {
       toolset = "14.29"
       await setupChocoPack("visualstudio2019buildtools", "16.11.7.0", [])
-      // VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133"
+      VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133"
     }
   } catch (e) {
     error(e as string | Error)
