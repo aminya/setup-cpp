@@ -114,17 +114,16 @@ export async function main(args: string[]): Promise<number> {
 
     // skip if undefined
     if (value !== undefined) {
-      // get the setup function
-      const setupFunction = setups[tool]
-
       // running the setup function for this tool
       try {
         let installationInfo: InstallationInfo | undefined | void
         if (tool === "vcvarsall") {
-          // TODO expose the options
           // eslint-disable-next-line no-await-in-loop
-          ;(setupFunction as typeof setupVCVarsall)(undefined, arch, undefined, undefined, false, false)
+          setupVCVarsall(getVersion(tool, value), undefined, arch, undefined, undefined, false, false)
         } else {
+          // get the setup function
+          const setupFunction = setups[tool]
+
           // eslint-disable-next-line no-await-in-loop
           installationInfo = await setupFunction(getVersion(tool, value), join(setupCppDir, tool), arch)
         }

@@ -22,7 +22,7 @@ specifiers:
   hasha: ^5.2.2
   jest: ^27.4.2
   mri: ^1.2.0
-  msvc-dev-cmd: ' https://github.com/ilammy/msvc-dev-cmd'
+  msvc-dev-cmd: ' https://github.com/aminya/msvc-dev-cmd'
   npm-run-all2: ^5.0.2
   parcel: ^2.0.1
   prettier-config-atomic: ^3.0.1
@@ -43,7 +43,7 @@ dependencies:
   execa: 5.1.1
   hasha: 5.2.2
   mri: 1.2.0
-  msvc-dev-cmd: github.com/ilammy/msvc-dev-cmd/9f8ae839b01883414208f29e3e24524387f48e1f
+  msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/dba5a20a9276e1a268337d014d486be27b98d66a
   semver: 7.3.5
   setup-python: github.com/actions/setup-python/f38219332975fe8f9c04cca981d674bf22aea1d3
   untildify: 4.0.0
@@ -8619,6 +8619,14 @@ packages:
       semver: 7.3.5
     dev: false
 
+  github.com/aminya/msvc-dev-cmd/dba5a20a9276e1a268337d014d486be27b98d66a:
+    resolution: {tarball: https://codeload.github.com/aminya/msvc-dev-cmd/tar.gz/dba5a20a9276e1a268337d014d486be27b98d66a}
+    name: msvc-dev-cmd
+    version: 1.1.1
+    dependencies:
+      '@actions/core': 1.6.0
+    dev: false
+
   github.com/aminya/sort-package-json/076051b58be7b198732d1ce2b9a415ccd0c63a97:
     resolution: {tarball: https://codeload.github.com/aminya/sort-package-json/tar.gz/076051b58be7b198732d1ce2b9a415ccd0c63a97}
     name: sort-package-json
@@ -8632,11 +8640,3 @@ packages:
       is-plain-obj: 2.1.0
       sort-object-keys: 1.1.3
     dev: true
-
-  github.com/ilammy/msvc-dev-cmd/9f8ae839b01883414208f29e3e24524387f48e1f:
-    resolution: {tarball: https://codeload.github.com/ilammy/msvc-dev-cmd/tar.gz/9f8ae839b01883414208f29e3e24524387f48e1f}
-    name: msvc-dev-cmd
-    version: 1.1.1
-    dependencies:
-      '@actions/core': 1.6.0
-    dev: false

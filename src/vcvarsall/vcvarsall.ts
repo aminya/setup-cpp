@@ -1,5 +1,8 @@
 import { exportVariable, info } from "@actions/core"
 import { existsSync } from "fs"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
 
 function getArch(arch: string): string {
   switch (arch) {
@@ -18,6 +21,7 @@ function getArch(arch: string): string {
 }
 
 export function setupVCVarsall(
+  vsversion: string,
   VCTargetsPath: string | undefined,
   arch: string,
   toolset: string | undefined,
@@ -30,8 +34,5 @@ export function setupVCVarsall(
     exportVariable("VCTargetsPath", VCTargetsPath)
   }
 
-  // lazy load the action so it is not executed
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { setupMSVCDevCmd } = require("msvc-dev-cmd/index")
-  setupMSVCDevCmd(getArch(arch), sdk, toolset, uwp, spectre)
+  setupMSVCDevCmd(getArch(arch), sdk, toolset, uwp, spectre, vsversion)
 }
