@@ -22,7 +22,7 @@ export async function setupMSVC(
   try {
     if (version === "2015") {
       toolset = "14.0"
-      await setupChocoPack("visualcpp-build-tools", "14.0.25420.1", [])
+      await setupChocoPack("visualcpp-build-tools", "14.0.25420.1", ["--ignore-dependencies"])
       VCTargetsPath = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/v140"
     } else if (version === "2017") {
       toolset = "14.16"
