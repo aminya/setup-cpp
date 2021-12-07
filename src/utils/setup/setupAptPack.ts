@@ -26,12 +26,12 @@ export async function setupAptPack(
 
   if (version !== undefined && version !== "") {
     try {
-      await execaSudo(apt, ["install", "-y", `${name}=${version}`])
+      await execaSudo(apt, ["install", "--fix-broken", "-y", `${name}=${version}`])
     } catch {
-      await execaSudo(apt, ["install", "-y", `${name}-${version}`])
+      await execaSudo(apt, ["install", "--fix-broken", "-y", `${name}-${version}`])
     }
   } else {
-    await execaSudo(apt, ["install", "-y", name])
+    await execaSudo(apt, ["install", "--fix-broken", "-y", name])
   }
 
   return { binDir: "/usr/bin/" }
