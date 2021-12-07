@@ -18,7 +18,6 @@ import untildify from "untildify"
 import { isCI } from "./utils/env/isci"
 
 import semverValid from "semver/functions/valid"
-// import semverCoerce from "semver/functions/coerce"
 import { getVersion } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
@@ -227,16 +226,6 @@ export function getCompilerInfo(maybeCompiler: string) {
     if (semverValid(maybeVersion) !== null) {
       return { compiler, version: maybeVersion }
     } else {
-      // version coercion
-      // try {
-      //   // find the semver version of an integer
-      //   const coercedVersion = semverCoerce(maybeVersion)
-      //   if (coercedVersion !== null) {
-      //     return { compiler, version: coercedVersion.version }
-      //   }
-      // } catch (err) {
-      //   // handled in the end
-      // }
       warning(`Invalid semver version ${maybeVersion} used for the compiler.`)
       return { compiler, version: maybeVersion }
     }

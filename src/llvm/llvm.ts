@@ -5,7 +5,7 @@ import semverMajor from "semver/functions/major"
 import { isValidUrl } from "../utils/http/validate_url"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
-import { getSpecificVersionAndUrl, getVersions } from "../utils/setup/version"
+import { getSpecificVersionAndUrl, getVersions, semverCoerceIfInvalid } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addBinExtension } from "../utils/extension/extension"
 
@@ -244,7 +244,9 @@ export async function setupLLVM(
   return installationInfo
 }
 
-export async function activateLLVM(directory: string, version: string) {
+export async function activateLLVM(directory: string, versionGiven: string) {
+  const version = semverCoerceIfInvalid(versionGiven)
+
   const lib = path.join(directory, "lib")
 
   const ld = process.env.LD_LIBRARY_PATH ?? ""

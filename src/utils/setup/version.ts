@@ -1,5 +1,7 @@
 import { isValidUrl } from "../http/validate_url"
 import semverCompare from "semver/functions/compare"
+import semverCoerce from "semver/functions/coerce"
+import semverValid from "semver/functions/valid"
 import { getExecOutput } from "@actions/exec"
 
 /**
@@ -83,4 +85,21 @@ export async function isBinUptoDate(
     // assume given version is old
     return false
   }
+}
+
+/** Coerce the given version if it is invalid */
+export function semverCoerceIfInvalid(version: string) {
+  if (semverValid(version) === null) {
+    // version coercion
+    try {
+      // find the semver version of an integer
+      const coercedVersion = semverCoerce(version)
+      if (coercedVersion !== null) {
+        return coercedVersion.version
+      }
+    } catch (err) {
+      // handled below
+    }
+  }
+  return version
 }
