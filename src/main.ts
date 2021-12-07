@@ -171,6 +171,13 @@ export async function main(args: string[]): Promise<number> {
           await setupMSVC(getVersion("msvc", version) as string, join(setupCppDir, "msvc"), arch)
           break
         }
+        case "appleclang":
+        case "applellvm": {
+          core.warning("Assuming apple-clang is already installed")
+          core.exportVariable("CC", "clang")
+          core.exportVariable("CXX", "clang++")
+          break
+        }
         default: {
           errorMessages.push(`Unsupported compiler ${compiler}`)
         }
