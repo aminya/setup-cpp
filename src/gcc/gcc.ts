@@ -37,8 +37,8 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
         binDir = (
           await setupAptPack("g++", version, [
             "ppa:ubuntu-toolchain-r/test",
-            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai",
-            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
+            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
+            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
           ])
         ).binDir
       } else {
@@ -46,8 +46,8 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
         binDir = (
           await setupAptPack("g++-multilib", version, [
             "ppa:ubuntu-toolchain-r/test",
-            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai",
-            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
+            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
+            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
           ])
         ).binDir
       }
@@ -59,8 +59,8 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
     //   if (arch === "arm" || arch === "arm64") {
     //     return setupAptPack("gcc-arm-none-eabi", version, [
     //       "ppa:ubuntu-toolchain-r/test",
-    //       "deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai",
-    //       "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
+    //       "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
+    //       "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
     //     ])
     //   } else {
     //     throw new Error(`Unsupported platform for ${arch}`)
