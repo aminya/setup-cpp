@@ -34,18 +34,34 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
     }
     case "linux": {
       if (arch === "x64") {
-        binDir = (await setupAptPack("g++", version, "ppa:ubuntu-toolchain-r/test")).binDir
+        binDir = (
+          await setupAptPack("g++", version, [
+            "ppa:ubuntu-toolchain-r/test",
+            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
+            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
+          ])
+        ).binDir
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
-        binDir = (await setupAptPack("g++-multilib", version, "ppa:ubuntu-toolchain-r/test")).binDir
+        binDir = (
+          await setupAptPack("g++-multilib", version, [
+            "ppa:ubuntu-toolchain-r/test",
+            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
+            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
+          ])
+        ).binDir
       }
       break
     }
-    // TODO support bare-metal
+    // TODO support bare-metal (need to support passing it as the input)
     // TODO support abi
     // case "none": {
     //   if (arch === "arm" || arch === "arm64") {
-    //     return setupAptPack("gcc-arm-none-eabi", version, "ppa:ubuntu-toolchain-r/test")
+    //     return setupAptPack("gcc-arm-none-eabi", version, [
+    //       "ppa:ubuntu-toolchain-r/test",
+    //       "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
+    //       "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
+    //     ])
     //   } else {
     //     throw new Error(`Unsupported platform for ${arch}`)
     //   }

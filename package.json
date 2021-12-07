@@ -36,7 +36,7 @@
     "execa": "^5.1.1",
     "hasha": "^5.2.2",
     "mri": "^1.2.0",
-    "msvc-dev-cmd": " https://github.com/aminya/msvc-dev-cmd",
+    "msvc-dev-cmd": "git://github.com/aminya/msvc-dev-cmd#9f672c1",
     "semver": "^7.3.5",
     "setup-python": "https://github.com/actions/setup-python",
     "untildify": "^4.0.0",

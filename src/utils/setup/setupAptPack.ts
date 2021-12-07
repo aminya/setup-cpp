@@ -8,15 +8,18 @@ let didUpdate: boolean = false
 export async function setupAptPack(
   name: string,
   version?: string,
-  repository: boolean | string = true
+  repositories: boolean | string[] = true
 ): Promise<InstallationInfo> {
   const apt = "apt-get"
 
-  if (typeof repository === "string") {
-    await execaSudo("add-apt-repository", ["--update", "-y", repository])
+  if (Array.isArray(repositories)) {
+    for (const repo of repositories) {
+      // eslint-disable-next-line no-await-in-loop
+      await execaSudo("add-apt-repository", ["--update", "-y", repo])
+    }
   }
 
-  if (!didUpdate || repository === true) {
+  if (!didUpdate || repositories === true) {
     await execaSudo(apt, ["update", "-y"])
     didUpdate = true
   }
