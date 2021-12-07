@@ -37,8 +37,7 @@ inputs:
     description: "The gcovr version to install."
     required: false
   python:
-    description: "The pyhon version to install."
-    default: "3.x"
+    description: "The python version to install."
     required: false
   ccache:
     description: "The ccache version to install."
