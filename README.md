@@ -28,6 +28,7 @@ The package can be used locally or from CI services like GitHub Actions.
 - doxygen
 - gcovr
 - opencppcoverage
+- kcov
 - python
 - choco
 - brew

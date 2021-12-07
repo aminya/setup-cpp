@@ -26,6 +26,7 @@ import { setupVcpkg } from "./vcpkg/vcpkg"
 import { join } from "path"
 import { warning } from "@actions/core"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
+import { setupKcov } from "./kcov/kcov"
 
 /** The setup functions */
 const setups = {
@@ -46,6 +47,7 @@ const setups = {
   cppcheck: setupCppcheck,
   msvc: setupMSVC,
   vcvarsall: setupVCVarsall,
+  kcov: setupKcov,
 }
 
 /** The tools that can be installed */
@@ -67,6 +69,7 @@ const tools: Array<keyof typeof setups> = [
   "gcc",
   "msvc",
   "vcvarsall",
+  "kcov",
 ]
 
 /** The possible inputs to the program */
@@ -267,6 +270,7 @@ All the available tools:
 --doxygen
 --gcovr
 --opencppcoverage
+--kcov
 --python
 --choco
 --brew
