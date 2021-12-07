@@ -51,6 +51,9 @@ inputs:
   opencppcoverage:
     description: "The opencppcoverage version to install."
     required: false
+  kcov:
+    description: "The kcov version to install."
+    required: false
 
 runs:
   using: "node12"
