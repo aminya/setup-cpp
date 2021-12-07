@@ -24,7 +24,6 @@ import { InstallationInfo } from "./utils/setup/setupBin"
 import { error, success } from "./utils/io/io"
 import { setupVcpkg } from "./vcpkg/vcpkg"
 import { join } from "path"
-import { warning } from "@actions/core"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
 import { setupKcov } from "./kcov/kcov"
 
@@ -176,7 +175,7 @@ export async function main(args: string[]): Promise<number> {
         }
         case "appleclang":
         case "applellvm": {
-          core.warning("Assuming apple-clang is already installed")
+          core.info("Assuming apple-clang is already installed")
           core.exportVariable("CC", "clang")
           core.exportVariable("CXX", "clang++")
           break
@@ -236,7 +235,7 @@ export function getCompilerInfo(maybeCompiler: string) {
     if (semverValid(maybeVersion) !== null) {
       return { compiler, version: maybeVersion }
     } else {
-      warning(`Invalid semver version ${maybeVersion} used for the compiler.`)
+      core.info(`Invalid semver version ${maybeVersion} used for the compiler.`)
       return { compiler, version: maybeVersion }
     }
   }
