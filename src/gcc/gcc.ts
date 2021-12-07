@@ -35,28 +35,28 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
     case "linux": {
       if (arch === "x64") {
         await setupAptPack("gcc", version, [
-          "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
-          "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
+          "deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai",
+          "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
           "ppa:ubuntu-toolchain-r/test",
         ])
         binDir = (
           await setupAptPack("g++", version, [
-            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
-            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
+            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai",
+            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
             "ppa:ubuntu-toolchain-r/test",
           ])
         ).binDir
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         await setupAptPack("gcc-multilib", version, [
-          "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
-          "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
+          "deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai",
+          "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
           "ppa:ubuntu-toolchain-r/test",
         ])
         binDir = (
           await setupAptPack("g++-multilib", version, [
-            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
-            "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
+            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai",
+            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
             "ppa:ubuntu-toolchain-r/test",
           ])
         ).binDir
@@ -68,8 +68,8 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
     // case "none": {
     //   if (arch === "arm" || arch === "arm64") {
     //     return setupAptPack("gcc-arm-none-eabi", version, [
-    //       "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai'",
-    //       "'deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe'",
+    //       "deb http://dk.archive.ubuntu.com/ubuntu/ xenial mai",
+    //       "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
     //       "ppa:ubuntu-toolchain-r/test",
     //     ])
     //   } else {
