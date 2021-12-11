@@ -1,5 +1,4 @@
 import { getExecOutput } from "@actions/exec"
-import { existsSync } from "fs"
 import * as core from "@actions/core"
 
 export async function setupMacOSSDK() {
@@ -7,8 +6,10 @@ export async function setupMacOSSDK() {
     try {
       const xcrun = await getExecOutput("xcrun --sdk macosx --show-sdk-path")
       const sdkroot = xcrun.stdout || xcrun.stderr
-      if (existsSync(sdkroot)) {
+      if (sdkroot) {
         core.exportVariable("SDKROOT", sdkroot)
+      } else {
+        core.error(`SDKROOT not set`)
       }
     } catch (e) {
       core.error(e as Error | string)
