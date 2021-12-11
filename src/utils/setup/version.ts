@@ -58,8 +58,9 @@ export const defaultVersionRegex = /v?(\d\S*)/
 /** Get the version of a binary */
 export async function getBinVersion(file: string, versionRegex: RegExp = defaultVersionRegex) {
   try {
-    const { stderr, stdout } = await getExecOutput(file, ["--version"])
-    const version = stdout.match(versionRegex)?.[1] ?? stderr.match(versionRegex)?.[1]
+    const execout = await getExecOutput(file, ["--version"])
+    const version_output = execout.stdout || execout.stderr || ""
+    const version = version_output.trim().match(versionRegex)?.[1]
     return version
   } catch (e) {
     console.error(e)

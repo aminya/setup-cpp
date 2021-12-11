@@ -7,7 +7,7 @@ export async function setupMacOSSDK() {
       const xcrun = await getExecOutput("xcrun --sdk macosx --show-sdk-path")
       const sdkroot = xcrun.stdout || xcrun.stderr
       if (sdkroot) {
-        core.exportVariable("SDKROOT", sdkroot)
+        core.exportVariable("SDKROOT", sdkroot.trim())
       } else {
         core.error(`SDKROOT not set`)
       }
