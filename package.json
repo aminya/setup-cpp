@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production parcel build --detailed-report",
-    "build.docker": "pnpm build && docker build -f ./building/docker/debian.dockerfile -t setup_cpp .",
+    "build.docker": "pnpm build && docker build -f ./building/docker/debian_node.dockerfile -t setup_cpp .",
     "clean": "shx rm -rf dist exe",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "format": "prettier --write .",

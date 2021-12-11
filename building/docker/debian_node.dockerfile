@@ -6,6 +6,6 @@ ADD "./dist/" "/"
 WORKDIR "/"
 
 # run installation
-RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
+RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true
 
 ENTRYPOINT [ "/bin/sh" ]

@@ -67,7 +67,7 @@ chmod +x setup_cpp_mac
 sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
-NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11`.
+NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`.
 For the tools, instead of `true` that chooses the default version, you can pass a specific version.
 
 ### With Nodejs
@@ -165,8 +165,8 @@ RUN apt-get install -y --no-install-recommends ca-certificates wget unzip
 RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.5.1/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 
-# install llvm, cmake, ninja, ccache, and vcpkg
-RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+# install llvm, cmake, ninja, and ccache
+RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true
 
 ENTRYPOINT [ "/bin/sh" ]
 ```
