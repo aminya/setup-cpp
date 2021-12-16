@@ -208,3 +208,16 @@ jobs:
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 ```
+
+
+# Articles
+
+[Setup-Cpp on Dev.to](https://dev.to/aminya/setup-cpp-3ia4)
+
+# Usage Examples
+
+- [libclang](https://github.com/atilaneves/libclang)
+- [dpp](https://github.com/atilaneves/dpp)
+- [d-tree-sitter](https://github.com/aminya/d-tree-sitter)
+
+See all of the usage examples on GitHub [here](https://github.com/search?q=aminya%2Fsetup-cpp+path%3A.github%2Fworkflows%2F+language%3AYAML+fork%3Atrue&type=code).
