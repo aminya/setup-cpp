@@ -1,3 +1,7 @@
 export function isCI() {
-  return !(process.env.CI === undefined || process.env.CI === "" || process.env.CI === "false")
+  return process.env.CI === "true"
+}
+
+export function isGitHubCI() {
+  return isCI() && process.env.GITHUB_ACTIONS == "true"
 }

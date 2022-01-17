@@ -5,10 +5,10 @@ import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import hasha from "hasha"
 import { join } from "path"
-import { isCI } from "../utils/env/isci"
+import { isGitHubCI } from "../utils/env/isci"
 
 export function setupPython(version: string, setupDir: string, arch: string) {
-  if (!isCI()) {
+  if (!isGitHubCI()) {
     // TODO parse versoin
     return setupPythonViaSystem("", setupDir, arch)
   }
