@@ -4,7 +4,7 @@ import { addPath } from "../path/addPath"
 import { join } from "path"
 import { existsSync } from "fs"
 import { tmpdir } from "os"
-import { isCI } from "../env/isci"
+import { isGitHubCI } from "../env/isci"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -52,7 +52,7 @@ export async function setupBin(
   )
 
   // Restore from cache (if found).
-  if (isCI()) {
+  if (isGitHubCI()) {
     try {
       const dir = find(name, version)
       if (dir) {
@@ -86,7 +86,7 @@ export async function setupBin(
   addPath(binDir)
 
   // check if inside Github Actions. If so, cache the installation
-  if (isCI() && typeof process.env.RUNNER_TOOL_CACHE === "string") {
+  if (isGitHubCI() && typeof process.env.RUNNER_TOOL_CACHE === "string") {
     await cacheDir(setupDir, name, version)
   }
 
