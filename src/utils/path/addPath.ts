@@ -5,6 +5,7 @@ import execa from "execa"
 import { isGitHubCI } from "../env/isci"
 import untildify from "untildify"
 import { appendFileSync } from "fs"
+// import { spawnSync } from "child_process"
 
 /** An add path function that works locally or inside GitHub Actions */
 export function addPath(path: string) {
@@ -35,7 +36,7 @@ function addPathSystem(path: string) {
     case "darwin": {
       const profile_path = untildify("~/.profile")
       appendFileSync(profile_path, `\nexport PATH=${path}:$PATH\n`)
-      execa.commandSync(`source "${profile_path}"`)
+      // spawnSync(`source "${profile_path}"`, { shell: true })
       core.info(`${path} was added to "${profile_path}"`)
       return
     }
