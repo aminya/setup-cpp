@@ -3,6 +3,7 @@ import { delimiter } from "path"
 import * as core from "@actions/core"
 import execa from "execa"
 import { isGitHubCI } from "../env/isci"
+import untildify from "untildify"
 
 /** An add path function that works locally or inside GitHub Actions */
 export function addPath(path: string) {
@@ -31,9 +32,10 @@ function addPathSystem(path: string) {
     }
     case "linux":
     case "darwin": {
-      execa.commandSync(`echo "export PATH=${path}:$PATH" >> ~/.profile`)
-      execa.commandSync(`source ~/.profile`)
-      core.info(`${path} was added to ~/.profile`)
+      const profile_path = untildify("~/.profile")
+      execa.commandSync(`echo "export PATH=${path}:$PATH" >> "${profile_path}"`)
+      execa.commandSync(`source "${profile_path}"`)
+      core.info(`${path} was added to "${profile_path}"`)
       return
     }
     default: {

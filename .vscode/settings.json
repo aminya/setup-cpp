@@ -20,6 +20,7 @@
     "nothrow",
     "Opencppcoverage",
     "OSSDK",
+    "setx",
     "untildify",
     "vcpkg",
     "visualc",
