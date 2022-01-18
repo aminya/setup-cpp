@@ -1,4 +1,4 @@
-import { exportVariable, info } from "@actions/core"
+import { info } from "@actions/core"
 import { addPath } from "../utils/path/addPath"
 import { existsSync } from "fs"
 import { setupAptPack } from "../utils/setup/setupAptPack"
@@ -7,6 +7,7 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import semverMajor from "semver/functions/major"
 import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
+import { addEnv } from "../utils/env/addEnv"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGcc(version: string, _setupDir: string, arch: string) {
@@ -92,22 +93,22 @@ async function activateGcc(version: string, binDir: string) {
   // const ld = process.env.LD_LIBRARY_PATH ?? ""
   // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
   // // Setup gcc as the compiler
-  // exportVariable("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`)
-  // exportVariable("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`)
-  // exportVariable("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`)
-  // exportVariable("LDFLAGS", `-L${installDir}/lib`)
-  // exportVariable("CPPFLAGS", `-I${installDir}/include`)
+  // addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`)
+  // addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`)
+  // addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`)
+  // addEnv("LDFLAGS", `-L${installDir}/lib`)
+  // addEnv("CPPFLAGS", `-I${installDir}/include`)
   if (process.platform === "win32") {
-    exportVariable("CC", `${binDir}/gcc`)
-    exportVariable("CXX", `${binDir}/g++`)
+    addEnv("CC", `${binDir}/gcc`)
+    addEnv("CXX", `${binDir}/g++`)
   } else {
     const majorVersion = semverMajor(semverCoerce(version) ?? version)
     if (majorVersion >= 5) {
-      exportVariable("CC", `${binDir}/gcc-${majorVersion}`)
-      exportVariable("CXX", `${binDir}/g++-${majorVersion}`)
+      addEnv("CC", `${binDir}/gcc-${majorVersion}`)
+      addEnv("CXX", `${binDir}/g++-${majorVersion}`)
     } else {
-      exportVariable("CC", `${binDir}/gcc-${version}`)
-      exportVariable("CXX", `${binDir}/g++-${version}`)
+      addEnv("CC", `${binDir}/gcc-${version}`)
+      addEnv("CXX", `${binDir}/g++-${version}`)
     }
   }
 

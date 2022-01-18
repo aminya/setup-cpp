@@ -1,8 +1,9 @@
-import { exportVariable, info } from "@actions/core"
+import { info } from "@actions/core"
 import { existsSync } from "fs"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
+import { addEnv } from "../utils/env/addEnv"
 
 function getArch(arch: string): string {
   switch (arch) {
@@ -31,7 +32,7 @@ export function setupVCVarsall(
 ) {
   if (VCTargetsPath !== undefined && existsSync(VCTargetsPath)) {
     info(`Adding ${VCTargetsPath} to PATH`)
-    exportVariable("VCTargetsPath", VCTargetsPath)
+    addEnv("VCTargetsPath", VCTargetsPath)
   }
 
   setupMSVCDevCmd(getArch(arch), sdk, toolset, uwp, spectre, vsversion)
