@@ -12,4 +12,7 @@ RUN chmod +x ./setup_cpp_linux
 # install llvm, cmake, ninja, and ccache
 RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true
 
+# reload the environment
+CMD source ~/.profile 
+
 ENTRYPOINT [ "/bin/sh" ]

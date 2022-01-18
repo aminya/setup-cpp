@@ -26,6 +26,7 @@ import { setupVcpkg } from "./vcpkg/vcpkg"
 import { join } from "path"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
 import { setupKcov } from "./kcov/kcov"
+import { addEnv } from "./utils/env/addEnv"
 
 /** The setup functions */
 const setups = {
@@ -176,8 +177,8 @@ export async function main(args: string[]): Promise<number> {
         case "appleclang":
         case "applellvm": {
           core.info("Assuming apple-clang is already installed")
-          core.exportVariable("CC", "clang")
-          core.exportVariable("CXX", "clang++")
+          addEnv("CC", "clang")
+          addEnv("CXX", "clang++")
           break
         }
         default: {

@@ -8,4 +8,7 @@ WORKDIR "/"
 # run installation
 RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true
 
+# reload the environment
+CMD source ~/.profile 
+
 ENTRYPOINT [ "/bin/sh" ]

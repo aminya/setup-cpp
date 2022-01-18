@@ -1,4 +1,3 @@
-import * as core from "@actions/core"
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import semverMajor from "semver/functions/major"
@@ -8,6 +7,8 @@ import { extractExe, extractTarByExe } from "../utils/setup/extract"
 import { getSpecificVersionAndUrl, getVersions, semverCoerceIfInvalid } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addBinExtension } from "../utils/extension/extension"
+import { addEnv } from "../utils/env/addEnv"
+import { setOutput } from "@actions/core"
 
 //================================================
 // Version
@@ -223,7 +224,7 @@ export function getUrl(platform: string, version: string): string | null | Promi
 
 async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): Promise<PackageInfo> {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, platform, version, getUrl)
-  core.setOutput("version", specificVersion)
+  setOutput("version", specificVersion)
   return {
     url,
     extractedFolderName: "",
@@ -252,26 +253,26 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  core.exportVariable("LLVM_PATH", directory) // the output of this action
+  addEnv("LLVM_PATH", directory) // the output of this action
 
   const llvmMajor = semverMajor(version)
 
   // Setup LLVM as the compiler
-  core.exportVariable("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
-  core.exportVariable("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
+  addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
+  addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
 
   if (process.platform !== "win32") {
     // https://github.com/aminya/setup-cpp/issues/6
-    core.exportVariable("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+    addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
   }
 
-  core.exportVariable("LDFLAGS", `-L${directory}/lib`)
-  core.exportVariable("CPPFLAGS", `-I${directory}/include`)
+  addEnv("LDFLAGS", `-L${directory}/lib`)
+  addEnv("CPPFLAGS", `-I${directory}/include`)
 
-  core.exportVariable("CC", `${directory}/bin/clang`)
-  core.exportVariable("CXX", `${directory}/bin/clang++`)
+  addEnv("CC", `${directory}/bin/clang`)
+  addEnv("CXX", `${directory}/bin/clang++`)
 
-  core.exportVariable("LIBRARY_PATH", `${directory}/lib`)
+  addEnv("LIBRARY_PATH", `${directory}/lib`)
 
   await setupMacOSSDK()
 }
