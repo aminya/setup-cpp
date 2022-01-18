@@ -51,6 +51,8 @@ An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 # windows example (open shell as admin)
 curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.5.3/setup_cpp_windows.exe"
 ./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+RefreshEnv.cmd # reload the environment
 ```
 
 ```ps1
@@ -58,6 +60,8 @@ curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.5.3/setup_cp
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.5.3/setup_cpp_linux"
 chmod +x setup_cpp_linux
 sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+source ~/.profile # reload the environment
 ```
 
 ```ps1
@@ -65,10 +69,14 @@ sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true -
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.5.3/setup_cpp_mac"
 chmod +x setup_cpp_mac
 sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+source ~/.profile # reload the environment
 ```
 
 NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`.
 For the tools, instead of `true` that chooses the default version, you can pass a specific version.
+
+NOTE: you will not need `sudo` if you are already a root user (e.g., in a GitLab runner).
 
 ### With Nodejs
 
@@ -82,6 +90,8 @@ Open the shell as admin, download via `curl`, then install
 # open shell as admin
 curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.5.3/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+RefreshEnv.cmd # reload the environment
 ```
 
 On Linux or Mac:
@@ -89,6 +99,8 @@ On Linux or Mac:
 ```ps1
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.5.3/setup_cpp.js"
 sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+source ~/.profile # reload the environment
 ```
 
 # Inside GitHub Actions
@@ -167,6 +179,9 @@ RUN chmod +x ./setup_cpp_linux
 
 # install llvm, cmake, ninja, and ccache
 RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true
+
+# reload the environment
+RUN source ~/.profile
 
 ENTRYPOINT [ "/bin/sh" ]
 ```
