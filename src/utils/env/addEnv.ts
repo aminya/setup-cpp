@@ -34,7 +34,7 @@ function addEnvSystem(name: string, val: string | undefined) {
     case "linux":
     case "darwin": {
       const profile_path = untildify("~/.profile")
-      appendFileSync(profile_path, `\nexport ${name}="${val}\n`)
+      appendFileSync(profile_path, `\nexport ${name}="${val}"\n`)
       core.info(`${name}="${val} was added to "${profile_path}"`)
       return
     }
