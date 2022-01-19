@@ -2,7 +2,7 @@ import { exportVariable } from "@actions/core"
 import * as core from "@actions/core"
 import execa from "execa"
 import { isGitHubCI } from "./isci"
-import untildify from "untildify"
+import { untildify_user as untildify } from "../path/untildify"
 import { appendFileSync } from "fs"
 import { join } from "path"
 import { isRoot } from "./sudo"
@@ -36,7 +36,7 @@ function addEnvSystem(name: string, val: string | undefined) {
     case "linux":
     case "darwin": {
       // find profile path
-      let profile_path = untildify("~/.profile")
+      let profile_path = untildify(".profile")
       if (isRoot() && typeof process.env.SUDO_USER === "string") {
         // use the user profile even if root
         profile_path = join("/home/", process.env.SUDO_USER, ".profile")

@@ -1,6 +1,6 @@
 import execa from "execa"
 // import { join } from "path"
-// import untildify from "untildify"
+// import { untildify_user as untildify } from "./utils/path/untildify"
 // import { setupCmake } from "../cmake/cmake"
 import { execaSudo } from "../utils/env/sudo"
 import { addBinExtension } from "../utils/extension/extension"
@@ -33,7 +33,7 @@ function getKcovPackageInfo(version: string): PackageInfo {
       extractFunction: async (file: string, dest: string): Promise<string> => {
         const out = await extractTarByExe(file, dest)
         // build after extraction using CMake
-        // await setupCmake("3.22.0", join(untildify("~/"), "cmake"), "")
+        // await setupCmake("3.22.0", join(untildify(""), "cmake"), "")
         await setupAptPack("libdw-dev")
         await setupAptPack("libcurl4-openssl-dev")
         await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out })

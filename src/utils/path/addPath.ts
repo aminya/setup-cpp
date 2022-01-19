@@ -3,7 +3,7 @@ import { delimiter } from "path"
 import * as core from "@actions/core"
 import execa from "execa"
 import { isGitHubCI } from "../env/isci"
-import untildify from "untildify"
+import { untildify_user as untildify } from "./untildify"
 import { appendFileSync } from "fs"
 
 /** An add path function that works locally or inside GitHub Actions */
@@ -34,7 +34,7 @@ function addPathSystem(path: string) {
     }
     case "linux":
     case "darwin": {
-      const profile_path = untildify("~/.profile")
+      const profile_path = untildify(".profile")
       appendFileSync(profile_path, `\nexport PATH=${path}:$PATH\n`)
       core.info(`${path} was added to "${profile_path}"`)
       return
