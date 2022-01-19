@@ -2,8 +2,10 @@ import { exportVariable } from "@actions/core"
 import * as core from "@actions/core"
 import execa from "execa"
 import { isGitHubCI } from "./isci"
-import untildify from "untildify"
+import { untildify_user as untildify } from "../path/untildify"
 import { appendFileSync } from "fs"
+import { join } from "path"
+import { isRoot } from "./sudo"
 
 /** An add path function that works locally or inside GitHub Actions */
 export function addEnv(name: string, val: string | undefined) {
@@ -33,8 +35,14 @@ function addEnvSystem(name: string, val: string | undefined) {
     }
     case "linux":
     case "darwin": {
-      const profile_path = untildify("~/.profile")
-      appendFileSync(profile_path, `\nexport ${name}="${val}\n`)
+      // find profile path
+      let profile_path = untildify(".profile")
+      if (isRoot() && typeof process.env.SUDO_USER === "string") {
+        // use the user profile even if root
+        profile_path = join("/home/", process.env.SUDO_USER, ".profile")
+      }
+
+      appendFileSync(profile_path, `\nexport ${name}="${val}"\n`)
       core.info(`${name}="${val} was added to "${profile_path}"`)
       return
     }

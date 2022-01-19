@@ -5,6 +5,7 @@ import { join } from "path"
 import { existsSync } from "fs"
 import { tmpdir } from "os"
 import { isGitHubCI } from "../env/isci"
+import { setupAptPack } from "./setupAptPack"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -76,6 +77,14 @@ export async function setupBin(
   // download ane extract the package into the installation directory.
   if (!existsSync(binDir) || !existsSync(binFile)) {
     info(`Download and extract ${name} ${version}`)
+
+    if (process.platform === "linux") {
+      // extraction dependencies
+      await setupAptPack("unzip")
+      await setupAptPack("tar")
+      await setupAptPack("xz-utils")
+    }
+
     const downloaded = await downloadTool(url)
     await extractFunction?.(downloaded, setupDir)
   }
