@@ -10,7 +10,7 @@ RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends unzip
 
 # run installation
-RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true
+RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --conan true --vcpkg true
 
 # reload the environment
 CMD source ~/.profile 
