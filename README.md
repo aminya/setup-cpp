@@ -223,6 +223,63 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 ```
 
+# GitLab PipeLines
+
+The following gives an example for setting up a C++ environment inside GitLab pipelines.
+
+.gitlab-ci.yaml
+
+```yaml
+image: ubuntu:latest
+
+stages:
+  - test
+
+.setup_linux: &setup_linux |
+  DEBIAN_FRONTEND=noninteractive
+
+  # set time-zone
+  TZ=Canada/Pacific
+  ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+  # for downloading
+  apt-get update -qq
+  apt-get install -y --no-install-recommends curl gnupg ca-certificates
+
+  # keys used by apt
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
+  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
+
+.setup_cpp: &setup_cpp |
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.5.6/setup_cpp_linux"
+  chmod +x setup_cpp_linux
+  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
+  source ~/.profile
+
+.test: &test |
+  # Build and Test
+  # ...
+
+test_linux_llvm:
+  stage: test
+  variables:
+    compiler: llvm
+  script:
+    - *setup_linux
+    - *setup_cpp
+    - *test
+
+test_linux_gcc:
+  stage: test
+  variables:
+    compiler: gcc
+  script:
+    - *setup_linux
+    - *setup_cpp
+    - *test
+```
+
 # Articles
 
 [Setup-Cpp on Dev.to](https://dev.to/aminya/setup-cpp-3ia4)
