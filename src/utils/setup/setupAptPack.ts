@@ -15,6 +15,11 @@ export async function setupAptPack(
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
+  if (!didUpdate) {
+    await execaSudo(apt, ["update", "-y"])
+    didUpdate = true
+  }
+
   if (!didInit) {
     // install apt utils and certificates (usually missing from docker containers)
     // set time - zone
@@ -37,11 +42,7 @@ export async function setupAptPack(
       // eslint-disable-next-line no-await-in-loop
       await execaSudo("add-apt-repository", ["--update", "-y", repo])
     }
-  }
-
-  if (!didUpdate || repositories === true) {
     await execaSudo(apt, ["update", "-y"])
-    didUpdate = true
   }
 
   if (version !== undefined && version !== "") {
