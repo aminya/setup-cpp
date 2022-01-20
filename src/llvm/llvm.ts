@@ -9,6 +9,7 @@ import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addBinExtension } from "../utils/extension/extension"
 import { addEnv } from "../utils/env/addEnv"
 import { setOutput } from "@actions/core"
+import { setupAptPack } from "../utils/setup/setupAptPack"
 
 //================================================
 // Version
@@ -246,6 +247,11 @@ export async function setupLLVM(
 }
 
 export async function activateLLVM(directory: string, versionGiven: string) {
+  if (process.platform === "linux") {
+    // install llvm build dependencies
+    await setupAptPack("build-essential") // TODO(question) llvm needs ld. But does it need all the build-essential?
+  }
+
   const version = semverCoerceIfInvalid(versionGiven)
 
   const lib = path.join(directory, "lib")
