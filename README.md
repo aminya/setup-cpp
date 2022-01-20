@@ -172,8 +172,7 @@ FROM debian:bullseye
 # add setup_cpp
 WORKDIR "/"
 RUN apt-get update -qq
-RUN apt-get install -y --no-install-recommends apt-utils
-RUN apt-get install -y --no-install-recommends ca-certificates wget unzip
+RUN apt-get install -y --no-install-recommends wget
 RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.5.5/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 

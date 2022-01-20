@@ -3,6 +3,7 @@ import { InstallationInfo } from "./setupBin"
 import { execaSudo } from "../env/sudo"
 
 let didUpdate: boolean = false
+let didInit: boolean = false
 
 /** A function that installs a package using apt */
 export async function setupAptPack(
@@ -11,6 +12,25 @@ export async function setupAptPack(
   repositories: boolean | string[] = true
 ): Promise<InstallationInfo> {
   const apt = "apt-get"
+
+  process.env.DEBIAN_FRONTEND = "noninteractive"
+
+  if (!didInit) {
+    // install apt utils and certificates (usually missing from docker containers)
+    // set time - zone
+    // TZ = Canada / Pacific
+    // ln - snf / usr / share / zoneinfo / $TZ / etc / localtime && echo $TZ > /etc/timezone
+    await execaSudo(apt, [
+      "install",
+      "--fix-broken",
+      "-y",
+      "software-properties-common",
+      "apt-utils",
+      "ca-certificates",
+      "gnupg",
+    ])
+    didInit = true
+  }
 
   if (Array.isArray(repositories)) {
     for (const repo of repositories) {
