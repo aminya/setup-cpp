@@ -30,6 +30,9 @@ inputs:
   conan:
     description: "The conan version to install."
     required: false
+  vcpkg:
+    description: "The vcpkg version to install."
+    required: false
   meson:
     description: "The meson version to install."
     required: false
