@@ -28,7 +28,7 @@ export function addPath(path: string) {
 function addPathSystem(path: string) {
   switch (process.platform) {
     case "win32": {
-      execa.sync(`setx PATH=${path};%PATH%`)
+      execa.sync(`setx PATH "${path};%PATH%"`)
       core.info(`${path} was added to the PATH.`)
       return
     }

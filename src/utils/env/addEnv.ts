@@ -29,7 +29,7 @@ export function addEnv(name: string, val: string | undefined) {
 function addEnvSystem(name: string, val: string | undefined) {
   switch (process.platform) {
     case "win32": {
-      execa.sync(`setx "${name}"="${val}"`)
+      execa.sync(`setx "${name}" "${val}"`)
       core.info(`${name}="${val} was set in the environment."`)
       return
     }
