@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 const { minify } = require("terser")
 const { readFileSync, writeFileSync } = require("fs")
 const { join, dirname } = require("path")

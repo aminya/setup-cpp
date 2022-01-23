@@ -5,7 +5,7 @@ import { getVersion } from "../../default_versions"
 jest.setTimeout(3000000)
 describe("setup-gcc", () => {
   it("should setup gcc", async () => {
-    const version = getVersion("gcc", undefined) ?? "11"
+    const version = getVersion("gcc", undefined) || "11"
     const installInfo = await setupGcc(version, "", process.arch)
 
     let gpp = "g++"

@@ -3,5 +3,5 @@ export function isCI() {
 }
 
 export function isGitHubCI() {
-  return isCI() && process.env.GITHUB_ACTIONS == "true"
+  return isCI() && process.env.GITHUB_ACTIONS === "true"
 }

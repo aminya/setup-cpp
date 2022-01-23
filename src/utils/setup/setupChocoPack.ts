@@ -8,7 +8,7 @@ import execa from "execa"
 let hasChoco = false
 
 /** A function that installs a package using choco */
-export async function setupChocoPack(name: string, version?: string, args: string[] = []): Promise<InstallationInfo> {
+export function setupChocoPack(name: string, version?: string, args: string[] = []): InstallationInfo {
   if (!hasChoco || which.sync("choco", { nothrow: true }) === null) {
     setupChocolatey("", "", process.arch)
     hasChoco = true
