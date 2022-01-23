@@ -1,6 +1,6 @@
 {
   "name": "setup-cpp",
-  "version": "0.1.0",
+  "version": "0.5.6",
   "description": "Install all the tools required for building and testing C++/C projects.",
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
@@ -14,6 +14,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production parcel build --detailed-report",
     "build.docker": "pnpm build && docker build -f ./building/docker/debian_node.dockerfile -t setup_cpp .",
+    "bump": "ncu -u -x execa",
     "clean": "shx rm -rf dist exe",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "format": "prettier --write .",
@@ -44,23 +45,23 @@
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.2",
-    "@types/jest": "^27.0.3",
+    "@types/jest": "^27.4.0",
     "@types/mri": "^1.1.1",
-    "@types/node": "^16.11.11",
+    "@types/node": "^17.0.10",
     "@types/semver": "^7.3.9",
     "@types/which": "^2.0.1",
     "caxa": "^2.1.0",
     "cross-env": "7.0.3",
     "cross-spawn": "^7.0.3",
     "eslint-config-atomic": "^1.16.5",
-    "jest": "^27.4.2",
+    "jest": "^27.4.7",
     "npm-run-all2": "^5.0.2",
-    "parcel": "^2.0.1",
+    "parcel": "^2.2.1",
     "prettier-config-atomic": "^3.0.1",
-    "shx": "0.3.3",
+    "shx": "0.3.4",
     "terser-config-atomic": "^0.1.1",
-    "ts-jest": "^27.0.7",
-    "typescript": "^4.5.2"
+    "ts-jest": "^27.1.3",
+    "typescript": "^4.5.5"
   },
   "engines": {
     "node": ">=12.x"
