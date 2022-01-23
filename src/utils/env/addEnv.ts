@@ -26,10 +26,15 @@ export function addEnv(name: string, val: string | undefined) {
   }
 }
 
-function addEnvSystem(name: string, val: string | undefined) {
+function addEnvSystem(name: string, valGiven: string | undefined) {
+  const val = valGiven ?? ""
   switch (process.platform) {
     case "win32": {
-      execa.sync(`setx "${name}" "${val}"`)
+      if (val.length <= 1024) {
+        execa.sync(`setx "${name}" "${val}"`)
+      } else {
+        execa.sync(`powershell -C "[Environment]::SetEnvironmentVariable('${name}', '${val}', 'User')"`)
+      }
       core.info(`${name}="${val} was set in the environment."`)
       return
     }

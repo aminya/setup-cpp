@@ -28,7 +28,11 @@ export function addPath(path: string) {
 function addPathSystem(path: string) {
   switch (process.platform) {
     case "win32": {
-      execa.sync(`setx PATH "${path};%PATH%"`)
+      if (`${path};${process.env.PATH}`.length <= 1024) {
+        execa.sync(`setx PATH "${path};%PATH%"`)
+      } else {
+        execa.sync(`powershell -C "[Environment]::SetEnvironmentVariable('PATH', \\"${path};$env:PATH\\", 'User')"`)
+      }
       core.info(`${path} was added to the PATH.`)
       return
     }
