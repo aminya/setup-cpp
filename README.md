@@ -136,6 +136,7 @@ jobs:
           - os: "windows-latest"
             compiler: "msvc"
     steps:
+      - uses: actions/checkout@v2
       - name: Cache
         uses: actions/cache@v2
         with:
