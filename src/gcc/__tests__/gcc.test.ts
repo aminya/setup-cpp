@@ -13,5 +13,8 @@ describe("setup-gcc", () => {
       gpp = `g++-${version}`
     }
     await testBin(gpp, ["--version"], installInfo?.binDir)
+
+    expect(process.env.CC?.includes("gcc")).toBeTruthy()
+    expect(process.env.CXX?.includes("g++")).toBeTruthy()
   })
 })
