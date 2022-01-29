@@ -25,6 +25,8 @@ The package can be used locally or from CI services like GitHub Actions.
 - conan
 - ccache
 - cppcheck
+- clangtidy
+- clangformat
 - doxygen
 - gcovr
 - opencppcoverage

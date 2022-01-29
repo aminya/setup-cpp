@@ -282,3 +282,13 @@ export async function activateLLVM(directory: string, versionGiven: string) {
 
   await setupMacOSSDK()
 }
+
+/** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
+export function setupClangTools(
+  version: string,
+  setupDir: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _arch: string
+): Promise<InstallationInfo> {
+  return setupBin("llvm", version, getLLVMPackageInfo, setupDir)
+}

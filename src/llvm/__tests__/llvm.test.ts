@@ -1,4 +1,4 @@
-import { setupLLVM, VERSIONS, getUrl } from "../llvm"
+import { setupLLVM, VERSIONS, getUrl, setupClangTools } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
@@ -47,6 +47,12 @@ describe("setup-llvm", () => {
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
+  })
+
+  it("should setup clang-tidy and clang-format", async () => {
+    const { binDir } = await setupClangTools("11.0.0", directory, "")
+    await testBin("clang-tidy", ["--version"], binDir)
+    await testBin("clang-format", ["--version"], binDir)
   })
 
   afterAll(async () => {
