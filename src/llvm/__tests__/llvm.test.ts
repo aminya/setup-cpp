@@ -44,6 +44,9 @@ describe("setup-llvm", () => {
   it("should setup LLVM", async () => {
     const { binDir } = await setupLLVM("11.0.0", directory, "")
     await testBin("clang++", ["--version"], binDir)
+
+    expect(process.env.CC?.includes("clang")).toBeTruthy()
+    expect(process.env.CXX?.includes("clang++")).toBeTruthy()
   })
 
   afterAll(async () => {
