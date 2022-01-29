@@ -21,7 +21,7 @@ import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
-import { error, success } from "./utils/io/io"
+import { error, success, warning } from "./utils/io/io"
 import { setupVcpkg } from "./vcpkg/vcpkg"
 import { join } from "path"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
@@ -134,11 +134,7 @@ export async function main(args: string[]): Promise<number> {
           installationInfo = await setupFunction(getVersion(tool, value), join(setupCppDir, tool), arch)
         }
         // preparing a report string
-        if (installationInfo !== undefined) {
-          successMessages.push(getSuccessMessage(tool, installationInfo))
-        } else {
-          successMessages.push(`${tool} was successfully installed`)
-        }
+        successMessages.push(getSuccessMessage(tool, installationInfo))
       } catch (e) {
         // push error message to the logger
         error(e as string | Error)
@@ -158,14 +154,20 @@ export async function main(args: string[]): Promise<number> {
         case "llvm":
         case "clang":
         case "clang++": {
-          await setupLLVM(getVersion("llvm", version) as string, join(setupCppDir, "llvm"), arch)
+          const installationInfo = await setupLLVM(
+            getVersion("llvm", version) as string,
+            join(setupCppDir, "llvm"),
+            arch
+          )
+          successMessages.push(getSuccessMessage("llvm", installationInfo))
           break
         }
         case "gcc":
         case "mingw":
         case "cygwin":
         case "msys": {
-          await setupGcc(getVersion("gcc", version) as string, join(setupCppDir, "gcc"), arch)
+          const installationInfo = await setupGcc(getVersion("gcc", version) as string, join(setupCppDir, "gcc"), arch)
+          successMessages.push(getSuccessMessage("gcc", installationInfo))
           break
         }
         case "cl":
@@ -175,7 +177,12 @@ export async function main(args: string[]): Promise<number> {
         case "visualstudio":
         case "visualcpp":
         case "visualc++": {
-          await setupMSVC(getVersion("msvc", version) as string, join(setupCppDir, "msvc"), arch)
+          const installationInfo = await setupMSVC(
+            getVersion("msvc", version) as string,
+            join(setupCppDir, "msvc"),
+            arch
+          )
+          successMessages.push(getSuccessMessage("msvc", installationInfo))
           break
         }
         case "appleclang":
@@ -183,6 +190,7 @@ export async function main(args: string[]): Promise<number> {
           core.info("Assuming apple-clang is already installed")
           addEnv("CC", "clang")
           addEnv("CXX", "clang++")
+          successMessages.push(getSuccessMessage("apple-clang", undefined))
           break
         }
         default: {
@@ -193,6 +201,11 @@ export async function main(args: string[]): Promise<number> {
   } catch (e) {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
+  }
+
+  if (successMessages.length === 0 && errorMessages.length === 0) {
+    warning("setup_cpp was called without any arguments. Nothing to do.")
+    return 0
   }
 
   // report the messages in the end
@@ -292,8 +305,11 @@ function maybeGetInput(key: string) {
   return undefined // skip installation
 }
 
-function getSuccessMessage(tool: string, installationInfo: InstallationInfo) {
+function getSuccessMessage(tool: string, installationInfo: InstallationInfo | undefined | void) {
   let msg = `${tool} was successfully installed`
+  if (installationInfo === undefined) {
+    return msg
+  }
   if ("installDir" in installationInfo) {
     msg += `\nThe installation directory is ${installationInfo.installDir}`
   }

@@ -37,7 +37,7 @@ The package can be used locally or from CI services like GitHub Actions.
 
 # Usage
 
-# From Terminal
+## From Terminal
 
 You should download the executable file or the js file (if Nodejs installed), and run it with the available options.
 
@@ -105,7 +105,7 @@ sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true
 source ~/.profile # reload the environment
 ```
 
-# Inside GitHub Actions
+## Inside GitHub Actions
 
 Here is a complete cross-platform example that tests llvm, gcc, and msvc. It also uses cmake, ninja, vcpkg, and cppcheck.
 
@@ -157,14 +157,16 @@ jobs:
         uses: aminya/setup-cpp@v1
         with:
           compiler: ${{ matrix.compiler }}
+          vcvarsall: ${{ contains(matrix.os, 'windows') }}
           cmake: true
           ninja: true
           vcpkg: true
-          cppcheck: true # instead of `true`, which chooses the default version, you can pass a specific version.
-          # add any tool that you need here...
+          cppcheck: true
+          clangtidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
+          # ...
 ```
 
-# Inside Docker
+## Inside Docker
 
 Here is an example for using setup_cpp to make a builder image that has the Cpp tools you need.
 
@@ -196,7 +198,7 @@ If you want to build the ones included, then run:
 docker build -f ./building/docker/debian.dockerfile -t setup_cpp .
 ```
 
-Where you should use the path to the docker after `-f`.
+Where you should use the path to the dockerfile after `-f`.
 
 After build, run the following to start an interactive shell in your container
 
@@ -204,7 +206,7 @@ After build, run the following to start an interactive shell in your container
 docker run -it setup_cpp
 ```
 
-# Inside Docker inside GitHub Actions
+## Inside Docker inside GitHub Actions
 
 You can use the docker file discussed in the previous section inside GitHub Actions like the following:
 
@@ -226,7 +228,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 ```
 
-# GitLab PipeLines
+## Inside GitLab pipelines
 
 The following gives an example for setting up a C++ environment inside GitLab pipelines.
 
@@ -289,6 +291,7 @@ test_linux_gcc:
 
 # Usage Examples
 
+- [cpp-best-practices starter project](https://github.com/cpp-best-practices/cpp_starter_project)
 - [libclang](https://github.com/atilaneves/libclang)
 - [dpp](https://github.com/atilaneves/dpp)
 - [d-tree-sitter](https://github.com/aminya/d-tree-sitter)
