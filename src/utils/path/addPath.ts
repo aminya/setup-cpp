@@ -5,6 +5,7 @@ import execa from "execa"
 import { isGitHubCI } from "../env/isci"
 import { untildify_user as untildify } from "./untildify"
 import { appendFileSync } from "fs"
+import { error } from "../io/io"
 
 /** An add path function that works locally or inside GitHub Actions */
 export function addPath(path: string) {
@@ -16,12 +17,12 @@ export function addPath(path: string) {
     }
   } catch (err) {
     try {
-      core.error(err as Error)
+      error(err as Error)
       return addPathSystem(path)
     } catch (err2) {
-      core.error(err2 as Error)
+      error(err2 as Error)
     }
-    core.error(`Failed to add ${path} to the percistent PATH. You should add it manually.`)
+    error(`Failed to add ${path} to the percistent PATH. You should add it manually.`)
   }
 }
 

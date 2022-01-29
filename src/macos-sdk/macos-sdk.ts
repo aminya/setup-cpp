@@ -1,6 +1,6 @@
 import { getExecOutput } from "@actions/exec"
-import * as core from "@actions/core"
 import { addEnv } from "../utils/env/addEnv"
+import { error } from "../utils/io/io"
 
 export async function setupMacOSSDK() {
   if (process.platform === "darwin") {
@@ -10,10 +10,10 @@ export async function setupMacOSSDK() {
       if (sdkroot) {
         addEnv("SDKROOT", sdkroot.trim())
       } else {
-        core.error(`SDKROOT not set`)
+        error(`SDKROOT not set`)
       }
     } catch (e) {
-      core.error(e as Error | string)
+      error(e as Error | string)
     }
   }
 }

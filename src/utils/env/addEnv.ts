@@ -6,6 +6,7 @@ import { untildify_user as untildify } from "../path/untildify"
 import { appendFileSync } from "fs"
 import { join } from "path"
 import { isRoot } from "./sudo"
+import { error } from "../io/io"
 
 /** An add path function that works locally or inside GitHub Actions */
 export function addEnv(name: string, val: string | undefined) {
@@ -17,12 +18,12 @@ export function addEnv(name: string, val: string | undefined) {
     }
   } catch (err) {
     try {
-      core.error(err as Error)
+      error(err as Error)
       return addEnvSystem(name, val)
     } catch (err2) {
-      core.error(err2 as Error)
+      error(err2 as Error)
     }
-    core.error(`Failed to export environment variable ${name}=${val}. You should add it manually.`)
+    error(`Failed to export environment variable ${name}=${val}. You should add it manually.`)
   }
 }
 
