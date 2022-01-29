@@ -51,6 +51,12 @@ inputs:
   cppcheck:
     description: "The cppcheck version to install."
     required: false
+  clangtidy:
+    description: "The clang-tidy version to install."
+    required: false
+  clangformat:
+    description: "The clang-format version to install."
+    required: false
   opencppcoverage:
     description: "The opencppcoverage version to install."
     required: false

@@ -7,7 +7,7 @@ import { setupConan } from "./conan/conan"
 import { setupCppcheck } from "./cppcheck/cppcheck"
 import { setupDoxygen } from "./doxygen/doxygen"
 import { setupGcovr } from "./gcovr/gcovr"
-import { setupLLVM } from "./llvm/llvm"
+import { setupLLVM, setupClangTools } from "./llvm/llvm"
 import { setupMeson } from "./meson/meson"
 import { setupMSVC } from "./msvc/msvc"
 import { setupNinja } from "./ninja/ninja"
@@ -45,6 +45,8 @@ const setups = {
   ccache: setupCcache,
   doxygen: setupDoxygen,
   cppcheck: setupCppcheck,
+  clangtidy: setupClangTools,
+  clangformat: setupClangTools,
   msvc: setupMSVC,
   vcvarsall: setupVCVarsall,
   kcov: setupKcov,
@@ -65,6 +67,8 @@ const tools: Array<keyof typeof setups> = [
   "ccache",
   "doxygen",
   "cppcheck",
+  "clangtidy",
+  "clangformat",
   "llvm",
   "gcc",
   "msvc",
@@ -267,6 +271,8 @@ All the available tools:
 --conan
 --ccache
 --cppcheck
+--clangformat
+--clangtidy
 --doxygen
 --gcovr
 --opencppcoverage
