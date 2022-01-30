@@ -23,6 +23,7 @@ The package can be used locally or from CI services like GitHub Actions.
 - vcpkg
 - meson
 - conan
+- make
 - ccache
 - cppcheck
 - clangtidy
