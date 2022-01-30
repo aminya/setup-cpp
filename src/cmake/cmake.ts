@@ -1,16 +1,13 @@
 import { extractZip, extractTar } from "@actions/tool-cache"
-import { getInput } from "@actions/core"
 import semverLte from "semver/functions/lte"
 import semverCoerce from "semver/functions/coerce"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 import { addBinExtension } from "../utils/extension/extension"
 
 /** Get the platform data for cmake */
-function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): PackageInfo {
+function getCmakePackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {
   const semVersion = semverCoerce(version) ?? version
-  const platformStr = platform ?? process.platform
-  const arch = getInput("architecture") || process.arch
-  switch (platformStr) {
+  switch (platform) {
     case "win32": {
       const isOld = semverLte(semVersion, "v3.19.6")
       let osArchStr: string
@@ -58,12 +55,11 @@ function getCmakePackageInfo(version: string, platform?: NodeJS.Platform): Packa
       }
     }
     default:
-      throw new Error(`Unsupported platform '${platformStr}'`)
+      throw new Error(`Unsupported platform '${platform}'`)
   }
 }
 
 /** Setup cmake */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupCmake(version: string, setupDir: string, _arch: string): Promise<InstallationInfo> {
-  return setupBin("cmake", version, getCmakePackageInfo, setupDir)
+export function setupCmake(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  return setupBin("cmake", version, getCmakePackageInfo, setupDir, arch)
 }

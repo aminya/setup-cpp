@@ -48,7 +48,7 @@ function getKcovPackageInfo(version: string): PackageInfo {
 export async function setupKcov(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "linux": {
-      const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir)
+      const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
       return installationInfo
     }
     default: {

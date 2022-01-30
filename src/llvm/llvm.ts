@@ -222,8 +222,8 @@ export function getUrl(platform: string, version: string): string | null | Promi
 //================================================
 // Exports
 //================================================
-
-async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): Promise<PackageInfo> {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform, _arch: string): Promise<PackageInfo> {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, platform, version, getUrl)
   setOutput("version", specificVersion)
   return {
@@ -235,13 +235,8 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform): P
   }
 }
 
-export async function setupLLVM(
-  version: string,
-  setupDir: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _arch: string
-): Promise<InstallationInfo> {
-  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir)
+export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
   await activateLLVM(installationInfo.installDir ?? setupDir, version)
   return installationInfo
 }
@@ -284,11 +279,6 @@ export async function activateLLVM(directory: string, versionGiven: string) {
 }
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
-export function setupClangTools(
-  version: string,
-  setupDir: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _arch: string
-): Promise<InstallationInfo> {
-  return setupBin("llvm", version, getLLVMPackageInfo, setupDir)
+export function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  return setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
 }

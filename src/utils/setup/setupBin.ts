@@ -41,15 +41,17 @@ export type InstallationInfo = {
 export async function setupBin(
   name: string,
   version: string,
-  getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo | Promise<PackageInfo>,
-  setupDir: string
+  getPackageInfo: (version: string, platform: NodeJS.Platform, arch: string) => PackageInfo | Promise<PackageInfo>,
+  setupDir: string,
+  arch: string
 ): Promise<InstallationInfo> {
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
-  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? join(tmpdir(), "setup-cpp", "ToolCache")
+  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACHE ?? join(tmpdir(), "setup-cpp", "ToolCache")
 
   const { url, binRelativeDir, binFileName, extractedFolderName, extractFunction } = await getPackageInfo(
     version,
-    process.platform
+    process.platform,
+    arch
   )
 
   // Restore from cache (if found).
