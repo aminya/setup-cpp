@@ -87,8 +87,12 @@ export async function setupBin(
       await setupAptPack("xz-utils")
     }
 
-    const downloaded = await downloadTool(url)
-    await extractFunction?.(downloaded, setupDir)
+    try {
+      const downloaded = await downloadTool(url)
+      await extractFunction?.(downloaded, setupDir)
+    } catch (err) {
+      throw new Error(`Failed to download ${name} ${version} ${arch}: ${err}`)
+    }
   }
 
   // Adding the bin dir to the path

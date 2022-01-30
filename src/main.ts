@@ -289,6 +289,7 @@ All the available tools:
 --meson
 --conan
 --make
+--task
 --ccache
 --cppcheck
 --clangformat
