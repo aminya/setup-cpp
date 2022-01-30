@@ -56,7 +56,7 @@ export function setupChocolatey(
   if (maybeChoco !== null) {
     binDir = dirname(maybeChoco)
   } else {
-    binDir = "C:/ProgramData/Chocolatey/bin/"
+    binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   }
 
   if (existsSync(binDir)) {

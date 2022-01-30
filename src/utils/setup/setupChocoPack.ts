@@ -28,7 +28,7 @@ export function setupChocoPack(name: string, version?: string, args: string[] = 
     execa.sync("choco", ["install", "-y", name, ...args], { env, extendEnv: false })
   }
 
-  const binDir = "C:/ProgramData/Chocolatey/bin/"
+  const binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   addPath(binDir)
   return { binDir }
 }
