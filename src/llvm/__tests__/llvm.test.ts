@@ -49,6 +49,18 @@ describe("setup-llvm", () => {
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
   })
 
+  it("should find llvm in the cache", async () => {
+    const { binDir } = await setupLLVM("11.0.0", directory, "")
+    await testBin("clang++", ["--version"], binDir)
+
+    expect(binDir.includes("ToolCache")).toBeTruthy()
+
+    expect(process.env.CC?.includes("clang")).toBeTruthy()
+    expect(process.env.CXX?.includes("clang++")).toBeTruthy()
+    expect(process.env.CC?.includes("ToolCache")).toBeTruthy()
+    expect(process.env.CXX?.includes("ToolCache")).toBeTruthy()
+  })
+
   it("should setup clang-tidy and clang-format", async () => {
     const { binDir } = await setupClangTools("11.0.0", directory, "")
     await testBin("clang-tidy", ["--version"], binDir)

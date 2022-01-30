@@ -242,7 +242,7 @@ export async function setupLLVM(
   _arch: string
 ): Promise<InstallationInfo> {
   const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir)
-  await activateLLVM(setupDir, version)
+  await activateLLVM(installationInfo.installDir ?? setupDir, version)
   return installationInfo
 }
 
