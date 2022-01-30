@@ -2,6 +2,7 @@ import * as core from "@actions/core"
 import { setupBrew } from "./brew/brew"
 import { setupCcache } from "./ccache/ccache"
 import { setupMake } from "./make/make"
+import { setupTask } from "./task/task"
 import { setupChocolatey } from "./chocolatey/chocolatey"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
@@ -52,6 +53,7 @@ const setups = {
   vcvarsall: setupVCVarsall,
   kcov: setupKcov,
   make: setupMake,
+  task: setupTask,
 }
 
 /** The tools that can be installed */
@@ -77,6 +79,7 @@ const tools: Array<keyof typeof setups> = [
   "vcvarsall",
   "kcov",
   "make",
+  "task",
 ]
 
 /** The possible inputs to the program */

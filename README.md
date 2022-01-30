@@ -24,6 +24,7 @@ The package can be used locally or from CI services like GitHub Actions.
 - meson
 - conan
 - make
+- task
 - ccache
 - cppcheck
 - clangtidy
