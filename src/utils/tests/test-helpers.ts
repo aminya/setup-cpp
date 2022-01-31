@@ -4,6 +4,7 @@ import * as path from "path"
 import { addBinExtension } from "../extension/extension"
 import { join } from "path"
 import spawn from "cross-spawn"
+import { existsSync } from "fs"
 
 export async function setupTmpDir(testName: string) {
   const tempDirectory = path.join(tmpdir(), "setup-cpp", testName)
@@ -38,10 +39,12 @@ export async function testBin(
   if (typeof binDir === "string") {
     expect(binDir).toBeDefined()
     expect(binDir).not.toHaveLength(0)
+    expect(existsSync(binDir)).toBeTruthy()
     bin = join(binDir, addBinExtension(name))
   }
 
   if (args !== null) {
+    console.log(`Running ${bin} ${args.join(" ")}`)
     const { status } = spawn.sync(bin, args, { stdio: "inherit" })
     expect(status).toBe(0)
   }
