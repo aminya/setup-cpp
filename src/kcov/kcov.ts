@@ -20,9 +20,7 @@ function getKcovPackageInfo(version: string): PackageInfo {
       extractedFolderName: "",
       binRelativeDir: "usr/local/bin",
       binFileName: addBinExtension("kcov"),
-      extractFunction: (file: string, dest: string) => {
-        return extractTarByExe(file, dest, ["--strip-components=0"])
-      },
+      extractFunction: extractTarByExe,
     }
   } else {
     return {

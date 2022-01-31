@@ -231,7 +231,12 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform, _a
     extractedFolderName: "",
     binRelativeDir: "bin",
     binFileName: addBinExtension("clang"),
-    extractFunction: platform === "win32" ? extractExe : extractTarByExe,
+    extractFunction:
+      platform === "win32"
+        ? extractExe
+        : (file: string, dest: string) => {
+            return extractTarByExe(file, dest, ["--strip-components=1"])
+          },
   }
 }
 
