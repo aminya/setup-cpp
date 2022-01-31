@@ -62,7 +62,7 @@ export async function setupBin(
         const installDir = join(dir, extractedFolderName)
         const binDir = join(installDir, binRelativeDir)
         if (existsSync(binDir) && existsSync(join(binDir, binFileName))) {
-          info(`${name} ${version} was found in the cache.`)
+          info(`${name} ${version} was found in the cache at ${binDir}.`)
           addPath(binDir)
           return { installDir, binDir }
         }
