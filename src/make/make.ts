@@ -1,3 +1,4 @@
+import { addPath } from "@actions/core"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
@@ -9,7 +10,9 @@ export function setupMake(version: string, _setupDir: string, _arch: string) {
       return setupChocoPack("make", version)
     }
     case "darwin": {
-      return setupBrewPack("make", version)
+      setupBrewPack("make", version)
+      addPath("/usr/local/opt/make/libexec/gnubin")
+      return { binDir: "/usr/local/opt/make/libexec/gnubin" }
     }
     case "linux": {
       return setupAptPack("make", version)
