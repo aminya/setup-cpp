@@ -2,6 +2,7 @@ import { setupLLVM, VERSIONS, getUrl, setupClangTools } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
+import { isGitHubCI } from "../../utils/env/isci"
 
 jest.setTimeout(300000)
 async function testUrl(version: string) {
@@ -53,12 +54,17 @@ describe("setup-llvm", () => {
     const { binDir } = await setupLLVM("11.0.0", directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
-    expect(binDir.includes("hostedtoolcache")).toBeTruthy()
+    if (isGitHubCI()) {
+      expect(binDir).toMatch("hostedtoolcache")
+    }
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
-    expect(process.env.CC?.includes("hostedtoolcache")).toBeTruthy()
-    expect(process.env.CXX?.includes("hostedtoolcache")).toBeTruthy()
+
+    if (isGitHubCI()) {
+      expect(process.env.CC).toMatch("hostedtoolcache")
+      expect(process.env.CXX).toMatch("hostedtoolcache")
+    }
   })
 
   it("should setup clang-tidy and clang-format", async () => {

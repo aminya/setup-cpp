@@ -9,6 +9,7 @@ import { error } from "../io/io"
 
 /** An add path function that works locally or inside GitHub Actions */
 export function addPath(path: string) {
+  process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
     if (isGitHubCI()) {
       ghAddPath(path)
@@ -45,8 +46,7 @@ function addPathSystem(path: string) {
       return
     }
     default: {
-      // fall through shell path modification
+      return
     }
   }
-  process.env.PATH = `${path}${delimiter}${process.env.PATH}`
 }

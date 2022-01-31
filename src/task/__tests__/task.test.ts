@@ -1,6 +1,6 @@
 import { setupTask } from "../task"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { InstallationInfo } from "../../utils/setup/setupBin"
+import { isGitHubCI } from "../../utils/env/isci"
 
 jest.setTimeout(300000)
 describe("setup-task", () => {
@@ -10,14 +10,16 @@ describe("setup-task", () => {
   })
 
   it("should setup task", async () => {
-    const installInfo = await setupTask("3.10.0", directory, process.arch)
+    const { binDir } = await setupTask("3.10.0", directory, process.arch)
 
-    await testBin("task", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
+    await testBin("task", ["--version"], binDir)
   })
 
   it("should find task in the cache", async () => {
-    const installInfo = await setupTask("3.10.0", directory, process.arch)
-    expect((installInfo as InstallationInfo | undefined)?.binDir.includes("hostedtoolcache")).toBeTruthy()
+    const { binDir } = await setupTask("3.10.0", directory, process.arch)
+    if (isGitHubCI()) {
+      expect(binDir).toMatch("hostedtoolcache")
+    }
   })
 
   afterEach(async () => {

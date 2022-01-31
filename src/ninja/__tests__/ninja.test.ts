@@ -1,5 +1,6 @@
 import { setupNinja } from "../ninja"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
+import { isGitHubCI } from "../../utils/env/isci"
 
 jest.setTimeout(300000)
 async function testNinja(directory: string) {
@@ -20,7 +21,9 @@ describe("setup-ninja", () => {
 
   it("should find Ninja in the cache", async () => {
     const binDir = await testNinja(directory)
-    expect(binDir.includes("hostedtoolcache")).toBeTruthy()
+    if (isGitHubCI()) {
+      expect(binDir).toMatch("hostedtoolcache")
+    }
   })
 
   afterEach(async () => {
