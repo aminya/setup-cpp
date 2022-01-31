@@ -17,7 +17,7 @@ describe("setup-task", () => {
 
   it("should find task in the cache", async () => {
     const installInfo = await setupTask("3.10.0", directory, process.arch)
-    expect((installInfo as InstallationInfo | undefined)?.binDir.includes("ToolCache")).toBeTruthy()
+    expect((installInfo as InstallationInfo | undefined)?.binDir.includes("hostedtoolcache")).toBeTruthy()
   })
 
   afterEach(async () => {

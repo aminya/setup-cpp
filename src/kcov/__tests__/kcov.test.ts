@@ -31,7 +31,7 @@ describe("setup-Kcov", () => {
   // it("should find Kcov in the cache", async () => {
   //   const directory = await setupTmpDir("kcov-v39")
   //   const binDir = await testKcov("v39", directory)
-  //   expect(binDir.includes("ToolCache")).toBeTruthy()
+  //   expect(binDir.includes("hostedtoolcache")).toBeTruthy()
   //   await cleanupTmpDir("kcov-v39")
   // })
 })

@@ -53,12 +53,12 @@ describe("setup-llvm", () => {
     const { binDir } = await setupLLVM("11.0.0", directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
-    expect(binDir.includes("ToolCache")).toBeTruthy()
+    expect(binDir.includes("hostedtoolcache")).toBeTruthy()
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
-    expect(process.env.CC?.includes("ToolCache")).toBeTruthy()
-    expect(process.env.CXX?.includes("ToolCache")).toBeTruthy()
+    expect(process.env.CC?.includes("hostedtoolcache")).toBeTruthy()
+    expect(process.env.CXX?.includes("hostedtoolcache")).toBeTruthy()
   })
 
   it("should setup clang-tidy and clang-format", async () => {

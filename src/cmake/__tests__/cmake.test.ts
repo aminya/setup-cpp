@@ -17,7 +17,7 @@ describe("setup-cmake", () => {
   it("should find CMake in the cache", async () => {
     const { binDir } = await setupCmake("3.20.2", directory, process.arch)
     await testBin("cmake", ["--version"], binDir)
-    expect(binDir.includes("ToolCache")).toBeTruthy()
+    expect(binDir.includes("hostedtoolcache")).toBeTruthy()
   })
 
   afterAll(async () => {

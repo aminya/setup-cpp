@@ -20,7 +20,7 @@ describe("setup-ninja", () => {
 
   it("should find Ninja in the cache", async () => {
     const binDir = await testNinja(directory)
-    expect(binDir.includes("ToolCache")).toBeTruthy()
+    expect(binDir.includes("hostedtoolcache")).toBeTruthy()
   })
 
   afterEach(async () => {

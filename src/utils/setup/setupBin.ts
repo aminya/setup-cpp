@@ -46,7 +46,7 @@ export async function setupBin(
   arch: string
 ): Promise<InstallationInfo> {
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
-  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACHE ?? join(tmpdir(), "setup-cpp", "ToolCache")
+  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACHE ?? join(tmpdir(), "setup-cpp", "hostedtoolcache")
 
   const { url, binRelativeDir, binFileName, extractedFolderName, extractFunction } = await getPackageInfo(
     version,
