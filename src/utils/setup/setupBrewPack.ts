@@ -14,7 +14,9 @@ export function setupBrewPack(name: string, version?: string): InstallationInfo 
   }
 
   // brew is not thread-safe
-  execa.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name])
+  execa.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name], {
+    stdio: "inherit",
+  })
 
   return { binDir: "/usr/local/bin/" }
 }

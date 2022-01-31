@@ -1,14 +1,15 @@
 import { addPath as ghAddPath } from "@actions/core"
 import { delimiter } from "path"
 import * as core from "@actions/core"
-import execa from "execa"
 import { isGitHubCI } from "../env/isci"
 import { untildify_user as untildify } from "./untildify"
 import { appendFileSync } from "fs"
 import { error } from "../io/io"
+import { execPowershell } from "../exec/powershell"
 
 /** An add path function that works locally or inside GitHub Actions */
 export function addPath(path: string) {
+  process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
     if (isGitHubCI()) {
       ghAddPath(path)
@@ -29,11 +30,10 @@ export function addPath(path: string) {
 function addPathSystem(path: string) {
   switch (process.platform) {
     case "win32": {
-      if (`${path};${process.env.PATH}`.length <= 1024) {
-        execa.sync(`setx PATH "${path};%PATH%"`)
-      } else {
-        execa.sync(`powershell -C "[Environment]::SetEnvironmentVariable('PATH', \\"${path};$env:PATH\\", 'User')"`)
-      }
+      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
+      execPowershell(
+        `$USER_PATH=[Environment]::GetEnvironmentVariable('PATH', 'User'); [Environment]::SetEnvironmentVariable('PATH', \\"${path};$USER_PATH\\", 'User')`
+      )
       core.info(`${path} was added to the PATH.`)
       return
     }
@@ -45,8 +45,7 @@ function addPathSystem(path: string) {
       return
     }
     default: {
-      // fall through shell path modification
+      return
     }
   }
-  process.env.PATH = `${path}${delimiter}${process.env.PATH}`
 }

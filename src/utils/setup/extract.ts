@@ -7,7 +7,7 @@ export async function extractExe(file: string, dest: string) {
   return dest
 }
 
-export async function extractTarByExe(file: string, dest: string, flags = ["--strip-components=1"]) {
+export async function extractTarByExe(file: string, dest: string, flags = ["--strip-components=0"]) {
   try {
     await mkdirP(dest)
   } catch {

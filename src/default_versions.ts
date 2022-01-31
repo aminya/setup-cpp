@@ -11,6 +11,7 @@ const DefaultVersions: Record<string, string> = {
   meson: "0.61.1",
   python: "3.8.10",
   kcov: "v39",
+  task: "3.10.0",
   gcc: process.platform === "win32" ? "11.2.0.07112021" : "11",
 }
 

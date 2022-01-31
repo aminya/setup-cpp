@@ -2,6 +2,7 @@ import { setupLLVM, VERSIONS, getUrl, setupClangTools } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
+import { isGitHubCI } from "../../utils/env/isci"
 
 jest.setTimeout(300000)
 async function testUrl(version: string) {
@@ -42,7 +43,7 @@ describe("setup-llvm", () => {
   })
 
   it("should setup LLVM", async () => {
-    const { binDir } = await setupLLVM("11.0.0", directory, "")
+    const { binDir } = await setupLLVM("11.0.0", directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
@@ -50,24 +51,29 @@ describe("setup-llvm", () => {
   })
 
   it("should find llvm in the cache", async () => {
-    const { binDir } = await setupLLVM("11.0.0", directory, "")
+    const { binDir } = await setupLLVM("11.0.0", directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
-    expect(binDir.includes("ToolCache")).toBeTruthy()
+    if (isGitHubCI()) {
+      expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
+    }
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
-    expect(process.env.CC?.includes("ToolCache")).toBeTruthy()
-    expect(process.env.CXX?.includes("ToolCache")).toBeTruthy()
+
+    if (isGitHubCI()) {
+      expect(process.env.CC).toMatch("hostedtoolcache")
+      expect(process.env.CXX).toMatch("hostedtoolcache")
+    }
   })
 
   it("should setup clang-tidy and clang-format", async () => {
-    const { binDir } = await setupClangTools("11.0.0", directory, "")
+    const { binDir } = await setupClangTools("11.0.0", directory, process.arch)
     await testBin("clang-tidy", ["--version"], binDir)
     await testBin("clang-format", ["--version"], binDir)
   })
 
   afterAll(async () => {
-    await cleanupTmpDir("setup-llvm")
+    await cleanupTmpDir("llvm")
   }, 100000)
 })

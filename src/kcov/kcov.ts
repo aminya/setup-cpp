@@ -2,7 +2,7 @@ import execa from "execa"
 // import { join } from "path"
 // import { untildify_user as untildify } from "./utils/path/untildify"
 // import { setupCmake } from "../cmake/cmake"
-import { execaSudo } from "../utils/env/sudo"
+import { execSudo } from "../utils/exec/sudo"
 import { addBinExtension } from "../utils/extension/extension"
 import { extractTarByExe } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
@@ -20,9 +20,7 @@ function getKcovPackageInfo(version: string): PackageInfo {
       extractedFolderName: "",
       binRelativeDir: "usr/local/bin",
       binFileName: addBinExtension("kcov"),
-      extractFunction: (file: string, dest: string) => {
-        return extractTarByExe(file, dest, ["--strip-components=0"])
-      },
+      extractFunction: extractTarByExe,
     }
   } else {
     return {
@@ -38,7 +36,7 @@ function getKcovPackageInfo(version: string): PackageInfo {
         await setupAptPack("libcurl4-openssl-dev")
         await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out })
         await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out })
-        await execaSudo("cmake", ["--install", "./build"], out)
+        await execSudo("cmake", ["--install", "./build"], out)
         return out
       },
     }
@@ -48,7 +46,7 @@ function getKcovPackageInfo(version: string): PackageInfo {
 export async function setupKcov(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "linux": {
-      const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir)
+      const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
       return installationInfo
     }
     default: {

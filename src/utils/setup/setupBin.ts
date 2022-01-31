@@ -41,15 +41,17 @@ export type InstallationInfo = {
 export async function setupBin(
   name: string,
   version: string,
-  getPackageInfo: (version: string, platform: NodeJS.Platform) => PackageInfo | Promise<PackageInfo>,
-  setupDir: string
+  getPackageInfo: (version: string, platform: NodeJS.Platform, arch: string) => PackageInfo | Promise<PackageInfo>,
+  setupDir: string,
+  arch: string
 ): Promise<InstallationInfo> {
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
-  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACH ?? join(tmpdir(), "setup-cpp", "ToolCache")
+  process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACHE ?? join(tmpdir(), "setup-cpp", "hostedtoolcache")
 
   const { url, binRelativeDir, binFileName, extractedFolderName, extractFunction } = await getPackageInfo(
     version,
-    process.platform
+    process.platform,
+    arch
   )
 
   // Restore from cache (if found).
@@ -60,7 +62,7 @@ export async function setupBin(
         const installDir = join(dir, extractedFolderName)
         const binDir = join(installDir, binRelativeDir)
         if (existsSync(binDir) && existsSync(join(binDir, binFileName))) {
-          info(`${name} ${version} was found in the cache.`)
+          info(`${name} ${version} was found in the cache at ${binDir}.`)
           addPath(binDir)
           return { installDir, binDir }
         }
@@ -85,8 +87,12 @@ export async function setupBin(
       await setupAptPack("xz-utils")
     }
 
-    const downloaded = await downloadTool(url)
-    await extractFunction?.(downloaded, setupDir)
+    try {
+      const downloaded = await downloadTool(url)
+      await extractFunction?.(downloaded, setupDir)
+    } catch (err) {
+      throw new Error(`Failed to download ${name} ${version} ${arch}: ${err}`)
+    }
   }
 
   // Adding the bin dir to the path

@@ -1,6 +1,8 @@
 import * as core from "@actions/core"
 import { setupBrew } from "./brew/brew"
 import { setupCcache } from "./ccache/ccache"
+import { setupMake } from "./make/make"
+import { setupTask } from "./task/task"
 import { setupChocolatey } from "./chocolatey/chocolatey"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
@@ -50,6 +52,8 @@ const setups = {
   msvc: setupMSVC,
   vcvarsall: setupVCVarsall,
   kcov: setupKcov,
+  make: setupMake,
+  task: setupTask,
 }
 
 /** The tools that can be installed */
@@ -74,6 +78,8 @@ const tools: Array<keyof typeof setups> = [
   "msvc",
   "vcvarsall",
   "kcov",
+  "make",
+  "task",
 ]
 
 /** The possible inputs to the program */
@@ -282,6 +288,8 @@ All the available tools:
 --vcpkg
 --meson
 --conan
+--make
+--task
 --ccache
 --cppcheck
 --clangformat

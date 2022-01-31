@@ -17,7 +17,8 @@ function getNinjaPlatform(platform: NodeJS.Platform) {
 }
 
 /** Get the platform data for ninja */
-function getNinjaPackageInfo(version: string, platform: NodeJS.Platform): PackageInfo {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function getNinjaPackageInfo(version: string, platform: NodeJS.Platform, _arch: string): PackageInfo {
   const ninjaPlatform = getNinjaPlatform(platform)
   return {
     binRelativeDir: "",
@@ -28,7 +29,6 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform): Packag
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupNinja(version: string, setupDir: string, _arch: string): Promise<InstallationInfo> {
-  return setupBin("ninja", version, getNinjaPackageInfo, setupDir)
+export function setupNinja(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  return setupBin("ninja", version, getNinjaPackageInfo, setupDir, arch)
 }

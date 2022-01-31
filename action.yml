@@ -30,6 +30,12 @@ inputs:
   conan:
     description: "The conan version to install."
     required: false
+  make:
+    description: "The make version to install."
+    required: false
+  task:
+    description: "The task version to install."
+    required: false
   vcpkg:
     description: "The vcpkg version to install."
     required: false
