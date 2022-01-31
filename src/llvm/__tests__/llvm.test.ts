@@ -55,7 +55,7 @@ describe("setup-llvm", () => {
     await testBin("clang++", ["--version"], binDir)
 
     if (isGitHubCI()) {
-      expect(binDir).toMatch("hostedtoolcache")
+      expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
     }
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()

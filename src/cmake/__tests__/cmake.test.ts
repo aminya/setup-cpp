@@ -19,7 +19,7 @@ describe("setup-cmake", () => {
     const { binDir } = await setupCmake("3.20.2", directory, process.arch)
     await testBin("cmake", ["--version"], binDir)
     if (isGitHubCI()) {
-      expect(binDir).toMatch("hostedtoolcache")
+      expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
     }
   })
 
