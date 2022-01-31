@@ -14,6 +14,9 @@ export function execPowershell(command: string) {
       powershell = maybePowerShell
     }
   }
+  if (powershell === undefined) {
+    throw new Error("Could not find powershell")
+  }
 
   execa.sync(`${powershell} -C "${command}"`)
 }
