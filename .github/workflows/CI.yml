@@ -53,13 +53,6 @@ jobs:
         run: |
           pnpm install
 
-      # - name: Setup SSH debugging session
-      #   uses: mxschmitt/action-tmate@v3
-
-      - name: Test
-        run: |
-          pnpm run test
-
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
         run: |
@@ -72,6 +65,14 @@ jobs:
             ./exe
             ./dist
           retention-days: 1
+
+      # - name: Setup SSH debugging session
+      #   uses: mxschmitt/action-tmate@v3
+
+      - name: Test
+        if: "!contains(github.event.head_commit.message, '[skip ci test]')"
+        run: |
+          pnpm run test
 
   Docker:
     runs-on: ${{ matrix.os }}

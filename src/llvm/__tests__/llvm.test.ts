@@ -4,7 +4,7 @@ import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { isGitHubCI } from "../../utils/env/isci"
 
-jest.setTimeout(300000)
+jest.setTimeout(400000)
 async function testUrl(version: string) {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, process.platform, version, getUrl)
 
