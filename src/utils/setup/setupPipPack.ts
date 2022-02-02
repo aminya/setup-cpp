@@ -26,7 +26,9 @@ export async function setupPipPack(name: string, version?: string) {
     }
   }
 
-  execa.sync(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name])
+  execa.sync(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
+    stdio: "inherit",
+  })
 
   if (binDir === undefined) {
     if (process.platform === "linux") {
