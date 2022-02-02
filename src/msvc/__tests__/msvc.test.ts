@@ -4,6 +4,20 @@ import { setupMSVC } from "../msvc"
 
 jest.setTimeout(300000)
 describe("setup-msvc", () => {
+  it("should setup the pre-installed msvc", async () => {
+    try {
+      if (process.platform !== "win32") {
+        return
+      }
+      await setupMSVC("", "", process.arch)
+      await testBin("cl", [])
+      console.log(which("cl"))
+    } catch (e) {
+      // TODO
+      console.error(e)
+    }
+  })
+
   it("should setup msvc 2022", async () => {
     try {
       if (process.platform !== "win32") {
