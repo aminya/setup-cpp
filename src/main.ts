@@ -160,11 +160,7 @@ export async function main(args: string[]): Promise<number> {
         case "llvm":
         case "clang":
         case "clang++": {
-          const installationInfo = await setupLLVM(
-            getVersion("llvm", version) as string,
-            join(setupCppDir, "llvm"),
-            arch
-          )
+          const installationInfo = await setupLLVM(getVersion("llvm", version), join(setupCppDir, "llvm"), arch)
           successMessages.push(getSuccessMessage("llvm", installationInfo))
           break
         }
@@ -172,7 +168,7 @@ export async function main(args: string[]): Promise<number> {
         case "mingw":
         case "cygwin":
         case "msys": {
-          const installationInfo = await setupGcc(getVersion("gcc", version) as string, join(setupCppDir, "gcc"), arch)
+          const installationInfo = await setupGcc(getVersion("gcc", version), join(setupCppDir, "gcc"), arch)
           successMessages.push(getSuccessMessage("gcc", installationInfo))
           break
         }
@@ -183,11 +179,7 @@ export async function main(args: string[]): Promise<number> {
         case "visualstudio":
         case "visualcpp":
         case "visualc++": {
-          const installationInfo = await setupMSVC(
-            getVersion("msvc", version) as string,
-            join(setupCppDir, "msvc"),
-            arch
-          )
+          const installationInfo = setupMSVC(getVersion("msvc", version), join(setupCppDir, "msvc"), arch)
           successMessages.push(getSuccessMessage("msvc", installationInfo))
           break
         }

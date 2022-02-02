@@ -23,9 +23,13 @@ export function setupChocoPack(name: string, version?: string, args: string[] = 
   env.PATH = PATH
 
   if (version !== undefined && version !== "") {
-    execa.sync("choco", ["install", "-y", name, `--version=${version}`, ...args], { env, extendEnv: false })
+    execa.sync("choco", ["install", "-y", name, `--version=${version}`, ...args], {
+      env,
+      extendEnv: false,
+      stdio: "inherit",
+    })
   } else {
-    execa.sync("choco", ["install", "-y", name, ...args], { env, extendEnv: false })
+    execa.sync("choco", ["install", "-y", name, ...args], { env, extendEnv: false, stdio: "inherit" })
   }
 
   const binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`

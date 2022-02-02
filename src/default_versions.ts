@@ -1,6 +1,4 @@
 const DefaultVersions: Record<string, string> = {
-  msvc: "2019",
-  vcvarsall: "2019",
   llvm: "13.0.0",
   clangtidy: "13.0.0",
   clangformat: "13.0.0",
