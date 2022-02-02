@@ -51,6 +51,12 @@ export async function setupMSVC(
         await setupChocoPack("visualstudio2019buildtools", "16.11.7.0", [])
       }
       VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133"
+    } else if (version === "17.0") {
+      toolset = undefined
+      if (!installed) {
+        await setupChocoPack("visualstudio2022buildtools", "117.0.5.0", [])
+      }
+      VCTargetsPath = undefined
     } else {
       error(`The given MSVC versions ${versionGiven} is not supported yet.`)
     }
