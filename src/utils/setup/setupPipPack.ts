@@ -31,7 +31,7 @@ export async function setupPipPack(name: string, version?: string) {
       // test if pip executable is working
       await execa(pip, ["--version"], { stdio: "inherit" })
     } catch (err) {
-      await setupPython(getVersion("python", undefined), "", process.arch)
+      await setupPython(getVersion("python", undefined), "~/python", process.arch)
       pip = "pip3"
     }
   }
