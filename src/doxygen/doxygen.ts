@@ -32,7 +32,11 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("doxygen.install", version)
-      await setupChocoPack("graphviz", undefined)
+      try {
+        await setupChocoPack("graphviz", undefined)
+      } catch (err) {
+        warning(`${err}`)
+      }
       const binDir = activateWinDoxygen()
       return { binDir }
     }
