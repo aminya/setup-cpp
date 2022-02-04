@@ -23,7 +23,7 @@ export function setupPython(version: string, setupDir: string, arch: string) {
 export async function setupPythonViaSystem(version: string, setupDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
-      await setupChocoPack("python3", version, [`/InstallDir:${setupDir}`])
+      setupChocoPack("python3", version, setupDir ? [`/InstallDir:${setupDir}`] : [])
       // Adding the bin dir to the path
       /** The directory which the tool is installed to */
       activateWinPython(setupDir)

@@ -7,6 +7,7 @@ import { addPath } from "../path/addPath"
 import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
 import { join } from "path"
+import { getVersion } from "../../default_versions"
 
 let pip: string | undefined
 
@@ -22,6 +23,15 @@ export async function setupPipPack(name: string, version?: string) {
       pip = "pip"
     } else {
       await setupPython("3.x", "", process.arch)
+      pip = "pip3"
+    }
+  }
+  if (process.platform === "win32") {
+    try {
+      // test if pip executable is working
+      await execa(pip, ["--version"], { stdio: "inherit" })
+    } catch (err) {
+      await setupPython(getVersion("python", undefined), "", process.arch)
       pip = "pip3"
     }
   }
