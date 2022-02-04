@@ -8,6 +8,7 @@ import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
 import { join } from "path"
 import { getVersion } from "../../default_versions"
+import { untildify_user as untildify } from "../path/untildify"
 
 let pip: string | undefined
 
@@ -31,7 +32,7 @@ export async function setupPipPack(name: string, version?: string) {
       // test if pip executable is working
       await execa(pip, ["--version"], { stdio: "inherit" })
     } catch (err) {
-      await setupPython(getVersion("python", undefined), "~/python", process.arch)
+      await setupPython(getVersion("python", undefined), untildify("python"), process.arch)
       pip = "pip3"
     }
   }
