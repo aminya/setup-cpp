@@ -20,7 +20,7 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
         extractFunction: (file: string, dest: string) => {
           return extractTarByExe(file, dest, ["--strip-components=1"])
         },
-        url: `https://downloads.sourceforge.net/project/doxygen/doxygen-binaries/rel-${version}/${folderName}.linux.bin.tar.gz`,
+        url: `https://www.doxygen.nl/files/${folderName}.linux.bin.tar.gz`,
       }
     }
     default:
@@ -37,15 +37,15 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       return { binDir }
     }
     case "darwin": {
-      setupBrewPack("doxygen", version)
+      setupBrewPack("doxygen", undefined)
       return setupBrewPack("graphviz", undefined)
     }
     case "linux": {
       try {
-        // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from sourceforge.
+        // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
         await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
       } catch (err) {
-        warning(`Failed to download doxygen from sourceforge. ${err}. Falling back to apt-get.`)
+        warning(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
         await setupAptPack("doxygen", undefined)
       }
       return setupAptPack("graphviz", undefined)
