@@ -3,14 +3,12 @@ import { addPath } from "../utils/path/addPath"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import hasha from "hasha"
-import { join } from "path"
 import { isGitHubCI } from "../utils/env/isci"
 
 export function setupPython(version: string, setupDir: string, arch: string) {
-  if (!isGitHubCI()) {
-    // TODO parse versoin
-    return setupPythonViaSystem("", setupDir, arch)
+  if (!isGitHubCI() || process.platform === "win32") {
+    // TODO parse version
+    return setupPythonViaSystem(version, setupDir, arch)
   }
   try {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -21,20 +19,15 @@ export function setupPython(version: string, setupDir: string, arch: string) {
   }
 }
 
-export async function setupPythonViaSystem(version: string, setupDir: string, arch: string) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function setupPythonViaSystem(version: string, setupDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
-      // Get an unique output directory name from the URL.
-      const key: string = await hasha.async(version + arch, { algorithm: "md5" })
-      const installDir = join(setupDir, key, "python")
-      const binDir = installDir
-      await setupChocoPack("python3", version, [`/InstallDir:${installDir}`])
-
+      await setupChocoPack("python3", version, [`/InstallDir:${setupDir}`])
       // Adding the bin dir to the path
       /** The directory which the tool is installed to */
-      activateWinPython(binDir)
-
-      return { installDir, binDir }
+      activateWinPython(setupDir)
+      return { installDir: setupDir, binDir: setupDir }
     }
     case "darwin": {
       return setupBrewPack("python3", version)
