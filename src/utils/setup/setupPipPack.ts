@@ -7,6 +7,7 @@ import { addPath } from "../path/addPath"
 import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
 import { join } from "path"
+import { getVersion } from "../../default_versions"
 
 let pip: string | undefined
 
@@ -22,7 +23,7 @@ export async function setupPipPack(name: string, version?: string) {
       pip = "pip"
     } else {
       info("pip3 was not found. Installing python")
-      await setupPython("3.x", "", process.arch)
+      await setupPython(getVersion("python", undefined), "", process.arch)
       pip = "pip3"
     }
   }
