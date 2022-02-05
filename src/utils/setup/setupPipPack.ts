@@ -8,27 +8,34 @@ import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
 import { join } from "path"
 import { getVersion } from "../../default_versions"
+import { InstallationInfo } from "./setupBin"
 
-let pip: string | undefined
-
+let python: string | undefined
 let binDir: string | undefined
 
+let tried = false
+
 /** A function that installs a package using pip */
-export async function setupPipPack(name: string, version?: string) {
+export async function setupPipPack(name: string, version?: string): Promise<InstallationInfo> {
   // setup python and pip if needed
-  if (pip === undefined) {
-    if (which.sync("pip3", { nothrow: true }) !== null) {
-      pip = "pip3"
-    } else if (which.sync("pip", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
-      pip = "pip"
+  if (python === undefined) {
+    if (which.sync("python3", { nothrow: true }) !== null) {
+      python = "python3"
+    } else if (which.sync("python", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
+      python = "python"
     } else {
-      info("pip3 was not found. Installing python")
+      info("python3 was not found. Installing python")
       await setupPython(getVersion("python", undefined), "", process.arch)
-      pip = "pip3"
+      // try again
+      if (tried) {
+        throw new Error("Failed to install python")
+      }
+      tried = true
+      return setupPipPack(name, version)
     }
   }
 
-  execa.sync(pip, ["install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
+  execa.sync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
     stdio: "inherit",
   })
 
@@ -41,12 +48,12 @@ export async function setupPipPack(name: string, version?: string) {
       // windows or others
       try {
         binDir = join(
-          (await getExecOutput(`python3 -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
+          (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
           "Scripts"
         )
       } catch {
         binDir = join(
-          (await getExecOutput('python -c "import sys;print(sys.base_exec_prefix);"')).stdout.trim(),
+          (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
           "Scripts"
         )
       }
