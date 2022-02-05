@@ -7,8 +7,6 @@ import { addPath } from "../path/addPath"
 import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
 import { join } from "path"
-import { isGitHubCI } from "../env/isci"
-import { getVersion } from "../../default_versions"
 
 let pip: string | undefined
 
@@ -18,15 +16,12 @@ let binDir: string | undefined
 export async function setupPipPack(name: string, version?: string) {
   // setup python and pip if needed
   if (pip === undefined) {
-    if (isGitHubCI() && process.platform === "win32") {
-      // run setupPython in actions_python anyways
-      await setupPython(getVersion("python", undefined), "", process.arch)
-    }
     if (which.sync("pip3", { nothrow: true }) !== null) {
       pip = "pip3"
     } else if (which.sync("pip", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
       pip = "pip"
     } else {
+      info("pip3 was not found. Installing python")
       await setupPython("3.x", "", process.arch)
       pip = "pip3"
     }
