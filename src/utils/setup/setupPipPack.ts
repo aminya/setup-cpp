@@ -39,13 +39,9 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     execa.sync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"])
   }
 
-  execa.sync(
-    python,
-    ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name, "--user"],
-    {
-      stdio: "inherit",
-    }
-  )
+  execa.sync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
+    stdio: "inherit",
+  })
 
   if (binDir === undefined) {
     if (process.platform === "linux") {
