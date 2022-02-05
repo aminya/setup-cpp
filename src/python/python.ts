@@ -4,6 +4,7 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isGitHubCI } from "../utils/env/isci"
+import { warning } from "@actions/core"
 
 export function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
@@ -15,6 +16,7 @@ export function setupPython(version: string, setupDir: string, arch: string) {
     const { setupActionsPython } = require("./actions_python") as typeof import("./actions_python")
     return setupActionsPython(version, setupDir, arch)
   } catch (err) {
+    warning(err as Error)
     return setupPythonViaSystem(version, setupDir, arch)
   }
 }
