@@ -32,7 +32,7 @@ function addEnvSystem(name: string, valGiven: string | undefined) {
   switch (process.platform) {
     case "win32": {
       // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit
-      execPowershell(`[Environment]::SetEnvironmentVariable('${name}', '${val}', 'User')`)
+      execPowershell(`[Environment]::SetEnvironmentVariable("${name}", "${val}", "User")`)
       core.info(`${name}="${val} was set in the environment."`)
       return
     }

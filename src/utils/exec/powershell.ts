@@ -18,5 +18,5 @@ export function execPowershell(command: string) {
     throw new Error("Could not find powershell")
   }
 
-  execa.sync(`${powershell} -C "${command}"`)
+  execa.sync(powershell, ["-c", command])
 }
