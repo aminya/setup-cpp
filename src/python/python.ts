@@ -6,7 +6,7 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isGitHubCI } from "../utils/env/isci"
 
 export function setupPython(version: string, setupDir: string, arch: string) {
-  if (!isGitHubCI() || process.platform === "win32") {
+  if (!isGitHubCI()) {
     // TODO parse version
     return setupPythonViaSystem(version, setupDir, arch)
   }
@@ -23,7 +23,12 @@ export function setupPython(version: string, setupDir: string, arch: string) {
 export async function setupPythonViaSystem(version: string, setupDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
-      setupChocoPack("python3", version, setupDir ? [`--params=/InstallDir:${setupDir}`] : [])
+      if (setupDir) {
+        setupChocoPack("python3", version, [`--params=/InstallDir:${setupDir}`])
+      } else {
+        setupChocoPack("python3", version)
+      }
+
       // Adding the bin dir to the path
       /** The directory which the tool is installed to */
       activateWinPython(setupDir)

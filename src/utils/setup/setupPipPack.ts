@@ -7,11 +7,10 @@ import { addPath } from "../path/addPath"
 import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
 import { join } from "path"
+import { isGitHubCI } from "../env/isci"
 import { getVersion } from "../../default_versions"
-import { untildify_user as untildify } from "../path/untildify"
 
 let pip: string | undefined
-let python: string = "python3"
 
 let binDir: string | undefined
 
@@ -19,23 +18,17 @@ let binDir: string | undefined
 export async function setupPipPack(name: string, version?: string) {
   // setup python and pip if needed
   if (pip === undefined) {
-    if (process.platform === "win32") {
-      const installationInfo = await setupPython(getVersion("python", undefined), untildify("python"), process.arch)
-      if (installationInfo?.installDir !== undefined) {
-        pip = join(installationInfo.installDir, "Scripts", "pip3.exe")
-        python = join(installationInfo.installDir, "python.exe")
-      } else {
-        pip = "pip3"
-      }
+    if (isGitHubCI() && process.platform === "win32") {
+      // run setupPython in actions_python anyways
+      await setupPython(getVersion("python", undefined), "", process.arch)
+    }
+    if (which.sync("pip3", { nothrow: true }) !== null) {
+      pip = "pip3"
+    } else if (which.sync("pip", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
+      pip = "pip"
     } else {
-      if (which.sync("pip3", { nothrow: true }) !== null) {
-        pip = "pip3"
-      } else if (which.sync("pip", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
-        pip = "pip"
-      } else {
-        await setupPython("3.x", "", process.arch)
-        pip = "pip3"
-      }
+      await setupPython("3.x", "", process.arch)
+      pip = "pip3"
     }
   }
 
@@ -52,7 +45,7 @@ export async function setupPipPack(name: string, version?: string) {
       // windows or others
       try {
         binDir = join(
-          (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
+          (await getExecOutput(`python3 -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
           "Scripts"
         )
       } catch {
