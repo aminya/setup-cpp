@@ -9,13 +9,14 @@ let sevenZip: string | undefined
 export async function extractExe(file: string, dest: string) {
   // install 7z if needed
   if (sevenZip === undefined) {
-    if (which.sync("7z", { nothrow: true }) !== null) {
-      sevenZip = "7z"
+    if (which.sync("7z", { nothrow: true }) === null) {
+      await setupSevenZip("", "", process.arch)
     }
-    await setupSevenZip("", "", process.arch)
+    // eslint-disable-next-line require-atomic-updates
+    sevenZip = "7z"
   }
 
-  await execa("7z", ["x", file, `-o${dest}`])
+  await execa(sevenZip, ["x", file, `-o${dest}`])
   return dest
 }
 
