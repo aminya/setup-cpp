@@ -33,9 +33,13 @@ The package can be used locally or from CI services like GitHub Actions.
 - gcovr
 - opencppcoverage
 - kcov
+
+`setup-cpp` can also install the following. These are automatically installed if needed for the above Cpp tools (e.g., python is required for conan).
+
 - python
 - choco
 - brew
+- sevenzip
 
 # Usage
 
