@@ -29,6 +29,7 @@ import { join } from "path"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
 import { setupKcov } from "./kcov/kcov"
 import { addEnv } from "./utils/env/addEnv"
+import { setupSevenZip } from "./sevenzip/sevenzip"
 
 /** The setup functions */
 const setups = {
@@ -54,6 +55,7 @@ const setups = {
   kcov: setupKcov,
   make: setupMake,
   task: setupTask,
+  sevenzip: setupSevenZip,
 }
 
 /** The tools that can be installed */
@@ -80,6 +82,7 @@ const tools: Array<keyof typeof setups> = [
   "kcov",
   "make",
   "task",
+  "sevenzip",
 ]
 
 /** The possible inputs to the program */
@@ -290,9 +293,11 @@ All the available tools:
 --gcovr
 --opencppcoverage
 --kcov
+
 --python
 --choco
 --brew
+--sevenzip
       `)
 }
 

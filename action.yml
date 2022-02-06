@@ -69,6 +69,9 @@ inputs:
   kcov:
     description: "The kcov version to install."
     required: false
+  sevenzip:
+    description: "The 7z version to install."
+    required: false
 
 runs:
   using: "node12"
