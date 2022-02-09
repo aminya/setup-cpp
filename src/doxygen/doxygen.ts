@@ -1,10 +1,10 @@
 import { addPath } from "../utils/path/addPath"
 import { setupAptPack } from "../utils/setup/setupAptPack"
-import { PackageInfo, setupBin } from "../utils/setup/setupBin"
+import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { addBinExtension } from "../utils/extension/extension"
-import { extractTarByExe } from "../utils/setup/extract"
+import { extractTar } from "../utils/setup/extract"
 import { warning } from "../utils/io/io"
 
 /** Get the platform data for cmake */
@@ -17,9 +17,7 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
         binRelativeDir: "bin/",
         binFileName: addBinExtension("doxygen"),
         extractedFolderName: folderName,
-        extractFunction: (file: string, dest: string) => {
-          return extractTarByExe(file, dest, ["--strip-components=1"])
-        },
+        extractFunction: extractTar,
         url: `https://www.doxygen.nl/files/${folderName}.linux.bin.tar.gz`,
       }
     }
@@ -41,18 +39,21 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       return { binDir }
     }
     case "darwin": {
-      setupBrewPack("doxygen", undefined)
-      return setupBrewPack("graphviz", undefined)
+      const installationInfo = setupBrewPack("doxygen", undefined)
+      setupBrewPack("graphviz", undefined)
+      return installationInfo
     }
     case "linux": {
+      let installationInfo: InstallationInfo
       try {
         // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
-        await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
+        installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
       } catch (err) {
         warning(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
-        await setupAptPack("doxygen", undefined)
+        installationInfo = await setupAptPack("doxygen", undefined)
       }
-      return setupAptPack("graphviz", undefined)
+      await setupAptPack("graphviz", undefined)
+      return installationInfo
     }
     default: {
       throw new Error(`Unsupported platform`)
