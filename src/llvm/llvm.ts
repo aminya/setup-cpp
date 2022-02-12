@@ -8,8 +8,11 @@ import { getSpecificVersionAndUrl, getVersions, semverCoerceIfInvalid } from "..
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addBinExtension } from "../utils/extension/extension"
 import { addEnv } from "../utils/env/addEnv"
-import { setOutput } from "@actions/core"
+import { info, setOutput } from "@actions/core"
 import { setupAptPack } from "../utils/setup/setupAptPack"
+import { warning } from "../utils/io/io"
+import { existsSync } from "fs"
+import { isGitHubCI } from "../utils/env/isci"
 
 //================================================
 // Version
@@ -281,9 +284,24 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   addEnv("LIBRARY_PATH", `${directory}/lib`)
 
   await setupMacOSSDK()
+
+  if (isGitHubCI()) {
+    addLLVMLoggingMatcher()
+  }
 }
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
 export function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  if (isGitHubCI()) {
+    addLLVMLoggingMatcher()
+  }
   return setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
+}
+
+function addLLVMLoggingMatcher() {
+  const matcherPath = path.join(__dirname, "llvm_matcher.json")
+  if (!existsSync(matcherPath)) {
+    return warning("the llvm_matcher.json file does not exist in the same folder as setup_cpp.js")
+  }
+  info(`::add-matcher::${matcherPath}`)
 }
