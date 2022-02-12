@@ -1,6 +1,10 @@
-import * as core from "@actions/core"
 import * as finder from "setup-python/src/find-python"
 import * as finderPyPy from "setup-python/src/find-pypy"
+import { existsSync } from "fs"
+import { warning } from "../utils/io/io"
+import { info } from "@actions/core"
+import path from "path"
+import { isGitHubCI } from "../utils/env/isci"
 // import { getCacheDistributor } from "setup-python/src/cache-distributions/cache-factory"
 // import { isGhes } from "setup-python/src/utils"
 
@@ -23,13 +27,11 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
   if (isPyPyVersion(version)) {
     const installed = await finderPyPy.findPyPyVersion(version, arch)
     pythonVersion = `${installed.resolvedPyPyVersion}-${installed.resolvedPythonVersion}`
-    core.info(
-      `Successfully setup PyPy ${installed.resolvedPyPyVersion} with Python (${installed.resolvedPythonVersion})`
-    )
+    info(`Successfully setup PyPy ${installed.resolvedPyPyVersion} with Python (${installed.resolvedPythonVersion})`)
   } else {
     const installed = await finder.findPythonVersion(version, arch)
     pythonVersion = installed.version
-    core.info(`Successfully setup ${installed.impl} (${pythonVersion})`)
+    info(`Successfully setup ${installed.impl} (${pythonVersion})`)
   }
 
   // const cache = core.getInput("cache")
@@ -37,10 +39,17 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
   //   await cacheDependencies(cache, pythonVersion)
   // }
 
-  // fails
-  // const matchersPath = path.join(__dirname, '../..', '.github');
-  // core.info(`##[add-matcher]${path.join(matchersPath, 'python.json')}`);
-  // core.info(`##[add-matcher]${path.join("./.github", "python.json")}`)
+  if (isGitHubCI()) {
+    addPythonLoggingMatcher()
+  }
 
   return undefined
+}
+
+function addPythonLoggingMatcher() {
+  const matcherPath = path.join(__dirname, "python_matcher.json")
+  if (!existsSync(matcherPath)) {
+    return warning("the python_matcher.json file does not exist in the same folder as setup_cpp.js")
+  }
+  info(`::add-matcher::${matcherPath}`)
 }
