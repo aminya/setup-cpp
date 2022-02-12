@@ -1,7 +1,7 @@
 {
   "problemMatcher": [
     {
-      "owner": "msvc-problem-matcher",
+      "owner": "msvc",
       "pattern": [
         {
           "regexp": "^(?:\\s+\\d+\\>)?([^\\s].*)\\((\\d+),?(\\d+)?(?:,\\d+,\\d+)?\\)\\s*:\\s+(error|warning|info)\\s+(\\w{1,2}\\d+)\\s*:\\s*(.*)$",

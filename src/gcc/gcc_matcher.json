@@ -1,7 +1,7 @@
 {
   "problemMatcher": [
     {
-      "owner": "gcc-problem-matcher",
+      "owner": "gcc",
       "pattern": [
         {
           "regexp": "^(.*?):(\\d+):(\\d*):?\\s+(?:fatal\\s+)?(warning|error):\\s+(.*)$",
