@@ -1,9 +1,13 @@
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { error, info } from "@actions/core"
+import { info } from "@actions/core"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { vsversion_to_versionnumber, findVcvarsall } from "msvc-dev-cmd/lib.js"
+import { isGitHubCI } from "../utils/env/isci"
+import path from "path"
+import { existsSync } from "fs"
+import { error, warning } from "../utils/io/io"
 
 type MSVCVersion = "2022" | "17.0" | "2019" | "16.0" | "2017" | "15.0" | "2015" | "14.0" | "2013" | "12.0" | string
 
@@ -24,9 +28,9 @@ export function setupMSVC(
   info(`Checking if MSVC ${version} is already installed`)
   let installed = false
   try {
-    const path = findVcvarsall(version) as string
+    const vcvarsall_path = findVcvarsall(version) as string
     installed = true
-    info(`Found the pre-installed version of MSVC at ${path}`)
+    info(`Found the pre-installed version of MSVC at ${vcvarsall_path}`)
   } catch {
     // not installed, try installing
   }
@@ -61,4 +65,16 @@ export function setupMSVC(
   }
   // run vcvarsall.bat environment variables
   setupVCVarsall(version, VCTargetsPath, arch, toolset, sdk, uwp, spectre)
+
+  if (isGitHubCI()) {
+    addMSVCLoggingMatcher()
+  }
+}
+
+function addMSVCLoggingMatcher() {
+  const matcherPath = path.join(__dirname, "msvc_matcher.json")
+  if (!existsSync(matcherPath)) {
+    return warning("the msvc_matcher.json file does not exist in the same folder as setup_cpp.js")
+  }
+  info(`::add-matcher::${matcherPath}`)
 }
