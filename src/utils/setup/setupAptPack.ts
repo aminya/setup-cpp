@@ -1,6 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
 import { execSudo } from "../exec/sudo"
+import { endGroup, startGroup } from "@actions/core"
 
 let didUpdate: boolean = false
 let didInit: boolean = false
@@ -11,6 +12,8 @@ export async function setupAptPack(
   version?: string,
   repositories: boolean | string[] = true
 ): Promise<InstallationInfo> {
+  startGroup(`Installing ${name} ${version ?? ""} via apt`)
+
   const apt = "apt-get"
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
@@ -55,5 +58,6 @@ export async function setupAptPack(
     await execSudo(apt, ["install", "--fix-broken", "-y", name])
   }
 
+  endGroup()
   return { binDir: "/usr/bin/" }
 }
