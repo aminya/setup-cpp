@@ -40,6 +40,7 @@ The package can be used locally or from CI services like GitHub Actions.
 - choco
 - brew
 - sevenzip
+- graphviz
 
 # Usage
 
