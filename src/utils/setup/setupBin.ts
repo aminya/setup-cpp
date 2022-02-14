@@ -45,6 +45,8 @@ export async function setupBin(
   setupDir: string,
   arch: string
 ): Promise<InstallationInfo> {
+  info(`Installing ${name} ${version} ${arch} via direct downloading`)
+
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
   process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACHE ?? join(tmpdir(), "setup-cpp", "hostedtoolcache")
 
@@ -64,6 +66,7 @@ export async function setupBin(
         if (existsSync(binDir) && existsSync(join(binDir, binFileName))) {
           info(`${name} ${version} was found in the cache at ${binDir}.`)
           addPath(binDir)
+
           return { installDir, binDir }
         }
       }

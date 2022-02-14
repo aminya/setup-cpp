@@ -23,12 +23,12 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
     }
 
     if (!existsSync(join(setupDir, addShellExtension("bootstrap-vcpkg")))) {
-      execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir) })
+      execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
     } else {
       warning(`Vcpkg folder already exists at ${setupDir}`)
     }
 
-    execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true })
+    execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
     addPath(setupDir)
     // eslint-disable-next-line require-atomic-updates
     hasVCPKG = true

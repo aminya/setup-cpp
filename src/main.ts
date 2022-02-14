@@ -30,6 +30,7 @@ import { setupVCVarsall } from "./vcvarsall/vcvarsall"
 import { setupKcov } from "./kcov/kcov"
 import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
+import { endGroup, startGroup } from "@actions/core"
 
 /** The setup functions */
 const setups = {
@@ -125,22 +126,23 @@ export async function main(args: string[]): Promise<number> {
   // loop over the tools and run their setup function
   for (const tool of tools) {
     // get the version or "true" or undefined for this tool from the options
-    const value = opts[tool]
+    const version = opts[tool]
 
     // skip if undefined
-    if (value !== undefined) {
+    if (version !== undefined) {
       // running the setup function for this tool
+      startGroup(`Installing ${tool} ${version}`)
       try {
         let installationInfo: InstallationInfo | undefined | void
         if (tool === "vcvarsall") {
           // eslint-disable-next-line no-await-in-loop
-          setupVCVarsall(getVersion(tool, value), undefined, arch, undefined, undefined, false, false)
+          setupVCVarsall(getVersion(tool, version), undefined, arch, undefined, undefined, false, false)
         } else {
           // get the setup function
           const setupFunction = setups[tool]
 
           // eslint-disable-next-line no-await-in-loop
-          installationInfo = await setupFunction(getVersion(tool, value), join(setupCppDir, tool), arch)
+          installationInfo = await setupFunction(getVersion(tool, version), join(setupCppDir, tool), arch)
         }
         // preparing a report string
         successMessages.push(getSuccessMessage(tool, installationInfo))
@@ -149,6 +151,7 @@ export async function main(args: string[]): Promise<number> {
         error(e as string | Error)
         errorMessages.push(`${tool} failed to install`)
       }
+      endGroup()
     }
   }
 
@@ -159,6 +162,7 @@ export async function main(args: string[]): Promise<number> {
       const { compiler, version } = getCompilerInfo(maybeCompiler)
 
       // install the compiler. We allow some aliases for the compiler name
+      startGroup(`Installing ${compiler} ${version ?? ""}`)
       switch (compiler) {
         case "llvm":
         case "clang":
@@ -198,10 +202,12 @@ export async function main(args: string[]): Promise<number> {
           errorMessages.push(`Unsupported compiler ${compiler}`)
         }
       }
+      endGroup()
     }
   } catch (e) {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
+    endGroup()
   }
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
