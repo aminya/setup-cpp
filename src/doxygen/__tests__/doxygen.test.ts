@@ -10,10 +10,11 @@ describe("setup-doxygen", () => {
     directory = await setupTmpDir("doxygen")
   })
 
-  it("should setup doxygen", async () => {
+  it("should setup doxygen and dot", async () => {
     const installInfo = await setupDoxygen(getVersion("doxygen", undefined), directory, process.arch)
 
     await testBin("doxygen", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
+    await testBin("dot", ["-V"])
   })
 
   afterAll(async () => {
