@@ -29,6 +29,8 @@ export type InstallationInfo = {
   binDir: string
 }
 
+let didInit: boolean = false
+
 /**
  * A function that:
  *
@@ -83,11 +85,15 @@ export async function setupBin(
   if (!existsSync(binDir) || !existsSync(binFile)) {
     info(`Download and extract ${name} ${version}`)
 
-    if (process.platform === "linux") {
-      // extraction dependencies
-      await setupAptPack("unzip")
-      await setupAptPack("tar")
-      await setupAptPack("xz-utils")
+    if (!didInit) {
+      if (process.platform === "linux") {
+        // extraction dependencies
+        await setupAptPack("unzip")
+        await setupAptPack("tar")
+        await setupAptPack("xz-utils")
+      }
+      // eslint-disable-next-line require-atomic-updates
+      didInit = true
     }
 
     try {
