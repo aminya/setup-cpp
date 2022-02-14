@@ -54,6 +54,9 @@ inputs:
   doxygen:
     description: "The doxygen version to install."
     required: false
+  graphviz:
+    description: "The graphviz version to install."
+    required: false
   cppcheck:
     description: "The cppcheck version to install."
     required: false

@@ -17,7 +17,10 @@ jobs:
         os:
           - windows-2022
           - windows-2019
+          - windows-2016
           - ubuntu-20.04
+          - ubuntu-18.04
+          - macos-11
           - macos-10.15
         node:
           - 14 # installed on the images
@@ -56,10 +59,12 @@ jobs:
 
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
+        if: "contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-20.04') || contains(matrix.os, 'macos-11')"
         run: |
           pnpm run pack.exe
 
       - name: Upload Executable
+        if: "contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-20.04') || contains(matrix.os, 'macos-11')"
         uses: actions/upload-artifact@v2
         with:
           path: |
@@ -74,6 +79,7 @@ jobs:
         if: "!contains(github.event.head_commit.message, '[skip ci test]')"
         run: |
           pnpm run test
+        continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') }}
 
   Docker:
     runs-on: ${{ matrix.os }}

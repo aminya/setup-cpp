@@ -9,6 +9,7 @@ import { isBinUptoDate } from "./version"
 import { join } from "path"
 import { getVersion } from "../../default_versions"
 import { InstallationInfo } from "./setupBin"
+import { setupAptPack } from "./setupAptPack"
 
 let python: string | undefined
 let binDir: string | undefined
@@ -35,10 +36,14 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       tried = true
       return setupPipPack(name, version)
     }
-  }
-  if (process.platform === "win32") {
-    // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
-    execa.sync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
+    if (process.platform === "win32") {
+      // downgrade pip on Windows
+      // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
+      execa.sync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
+    } else if (process.platform === "linux") {
+      // ensure that pip is installed on Linux (happens when python is found but pip not installed)
+      await setupAptPack("python3-pip")
+    }
   }
 
   execa.sync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {

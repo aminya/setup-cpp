@@ -47,6 +47,7 @@ export async function setupKcov(version: string, setupDir: string, arch: string)
   switch (process.platform) {
     case "linux": {
       const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
+      await setupAptPack("libbinutils")
       return installationInfo
     }
     default: {

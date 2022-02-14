@@ -40,6 +40,7 @@ The package can be used locally or from CI services like GitHub Actions.
 - choco
 - brew
 - sevenzip
+- graphviz
 
 # Usage
 
@@ -133,15 +134,15 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - windows-2019
+          - windows-2022
           - ubuntu-20.04
-          - macos-10.15
+          - macos-11
         compiler:
           - llvm
           - gcc
           # you can specify the version after `-` like `llvm-13.0.0`.
         include:
-          - os: "windows-latest"
+          - os: "windows-2022"
             compiler: "msvc"
     steps:
       - uses: actions/checkout@v2

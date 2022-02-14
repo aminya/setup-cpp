@@ -31,6 +31,7 @@ import { setupKcov } from "./kcov/kcov"
 import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
 import { endGroup, startGroup } from "@actions/core"
+import { setupGraphviz } from "./graphviz/graphviz"
 
 /** The setup functions */
 const setups = {
@@ -48,6 +49,7 @@ const setups = {
   brew: setupBrew,
   ccache: setupCcache,
   doxygen: setupDoxygen,
+  graphviz: setupGraphviz,
   cppcheck: setupCppcheck,
   clangtidy: setupClangTools,
   clangformat: setupClangTools,
@@ -73,6 +75,7 @@ const tools: Array<keyof typeof setups> = [
   "opencppcoverage",
   "ccache",
   "doxygen",
+  "graphviz",
   "cppcheck",
   "clangtidy",
   "clangformat",
@@ -304,6 +307,7 @@ All the available tools:
 --choco
 --brew
 --sevenzip
+--graphviz
       `)
 }
 

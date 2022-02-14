@@ -6,6 +6,8 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { addBinExtension } from "../utils/extension/extension"
 import { extractTar } from "../utils/setup/extract"
 import { warning } from "../utils/io/io"
+import { setupGraphviz } from "../graphviz/graphviz"
+import { getVersion } from "../default_versions"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,17 +32,13 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("doxygen.install", version)
-      try {
-        await setupChocoPack("graphviz", undefined)
-      } catch (err) {
-        warning(`${err}`)
-      }
+      await setupGraphviz(getVersion("graphviz", undefined), "", arch)
       const binDir = activateWinDoxygen()
       return { binDir }
     }
     case "darwin": {
       const installationInfo = setupBrewPack("doxygen", undefined)
-      setupBrewPack("graphviz", undefined)
+      await setupGraphviz(getVersion("graphviz", undefined), "", arch)
       return installationInfo
     }
     case "linux": {
@@ -52,7 +50,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         warning(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
         installationInfo = await setupAptPack("doxygen", undefined)
       }
-      await setupAptPack("graphviz", undefined)
+      await setupGraphviz(getVersion("graphviz", undefined), "", arch)
       return installationInfo
     }
     default: {
@@ -62,8 +60,14 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
 }
 
 function activateWinDoxygen() {
-  addPath("C:/Program Files/Graphviz/bin")
-  const binDir = "C:/Program Files/doxygen/bin"
-  addPath(binDir)
-  return binDir
+  switch (process.platform) {
+    case "win32": {
+      const binDir = "C:/Program Files/doxygen/bin"
+      addPath(binDir)
+      return binDir
+    }
+    default: {
+      throw new Error(`Unsupported platform`)
+    }
+  }
 }
