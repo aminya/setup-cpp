@@ -244,17 +244,27 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform, _a
 }
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
-  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
+  const installationInfo = await _setupLLVM(version, setupDir, arch)
   await activateLLVM(installationInfo.installDir ?? setupDir, version)
   return installationInfo
 }
 
-export async function activateLLVM(directory: string, versionGiven: string) {
-  if (process.platform === "linux") {
-    // install llvm build dependencies
-    await setupAptPack("build-essential") // TODO(question) llvm needs ld. But does it need all the build-essential?
+let didInit = false
+async function _setupLLVM(version: string, setupDir: string, arch: string) {
+  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
+  if (!didInit) {
+    if (process.platform === "linux") {
+      // install llvm build dependencies
+      await setupAptPack("build-essential") // TODO(question) llvm needs ld. But does it need all the build-essential?
+      await setupAptPack("libtinfo-dev")
+    }
+    // eslint-disable-next-line require-atomic-updates
+    didInit = true
   }
+  return installationInfo
+}
 
+export async function activateLLVM(directory: string, versionGiven: string) {
   const version = semverCoerceIfInvalid(versionGiven)
 
   const lib = path.join(directory, "lib")
@@ -295,7 +305,7 @@ export function setupClangTools(version: string, setupDir: string, arch: string)
   if (isGitHubCI()) {
     addLLVMLoggingMatcher()
   }
-  return setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
+  return _setupLLVM(version, setupDir, arch)
 }
 
 function addLLVMLoggingMatcher() {
