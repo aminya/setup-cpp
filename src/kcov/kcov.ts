@@ -34,8 +34,8 @@ function getKcovPackageInfo(version: string): PackageInfo {
         // await setupCmake("3.22.0", join(untildify(""), "cmake"), "")
         await setupAptPack("libdw-dev")
         await setupAptPack("libcurl4-openssl-dev")
-        await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out })
-        await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out })
+        await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
+        await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
         await execSudo("cmake", ["--install", "./build"], out)
         return out
       },

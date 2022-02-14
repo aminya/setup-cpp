@@ -16,7 +16,7 @@ export async function extractExe(file: string, dest: string) {
     sevenZip = "7z"
   }
 
-  await execa(sevenZip, ["x", file, `-o${dest}`])
+  await execa(sevenZip, ["x", file, `-o${dest}`], { stdio: "inherit" })
   return dest
 }
 
@@ -26,6 +26,6 @@ export async function extractTarByExe(file: string, dest: string, flags = ["--st
   } catch {
     // ignore
   }
-  await execa("tar", ["xf", file, "-C", dest, ...flags])
+  await execa("tar", ["xf", file, "-C", dest, ...flags], { stdio: "inherit" })
   return dest
 }

@@ -9,6 +9,6 @@ export function execSudo(file: string, args: string[], cwd?: string) {
       stdio: "inherit",
     })
   } else {
-    return execa(file, args)
+    return execa(file, args, { stdio: "inherit" })
   }
 }

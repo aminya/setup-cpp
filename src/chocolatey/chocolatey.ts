@@ -39,15 +39,19 @@ export function setupChocolatey(
   }
 
   // https://docs.chocolatey.org/en-us/choco/setup#install-with-cmd.exe
-  execa.sync(powershell, [
-    "-NoProfile",
-    "-InputFormat",
-    "None",
-    "-ExecutionPolicy",
-    "Bypass",
-    "-Command",
-    "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
-  ])
+  execa.sync(
+    powershell,
+    [
+      "-NoProfile",
+      "-InputFormat",
+      "None",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-Command",
+      "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
+    ],
+    { stdio: "inherit" }
+  )
 
   const chocoPath = `${process.env.ALLUSERSPROFILE}\\chocolatey\\bin`
   addPath(chocoPath)
