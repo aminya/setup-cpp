@@ -4,13 +4,13 @@ import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"
 import execa from "execa"
-import { endGroup, startGroup } from "@actions/core"
+import { info } from "@actions/core"
 
 let hasChoco = false
 
 /** A function that installs a package using choco */
 export function setupChocoPack(name: string, version?: string, args: string[] = []): InstallationInfo {
-  startGroup(`Installing ${name} ${version ?? ""} via chocolatey`)
+  info(`Installing ${name} ${version ?? ""} via chocolatey`)
 
   if (!hasChoco || which.sync("choco", { nothrow: true }) === null) {
     setupChocolatey("", "", process.arch)
@@ -38,6 +38,5 @@ export function setupChocoPack(name: string, version?: string, args: string[] = 
   const binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   addPath(binDir)
 
-  endGroup()
   return { binDir }
 }

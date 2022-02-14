@@ -2,7 +2,7 @@
 import { getExecOutput } from "@actions/exec"
 import execa from "execa"
 import which from "which"
-import { endGroup, info, startGroup } from "@actions/core"
+import { info } from "@actions/core"
 import { addPath } from "../path/addPath"
 import { setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
@@ -17,7 +17,7 @@ let tried = false
 
 /** A function that installs a package using pip */
 export async function setupPipPack(name: string, version?: string): Promise<InstallationInfo> {
-  startGroup(`Installing ${name} ${version ?? ""} via pip`)
+  info(`Installing ${name} ${version ?? ""} via pip`)
 
   // setup python and pip if needed
   if (python === undefined) {
@@ -30,11 +30,9 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       await setupPython(getVersion("python", undefined), "", process.arch)
       // try again
       if (tried) {
-        endGroup()
         throw new Error("Failed to install python")
       }
       tried = true
-      endGroup()
       return setupPipPack(name, version)
     }
   }
@@ -70,6 +68,5 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     addPath(binDir)
   }
 
-  endGroup()
   return { binDir }
 }

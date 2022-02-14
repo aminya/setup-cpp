@@ -1,5 +1,5 @@
 import { find, downloadTool, cacheDir } from "@actions/tool-cache"
-import { endGroup, info, startGroup } from "@actions/core"
+import { info } from "@actions/core"
 import { addPath } from "../path/addPath"
 import { join } from "path"
 import { existsSync } from "fs"
@@ -45,7 +45,7 @@ export async function setupBin(
   setupDir: string,
   arch: string
 ): Promise<InstallationInfo> {
-  startGroup(`Installing ${name} ${version} ${arch} via direct downloading`)
+  info(`Installing ${name} ${version} ${arch} via direct downloading`)
 
   process.env.RUNNER_TEMP = process.env.RUNNER_TEMP ?? tmpdir()
   process.env.RUNNER_TOOL_CACHE = process.env.RUNNER_TOOL_CACHE ?? join(tmpdir(), "setup-cpp", "hostedtoolcache")
@@ -67,7 +67,6 @@ export async function setupBin(
           info(`${name} ${version} was found in the cache at ${binDir}.`)
           addPath(binDir)
 
-          endGroup()
           return { installDir, binDir }
         }
       }
@@ -95,7 +94,6 @@ export async function setupBin(
       const downloaded = await downloadTool(url)
       await extractFunction?.(downloaded, setupDir)
     } catch (err) {
-      endGroup()
       throw new Error(`Failed to download ${name} ${version} ${arch}: ${err}`)
     }
   }
@@ -110,6 +108,5 @@ export async function setupBin(
     await cacheDir(setupDir, name, version)
   }
 
-  endGroup()
   return { installDir, binDir }
 }
