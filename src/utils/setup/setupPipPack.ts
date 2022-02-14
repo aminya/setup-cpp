@@ -35,10 +35,11 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       tried = true
       return setupPipPack(name, version)
     }
-  }
-  if (process.platform === "win32") {
-    // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
-    execa.sync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
+    if (process.platform === "win32") {
+      // downgrade pip on Windows
+      // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
+      execa.sync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
+    }
   }
 
   execa.sync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
