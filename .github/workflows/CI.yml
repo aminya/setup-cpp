@@ -79,6 +79,7 @@ jobs:
         if: "!contains(github.event.head_commit.message, '[skip ci test]')"
         run: |
           pnpm run test
+        continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') }}
 
   Docker:
     runs-on: ${{ matrix.os }}
