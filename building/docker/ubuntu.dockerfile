@@ -1,5 +1,4 @@
-# debian
-FROM debian:bullseye
+FROM ubuntu:devel
 
 # add setup_cpp
 WORKDIR "/"

@@ -1,5 +1,7 @@
-# debian with node installed
-FROM node:16
+FROM ubuntu:devel
+
+RUN apt-get update -qq
+RUN apt-get install -y --no-install-recommends nodejs
 
 # add setup_cpp.js
 ADD "./dist/" "/"
