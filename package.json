@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "cross-env NODE_ENV=production parcel build --detailed-report && npm run copy.matchers",
-    "build.docker": "pnpm build && docker build -f ./building/docker/debian_node.dockerfile -t setup_cpp .",
+    "build.docker": "pnpm build && docker build -f ./building/docker/ubuntu_node.dockerfile -t setup_cpp .",
     "bump": "ncu -u -x execa",
     "clean": "shx rm -rf .parcel-cache dist exe",
     "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/ && shx cp ./src/msvc/msvc_matcher.json ./dist && shx cp ./src/python/python_matcher.json ./dist/ && shx cp ./src/llvm/llvm_matcher.json ./dist/ ",

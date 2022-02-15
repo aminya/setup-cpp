@@ -13,6 +13,8 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { warning } from "../utils/io/io"
 import { existsSync } from "fs"
 import { isGitHubCI } from "../utils/env/isci"
+import { setupGcc } from "../gcc/gcc"
+import { getVersion } from "../default_versions"
 
 //================================================
 // Version
@@ -255,7 +257,7 @@ async function _setupLLVM(version: string, setupDir: string, arch: string) {
   if (!didInit) {
     if (process.platform === "linux") {
       // install llvm build dependencies
-      await setupAptPack("build-essential") // TODO(question) llvm needs ld. But does it need all the build-essential?
+      await setupGcc(getVersion("gcc", undefined), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
       await setupAptPack("libtinfo-dev")
     }
     // eslint-disable-next-line require-atomic-updates
@@ -274,14 +276,14 @@ export async function activateLLVM(directory: string, versionGiven: string) {
 
   addEnv("LLVM_PATH", directory) // the output of this action
 
-  const llvmMajor = semverMajor(version)
-
   // Setup LLVM as the compiler
   addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
   addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
 
-  if (process.platform !== "win32") {
-    // https://github.com/aminya/setup-cpp/issues/6
+  const llvmMajor = semverMajor(version)
+  if (existsSync(`${directory}/lib/clang/${version}/include`)) {
+    addEnv("CPATH", `${directory}/lib/clang/${version}/include`)
+  } else if (existsSync(`${directory}/lib/clang/${llvmMajor}/include`)) {
     addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
   }
 

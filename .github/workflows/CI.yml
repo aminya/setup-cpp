@@ -87,6 +87,9 @@ jobs:
       matrix:
         os:
           - ubuntu-20.04
+        container:
+          - "ubuntu_node.dockerfile"
+          - "ubuntu_stable_node.dockerfile"
         node:
           - 14
         pnpm:
@@ -124,6 +127,6 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          pnpm build.docker
+          docker build -f ./building/docker/${{ matrix.container }} -t setup_cpp .
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true

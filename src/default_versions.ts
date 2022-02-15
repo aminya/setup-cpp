@@ -10,7 +10,7 @@ const DefaultVersions: Record<string, string> = {
   python: "3.8.10",
   kcov: "v39",
   task: "3.10.0",
-  doxygen: process.platform === "win32" ? "1.9.3.20220106" : "1.9.3",
+  doxygen: "1.9.2",
   gcc: process.platform === "win32" ? "11.2.0.07112021" : "11",
 }
 

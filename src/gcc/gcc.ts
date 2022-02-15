@@ -43,13 +43,7 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
           "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
           "ppa:ubuntu-toolchain-r/test",
         ])
-        binDir = (
-          await setupAptPack("g++", version, [
-            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial main",
-            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
-            "ppa:ubuntu-toolchain-r/test",
-          ])
-        ).binDir
+        binDir = (await setupAptPack("g++", version, [])).binDir
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         await setupAptPack("gcc-multilib", version, [
@@ -57,13 +51,7 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
           "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
           "ppa:ubuntu-toolchain-r/test",
         ])
-        binDir = (
-          await setupAptPack("g++-multilib", version, [
-            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial main",
-            "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
-            "ppa:ubuntu-toolchain-r/test",
-          ])
-        ).binDir
+        binDir = (await setupAptPack("g++-multilib", version, [])).binDir
       }
       break
     }

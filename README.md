@@ -178,8 +178,7 @@ jobs:
 Here is an example for using setup_cpp to make a builder image that has the Cpp tools you need.
 
 ```dockerfile
-# debian
-FROM debian:bullseye
+FROM ubuntu:devel
 
 # add setup_cpp
 WORKDIR "/"
@@ -202,7 +201,7 @@ See [this folder](https://github.com/aminya/setup-cpp/tree/master/building/docke
 If you want to build the ones included, then run:
 
 ```ps1
-docker build -f ./building/docker/debian.dockerfile -t setup_cpp .
+docker build -f ./building/docker/ubuntu.dockerfile -t setup_cpp .
 ```
 
 Where you should use the path to the dockerfile after `-f`.
@@ -242,7 +241,7 @@ The following gives an example for setting up a C++ environment inside GitLab pi
 .gitlab-ci.yaml
 
 ```yaml
-image: ubuntu:latest
+image: ubuntu:devel
 
 stages:
   - test
