@@ -274,14 +274,14 @@ export async function activateLLVM(directory: string, versionGiven: string) {
 
   addEnv("LLVM_PATH", directory) // the output of this action
 
-  const llvmMajor = semverMajor(version)
-
   // Setup LLVM as the compiler
   addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
   addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
 
-  if (process.platform !== "win32") {
-    // https://github.com/aminya/setup-cpp/issues/6
+  const llvmMajor = semverMajor(version)
+  if (existsSync(`${directory}/lib/clang/${version}/include`)) {
+    addEnv("CPATH", `${directory}/lib/clang/${version}/include`)
+  } else if (existsSync(`${directory}/lib/clang/${llvmMajor}/include`)) {
     addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
   }
 
