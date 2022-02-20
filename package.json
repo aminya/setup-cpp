@@ -12,9 +12,10 @@
     "setup_cpp": "./dist/setup_cpp.js"
   },
   "scripts": {
-    "build": "cross-env NODE_ENV=production parcel build --detailed-report && npm run copy.matchers",
+    "build": "run-p test.tsc build.parcel copy.matchers",
     "build.docker": "pnpm build && docker build -f ./building/docker/ubuntu_node.dockerfile -t setup_cpp .",
-    "bump": "ncu -u -x execa",
+    "build.parcel": "cross-env NODE_ENV=production parcel build --detailed-report",
+    "bump": "ncu -u -x execa,prettier && pnpm update",
     "clean": "shx rm -rf .parcel-cache dist exe",
     "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/ && shx cp ./src/msvc/msvc_matcher.json ./dist && shx cp ./src/python/python_matcher.json ./dist/ && shx cp ./src/llvm/llvm_matcher.json ./dist/ ",
     "dev": "cross-env NODE_ENV=development parcel watch",
@@ -37,9 +38,9 @@
     "@actions/tool-cache": "^1.7.1",
     "execa": "^5.1.1",
     "mri": "^1.2.0",
-    "msvc-dev-cmd": "git://github.com/aminya/msvc-dev-cmd#9f672c1",
-    "semver": "^7.3.5",
-    "setup-python": "https://github.com/actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a",
+    "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
+    "semver": "7.3.5",
+    "setup-python": "github:actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a",
     "untildify": "^4.0.0",
     "which": "^2.0.2"
   },
@@ -47,16 +48,18 @@
     "@types/cross-spawn": "^6.0.2",
     "@types/jest": "^27.4.0",
     "@types/mri": "^1.1.1",
-    "@types/node": "^17.0.17",
+    "@types/node": "^17.0.18",
     "@types/semver": "^7.3.9",
     "@types/which": "^2.0.1",
     "caxa": "^2.1.0",
     "cross-env": "7.0.3",
     "cross-spawn": "^7.0.3",
-    "eslint-config-atomic": "^1.16.6",
+    "eslint": "^8.9.0",
+    "eslint-config-atomic": "^1.17.0",
     "jest": "^27.5.1",
     "npm-run-all2": "^5.0.2",
-    "parcel": "^2.3.1",
+    "parcel": "^2.3.2",
+    "prettier": "2.4.1",
     "prettier-config-atomic": "^3.0.3",
     "shx": "0.3.4",
     "terser-config-atomic": "^0.1.1",
@@ -87,7 +90,16 @@
   ],
   "pnpm": {
     "overrides": {
-      "semver": "7.3.5"
+      "semver": "7.3.5",
+      "eslint": "^8.9.0",
+      "prettier": "2.4.1",
+      "core-js": "*",
+      "babel-eslint": "npm:@babel/eslint-parser"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "eslint": "*"
+      }
     }
   },
   "targets": {
