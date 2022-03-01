@@ -1,6 +1,6 @@
 import { find, downloadTool, cacheDir } from "@actions/tool-cache"
 import { info } from "@actions/core"
-import { addPath } from "../path/addPath"
+import { addPath } from "../env/addEnv"
 import { join } from "path"
 import { existsSync } from "fs"
 import { tmpdir } from "os"

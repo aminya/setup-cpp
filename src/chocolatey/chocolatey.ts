@@ -3,7 +3,7 @@ import execa from "execa"
 import { existsSync } from "fs"
 import { dirname } from "path"
 import which from "which"
-import { addPath } from "../utils/path/addPath"
+import { addPath } from "../utils/env/addEnv"
 import { InstallationInfo } from "../utils/setup/setupBin"
 
 let binDir: string | undefined

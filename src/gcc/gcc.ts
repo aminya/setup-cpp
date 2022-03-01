@@ -1,4 +1,4 @@
-import { addPath } from "../utils/path/addPath"
+import { addPath } from "../utils/env/addEnv"
 import { existsSync } from "fs"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"

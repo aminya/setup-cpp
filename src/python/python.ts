@@ -1,5 +1,5 @@
 import * as core from "@actions/core"
-import { addPath } from "../utils/path/addPath"
+import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
