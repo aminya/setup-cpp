@@ -84,7 +84,7 @@ source ~/.cpprc # activate cpp enviroment variables
 
 NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`. For the tools, you can pass a specific version instead of `true` that chooses the default version
 
-NOTE: On Unix systems, when `setup-cpp` is used locally or in other CI services like GitLab, the environment variables are added to `~/.cpprc`. You should run `source ~/.cpprc` to immediately activate the environment variables. This file is automatically sourced in the next shell restart from `~/.bashrc` or `~/.profile` if `SOURCE_CPPRC` is not set to `0`.
+NOTE: On Unix systems, when `setup-cpp` is used locally or in other CI services like GitLab, the environment variables are added to `~/.cpprc`. You should run `source ~/.cpprc` to immediately activate the environment variables. This file is automatically sourced in the next shell restart from `~/.bashrc` or `~/.profile` if `SOURCE_CPPRC` is not set to `0`. To deactivate `.cpprc` in the next shell restart, rename/remove `~/.cpprc`.
 
 NOTE: On Unix systems, you will not need `sudo` if you are already a root user (e.g., in a GitLab runner or Docker).
 

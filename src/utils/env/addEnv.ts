@@ -115,7 +115,7 @@ function setupCppInProfile() {
   appendFileSync(cpprc_path, `\n${source_cpprc_str}\n`)
   info(`Added ${source_cpprc_str} to ${cpprc_path}`)
 
-  const source_cpprc_string = `\n# source .cpprc if SOURCE_CPPRC is set to 1\nif [ "$SOURCE_CPPRC" = 1 ]; then source "${cpprc_path}"; fi\n`
+  const source_cpprc_string = `\n# source .cpprc if SOURCE_CPPRC is not set to 0\nif [[ "$SOURCE_CPPRC" != 0 && -f "${cpprc_path}" ]]; then source "${cpprc_path}"; fi\n`
 
   try {
     // source cpprc in .profile
