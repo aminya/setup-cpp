@@ -227,12 +227,12 @@ export async function main(args: string[]): Promise<number> {
   if (!isGitHubCI()) {
     switch (process.platform) {
       case "win32": {
-        core.info("Run `RefreshEnv.cmd` or restart your shell to update the environment.")
+        warning("Run `RefreshEnv.cmd` or restart your shell to update the environment.")
         break
       }
       case "linux":
       case "darwin": {
-        core.info("Run `source ~/.cpprc` or restart your shell to update the environment.")
+        warning("Run `source ~/.cpprc` or restart your shell to update the environment.")
         break
       }
       default: {
