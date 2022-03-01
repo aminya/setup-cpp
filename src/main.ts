@@ -232,7 +232,7 @@ export async function main(args: string[]): Promise<number> {
       }
       case "linux":
       case "darwin": {
-        core.info("Run `source ~/.profile` or restart your shell to update the environment.")
+        core.info("Run `source ~/.cpprc` or restart your shell to update the environment.")
         break
       }
       default: {

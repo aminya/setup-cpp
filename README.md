@@ -61,7 +61,7 @@ An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.9.4/setup_cpp_windows.exe"
 ./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-RefreshEnv.cmd # reload the environment
+RefreshEnv.cmd # activate cpp enviroment variables
 ```
 
 ```ps1
@@ -70,7 +70,7 @@ wget "https://github.com/aminya/setup-cpp/releases/download/v0.9.4/setup_cpp_lin
 chmod +x setup_cpp_linux
 sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-source ~/.profile # reload the environment
+source ~/.cpprc # activate cpp enviroment variables
 ```
 
 ```ps1
@@ -79,7 +79,7 @@ wget "https://github.com/aminya/setup-cpp/releases/download/v0.9.4/setup_cpp_mac
 chmod +x setup_cpp_mac
 sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-source ~/.profile # reload the environment
+source ~/.cpprc # activate cpp enviroment variables
 ```
 
 NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`.
@@ -100,7 +100,7 @@ Open the shell as admin, download via `curl`, then install
 curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.9.4/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-RefreshEnv.cmd # reload the environment
+RefreshEnv.cmd # activate cpp enviroment variables
 ```
 
 On Linux or Mac:
@@ -109,7 +109,7 @@ On Linux or Mac:
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.9.4/setup_cpp.js"
 sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-source ~/.profile # reload the environment
+source ~/.cpprc # activate cpp enviroment variables
 ```
 
 ## Inside GitHub Actions
@@ -190,8 +190,8 @@ RUN chmod +x ./setup_cpp_linux
 # install llvm, cmake, ninja, and ccache
 RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true
 
-# reload the environment
-RUN source ~/.profile
+# activate cpp enviroment variables
+RUN source ~/.cpprc
 
 ENTRYPOINT [ "/bin/sh" ]
 ```
@@ -266,7 +266,7 @@ stages:
   curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.9.4/setup_cpp_linux"
   chmod +x setup_cpp_linux
   ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
-  source ~/.profile
+  source ~/.cpprc
 
 .test: &test |
   # Build and Test

@@ -1,8 +1,8 @@
 import { exportVariable, addPath as ghAddPath, info } from "@actions/core"
 import { isGitHubCI } from "./isci"
 import { untildify_user as untildify } from "../path/untildify"
-import { appendFileSync } from "fs"
-import { error } from "../io/io"
+import { appendFileSync, existsSync, readFileSync } from "fs"
+import { error, warning } from "../io/io"
 import { execPowershell } from "../exec/powershell"
 import { delimiter } from "path"
 
@@ -25,30 +25,6 @@ export function addEnv(name: string, val: string | undefined) {
   }
 }
 
-function addEnvSystem(name: string, valGiven: string | undefined) {
-  const val = valGiven ?? ""
-  switch (process.platform) {
-    case "win32": {
-      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit
-      execPowershell(`[Environment]::SetEnvironmentVariable("${name}", "${val}", "User")`)
-      info(`${name}="${val} was set in the environment."`)
-      return
-    }
-    case "linux":
-    case "darwin": {
-      // find profile path
-      const profile_path = untildify(".profile")
-      appendFileSync(profile_path, `\nexport ${name}="${val}"\n`)
-      info(`${name}="${val} was added to "${profile_path}"`)
-      return
-    }
-    default: {
-      // fall through shell path modification
-    }
-  }
-  process.env[name] = val
-}
-
 /** An add path function that works locally or inside GitHub Actions */
 export function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
@@ -69,6 +45,31 @@ export function addPath(path: string) {
   }
 }
 
+const cpprc_path = untildify(".cpprc")
+
+function addEnvSystem(name: string, valGiven: string | undefined) {
+  const val = valGiven ?? ""
+  switch (process.platform) {
+    case "win32": {
+      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit
+      execPowershell(`[Environment]::SetEnvironmentVariable("${name}", "${val}", "User")`)
+      info(`${name}="${val} was set in the environment."`)
+      return
+    }
+    case "linux":
+    case "darwin": {
+      setupCppInProfile()
+      appendFileSync(cpprc_path, `\nexport ${name}="${val}"\n`)
+      info(`${name}="${val} was added to "${cpprc_path}"`)
+      return
+    }
+    default: {
+      // fall through shell path modification
+    }
+  }
+  process.env[name] = val
+}
+
 function addPathSystem(path: string) {
   switch (process.platform) {
     case "win32": {
@@ -81,13 +82,54 @@ function addPathSystem(path: string) {
     }
     case "linux":
     case "darwin": {
-      const profile_path = untildify(".profile")
-      appendFileSync(profile_path, `\nexport PATH=${path}:$PATH\n`)
-      info(`${path} was added to "${profile_path}"`)
+      setupCppInProfile()
+      appendFileSync(cpprc_path, `\nexport PATH=${path}:$PATH\n`)
+      info(`${path} was added to "${cpprc_path}"`)
       return
     }
     default: {
       return
     }
   }
+}
+
+let setupCppInProfile_called = false
+
+/// handles adding conditions to source .cpprc file from .bashrc and .profile
+function setupCppInProfile() {
+  if (setupCppInProfile_called) {
+    return
+  }
+
+  // a variable that prevents source_cpprc from being called from .bashrc and .profile
+  const source_cpprc_str = "export SOURCE_CPPRC=0"
+
+  if (existsSync(cpprc_path)) {
+    const cpprc_content = readFileSync(cpprc_path, "utf8")
+    if (cpprc_content.includes(source_cpprc_str)) {
+      // already executed setupCppInProfile
+      return
+    }
+  }
+
+  appendFileSync(cpprc_path, `\n${source_cpprc_str}\n`)
+  info(`Added ${source_cpprc_str} to ${cpprc_path}`)
+
+  const source_cpprc_string = `\n# source .cpprc if SOURCE_CPPRC is set to 1\nif [ "$SOURCE_CPPRC" = 1 ]; then source "${cpprc_path}"; fi\n`
+
+  try {
+    // source cpprc in .profile
+    const profile_path = untildify(".profile")
+    appendFileSync(profile_path, source_cpprc_string)
+    info(`${source_cpprc_string} was added to ${profile_path}`)
+
+    // source cpprc in .bashrc too
+    const bashrc_path = untildify(".bashrc")
+    appendFileSync(bashrc_path, source_cpprc_string)
+    info(`${source_cpprc_string} was added to ${bashrc_path}`)
+  } catch (err) {
+    warning(`Failed to add ${source_cpprc_string} to .profile or .bashrc. You should add it manually: ${err}`)
+  }
+
+  setupCppInProfile_called = true
 }
