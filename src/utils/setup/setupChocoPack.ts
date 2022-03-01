@@ -1,5 +1,5 @@
 /* eslint-disable require-atomic-updates */
-import { addPath } from "../path/addPath"
+import { addPath } from "../env/addEnv"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"

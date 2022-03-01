@@ -1,4 +1,4 @@
-import { addPath } from "../utils/path/addPath"
+import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"

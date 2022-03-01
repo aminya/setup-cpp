@@ -6,6 +6,7 @@
     "CPATH",
     "Cppcheck",
     "CPPFLAGS",
+    "cpprc",
     "dyld",
     "eabi",
     "execa",

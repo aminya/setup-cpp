@@ -11,6 +11,6 @@ RUN chmod +x ./setup_cpp_linux
 RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 # reload the environment
-CMD source ~/.profile 
+CMD source ~/.cpprc 
 
 ENTRYPOINT [ "/bin/sh" ]
