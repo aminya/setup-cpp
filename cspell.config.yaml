@@ -1,0 +1,67 @@
+version: "0.2"
+files:
+  - "**/*"
+useGitignore: true
+enableGlobDot: true
+ignorePaths:
+  - pnpm-lock.yaml
+  - .git/
+  - dist/
+words:
+  - "buildtools"
+  - "ccache"
+  - "cmake"
+  - "CPATH"
+  - "Cppcheck"
+  - "CPPFLAGS"
+  - "cpprc"
+  - "dyld"
+  - "eabi"
+  - "execa"
+  - "gcovr"
+  - "Graphviz"
+  - "isci"
+  - "LDFLAGS"
+  - "msbuild"
+  - "msvc"
+  - "msys"
+  - "multilib"
+  - "nothrow"
+  - "Opencppcoverage"
+  - "OSSDK"
+  - "setx"
+  - "untildify"
+  - "vcpkg"
+  - "visualc"
+  - "visualcpp"
+  - pnpm
+  - Yahyaabadi
+  - vcvarsall
+  - kcov
+  - choco
+  - vsversion
+  - pwsh
+  - pypy
+  - ghes
+  - applellvm
+  - xcrun
+  - libstdc
+  - libtinfo
+  - libdw
+  - npmrc
+  - setupcpp
+  - aarch
+  - devel
+  - aminya
+  - caxa
+  - libbinutils
+  - tsbuildinfo
+  - deps
+  - mxschmitt
+  - terserrc
+ignoreWords: []
+import: []
+dictionaryDefinitions: []
+dictionaries: []
+language: "en, en-GB"
+allowCompoundWords: true

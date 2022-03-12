@@ -61,7 +61,7 @@ An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.10.0/setup_cpp_windows.exe"
 ./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-RefreshEnv.cmd # activate cpp enviroment variables
+RefreshEnv.cmd # activate cpp environment variables
 ```
 
 ```ps1
@@ -70,7 +70,7 @@ wget "https://github.com/aminya/setup-cpp/releases/download/v0.10.0/setup_cpp_li
 chmod +x setup_cpp_linux
 sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-source ~/.cpprc # activate cpp enviroment variables
+source ~/.cpprc # activate cpp environment variables
 ```
 
 ```ps1
@@ -79,7 +79,7 @@ wget "https://github.com/aminya/setup-cpp/releases/download/v0.10.0/setup_cpp_ma
 chmod +x setup_cpp_mac
 sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-source ~/.cpprc # activate cpp enviroment variables
+source ~/.cpprc # activate cpp environment variables
 ```
 
 NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`. For the tools, you can pass a specific version instead of `true` that chooses the default version
@@ -101,7 +101,7 @@ Open the shell as admin, download via `curl`, then install
 curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.10.0/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-RefreshEnv.cmd # activate cpp enviroment variables
+RefreshEnv.cmd # activate cpp environment variables
 ```
 
 On Linux or Mac:
@@ -110,7 +110,7 @@ On Linux or Mac:
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.10.0/setup_cpp.js"
 sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-source ~/.cpprc # activate cpp enviroment variables
+source ~/.cpprc # activate cpp environment variables
 ```
 
 ## Inside GitHub Actions
@@ -191,7 +191,7 @@ RUN chmod +x ./setup_cpp_linux
 # install llvm, cmake, ninja, and ccache
 RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true
 
-# activate cpp enviroment variables
+# activate cpp environment variables
 RUN source ~/.cpprc
 
 ENTRYPOINT [ "/bin/sh" ]
