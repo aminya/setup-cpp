@@ -26,6 +26,7 @@ describe("setup-llvm", () => {
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
+        "14.0.0",
         "13.0.0",
         "12.0.0",
         "12",
