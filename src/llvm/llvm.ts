@@ -58,6 +58,7 @@ export const VERSIONS: Set<string> = getVersions([
   "13.0.0",
   "13.0.1",
   "14.0.0",
+  "14.0.1",
 ])
 
 //================================================
@@ -116,7 +117,11 @@ function getDarwinUrl(version: string): string | null {
  */
 const UBUNTU_RC: Map<string, string> = new Map()
 
-/** The (latest) Ubuntu versions for each LLVM version. */
+/**
+ * The (latest) Ubuntu versions for each LLVM version.
+ *
+ * https://github.com/llvm/llvm-project/releases/tag/llvmorg-14.0.1 or https://releases.llvm.org/14.0.1
+ */
 const UBUNTU: { [key: string]: string } = {
   "3.5.0": "-ubuntu-14.04",
   "3.5.1": "",
@@ -152,10 +157,11 @@ const UBUNTU: { [key: string]: string } = {
   "13.0.0": "-ubuntu-20.04",
   "13.0.1": "-ubuntu-18.04",
   "14.0.0": "-ubuntu-18.04",
+  "14.0.1": "-ubuntu-18.04",
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
-const MAX_UBUNTU: string = "14.0.0"
+const MAX_UBUNTU: string = "14.0.1"
 
 /** Gets an LLVM download URL for the Linux (Ubuntu) platform. */
 function getLinuxUrl(versionGiven: string): string {
