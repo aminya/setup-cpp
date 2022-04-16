@@ -8,7 +8,7 @@ const DefaultVersions: Record<string, string> = {
   conan: "1.47.0", // https://github.com/conan-io/conan/releases
   meson: "0.61.4", // https://github.com/mesonbuild/meson/releases
   python: "3.8.10",
-  kcov: "v40", // https://github.com/SimonKagstrom/kcov/releases
+  kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
   task: "3.12.0", // https://github.com/go-task/task/releases
   doxygen: "1.9.1", // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen
   gcc: process.platform === "win32" ? "11.2.0.07112021" : "11", // https://community.chocolatey.org/packages/mingw#versionhistory and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
