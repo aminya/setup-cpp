@@ -1,7 +1,9 @@
 import execa from "execa"
-// import { join } from "path"
-// import { untildify_user as untildify } from "./utils/path/untildify"
-// import { setupCmake } from "../cmake/cmake"
+import { join } from "path"
+import untildify from "untildify"
+import which from "which"
+import { setupCmake } from "../cmake/cmake"
+import { getVersion } from "../default_versions"
 import { execSudo } from "../utils/exec/sudo"
 import { addBinExtension } from "../utils/extension/extension"
 import { extractTarByExe } from "../utils/setup/extract"
@@ -16,7 +18,7 @@ function getKcovPackageInfo(version: string): PackageInfo {
   }
   if (version_number >= 39) {
     return {
-      url: `https://github.com/SimonKagstrom/kcov/releases/download/${version}/kcov-amd64.tar.gz`,
+      url: `https://github.com/SimonKagstrom/kcov/releases/download/v${version_number}/kcov-amd64.tar.gz`,
       extractedFolderName: "",
       binRelativeDir: "usr/local/bin",
       binFileName: addBinExtension("kcov"),
@@ -28,19 +30,25 @@ function getKcovPackageInfo(version: string): PackageInfo {
       extractedFolderName: `kcov-${version_number}`,
       binRelativeDir: "build/",
       binFileName: addBinExtension("kcov"),
-      extractFunction: async (file: string, dest: string): Promise<string> => {
-        const out = await extractTarByExe(file, dest)
-        // build after extraction using CMake
-        // await setupCmake("3.22.0", join(untildify(""), "cmake"), "")
-        await setupAptPack("libdw-dev")
-        await setupAptPack("libcurl4-openssl-dev")
-        await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
-        await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
-        await execSudo("cmake", ["--install", "./build"], out)
-        return out
-      },
+      extractFunction: buildKcov,
     }
   }
+}
+
+async function buildKcov(file: string, dest: string) {
+  const out = await extractTarByExe(file, dest, ["--strip-components=1"])
+  // build after extraction using CMake
+  if (which.sync("cmake", { nothrow: true }) === null) {
+    await setupCmake(getVersion("cmake", undefined), join(untildify(""), "cmake"), "")
+  }
+  if (process.platform === "linux") {
+    await setupAptPack("libdw-dev")
+    await setupAptPack("libcurl4-openssl-dev")
+  }
+  await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
+  await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
+  await execSudo("cmake", ["--install", "./build"], out)
+  return out
 }
 
 export async function setupKcov(version: string, setupDir: string, arch: string) {
