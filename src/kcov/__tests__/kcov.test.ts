@@ -10,14 +10,18 @@ describe("setup-Kcov", () => {
     return
   }
 
-  let directory: string
-  beforeAll(async () => {
-    directory = await setupTmpDir("kcov-v39")
+  it("should setup Kcov v40", async () => {
+    const directory = await setupTmpDir("kcov-v40")
+    const { binDir } = (await setupKcov("40", directory, "")) as InstallationInfo
+    await testBin("kcov", ["--version"], binDir)
+    await cleanupTmpDir("kcov-v40")
   })
 
   it("should setup Kcov v39", async () => {
+    const directory = await setupTmpDir("kcov-v39")
     const { binDir } = (await setupKcov("39", directory, "")) as InstallationInfo
     await testBin("kcov", ["--version"], binDir)
+    await cleanupTmpDir("kcov-v39")
   })
 
   // it("should find Kcov in the cache", async () => {
@@ -43,9 +47,5 @@ describe("setup-Kcov", () => {
       // TODO
       console.warn(err)
     }
-  })
-
-  afterAll(async () => {
-    await cleanupTmpDir("kcov-v38")
   })
 })
