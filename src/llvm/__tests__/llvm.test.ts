@@ -7,6 +7,7 @@ import execa from "execa"
 import path from "path"
 import { addBinExtension } from "../../utils/extension/extension"
 import { chmodSync } from "fs"
+import { getVersion } from "../../default_versions"
 
 jest.setTimeout(400000)
 async function testUrl(version: string) {
@@ -26,6 +27,7 @@ describe("setup-llvm", () => {
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
+        "14.0.1",
         "14.0.0",
         "13.0.0",
         "12.0.0",
@@ -49,7 +51,7 @@ describe("setup-llvm", () => {
   })
 
   it("should setup LLVM", async () => {
-    const { binDir } = await setupLLVM("13.0.0", directory, process.arch)
+    const { binDir } = await setupLLVM(getVersion("llvm", "true"), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
@@ -66,7 +68,7 @@ describe("setup-llvm", () => {
   })
 
   it("should find llvm in the cache", async () => {
-    const { binDir } = await setupLLVM("13.0.0", directory, process.arch)
+    const { binDir } = await setupLLVM(getVersion("llvm", "true"), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     if (isGitHubCI()) {
@@ -83,7 +85,7 @@ describe("setup-llvm", () => {
   })
 
   it("should setup clang-tidy and clang-format", async () => {
-    const { binDir } = await setupClangTools("13.0.0", directory, process.arch)
+    const { binDir } = await setupClangTools(getVersion("llvm", "true"), directory, process.arch)
     await testBin("clang-tidy", ["--version"], binDir)
     await testBin("clang-format", ["--version"], binDir)
   })

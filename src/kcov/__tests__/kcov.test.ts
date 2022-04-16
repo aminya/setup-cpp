@@ -1,6 +1,7 @@
 import { setupKcov } from "../kcov"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { InstallationInfo } from "../../utils/setup/setupBin"
+import { getVersion } from "../../default_versions"
 
 jest.setTimeout(300000)
 async function testKcov(version: string, directory: string) {
@@ -15,10 +16,12 @@ describe("setup-Kcov", () => {
     return
   }
 
-  it("should setup Kcov v39", async () => {
-    const directory = await setupTmpDir("kcov-v39")
-    await testKcov("v39", directory)
-    await cleanupTmpDir("kcov-v39")
+  it("should setup Kcov", async () => {
+    const version = getVersion("kcov", "true")
+
+    const directory = await setupTmpDir(`kcov-${version}`)
+    await testKcov(version, directory)
+    await cleanupTmpDir(`kcov-${version}`)
   })
 
   // TODO
