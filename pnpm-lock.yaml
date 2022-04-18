@@ -22,6 +22,7 @@ specifiers:
   cross-env: 7.0.3
   cross-spawn: ^7.0.3
   cspell: ^5.19.7
+  dayjs: ^1.11.1
   eslint: ^8.13.0
   eslint-config-atomic: ^1.17.1
   execa: ^5.1.1
@@ -48,6 +49,7 @@ dependencies:
   '@actions/exec': 1.1.1
   '@actions/io': 1.1.2
   '@actions/tool-cache': 1.7.2
+  dayjs: 1.11.1
   execa: 5.1.1
   mri: 1.2.0
   msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
@@ -3252,6 +3254,10 @@ packages:
   /date-now/0.1.4:
     resolution: {integrity: sha1-6vQ5/U1ISK105cx9vvIAZyueNFs=}
     dev: true
+
+  /dayjs/1.11.1:
+    resolution: {integrity: sha512-ER7EjqVAMkRRsxNCC5YqJ9d9VQYuWdGt7aiH2qA5R5wt8ZmWaP2dLUSIK6y/kVzLMlmh1Tvu5xUf4M/wdGJ5KA==}
+    dev: false
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}
