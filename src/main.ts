@@ -134,6 +134,7 @@ export async function main(args: string[]): Promise<number> {
     // skip if undefined
     if (version !== undefined) {
       // running the setup function for this tool
+      console.time(`took`)
       startGroup(`Installing ${tool} ${version}`)
       try {
         let installationInfo: InstallationInfo | undefined | void
@@ -155,6 +156,7 @@ export async function main(args: string[]): Promise<number> {
         errorMessages.push(`${tool} failed to install`)
       }
       endGroup()
+      console.timeEnd()
     }
   }
 
@@ -165,6 +167,7 @@ export async function main(args: string[]): Promise<number> {
       const { compiler, version } = getCompilerInfo(maybeCompiler)
 
       // install the compiler. We allow some aliases for the compiler name
+      console.time(`took`)
       startGroup(`Installing ${compiler} ${version ?? ""}`)
       switch (compiler) {
         case "llvm":
@@ -206,11 +209,13 @@ export async function main(args: string[]): Promise<number> {
         }
       }
       endGroup()
+      console.timeEnd()
     }
   } catch (e) {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
     endGroup()
+    console.timeEnd()
   }
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
