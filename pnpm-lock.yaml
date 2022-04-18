@@ -38,7 +38,7 @@ specifiers:
   setup-python: github:actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a
   shx: 0.3.4
   terser-config-atomic: ^0.1.1
-  time-delta: github:aminya/time-delta#a6f84237aa249d246488d06439acbe0e6e364fd5
+  time-delta: github:aminya/time-delta#b8d65be65af2ad348ae21f4e0e2fd2ee7430c299
   ts-jest: ^27.1.4
   typescript: ^4.6.3
   untildify: ^4.0.0
@@ -54,7 +54,7 @@ dependencies:
   msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
   semver: 7.3.7
   setup-python: github.com/actions/setup-python/7f80679172b057fc5e90d70d197929d454754a5a
-  time-delta: github.com/aminya/time-delta/a6f84237aa249d246488d06439acbe0e6e364fd5
+  time-delta: github.com/aminya/time-delta/b8d65be65af2ad348ae21f4e0e2fd2ee7430c299
   untildify: 4.0.0
   which: 2.0.2
 
@@ -8256,8 +8256,8 @@ packages:
       sort-object-keys: 1.1.3
     dev: true
 
-  github.com/aminya/time-delta/a6f84237aa249d246488d06439acbe0e6e364fd5:
-    resolution: {tarball: https://codeload.github.com/aminya/time-delta/tar.gz/a6f84237aa249d246488d06439acbe0e6e364fd5}
+  github.com/aminya/time-delta/b8d65be65af2ad348ae21f4e0e2fd2ee7430c299:
+    resolution: {tarball: https://codeload.github.com/aminya/time-delta/tar.gz/b8d65be65af2ad348ae21f4e0e2fd2ee7430c299}
     name: time-delta
     version: 1.0.0
     engines: {node: '>=12'}

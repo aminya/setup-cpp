@@ -128,7 +128,7 @@ export async function main(args: string[]): Promise<number> {
   const successMessages: string[] = []
   const errorMessages: string[] = []
 
-  const timeFormatter = timeDelta.create()
+  const timeFormatter = timeDelta.create({ autoloadLocales: true })
   timeDelta.addLocale(enLocale as timeDelta.Locale)
   let time1: number
   let time2: number
