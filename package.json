@@ -40,9 +40,10 @@
     "execa": "^5.1.1",
     "mri": "^1.2.0",
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
+    "numerous": "1.0.3",
     "semver": "7.3.7",
     "setup-python": "github:actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a",
-    "time-delta": "github:aminya/time-delta#b8d65be65af2ad348ae21f4e0e2fd2ee7430c299",
+    "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",
     "untildify": "^4.0.0",
     "which": "^2.0.2"
   },

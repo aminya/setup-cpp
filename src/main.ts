@@ -21,7 +21,13 @@ import { isGitHubCI } from "./utils/env/isci"
 import * as timeDelta from "time-delta"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import enLocale from "time-delta/locales/en.js"
+import timeDeltaLocale from "time-delta/locales/en.js"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as numerous from "numerous"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import numerousLocale from "numerous/locales/en.js"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
@@ -129,7 +135,8 @@ export async function main(args: string[]): Promise<number> {
   const errorMessages: string[] = []
 
   const timeFormatter = timeDelta.create({ autoloadLocales: true })
-  timeDelta.addLocale(enLocale as timeDelta.Locale)
+  timeDelta.addLocale(timeDeltaLocale as timeDelta.Locale)
+  numerous.addLocale(numerousLocale)
   let time1: number
   let time2: number
 
