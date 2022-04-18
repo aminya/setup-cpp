@@ -37,12 +37,12 @@
     "@actions/exec": "^1.1.1",
     "@actions/io": "^1.1.2",
     "@actions/tool-cache": "^1.7.2",
-    "dayjs": "^1.11.1",
     "execa": "^5.1.1",
     "mri": "^1.2.0",
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
     "semver": "7.3.7",
     "setup-python": "github:actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a",
+    "time-delta": "^1.0.0",
     "untildify": "^4.0.0",
     "which": "^2.0.2"
   },

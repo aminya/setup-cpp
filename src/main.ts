@@ -18,9 +18,10 @@ import { setupPython } from "./python/python"
 import mri from "mri"
 import { untildify_user as untildify } from "./utils/path/untildify"
 import { isGitHubCI } from "./utils/env/isci"
-import dayjs from "dayjs"
-// eslint-disable-next-line import/no-unassigned-import
-import "dayjs/locale/en"
+import * as timeDelta from "time-delta"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import enLocale from "time-delta/locales/en"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
@@ -127,9 +128,10 @@ export async function main(args: string[]): Promise<number> {
   const successMessages: string[] = []
   const errorMessages: string[] = []
 
-  dayjs.locale("en")
-  let time1: number
-  let time2: number
+  const timeFormatter = timeDelta.create()
+  timeDelta.addLocale(enLocale as timeDelta.LocaleData)
+  let time1: Date
+  let time2: Date
 
   // installing the specified tools
 
@@ -141,7 +143,7 @@ export async function main(args: string[]): Promise<number> {
     // skip if undefined
     if (version !== undefined) {
       // running the setup function for this tool
-      time1 = Date.now()
+      time1 = new Date(Date.now())
       startGroup(`Installing ${tool} ${version}`)
       try {
         let installationInfo: InstallationInfo | undefined | void
@@ -163,14 +165,14 @@ export async function main(args: string[]): Promise<number> {
         errorMessages.push(`${tool} failed to install`)
       }
       endGroup()
-      time2 = Date.now()
-      info(`took ${dayjs(new Date(time2 - time1)).format()}`)
+      time2 = new Date(Date.now())
+      info(`took ${timeFormatter.format(time1, time2) as string}`)
     }
   }
 
   // installing the specified compiler
   const maybeCompiler = opts.compiler
-  time1 = Date.now()
+  time1 = new Date(Date.now())
   try {
     if (maybeCompiler !== undefined) {
       const { compiler, version } = getCompilerInfo(maybeCompiler)
@@ -217,15 +219,15 @@ export async function main(args: string[]): Promise<number> {
         }
       }
       endGroup()
-      time2 = Date.now()
-      info(`took ${dayjs(new Date(time2 - time1)).format()}`)
+      time2 = new Date(Date.now())
+      info(`took ${timeFormatter.format(time1, time2) as string}`)
     }
   } catch (e) {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
     endGroup()
-    time2 = Date.now()
-    info(`took ${dayjs(new Date(time2 - time1)).format()}`)
+    time2 = new Date(Date.now())
+    info(`took ${timeFormatter.format(time1, time2) as string}`)
   }
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
