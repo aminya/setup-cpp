@@ -97,7 +97,7 @@
       "semver": "7.3.7",
       "eslint": "^8.13.0",
       "prettier": "2.6.2",
-      "lru-cache": "7.4.0",
+      "lru-cache": "7.8.1",
       "core-js": "*",
       "babel-eslint": "npm:@babel/eslint-parser"
     },
