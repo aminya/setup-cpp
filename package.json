@@ -42,6 +42,7 @@
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
     "semver": "7.3.7",
     "setup-python": "github:actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a",
+    "time-delta": "^1.0.0",
     "untildify": "^4.0.0",
     "which": "^2.0.2"
   },

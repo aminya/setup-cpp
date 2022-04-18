@@ -18,12 +18,13 @@ import { setupPython } from "./python/python"
 import mri from "mri"
 import { untildify_user as untildify } from "./utils/path/untildify"
 import { isGitHubCI } from "./utils/env/isci"
+import timeDelta from "time-delta"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
-import { error, success, warning } from "./utils/io/io"
+import { error, info, success, warning } from "./utils/io/io"
 import { setupVcpkg } from "./vcpkg/vcpkg"
 import { join } from "path"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
@@ -124,6 +125,10 @@ export async function main(args: string[]): Promise<number> {
   const successMessages: string[] = []
   const errorMessages: string[] = []
 
+  const timeFormatter = timeDelta.create()
+  let time1: Date
+  let time2: Date
+
   // installing the specified tools
 
   // loop over the tools and run their setup function
@@ -134,7 +139,7 @@ export async function main(args: string[]): Promise<number> {
     // skip if undefined
     if (version !== undefined) {
       // running the setup function for this tool
-      console.time(`took`)
+      time1 = new Date(Date.now())
       startGroup(`Installing ${tool} ${version}`)
       try {
         let installationInfo: InstallationInfo | undefined | void
@@ -156,7 +161,8 @@ export async function main(args: string[]): Promise<number> {
         errorMessages.push(`${tool} failed to install`)
       }
       endGroup()
-      console.timeEnd()
+      time2 = new Date(Date.now())
+      info(`took ${timeFormatter.format(time1, time2) as string}`)
     }
   }
 
@@ -167,7 +173,7 @@ export async function main(args: string[]): Promise<number> {
       const { compiler, version } = getCompilerInfo(maybeCompiler)
 
       // install the compiler. We allow some aliases for the compiler name
-      console.time(`took`)
+      time1 = new Date(Date.now())
       startGroup(`Installing ${compiler} ${version ?? ""}`)
       switch (compiler) {
         case "llvm":
@@ -209,13 +215,13 @@ export async function main(args: string[]): Promise<number> {
         }
       }
       endGroup()
-      console.timeEnd()
+      time2 = new Date(Date.now())
+      info(`took ${timeFormatter.format(time1, time2) as string}`)
     }
   } catch (e) {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
     endGroup()
-    console.timeEnd()
   }
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
