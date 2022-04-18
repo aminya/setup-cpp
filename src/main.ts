@@ -173,7 +173,7 @@ export async function main(args: string[]): Promise<number> {
       }
       endGroup()
       time2 = Date.now()
-      info(`took ${timeFormatter.format(time1, time2)}`)
+      info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
     }
   }
 
@@ -227,14 +227,14 @@ export async function main(args: string[]): Promise<number> {
       }
       endGroup()
       time2 = Date.now()
-      info(`took ${timeFormatter.format(time1, time2)}`)
+      info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
     }
   } catch (e) {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
     endGroup()
     time2 = Date.now()
-    info(`took ${timeFormatter.format(time1, time2)}`)
+    info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
   }
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
