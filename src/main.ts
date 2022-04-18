@@ -18,7 +18,10 @@ import { setupPython } from "./python/python"
 import mri from "mri"
 import { untildify_user as untildify } from "./utils/path/untildify"
 import { isGitHubCI } from "./utils/env/isci"
-import timeDelta from "time-delta"
+import * as timeDelta from "time-delta"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import enLocale from "time-delta/locales/en"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
@@ -126,6 +129,7 @@ export async function main(args: string[]): Promise<number> {
   const errorMessages: string[] = []
 
   const timeFormatter = timeDelta.create()
+  timeDelta.addLocale(enLocale as timeDelta.LocaleData)
   let time1: Date
   let time2: Date
 
