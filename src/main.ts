@@ -168,12 +168,12 @@ export async function main(args: string[]): Promise<number> {
 
   // installing the specified compiler
   const maybeCompiler = opts.compiler
+  time1 = new Date(Date.now())
   try {
     if (maybeCompiler !== undefined) {
       const { compiler, version } = getCompilerInfo(maybeCompiler)
 
       // install the compiler. We allow some aliases for the compiler name
-      time1 = new Date(Date.now())
       startGroup(`Installing ${compiler} ${version ?? ""}`)
       switch (compiler) {
         case "llvm":
@@ -222,6 +222,8 @@ export async function main(args: string[]): Promise<number> {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
     endGroup()
+    time2 = new Date(Date.now())
+    info(`took ${timeFormatter.format(time1, time2) as string}`)
   }
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
