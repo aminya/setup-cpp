@@ -326,15 +326,15 @@ function maybeGetInput(key: string) {
 }
 
 function getSuccessMessage(tool: string, installationInfo: InstallationInfo | undefined | void) {
-  let msg = `${tool} was successfully installed`
+  let msg = `✅ ${tool} was installed successfully:`
   if (installationInfo === undefined) {
     return msg
   }
   if ("installDir" in installationInfo) {
-    msg += `\nThe installation directory is ${installationInfo.installDir}`
+    msg += `\n- The installation directory is ${installationInfo.installDir}`
   }
   if (installationInfo.binDir !== "") {
-    msg += `\nThe binary directory is ${installationInfo.binDir}`
+    msg += `\n- The binary directory is ${installationInfo.binDir}`
   }
   return msg
 }
