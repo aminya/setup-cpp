@@ -21,7 +21,7 @@ import { isGitHubCI } from "./utils/env/isci"
 import * as timeDelta from "time-delta"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import enLocale from "time-delta/locales/en"
+import enLocale from "time-delta/locales/en.js"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
@@ -129,9 +129,9 @@ export async function main(args: string[]): Promise<number> {
   const errorMessages: string[] = []
 
   const timeFormatter = timeDelta.create()
-  timeDelta.addLocale(enLocale as timeDelta.LocaleData)
-  let time1: Date
-  let time2: Date
+  timeDelta.addLocale(enLocale as timeDelta.Locale)
+  let time1: number
+  let time2: number
 
   // installing the specified tools
 
@@ -143,7 +143,7 @@ export async function main(args: string[]): Promise<number> {
     // skip if undefined
     if (version !== undefined) {
       // running the setup function for this tool
-      time1 = new Date(Date.now())
+      time1 = Date.now()
       startGroup(`Installing ${tool} ${version}`)
       try {
         let installationInfo: InstallationInfo | undefined | void
@@ -165,14 +165,14 @@ export async function main(args: string[]): Promise<number> {
         errorMessages.push(`${tool} failed to install`)
       }
       endGroup()
-      time2 = new Date(Date.now())
-      info(`took ${timeFormatter.format(time1, time2) as string}`)
+      time2 = Date.now()
+      info(`took ${timeFormatter.format(time1, time2)}`)
     }
   }
 
   // installing the specified compiler
   const maybeCompiler = opts.compiler
-  time1 = new Date(Date.now())
+  time1 = Date.now()
   try {
     if (maybeCompiler !== undefined) {
       const { compiler, version } = getCompilerInfo(maybeCompiler)
@@ -219,15 +219,15 @@ export async function main(args: string[]): Promise<number> {
         }
       }
       endGroup()
-      time2 = new Date(Date.now())
-      info(`took ${timeFormatter.format(time1, time2) as string}`)
+      time2 = Date.now()
+      info(`took ${timeFormatter.format(time1, time2)}`)
     }
   } catch (e) {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
     endGroup()
-    time2 = new Date(Date.now())
-    info(`took ${timeFormatter.format(time1, time2) as string}`)
+    time2 = Date.now()
+    info(`took ${timeFormatter.format(time1, time2)}`)
   }
 
   if (successMessages.length === 0 && errorMessages.length === 0) {

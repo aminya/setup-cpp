@@ -37,7 +37,7 @@ specifiers:
   setup-python: github:actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a
   shx: 0.3.4
   terser-config-atomic: ^0.1.1
-  time-delta: ^1.0.0
+  time-delta: github:aminya/time-delta#a6f84237aa249d246488d06439acbe0e6e364fd5
   ts-jest: ^27.1.4
   typescript: ^4.6.3
   untildify: ^4.0.0
@@ -53,7 +53,7 @@ dependencies:
   msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
   semver: 7.3.7
   setup-python: github.com/actions/setup-python/7f80679172b057fc5e90d70d197929d454754a5a
-  time-delta: 1.0.0
+  time-delta: github.com/aminya/time-delta/a6f84237aa249d246488d06439acbe0e6e364fd5
   untildify: 4.0.0
   which: 2.0.2
 
@@ -7680,14 +7680,6 @@ packages:
     resolution: {integrity: sha512-8hmiGIJMDlwjg7dlJ4yKGLK8EsYqKgPWbG3b4wjJddKNwc7N7Dpn08Df4szr/sZdMVeOstrdYSsqzX6BYbcB+w==}
     dev: true
 
-  /time-delta/1.0.0:
-    resolution: {integrity: sha512-9Njh4IxFsKileZFMTQ01ci1Mt7HlfkkgGSNSsvo2psvSqUedqSDdxS18gI7C9kSjeJ8FSkD4ekA2w5bOZCnu7g==}
-    engines: {node: '>=12'}
-    dependencies:
-      is-node: 1.0.2
-      numerous: 1.0.3
-    dev: false
-
   /timsort/0.3.0:
     resolution: {integrity: sha1-QFQRqOfmM5/mTbmiNN4R3DHgK9Q=}
     dev: true
@@ -8267,3 +8259,13 @@ packages:
       is-plain-obj: 2.1.0
       sort-object-keys: 1.1.3
     dev: true
+
+  github.com/aminya/time-delta/a6f84237aa249d246488d06439acbe0e6e364fd5:
+    resolution: {tarball: https://codeload.github.com/aminya/time-delta/tar.gz/a6f84237aa249d246488d06439acbe0e6e364fd5}
+    name: time-delta
+    version: 1.0.0
+    engines: {node: '>=12'}
+    dependencies:
+      is-node: 1.0.2
+      numerous: 1.0.3
+    dev: false
