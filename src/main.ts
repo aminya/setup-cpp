@@ -18,12 +18,22 @@ import { setupPython } from "./python/python"
 import mri from "mri"
 import { untildify_user as untildify } from "./utils/path/untildify"
 import { isGitHubCI } from "./utils/env/isci"
+import * as timeDelta from "time-delta"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import timeDeltaLocale from "time-delta/locales/en.js"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import * as numerous from "numerous"
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import numerousLocale from "numerous/locales/en.js"
 
 import semverValid from "semver/functions/valid"
 import { getVersion } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
-import { error, success, warning } from "./utils/io/io"
+import { error, info, success, warning } from "./utils/io/io"
 import { setupVcpkg } from "./vcpkg/vcpkg"
 import { join } from "path"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
@@ -124,6 +134,12 @@ export async function main(args: string[]): Promise<number> {
   const successMessages: string[] = []
   const errorMessages: string[] = []
 
+  const timeFormatter = timeDelta.create({ autoloadLocales: true })
+  timeDelta.addLocale(timeDeltaLocale as timeDelta.Locale)
+  numerous.addLocale(numerousLocale)
+  let time1: number
+  let time2: number
+
   // installing the specified tools
 
   // loop over the tools and run their setup function
@@ -134,6 +150,7 @@ export async function main(args: string[]): Promise<number> {
     // skip if undefined
     if (version !== undefined) {
       // running the setup function for this tool
+      time1 = Date.now()
       startGroup(`Installing ${tool} ${version}`)
       try {
         let installationInfo: InstallationInfo | undefined | void
@@ -155,11 +172,14 @@ export async function main(args: string[]): Promise<number> {
         errorMessages.push(`${tool} failed to install`)
       }
       endGroup()
+      time2 = Date.now()
+      info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
     }
   }
 
   // installing the specified compiler
   const maybeCompiler = opts.compiler
+  time1 = Date.now()
   try {
     if (maybeCompiler !== undefined) {
       const { compiler, version } = getCompilerInfo(maybeCompiler)
@@ -206,11 +226,15 @@ export async function main(args: string[]): Promise<number> {
         }
       }
       endGroup()
+      time2 = Date.now()
+      info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
     }
   } catch (e) {
     error(e as string | Error)
     errorMessages.push(`Failed to install the ${maybeCompiler}`)
     endGroup()
+    time2 = Date.now()
+    info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
   }
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
@@ -321,15 +345,15 @@ function maybeGetInput(key: string) {
 }
 
 function getSuccessMessage(tool: string, installationInfo: InstallationInfo | undefined | void) {
-  let msg = `${tool} was successfully installed`
+  let msg = `✅ ${tool} was installed successfully:`
   if (installationInfo === undefined) {
     return msg
   }
   if ("installDir" in installationInfo) {
-    msg += `\nThe installation directory is ${installationInfo.installDir}`
+    msg += `\n- The installation directory is ${installationInfo.installDir}`
   }
   if (installationInfo.binDir !== "") {
-    msg += `\nThe binary directory is ${installationInfo.binDir}`
+    msg += `\n- The binary directory is ${installationInfo.binDir}`
   }
   return msg
 }
