@@ -52,13 +52,13 @@ Tip: You can automate downloading using `wget`, `curl`, or other similar tools.
 
 ### Executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.12.0), and run it with the available options.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.13.0), and run it with the available options.
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```ps1
 # windows example (open shell as admin)
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.12.0/setup_cpp_windows.exe"
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp_windows.exe"
 ./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
@@ -66,7 +66,7 @@ RefreshEnv.cmd # activate cpp environment variables
 
 ```ps1
 # linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.12.0/setup_cpp_linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp_linux"
 chmod +x setup_cpp_linux
 sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -75,7 +75,7 @@ source ~/.cpprc # activate cpp environment variables
 
 ```ps1
 # mac example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.12.0/setup_cpp_mac"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp_mac"
 chmod +x setup_cpp_mac
 sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -90,7 +90,7 @@ NOTE: On Unix systems, you will not need `sudo` if you are already a root user (
 
 ### With Nodejs
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.12.0/setup_cpp.js), and run it with the available options.
+Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp.js), and run it with the available options.
 
 On Windows:
 
@@ -98,7 +98,7 @@ Open the shell as admin, download via `curl`, then install
 
 ```ps1
 # open shell as admin
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.12.0/setup_cpp.js"
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
@@ -107,7 +107,7 @@ RefreshEnv.cmd # activate cpp environment variables
 On Linux or Mac:
 
 ```ps1
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.12.0/setup_cpp.js"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp.js"
 sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 source ~/.cpprc # activate cpp environment variables
@@ -185,7 +185,7 @@ FROM ubuntu:devel
 WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends wget
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.12.0/setup_cpp_linux"
+RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 
 # install llvm, cmake, ninja, and ccache
@@ -264,7 +264,7 @@ stages:
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
 
 .setup_cpp: &setup_cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.12.0/setup_cpp_linux"
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.13.0/setup_cpp_linux"
   chmod +x setup_cpp_linux
   ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
   source ~/.cpprc
