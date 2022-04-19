@@ -45,7 +45,7 @@ export function addPath(path: string) {
   }
 }
 
-const cpprc_path = untildify(".cpprc")
+export const cpprc_path = untildify(".cpprc")
 
 function addEnvSystem(name: string, valGiven: string | undefined) {
   const val = valGiven ?? ""
@@ -96,7 +96,7 @@ function addPathSystem(path: string) {
 let setupCppInProfile_called = false
 
 /// handles adding conditions to source .cpprc file from .bashrc and .profile
-function setupCppInProfile() {
+export function setupCppInProfile() {
   if (setupCppInProfile_called) {
     return
   }
