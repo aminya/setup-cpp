@@ -1,6 +1,6 @@
 import { addPath, addEnv } from "../utils/env/addEnv"
 import { existsSync } from "fs"
-import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import semverMajor from "semver/functions/major"
@@ -96,9 +96,19 @@ async function activateGcc(version: string, binDir: string) {
     if (majorVersion >= 5) {
       addEnv("CC", `${binDir}/gcc-${majorVersion}`)
       addEnv("CXX", `${binDir}/g++-${majorVersion}`)
+
+      if (process.platform === "linux") {
+        await updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
+        await updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
+      }
     } else {
       addEnv("CC", `${binDir}/gcc-${version}`)
       addEnv("CXX", `${binDir}/g++-${version}`)
+
+      if (process.platform === "linux") {
+        await updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
+        await updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
+      }
     }
   }
 
