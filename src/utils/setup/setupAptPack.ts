@@ -74,12 +74,12 @@ export async function setupAptPack(
 
 export function updateAptAlternatives(name: string, path: string) {
   if (isGitHubCI()) {
-    return execSudo("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "10"])
+    return execSudo("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
   } else {
     setupCppInProfile()
     return appendFileSync(
       cpprc_path,
-      `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 10; fi\n`
+      `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 40; fi\n`
     )
   }
 }
