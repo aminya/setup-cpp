@@ -28,7 +28,7 @@
     "test.cspell": "cspell lint --no-progress --show-suggestions",
     "test.format": "prettier . --check",
     "test.lint": "eslint .",
-    "test.tsc": "tsc --noEmit",
+    "test.tsc": "tsc --noEmit | loose-ts-check",
     "test.unit": "jest --runInBand"
   },
   "prettier": "prettier-config-atomic",
@@ -61,6 +61,7 @@
     "eslint": "^8.13.0",
     "eslint-config-atomic": "^1.17.1",
     "jest": "^27.5.1",
+    "loose-ts-check": "^1.2.0",
     "npm-check-updates": "^12.5.9",
     "npm-run-all2": "^5.0.2",
     "parcel": "^2.4.1",

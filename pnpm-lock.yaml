@@ -27,6 +27,7 @@ specifiers:
   eslint-config-atomic: ^1.17.1
   execa: ^5.1.1
   jest: ^27.5.1
+  loose-ts-check: ^1.2.0
   mri: ^1.2.0
   msvc-dev-cmd: github:aminya/msvc-dev-cmd#9f672c1
   npm-check-updates: ^12.5.9
@@ -36,7 +37,7 @@ specifiers:
   prettier: 2.6.2
   prettier-config-atomic: ^3.0.9
   semver: 7.3.7
-  setup-python: github:actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a
+  setup-python: github:actions/setup-python#v3.1.2
   shx: 0.3.4
   terser-config-atomic: ^0.1.1
   time-delta: github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e
@@ -55,7 +56,7 @@ dependencies:
   msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
   numerous: 1.0.3
   semver: 7.3.7
-  setup-python: github.com/actions/setup-python/7f80679172b057fc5e90d70d197929d454754a5a
+  setup-python: github.com/actions/setup-python/98f2ad02fd48d057ee3b4d4f66525b231c3e52b6
   time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
   untildify: 4.0.0
   which: 2.0.2
@@ -74,6 +75,7 @@ devDependencies:
   eslint: 8.13.0
   eslint-config-atomic: 1.17.1
   jest: 27.5.1
+  loose-ts-check: 1.2.0
   npm-check-updates: 12.5.9
   npm-run-all2: 5.0.2
   parcel: 2.4.1
@@ -86,8 +88,8 @@ devDependencies:
 
 packages:
 
-  /@actions/cache/1.0.11:
-    resolution: {integrity: sha512-L+VCF1JpFePAzxkYtpwYDWnd0WzSU1DoNPE2cuINKpEie27ONH0Cpqt40cG8NiJW4zbZLN+kNkEDo3F2MkUuRw==}
+  /@actions/cache/2.0.2:
+    resolution: {integrity: sha512-K1DCaW/OtHj5mV7hI7HEXiceX3rM4Nc0iG2hfYsrkEy6GiOeqlCC/LyICrBZIRDM6+vSrS12tg1ORl4hghomBA==}
     dependencies:
       '@actions/core': 1.6.0
       '@actions/exec': 1.1.1
@@ -5778,6 +5780,14 @@ packages:
       js-tokens: 4.0.0
     dev: true
 
+  /loose-ts-check/1.2.0:
+    resolution: {integrity: sha512-RnVczoE60wOWBkgjjPVieeUknHftgeiyTnjxbwRBF1RRqdUGB42f4yUjJ0KNlBRLRQNnGZwEl+aM/YijcWJtTA==}
+    hasBin: true
+    dependencies:
+      chalk: 4.1.2
+      yargs: 16.2.0
+    dev: true
+
   /lowercase-keys/1.0.1:
     resolution: {integrity: sha512-G2Lj61tXDnVFFOi8VZds+SoQjtQC3dgokKdDG2mTm1tx4m50NUHBOZSBwQQHyy0V12A0JTG4icfZQH+xPyh8VA==}
     engines: {node: '>=0.10.0'}
@@ -8219,12 +8229,12 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
-  github.com/actions/setup-python/7f80679172b057fc5e90d70d197929d454754a5a:
-    resolution: {tarball: https://codeload.github.com/actions/setup-python/tar.gz/7f80679172b057fc5e90d70d197929d454754a5a}
+  github.com/actions/setup-python/98f2ad02fd48d057ee3b4d4f66525b231c3e52b6:
+    resolution: {tarball: https://codeload.github.com/actions/setup-python/tar.gz/98f2ad02fd48d057ee3b4d4f66525b231c3e52b6}
     name: setup-python
-    version: 2.2.2
+    version: 3.1.1
     dependencies:
-      '@actions/cache': 1.0.11
+      '@actions/cache': 2.0.2
       '@actions/core': 1.6.0
       '@actions/exec': 1.1.1
       '@actions/glob': 0.2.1
