@@ -68,3 +68,7 @@ export async function setupAptPack(
 
   return { binDir: "/usr/bin/" }
 }
+
+export function updateAptAlternatives(name: string, path: string) {
+  return execSudo("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "10"])
+}
