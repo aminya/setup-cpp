@@ -5,17 +5,9 @@ import { info, warning } from "../utils/io/io"
 import * as core from "@actions/core"
 import path from "path"
 import { isGitHubCI } from "../utils/env/isci"
-import { isCacheFeatureAvailable } from "setup-python/src/utils"
-import { getCacheDistributor } from "setup-python/src/cache-distributions/cache-factory"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy-")
-}
-
-async function cacheDependencies(cache: string, pythonVersion: string) {
-  const cacheDependencyPath = undefined // core.getInput("cache-dependency-path") || undefined
-  const cacheDistributor = getCacheDistributor(cache, pythonVersion, cacheDependencyPath)
-  await cacheDistributor.restoreCache()
 }
 
 export async function setupActionsPython(version: string, _setupDir: string, arch: string) {
@@ -41,9 +33,9 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
       }
 
       const cache = "pip" // core.getInput("cache") // package manager used for caching
-      if (isCacheFeatureAvailable()) {
-        await cacheDependencies(cache, pythonVersion)
-      }
+
+      const { cacheDependencies } = await import("./cache")
+      await cacheDependencies(cache, pythonVersion)
     }
   } catch (err) {
     core.setFailed((err as Error).message)
