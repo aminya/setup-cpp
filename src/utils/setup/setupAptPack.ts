@@ -3,6 +3,9 @@ import { InstallationInfo } from "./setupBin"
 import { execSudo } from "../exec/sudo"
 import { info } from "@actions/core"
 import { warning } from "../io/io"
+import { isGitHubCI } from "../env/isci"
+import { cpprc_path, setupCppInProfile } from "../env/addEnv"
+import { appendFileSync } from "fs"
 
 let didUpdate: boolean = false
 let didInit: boolean = false
@@ -67,4 +70,16 @@ export async function setupAptPack(
   }
 
   return { binDir: "/usr/bin/" }
+}
+
+export function updateAptAlternatives(name: string, path: string) {
+  if (isGitHubCI()) {
+    return execSudo("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "10"])
+  } else {
+    setupCppInProfile()
+    return appendFileSync(
+      cpprc_path,
+      `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 10; fi\n`
+    )
+  }
 }

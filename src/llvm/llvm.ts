@@ -9,7 +9,7 @@ import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addBinExtension } from "../utils/extension/extension"
 import { addEnv } from "../utils/env/addEnv"
 import { info, setOutput } from "@actions/core"
-import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { warning } from "../utils/io/io"
 import { existsSync } from "fs"
 import { isGitHubCI } from "../utils/env/isci"
@@ -306,6 +306,16 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   addEnv("LIBRARY_PATH", `${directory}/lib`)
 
   await setupMacOSSDK()
+
+  if (process.platform === "linux") {
+    await updateAptAlternatives("cc", `${directory}/bin/clang`)
+    await updateAptAlternatives("cxx", `${directory}/bin/clang++`)
+    await updateAptAlternatives("clang", `${directory}/bin/clang`)
+    await updateAptAlternatives("clang++", `${directory}/bin/clang++`)
+    await updateAptAlternatives("lld", `${directory}/bin/lld`)
+    await updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`)
+    await updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
+  }
 
   if (isGitHubCI()) {
     addLLVMLoggingMatcher()
