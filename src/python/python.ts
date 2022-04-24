@@ -6,14 +6,13 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isGitHubCI } from "../utils/env/isci"
 import { warning } from "@actions/core"
 
-export function setupPython(version: string, setupDir: string, arch: string) {
+export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
     // TODO parse version
     return setupPythonViaSystem(version, setupDir, arch)
   }
   try {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const { setupActionsPython } = require("./actions_python") as typeof import("./actions_python")
+    const { setupActionsPython } = await import("./actions_python")
     return setupActionsPython(version, setupDir, arch)
   } catch (err) {
     warning(err as Error)

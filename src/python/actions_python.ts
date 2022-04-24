@@ -5,6 +5,7 @@ import { info, warning } from "../utils/io/io"
 import { debug } from "@actions/core"
 import path from "path"
 import { isGitHubCI } from "../utils/env/isci"
+import { cacheDependencies } from "./cache"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy-")
@@ -31,7 +32,6 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
 
     const cache = "pip" // core.getInput("cache") // package manager used for caching
 
-    const { cacheDependencies } = await import("./cache")
     await cacheDependencies(cache, pythonVersion)
   }
 
