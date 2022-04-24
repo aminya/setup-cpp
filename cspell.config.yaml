@@ -8,60 +8,61 @@ ignorePaths:
   - .git/
   - dist/
 words:
-  - "buildtools"
-  - "ccache"
-  - "cmake"
-  - "CPATH"
-  - "Cppcheck"
-  - "CPPFLAGS"
-  - "cpprc"
-  - "dyld"
-  - "eabi"
-  - "execa"
-  - "gcovr"
-  - "Graphviz"
-  - "isci"
-  - "LDFLAGS"
-  - "msbuild"
-  - "msvc"
-  - "msys"
-  - "multilib"
-  - "nothrow"
-  - "Opencppcoverage"
-  - "OSSDK"
-  - "setx"
-  - "untildify"
-  - "vcpkg"
-  - "visualc"
-  - "visualcpp"
-  - pnpm
-  - Yahyaabadi
-  - vcvarsall
-  - kcov
-  - choco
-  - vsversion
-  - pwsh
-  - pypy
-  - ghes
+  - aarch
+  - aminya
   - applellvm
-  - xcrun
+  - buildtools
+  - caxa
+  - ccache
+  - choco
+  - cmake
+  - CPATH
+  - Cppcheck
+  - CPPFLAGS
+  - cpprc
+  - Cpython
+  - deps
+  - devel
+  - dyld
+  - eabi
+  - execa
+  - gcovr
+  - ghes
+  - Graphviz
+  - isci
+  - kcov
+  - LDFLAGS
+  - libbinutils
+  - libdw
   - libstdc
   - libtinfo
-  - libdw
-  - npmrc
-  - setupcpp
-  - aarch
-  - devel
-  - aminya
-  - caxa
-  - libbinutils
-  - tsbuildinfo
-  - deps
+  - msbuild
+  - msvc
+  - msys
+  - multilib
   - mxschmitt
+  - nothrow
+  - npmrc
+  - Opencppcoverage
+  - OSSDK
+  - pnpm
+  - pwsh
+  - pypy
+  - setupcpp
+  - setx
   - terserrc
+  - tsbuildinfo
+  - untildify
+  - vcpkg
+  - vcvarsall
+  - visualc
+  - visualcpp
+  - vsversion
+  - xcrun
+  - Yahyaabadi
 ignoreWords: []
 import: []
 dictionaryDefinitions: []
 dictionaries: []
-language: "en, en-GB"
+language: en, en-GB
 allowCompoundWords: true

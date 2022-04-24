@@ -5,7 +5,7 @@ import { info, warning } from "../utils/io/io"
 import { debug } from "@actions/core"
 import path from "path"
 import { isGitHubCI } from "../utils/env/isci"
-import { cacheDependencies } from "./cache"
+import { cacheDependencies } from "./actions_cache"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy-")
