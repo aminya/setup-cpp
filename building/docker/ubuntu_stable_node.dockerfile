@@ -1,10 +1,10 @@
-FROM ubuntu:latest
+FROM ubuntu:20.04
 
 # set time-zone
 ENV TZ=Canada/Pacific
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-# The nodejs that ships on ubuntu:latest servers is too old.
+# The nodejs that ships on ubuntu:20.04 servers is too old.
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends curl gnupg ca-certificates
