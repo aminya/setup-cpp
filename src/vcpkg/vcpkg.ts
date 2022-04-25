@@ -28,6 +28,12 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
       warning(`Vcpkg folder already exists at ${setupDir}`)
     }
 
+    // allow read/write for everyone in setupDir. vcpkg requires this so it can install things without sudo
+    if (process.platform === "linux" || process.platform === "darwin") {
+      // https://chmodcommand.com/chmod-666/
+      execa.sync("chmod", ["-R", "666", setupDir], { cwd: setupDir, stdio: "inherit" })
+    }
+
     execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
     addPath(setupDir)
     // eslint-disable-next-line require-atomic-updates
