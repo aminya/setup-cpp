@@ -15,4 +15,8 @@ const compress =
 module.exports = {
   ...terserConfig,
   compress,
+  format: {
+    ...terserConfig.format,
+    comments: false,
+  },
 }
