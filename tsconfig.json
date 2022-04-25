@@ -16,7 +16,7 @@
     "inlineSources": true,
     "preserveSymlinks": true,
     "removeComments": false,
-    "skipLibCheck": true, // TODO: time-delta has issues
+    "skipLibCheck": false,
     "lib": ["ES2018", "dom"],
     "target": "ES2018",
     "allowJs": true,

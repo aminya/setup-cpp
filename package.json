@@ -14,10 +14,10 @@
   "scripts": {
     "build": "run-p test.tsc build.parcel copy.matchers",
     "build.docker": "pnpm build && docker build -f ./building/docker/ubuntu_node.dockerfile -t setup_cpp .",
-    "build.parcel": "cross-env NODE_ENV=production parcel build --detailed-report",
+    "build.parcel": "shx rm -rf ./dist/*.js ./dist/*.js.map && cross-env NODE_ENV=production parcel build --detailed-report",
     "bump": "ncu -u -x execa && pnpm update",
     "clean": "shx rm -rf .parcel-cache dist exe",
-    "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/ && shx cp ./src/msvc/msvc_matcher.json ./dist && shx cp ./src/python/python_matcher.json ./dist/ && shx cp ./src/llvm/llvm_matcher.json ./dist/ ",
+    "copy.matchers": "shx rm -rf ./dist/*.json && shx cp ./src/gcc/gcc_matcher.json ./dist/ && shx cp ./src/msvc/msvc_matcher.json ./dist && shx cp ./src/python/python_matcher.json ./dist/ && shx cp ./src/llvm/llvm_matcher.json ./dist/ ",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "format": "prettier --write .",
     "lint": "eslint . --fix",
@@ -28,7 +28,7 @@
     "test.cspell": "cspell lint --no-progress --show-suggestions",
     "test.format": "prettier . --check",
     "test.lint": "eslint .",
-    "test.tsc": "tsc --noEmit",
+    "test.tsc": "tsc --noEmit | loose-ts-check",
     "test.unit": "jest --runInBand"
   },
   "prettier": "prettier-config-atomic",
@@ -42,7 +42,7 @@
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
     "numerous": "1.0.3",
     "semver": "7.3.7",
-    "setup-python": "github:actions/setup-python#7f80679172b057fc5e90d70d197929d454754a5a",
+    "setup-python": "github:actions/setup-python#v3.1.2",
     "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",
     "untildify": "^4.0.0",
     "which": "^2.0.2"
@@ -61,6 +61,7 @@
     "eslint": "^8.13.0",
     "eslint-config-atomic": "^1.17.1",
     "jest": "^27.5.1",
+    "loose-ts-check": "^1.2.0",
     "npm-check-updates": "^12.5.9",
     "npm-run-all2": "^5.0.2",
     "parcel": "^2.4.1",
