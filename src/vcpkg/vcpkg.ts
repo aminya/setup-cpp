@@ -3,6 +3,8 @@ import execa from "execa"
 import { existsSync } from "fs"
 import { dirname, join } from "path"
 import which from "which"
+import { isRoot } from "../utils/env/sudo"
+import { execSudo } from "../utils/exec/sudo"
 import { addShellExtension, addShellHere } from "../utils/extension/extension"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { InstallationInfo } from "../utils/setup/setupBin"
@@ -28,13 +30,17 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
       warning(`Vcpkg folder already exists at ${setupDir}`)
     }
 
-    // allow read/write for everyone in setupDir. vcpkg requires this so it can install things without sudo
-    if (process.platform === "linux" || process.platform === "darwin") {
-      // https://chmodcommand.com/chmod-666/
-      execa.sync("chmod", ["-R", "666", setupDir], { cwd: setupDir, stdio: "inherit" })
+    execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
+
+    // change the owner to the SUDO_USER in setupDir. vcpkg requires this so it can install things without sudo
+    if (
+      (process.platform === "linux" || process.platform === "darwin") &&
+      isRoot() &&
+      process.env.SUDO_USER !== undefined
+    ) {
+      await execSudo("chown", ["-R", process.env.SUDO_USER, setupDir], setupDir)
     }
 
-    execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
     addPath(setupDir)
     // eslint-disable-next-line require-atomic-updates
     hasVCPKG = true
