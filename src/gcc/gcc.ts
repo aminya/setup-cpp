@@ -100,6 +100,8 @@ async function activateGcc(version: string, binDir: string) {
       if (process.platform === "linux") {
         await updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
         await updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
+        await updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`)
+        await updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
       }
     } else {
       addEnv("CC", `${binDir}/gcc-${version}`)
@@ -108,6 +110,8 @@ async function activateGcc(version: string, binDir: string) {
       if (process.platform === "linux") {
         await updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
         await updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
+        await updateAptAlternatives("gcc", `${binDir}/gcc-${version}`)
+        await updateAptAlternatives("g++", `${binDir}/g++-${version}`)
       }
     }
   }
