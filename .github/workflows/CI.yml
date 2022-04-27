@@ -127,6 +127,6 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./building/docker/${{ matrix.container }} -t setup_cpp .
+          docker build -f ./dev/docker/${{ matrix.container }} -t setup_cpp .
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true

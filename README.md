@@ -197,12 +197,12 @@ RUN source ~/.cpprc
 ENTRYPOINT [ "/bin/sh" ]
 ```
 
-See [this folder](https://github.com/aminya/setup-cpp/tree/master/building/docker), for some dockerfile examples.
+See [this folder](https://github.com/aminya/setup-cpp/tree/master/dev/docker), for some dockerfile examples.
 
 If you want to build the ones included, then run:
 
 ```ps1
-docker build -f ./building/docker/ubuntu.dockerfile -t setup_cpp .
+docker build -f ./dev/docker/ubuntu.dockerfile -t setup_cpp .
 ```
 
 Where you should use the path to the dockerfile after `-f`.
@@ -230,7 +230,7 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./building/docker/debian.dockerfile -t setup_cpp .
+          docker build -f ./dev/docker/debian.dockerfile -t setup_cpp .
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 ```
