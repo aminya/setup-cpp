@@ -1,7 +1,7 @@
 const DefaultVersions: Record<string, string> = {
-  llvm: "14.0.0", // https://github.com/llvm/llvm-project/releases
-  clangtidy: "14.0.0",
-  clangformat: "14.0.0",
+  llvm: "13.0.0", // https://github.com/llvm/llvm-project/releases
+  clangtidy: "13.0.0",
+  clangformat: "13.0.0",
   ninja: "1.10.2", // https://github.com/ninja-build/ninja/releases
   cmake: "3.23.1", // https://github.com/Kitware/CMake/releases
   gcovr: "5.0", // https://pypi.org/project/gcovr/
