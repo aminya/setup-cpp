@@ -202,6 +202,8 @@ See [this folder](https://github.com/aminya/setup-cpp/tree/master/dev/docker), f
 If you want to build the ones included, then run:
 
 ```ps1
+git clone --recurse-submodules https://github.com/aminya/setup-cpp
+cd ./setup-cpp
 docker build -f ./dev/docker/ubuntu.dockerfile -t setup_cpp .
 ```
 

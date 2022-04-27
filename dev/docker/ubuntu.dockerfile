@@ -1,4 +1,5 @@
-FROM ubuntu:devel
+#### Base Image
+FROM ubuntu:devel AS base
 
 # add setup_cpp
 WORKDIR "/"
@@ -8,9 +9,20 @@ RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.
 RUN chmod +x ./setup_cpp_linux
 
 # install llvm, cmake, ninja, and ccache
-RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
 
-# reload the environment
-CMD source ~/.cpprc 
-
+CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/sh" ]
+
+#### Building
+FROM base AS builder
+ADD ./dev/cpp_vcpkg_project /home/app
+WORKDIR /home/app
+RUN make build
+
+### Running environment
+FROM gcr.io/distroless/cc
+# copy the built binaries and their runtime dependencies
+COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
+WORKDIR /home/app/
+ENTRYPOINT ["./my_exe"]
