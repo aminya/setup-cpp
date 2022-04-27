@@ -314,7 +314,12 @@ test_linux_gcc:
 
 # Usage Examples
 
+- [cpp_vcpkg_project project](https://github.com/aminya/cpp_vcpkg_project)
+- [ftxui](https://github.com/ArthurSonzogni/FTXUI)
+- [project_optins](https://github.com/aminya/project_options)
 - [cpp-best-practices starter project](https://github.com/cpp-best-practices/cpp_starter_project)
+- [json2cpp](https://github.com/lefticus/json2cpp)
+- [lefticus/tools](https://github.com/lefticus/tools)
 - [libclang](https://github.com/atilaneves/libclang)
 - [dpp](https://github.com/atilaneves/dpp)
 - [d-tree-sitter](https://github.com/aminya/d-tree-sitter)

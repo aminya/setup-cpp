@@ -27,12 +27,14 @@ words:
   - dyld
   - eabi
   - execa
+  - ftxui
   - gcovr
   - ghes
   - Graphviz
   - isci
   - kcov
   - LDFLAGS
+  - lefticus
   - libbinutils
   - libdw
   - libstdc
