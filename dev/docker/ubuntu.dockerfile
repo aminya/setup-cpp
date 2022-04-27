@@ -5,7 +5,7 @@ FROM ubuntu:devel AS base
 WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends wget
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.13.1/setup_cpp_linux"
+RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.13.2/setup_cpp_linux"
 RUN chmod +x ./setup_cpp_linux
 
 # install llvm, cmake, ninja, and ccache
