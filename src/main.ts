@@ -161,8 +161,11 @@ export async function main(args: string[]): Promise<number> {
           // get the setup function
           const setupFunction = setups[tool]
 
+          // the tool installation directory (for the functions that ue it)
+          const setupDir = join(setupCppDir, ["llvm", "clangformat", "clangtidy"].includes(tool) ? "llvm" : tool)
+
           // eslint-disable-next-line no-await-in-loop
-          installationInfo = await setupFunction(getVersion(tool, version), join(setupCppDir, tool), arch)
+          installationInfo = await setupFunction(getVersion(tool, version), setupDir, arch)
         }
         // preparing a report string
         successMessages.push(getSuccessMessage(tool, installationInfo))
