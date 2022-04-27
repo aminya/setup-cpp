@@ -42,12 +42,12 @@ async function buildKcov(file: string, dest: string) {
     await setupCmake(getVersion("cmake", undefined), join(untildify(""), "cmake"), "")
   }
   if (process.platform === "linux") {
-    await setupAptPack("libdw-dev")
-    await setupAptPack("libcurl4-openssl-dev")
+    setupAptPack("libdw-dev")
+    setupAptPack("libcurl4-openssl-dev")
   }
   await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
   await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
-  await execSudo("cmake", ["--install", "./build"], out)
+  execSudo("cmake", ["--install", "./build"], out)
   return out
 }
 
@@ -55,7 +55,7 @@ export async function setupKcov(version: string, setupDir: string, arch: string)
   switch (process.platform) {
     case "linux": {
       const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
-      await setupAptPack("libbinutils")
+      setupAptPack("libbinutils")
       return installationInfo
     }
     default: {

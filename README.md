@@ -199,7 +199,7 @@ ENTRYPOINT [ "/bin/bash" ]
 FROM base AS builder
 ADD ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
-RUN bash -c 'source ~/.cpprc \ 
+RUN bash -c 'source ~/.cpprc \
     && make build'
 
 ### Running environment

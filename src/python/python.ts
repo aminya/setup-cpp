@@ -21,7 +21,7 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupPythonViaSystem(version: string, setupDir: string, _arch: string) {
+export function setupPythonViaSystem(version: string, setupDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
       if (setupDir) {
@@ -39,8 +39,8 @@ export async function setupPythonViaSystem(version: string, setupDir: string, _a
       return setupBrewPack("python3", version)
     }
     case "linux": {
-      const installInfo = await setupAptPack("python3", version)
-      await setupAptPack("python3-pip")
+      const installInfo = setupAptPack("python3", version)
+      setupAptPack("python3-pip")
       return installInfo
     }
     default: {

@@ -12,16 +12,16 @@ import { InstallationInfo } from "../utils/setup/setupBin"
 let hasVCPKG = false
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupVcpkg(_version: string, setupDir: string, _arch: string): Promise<InstallationInfo> {
+export function setupVcpkg(_version: string, setupDir: string, _arch: string): InstallationInfo {
   if (!hasVCPKG || which.sync("vcpkg", { nothrow: true }) === null) {
     if (process.platform === "linux") {
       // vcpkg download and extraction dependencies
-      await setupAptPack("curl")
-      await setupAptPack("zip")
-      await setupAptPack("unzip")
-      await setupAptPack("tar")
-      await setupAptPack("git")
-      await setupAptPack("pkg-config")
+      setupAptPack("curl")
+      setupAptPack("zip")
+      setupAptPack("unzip")
+      setupAptPack("tar")
+      setupAptPack("git")
+      setupAptPack("pkg-config")
     }
 
     if (!existsSync(join(setupDir, addShellExtension("bootstrap-vcpkg")))) {
@@ -38,7 +38,7 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
       isRoot() &&
       process.env.SUDO_USER !== undefined
     ) {
-      await execSudo("chown", ["-R", process.env.SUDO_USER, setupDir], setupDir)
+      execSudo("chown", ["-R", process.env.SUDO_USER, setupDir], setupDir)
     }
 
     addPath(setupDir)

@@ -42,7 +42,7 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       execa.sync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
     } else if (process.platform === "linux") {
       // ensure that pip is installed on Linux (happens when python is found but pip not installed)
-      await setupAptPack("python3-pip")
+      setupAptPack("python3-pip")
     }
   }
 

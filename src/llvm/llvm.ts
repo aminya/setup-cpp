@@ -268,7 +268,7 @@ async function _setupLLVM(version: string, setupDir: string, arch: string) {
     if (process.platform === "linux") {
       // install llvm build dependencies
       await setupGcc(getVersion("gcc", undefined), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
-      await setupAptPack("libtinfo-dev")
+      setupAptPack("libtinfo-dev")
     }
     // eslint-disable-next-line require-atomic-updates
     didInit = true

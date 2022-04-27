@@ -48,7 +48,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
       } catch (err) {
         info(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
-        installationInfo = await setupAptPack("doxygen", undefined)
+        installationInfo = setupAptPack("doxygen", undefined)
       }
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)
       return installationInfo

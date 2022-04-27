@@ -88,9 +88,9 @@ export async function setupBin(
     if (!didInit) {
       if (process.platform === "linux") {
         // extraction dependencies
-        await setupAptPack("unzip")
-        await setupAptPack("tar")
-        await setupAptPack("xz-utils")
+        setupAptPack("unzip")
+        setupAptPack("tar")
+        setupAptPack("xz-utils")
       }
       // eslint-disable-next-line require-atomic-updates
       didInit = true

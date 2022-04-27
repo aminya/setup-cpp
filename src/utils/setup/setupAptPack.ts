@@ -11,11 +11,11 @@ let didUpdate: boolean = false
 let didInit: boolean = false
 
 /** A function that installs a package using apt */
-export async function setupAptPack(
+export function setupAptPack(
   name: string,
   version?: string,
   repositories: boolean | string[] = true
-): Promise<InstallationInfo> {
+): InstallationInfo {
   info(`Installing ${name} ${version ?? ""} via apt`)
 
   const apt = "apt-get"
@@ -23,7 +23,7 @@ export async function setupAptPack(
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
   if (!didUpdate) {
-    await execSudo(apt, ["update", "-y"])
+    execSudo(apt, ["update", "-y"])
     didUpdate = true
   }
 
@@ -32,7 +32,7 @@ export async function setupAptPack(
     // set time - zone
     // TZ = Canada / Pacific
     // ln - snf / usr / share / zoneinfo / $TZ / etc / localtime && echo $TZ > /etc/timezone
-    await execSudo(apt, [
+    execSudo(apt, [
       "install",
       "--fix-broken",
       "-y",
@@ -42,9 +42,9 @@ export async function setupAptPack(
       "gnupg",
     ])
     try {
-      await execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "3B4FE6ACC0B21F32"])
-      await execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "40976EAF437D05B5"])
-      await execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "1E9377A2BA9EF27F"])
+      execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "3B4FE6ACC0B21F32"])
+      execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "40976EAF437D05B5"])
+      execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "1E9377A2BA9EF27F"])
     } catch (err) {
       warning(`Failed to add keys: ${err}`)
     }
@@ -54,19 +54,19 @@ export async function setupAptPack(
   if (Array.isArray(repositories)) {
     for (const repo of repositories) {
       // eslint-disable-next-line no-await-in-loop
-      await execSudo("add-apt-repository", ["--update", "-y", repo])
+      execSudo("add-apt-repository", ["--update", "-y", repo])
     }
-    await execSudo(apt, ["update", "-y"])
+    execSudo(apt, ["update", "-y"])
   }
 
   if (version !== undefined && version !== "") {
     try {
-      await execSudo(apt, ["install", "--fix-broken", "-y", `${name}=${version}`])
+      execSudo(apt, ["install", "--fix-broken", "-y", `${name}=${version}`])
     } catch {
-      await execSudo(apt, ["install", "--fix-broken", "-y", `${name}-${version}`])
+      execSudo(apt, ["install", "--fix-broken", "-y", `${name}-${version}`])
     }
   } else {
-    await execSudo(apt, ["install", "--fix-broken", "-y", name])
+    execSudo(apt, ["install", "--fix-broken", "-y", name])
   }
 
   return { binDir: "/usr/bin/" }
