@@ -21,6 +21,7 @@ RUN bash -c 'source ~/.cpprc \
     && make build'
 
 ### Running environment
+# use a distroless image or ubuntu:devel if you wish
 FROM gcr.io/distroless/cc
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
