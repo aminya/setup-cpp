@@ -157,11 +157,11 @@ const UBUNTU: { [key: string]: string } = {
   "13.0.0": "-ubuntu-20.04",
   "13.0.1": "-ubuntu-18.04",
   "14.0.0": "-ubuntu-18.04",
-  // "14.0.1": "-ubuntu-18.04",
+  "14.0.1": "-ubuntu-18.04",
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
-const MAX_UBUNTU: string = "14.0.0"
+const MAX_UBUNTU: string = "14.0.1"
 
 /** Gets an LLVM download URL for the Linux (Ubuntu) platform. */
 function getLinuxUrl(versionGiven: string): string {
