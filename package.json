@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "run-p test.tsc build.parcel copy.matchers",
-    "build.docker": "pnpm build && docker build -f ./building/docker/ubuntu_node.dockerfile -t setup_cpp .",
+    "build.docker": "pnpm build && docker build -f ./dev/docker/ubuntu_node.dockerfile -t setup_cpp .",
     "build.parcel": "shx rm -rf ./dist/*.js ./dist/*.js.map && cross-env NODE_ENV=production parcel build --detailed-report",
     "bump": "ncu -u -x execa && pnpm update",
     "clean": "shx rm -rf .parcel-cache dist exe",
@@ -21,7 +21,7 @@
     "dev": "cross-env NODE_ENV=development parcel watch",
     "format": "prettier --write .",
     "lint": "eslint . --fix",
-    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./building/scripts/pack-exe.js",
+    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./dev/scripts/pack-exe.js",
     "prepare": "npm run build",
     "start.docker": "docker run -t setup_cpp .",
     "test": "run-p test.format test.lint  test.cspell test.tsc test.unit",
