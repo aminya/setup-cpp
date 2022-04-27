@@ -1,4 +1,4 @@
 {
   "extends": "eslint-config-atomic",
-  "ignorePatterns": ["dist/", "node_modules/"]
+  "ignorePatterns": ["dist/", "node_modules/", "dev/cpp_vcpkg_project"]
 }
