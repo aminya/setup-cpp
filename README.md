@@ -194,7 +194,7 @@ RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true
 # activate cpp environment variables
 RUN source ~/.cpprc
 
-ENTRYPOINT [ "/bin/sh" ]
+ENTRYPOINT [ "/bin/bash" ]
 ```
 
 See [this folder](https://github.com/aminya/setup-cpp/tree/master/dev/docker), for some dockerfile examples.

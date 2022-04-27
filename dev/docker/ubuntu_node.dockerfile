@@ -11,13 +11,14 @@ WORKDIR "/"
 RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --make true
 
 CMD source ~/.cpprc
-ENTRYPOINT [ "/bin/sh" ]
+ENTRYPOINT [ "/bin/bash" ]
 
 #### Building
 FROM base AS builder
 ADD ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
-RUN make build
+RUN bash -c 'source ~/.cpprc \ 
+    && make build'
 
 ### Running environment
 FROM gcr.io/distroless/cc

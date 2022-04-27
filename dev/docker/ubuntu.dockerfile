@@ -12,13 +12,14 @@ RUN chmod +x ./setup_cpp_linux
 RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
 
 CMD source ~/.cpprc
-ENTRYPOINT [ "/bin/sh" ]
+ENTRYPOINT [ "/bin/bash" ]
 
 #### Building
 FROM base AS builder
 ADD ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
-RUN make build
+RUN bash -c 'source ~/.cpprc \ 
+    && make build'
 
 ### Running environment
 FROM gcr.io/distroless/cc
