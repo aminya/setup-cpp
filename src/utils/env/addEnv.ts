@@ -1,4 +1,4 @@
-import { exportVariable, addPath as ghAddPath, info } from "@actions/core"
+import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/core"
 import { isGitHubCI } from "./isci"
 import { untildify_user as untildify } from "../path/untildify"
 import { appendFileSync, existsSync, readFileSync } from "fs"
@@ -21,7 +21,7 @@ export function addEnv(name: string, val: string | undefined) {
     } catch (err2) {
       error(err2 as Error)
     }
-    error(`Failed to export environment variable ${name}=${val}. You should add it manually.`)
+    setFailed(`Failed to export environment variable ${name}=${val}. You should add it manually.`)
   }
 }
 
@@ -41,7 +41,7 @@ export function addPath(path: string) {
     } catch (err2) {
       error(err2 as Error)
     }
-    error(`Failed to add ${path} to the percistent PATH. You should add it manually.`)
+    setFailed(`Failed to add ${path} to the percistent PATH. You should add it manually.`)
   }
 }
 
