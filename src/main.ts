@@ -1,4 +1,4 @@
-import { getInput, endGroup, startGroup } from "@actions/core"
+import { getInput, endGroup, startGroup, notice } from "@actions/core"
 import { setupBrew } from "./brew/brew"
 import { setupCcache } from "./ccache/ccache"
 import { setupMake } from "./make/make"
@@ -217,7 +217,7 @@ export async function main(args: string[]): Promise<number> {
         }
         case "appleclang":
         case "applellvm": {
-          info("Assuming apple-clang is already installed")
+          notice("Assuming apple-clang is already installed")
           addEnv("CC", "clang")
           addEnv("CXX", "clang++")
           successMessages.push(getSuccessMessage("apple-clang", undefined))
@@ -289,7 +289,7 @@ export function getCompilerInfo(maybeCompiler: string) {
     if (semverValid(maybeVersion) !== null) {
       return { compiler, version: maybeVersion }
     } else {
-      info(`Invalid semver version ${maybeVersion} used for the compiler.`)
+      notice(`Invalid semver version ${maybeVersion} used for the compiler.`)
       return { compiler, version: maybeVersion }
     }
   }

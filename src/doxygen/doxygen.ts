@@ -5,7 +5,7 @@ import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { addBinExtension } from "../utils/extension/extension"
 import { extractTar } from "../utils/setup/extract"
-import { info } from "../utils/io/io"
+import { notice } from "../utils/io/io"
 import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../default_versions"
 
@@ -47,7 +47,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
         installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
       } catch (err) {
-        info(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
+        notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
         installationInfo = setupAptPack("doxygen", undefined)
       }
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)
