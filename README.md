@@ -180,7 +180,7 @@ Here is an example for using setup_cpp to make a builder image that has the Cpp 
 
 ```dockerfile
 #### Base Image
-FROM ubuntu:devel AS base
+FROM ubuntu:22.04 AS base
 
 # add setup_cpp
 WORKDIR "/"
@@ -203,7 +203,7 @@ RUN bash -c 'source ~/.cpprc \
     && make build'
 
 ### Running environment
-# use a distroless image or ubuntu:devel if you wish
+# use a distroless image or ubuntu:22.04 if you wish
 FROM gcr.io/distroless/cc
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
@@ -258,7 +258,7 @@ The following gives an example for setting up a C++ environment inside GitLab pi
 .gitlab-ci.yaml
 
 ```yaml
-image: ubuntu:devel
+image: ubuntu:22.04
 
 stages:
   - test

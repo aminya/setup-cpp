@@ -7,9 +7,8 @@ import semverMajor from "semver/functions/major"
 import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import path from "path"
-import { warning } from "../utils/io/io"
+import { warning, info } from "../utils/io/io"
 import { isGitHubCI } from "../utils/env/isci"
-import { info } from "@actions/core"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGcc(version: string, _setupDir: string, arch: string) {
@@ -37,19 +36,11 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
     }
     case "linux": {
       if (arch === "x64") {
-        setupAptPack("gcc", version, [
-          "deb http://dk.archive.ubuntu.com/ubuntu/ xenial main",
-          "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
-          "ppa:ubuntu-toolchain-r/test",
-        ])
+        setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
         binDir = setupAptPack("g++", version, []).binDir
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
-        setupAptPack("gcc-multilib", version, [
-          "deb http://dk.archive.ubuntu.com/ubuntu/ xenial main",
-          "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
-          "ppa:ubuntu-toolchain-r/test",
-        ])
+        setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
         binDir = setupAptPack("g++-multilib", version, []).binDir
       }
       break
@@ -59,8 +50,6 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
     // case "none": {
     //   if (arch === "arm" || arch === "arm64") {
     //     return setupAptPack("gcc-arm-none-eabi", version, [
-    //       "deb http://dk.archive.ubuntu.com/ubuntu/ xenial main",
-    //       "deb http://dk.archive.ubuntu.com/ubuntu/ xenial universe",
     //       "ppa:ubuntu-toolchain-r/test",
     //     ])
     //   } else {

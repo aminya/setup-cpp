@@ -1,4 +1,4 @@
-import * as core from "@actions/core"
+import { getInput, endGroup, startGroup, notice } from "@actions/core"
 import { setupBrew } from "./brew/brew"
 import { setupCcache } from "./ccache/ccache"
 import { setupMake } from "./make/make"
@@ -40,7 +40,6 @@ import { setupVCVarsall } from "./vcvarsall/vcvarsall"
 import { setupKcov } from "./kcov/kcov"
 import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
-import { endGroup, startGroup } from "@actions/core"
 import { setupGraphviz } from "./graphviz/graphviz"
 
 /** The setup functions */
@@ -218,7 +217,7 @@ export async function main(args: string[]): Promise<number> {
         }
         case "appleclang":
         case "applellvm": {
-          core.info("Assuming apple-clang is already installed")
+          notice("Assuming apple-clang is already installed")
           addEnv("CC", "clang")
           addEnv("CXX", "clang++")
           successMessages.push(getSuccessMessage("apple-clang", undefined))
@@ -249,7 +248,7 @@ export async function main(args: string[]): Promise<number> {
   successMessages.forEach((tool) => success(tool))
   errorMessages.forEach((tool) => error(tool))
 
-  core.info("setup_cpp finished")
+  info("setup_cpp finished")
 
   if (!isGitHubCI()) {
     switch (process.platform) {
@@ -290,7 +289,7 @@ export function getCompilerInfo(maybeCompiler: string) {
     if (semverValid(maybeVersion) !== null) {
       return { compiler, version: maybeVersion }
     } else {
-      core.info(`Invalid semver version ${maybeVersion} used for the compiler.`)
+      notice(`Invalid semver version ${maybeVersion} used for the compiler.`)
       return { compiler, version: maybeVersion }
     }
   }
@@ -298,7 +297,7 @@ export function getCompilerInfo(maybeCompiler: string) {
 }
 
 function printHelp() {
-  core.info(`
+  info(`
 setup_cpp [options]
 setup_cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -340,7 +339,7 @@ All the available tools:
 
 /** Get an object from github actions */
 function maybeGetInput(key: string) {
-  const value = core.getInput(key.toLowerCase())
+  const value = getInput(key.toLowerCase())
   if (value !== "false" && value !== "") {
     return value
   }

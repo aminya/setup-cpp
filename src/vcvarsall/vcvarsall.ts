@@ -1,9 +1,9 @@
-import { info } from "@actions/core"
 import { existsSync } from "fs"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
 import { addEnv } from "../utils/env/addEnv"
+import { info } from "../utils/io/io"
 
 function getArch(arch: string): string {
   switch (arch) {
