@@ -7,9 +7,8 @@ import semverMajor from "semver/functions/major"
 import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import path from "path"
-import { warning } from "../utils/io/io"
+import { warning, info } from "../utils/io/io"
 import { isGitHubCI } from "../utils/env/isci"
-import { info } from "@actions/core"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGcc(version: string, _setupDir: string, arch: string) {

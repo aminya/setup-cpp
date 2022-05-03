@@ -1,10 +1,9 @@
-import * as core from "@actions/core"
 import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isGitHubCI } from "../utils/env/isci"
-import { warning } from "@actions/core"
+import { warning, info } from "../utils/io/io"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
@@ -15,7 +14,7 @@ export async function setupPython(version: string, setupDir: string, arch: strin
     const { setupActionsPython } = await import("./actions_python")
     return setupActionsPython(version, setupDir, arch)
   } catch (err) {
-    warning(err as Error)
+    warning((err as Error).toString())
     return setupPythonViaSystem(version, setupDir, arch)
   }
 }
@@ -50,6 +49,6 @@ export function setupPythonViaSystem(version: string, setupDir: string, _arch: s
 }
 
 function activateWinPython(binDir: string) {
-  core.info(`Add ${binDir} to PATH`)
+  info(`Add ${binDir} to PATH`)
   addPath(binDir)
 }
