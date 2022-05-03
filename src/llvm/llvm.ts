@@ -184,6 +184,7 @@ function getLinuxUrl(versionGiven: string): string {
   } else {
     // default to the maximum version
     ubuntu = UBUNTU_SUFFIX_MAP[MAX_UBUNTU]
+    warning(`Falling back to LLVM version ${ubuntu} for the Ubuntu.`)
   }
 
   const prefix = "clang+llvm-"
