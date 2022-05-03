@@ -122,7 +122,7 @@ const UBUNTU_RC: Map<string, string> = new Map()
  *
  * https://github.com/llvm/llvm-project/releases/tag/llvmorg-14.0.1 or https://releases.llvm.org/14.0.1
  */
-const UBUNTU: { [key: string]: string } = {
+const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
   "3.5.0": "-ubuntu-14.04",
   "3.5.1": "",
   "3.5.2": "-ubuntu-14.04",
@@ -157,11 +157,11 @@ const UBUNTU: { [key: string]: string } = {
   "13.0.0": "-ubuntu-20.04",
   "13.0.1": "-ubuntu-18.04",
   "14.0.0": "-ubuntu-18.04",
-  "14.0.1": "-ubuntu-18.04",
+  // "14.0.1": "-ubuntu-18.04",  // only available for powerpc64le
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
-const MAX_UBUNTU: string = "14.0.1"
+const MAX_UBUNTU: string = "14.0.0"
 
 /** Gets an LLVM download URL for the Linux (Ubuntu) platform. */
 function getLinuxUrl(versionGiven: string): string {
@@ -176,11 +176,11 @@ function getLinuxUrl(versionGiven: string): string {
   // ubuntu-version is specified
   if (version.includes("ubuntu")) {
     ubuntu = version
-  } else if (version !== "" && version in UBUNTU) {
-    ubuntu = UBUNTU[version]
+  } else if (version !== "" && version in UBUNTU_SUFFIX_MAP) {
+    ubuntu = UBUNTU_SUFFIX_MAP[version]
   } else {
     // default to the maximum version
-    ubuntu = UBUNTU[MAX_UBUNTU]
+    ubuntu = UBUNTU_SUFFIX_MAP[MAX_UBUNTU]
   }
 
   const prefix = "clang+llvm-"
