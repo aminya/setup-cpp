@@ -3,12 +3,12 @@ FROM ubuntu:22.04 AS base
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends nodejs
 
-# add setup_cpp.js
+# add setup_cpp.mjs
 ADD "./dist/" "/"
 WORKDIR "/"
 
 # run installation
-RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --make true
+RUN node ./setup_cpp.mjs --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --make true
 
 CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/bash" ]

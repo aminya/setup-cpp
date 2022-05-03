@@ -45,7 +45,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
 function addPythonLoggingMatcher() {
   const matcherPath = path.join(__dirname, "python_matcher.json")
   if (!existsSync(matcherPath)) {
-    return warning("the python_matcher.json file does not exist in the same folder as setup_cpp.js")
+    return warning("the python_matcher.json file does not exist in the same folder as setup_cpp.mjs")
   }
   info(`::add-matcher::${matcherPath}`)
 }

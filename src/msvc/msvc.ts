@@ -73,7 +73,7 @@ export function setupMSVC(
 function addMSVCLoggingMatcher() {
   const matcherPath = path.join(__dirname, "msvc_matcher.json")
   if (!existsSync(matcherPath)) {
-    return warning("the msvc_matcher.json file does not exist in the same folder as setup_cpp.js")
+    return warning("the msvc_matcher.json file does not exist in the same folder as setup_cpp.mjs")
   }
   info(`::add-matcher::${matcherPath}`)
 }

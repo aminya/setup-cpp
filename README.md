@@ -90,7 +90,7 @@ NOTE: On Unix systems, you will not need `sudo` if you are already a root user (
 
 ### With Nodejs
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.13.2/setup_cpp.js), and run it with the available options.
+Download the `setup_cpp.mjs` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.13.2/setup_cpp.mjs), and run it with the available options.
 
 On Windows:
 
@@ -98,8 +98,8 @@ Open the shell as admin, download via `curl`, then install
 
 ```ps1
 # open shell as admin
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.13.2/setup_cpp.js"
-node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.13.2/setup_cpp.mjs"
+node ./setup_cpp.mjs --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
 ```
@@ -107,8 +107,8 @@ RefreshEnv.cmd # activate cpp environment variables
 On Linux or Mac:
 
 ```ps1
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.13.2/setup_cpp.js"
-sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.13.2/setup_cpp.mjs"
+sudo node ./setup_cpp.mjs --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 source ~/.cpprc # activate cpp environment variables
 ```

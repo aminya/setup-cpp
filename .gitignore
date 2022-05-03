@@ -12,7 +12,7 @@ temp-*
 
 # Build directories
 ./dist/
-!./dist/setup_cpp.js
-!./dist/setup_cpp.js.map
+!./dist/setup_cpp.mjs
+!./dist/setup_cpp.mjs.map
 .parcel-cache
 exe

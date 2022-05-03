@@ -78,7 +78,7 @@ inputs:
 
 runs:
   using: "node12"
-  main: "dist/setup_cpp.js"
+  main: "dist/setup_cpp.mjs"
 
 branding:
   icon: "award"
