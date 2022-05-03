@@ -1,4 +1,4 @@
-import { addPath } from "@actions/core"
+import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
