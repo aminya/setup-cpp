@@ -15,7 +15,7 @@
     "build": "shx rm -rf dist/ && shx mkdir ./dist && run-p test.tsc build.parcel copy.matchers",
     "build.docker": "pnpm build && docker build -f ./dev/docker/ubuntu_node.dockerfile -t setup_cpp .",
     "build.parcel": "cross-env NODE_ENV=production parcel build --detailed-report",
-    "bump": "ncu -u -x numerous,jest && pnpm update",
+    "bump": "ncu -u -x numerous,jest && pnpm update && ls-engines --save",
     "clean": "shx rm -rf .parcel-cache dist exe",
     "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/ && shx cp ./src/msvc/msvc_matcher.json ./dist && shx cp ./src/python/python_matcher.json ./dist/ && shx cp ./src/llvm/llvm_matcher.json ./dist/ ",
     "dev": "cross-env NODE_ENV=development parcel watch",
@@ -64,6 +64,7 @@
     "eslint-config-atomic": "^1.17.1",
     "jest": "^27.5.1",
     "loose-ts-check": "^1.2.0",
+    "ls-engines": "^0.6.5",
     "npm-check-updates": "^12.5.11",
     "npm-run-all2": "^5.0.2",
     "parcel": "^2.5.0",
@@ -75,7 +76,7 @@
     "typescript": "^4.6.4"
   },
   "engines": {
-    "node": ">=12.20"
+    "node": "^18 || ^17 || ^16 || ^14.13.1 || ^12.20"
   },
   "keywords": [
     "github-actions",
