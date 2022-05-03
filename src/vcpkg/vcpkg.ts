@@ -1,4 +1,4 @@
-import execa from "execa"
+import * as execa from "execa"
 import { existsSync } from "fs"
 import { dirname, join } from "path"
 import which from "which"
@@ -26,12 +26,19 @@ export function setupVcpkg(_version: string, setupDir: string, _arch: string): I
     }
 
     if (!existsSync(join(setupDir, addShellExtension("bootstrap-vcpkg")))) {
-      execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
+      execa.execaSync("git", ["clone", "https://github.com/microsoft/vcpkg"], {
+        cwd: dirname(setupDir),
+        stdio: "inherit",
+      })
     } else {
       notice(`Vcpkg folder already exists at ${setupDir}. This might mean that ~/vcpkg is restored from the cache.`)
     }
 
-    execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
+    execa.execaSync(addShellExtension(addShellHere("bootstrap-vcpkg")), {
+      cwd: setupDir,
+      shell: true,
+      stdio: "inherit",
+    })
 
     // change the owner to the SUDO_USER in setupDir. vcpkg requires this so it can install things without sudo
     if (

@@ -1,4 +1,4 @@
-import execa from "execa"
+import * as execa from "execa"
 import { mkdirP } from "@actions/io"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
@@ -17,7 +17,7 @@ export async function extractExe(file: string, dest: string) {
     sevenZip = "7z"
   }
 
-  await execa(sevenZip, ["x", file, `-o${dest}`], { stdio: "inherit" })
+  await execa.execa(sevenZip, ["x", file, `-o${dest}`], { stdio: "inherit" })
   return dest
 }
 
@@ -32,7 +32,7 @@ export async function extractTarByExe(file: string, dest: string, flags = ["--st
   // https://github.com/heroku/heroku-slugs/issues/3
 
   try {
-    await execa("tar", ["xf", file, "-C", dest, ...flags], { stdio: "inherit" })
+    await execa.execa("tar", ["xf", file, "-C", dest, ...flags], { stdio: "inherit" })
   } catch (e) {
     if (process.platform === "win32" && (e as Error).message.includes("Can't create '\\\\?\\C:")) {
       warning(`Failed to extract symlink ${file} to ${dest}. Ignoring this symlink.`)

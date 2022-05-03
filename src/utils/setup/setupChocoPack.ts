@@ -3,7 +3,7 @@ import { addPath } from "../env/addEnv"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"
-import execa from "execa"
+import * as execa from "execa"
 import { info } from "@actions/core"
 
 let hasChoco = false
@@ -26,13 +26,13 @@ export function setupChocoPack(name: string, version?: string, args: string[] = 
   env.PATH = PATH
 
   if (version !== undefined && version !== "") {
-    execa.sync("choco", ["install", "-y", name, `--version=${version}`, ...args], {
+    execa.execaSync("choco", ["install", "-y", name, `--version=${version}`, ...args], {
       env,
       extendEnv: false,
       stdio: "inherit",
     })
   } else {
-    execa.sync("choco", ["install", "-y", name, ...args], { env, extendEnv: false, stdio: "inherit" })
+    execa.execaSync("choco", ["install", "-y", name, ...args], { env, extendEnv: false, stdio: "inherit" })
   }
 
   const binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`

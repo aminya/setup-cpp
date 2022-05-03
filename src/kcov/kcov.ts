@@ -1,4 +1,4 @@
-import execa from "execa"
+import * as execa from "execa"
 import { join } from "path"
 import untildify from "untildify"
 import which from "which"
@@ -45,8 +45,8 @@ async function buildKcov(file: string, dest: string) {
     setupAptPack("libdw-dev")
     setupAptPack("libcurl4-openssl-dev")
   }
-  await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
-  await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
+  await execa.execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
+  await execa.execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
   execSudo("cmake", ["--install", "./build"], out)
   return out
 }

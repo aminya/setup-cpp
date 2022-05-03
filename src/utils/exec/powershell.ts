@@ -1,4 +1,4 @@
-import execa from "execa"
+import * as execa from "execa"
 import which from "which"
 
 let powershell: string | undefined
@@ -18,5 +18,5 @@ export function execPowershell(command: string) {
     throw new Error("Could not find powershell")
   }
 
-  execa.sync(powershell, ["-c", command], { stdio: "inherit" })
+  execa.execaSync(powershell, ["-c", command], { stdio: "inherit" })
 }
