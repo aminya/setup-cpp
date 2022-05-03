@@ -1,5 +1,7 @@
 module.exports = {
-  preset: "ts-jest/presets/default-esm",
+  preset: "ts-jest/presets/js-with-ts-esm",
+  extensionsToTreatAsEsm: [".ts"],
+  transformIgnorePatterns: [], // transform everything
   testEnvironment: "node",
   testMatch: ["**/*.test.ts"],
   testPathIgnorePatterns: ["<rootDir>/src/python/setup-python/"],
