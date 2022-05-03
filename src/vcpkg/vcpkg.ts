@@ -1,11 +1,12 @@
-import { addPath, warning } from "@actions/core"
 import execa from "execa"
 import { existsSync } from "fs"
 import { dirname, join } from "path"
 import which from "which"
+import { addPath } from "../utils/env/addEnv"
 import { isRoot } from "../utils/env/sudo"
 import { execSudo } from "../utils/exec/sudo"
 import { addShellExtension, addShellHere } from "../utils/extension/extension"
+import { notice } from "../utils/io/io"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { InstallationInfo } from "../utils/setup/setupBin"
 
@@ -27,7 +28,7 @@ export function setupVcpkg(_version: string, setupDir: string, _arch: string): I
     if (!existsSync(join(setupDir, addShellExtension("bootstrap-vcpkg")))) {
       execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
     } else {
-      warning(`Vcpkg folder already exists at ${setupDir}`)
+      notice(`Vcpkg folder already exists at ${setupDir}. This might mean that ~/vcpkg is restored from the cache.`)
     }
 
     execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
