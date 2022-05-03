@@ -124,6 +124,7 @@ const UBUNTU_RC: Map<string, string> = new Map()
  *
  * https://github.com/llvm/llvm-project/releases/tag/llvmorg-14.0.1 or https://releases.llvm.org/14.0.1
  */
+// TODO change based on ubuntu version
 const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
   "3.5.0": "-ubuntu-14.04",
   "3.5.1": "",
