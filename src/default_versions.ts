@@ -22,15 +22,8 @@ let ubuntuVersionCached: number[] | null = null
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined) {
   if (version === "true" || (version === undefined && name in DefaultVersions)) {
-    return DefaultVersions[name]
-  } else {
-    return version ?? ""
-  }
-}
-
-export function defaultLLVMVersion(name: string) {
-  if (["llvm", "clangtidy", "clangformat"].includes(name)) {
-    if (process.platform === "linux") {
+    // llvm on linux
+    if (process.platform === "linux" && ["llvm", "clangtidy", "clangformat"].includes(name)) {
       try {
         // get the version if not already done
         ubuntuVersionCached = ubuntuVersionCached ?? ubuntuVersion()
@@ -45,6 +38,9 @@ export function defaultLLVMVersion(name: string) {
         }
       }
     }
+    // anything else
+    return DefaultVersions[name]
+  } else {
+    return version ?? ""
   }
-  return DefaultVersions[name]
 }
