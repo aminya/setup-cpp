@@ -12,12 +12,12 @@
     "setup_cpp": "./dist/setup_cpp.js"
   },
   "scripts": {
-    "build": "run-p test.tsc build.parcel copy.matchers",
+    "build": "shx rm -rf dist/ && shx mkdir ./dist && run-p test.tsc build.parcel copy.matchers",
     "build.docker": "pnpm build && docker build -f ./dev/docker/ubuntu_node.dockerfile -t setup_cpp .",
-    "build.parcel": "shx rm -rf ./dist/*.js ./dist/*.js.map && cross-env NODE_ENV=production parcel build --detailed-report",
+    "build.parcel": "cross-env NODE_ENV=production parcel build --detailed-report",
     "bump": "ncu -u -x execa && pnpm update",
     "clean": "shx rm -rf .parcel-cache dist exe",
-    "copy.matchers": "shx rm -rf ./dist/*.json && shx cp ./src/gcc/gcc_matcher.json ./dist/ && shx cp ./src/msvc/msvc_matcher.json ./dist && shx cp ./src/python/python_matcher.json ./dist/ && shx cp ./src/llvm/llvm_matcher.json ./dist/ ",
+    "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/ && shx cp ./src/msvc/msvc_matcher.json ./dist && shx cp ./src/python/python_matcher.json ./dist/ && shx cp ./src/llvm/llvm_matcher.json ./dist/ ",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "format": "prettier --write .",
     "lint": "eslint . --fix",
