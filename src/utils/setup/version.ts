@@ -3,6 +3,7 @@ import semverCompare from "semver/functions/compare"
 import semverCoerce from "semver/functions/coerce"
 import semverValid from "semver/functions/valid"
 import { getExecOutput } from "@actions/exec"
+import { info } from "../io/io"
 
 /**
  * Gets the specific versions supported by this action compatible with the supplied (specific or minimum) version in
@@ -96,6 +97,7 @@ export function semverCoerceIfInvalid(version: string) {
       // find the semver version of an integer
       const coercedVersion = semverCoerce(version)
       if (coercedVersion !== null) {
+        info(`Coerced version '${version}' to '${coercedVersion}'`)
         return coercedVersion.version
       }
     } catch (err) {

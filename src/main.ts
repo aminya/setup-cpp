@@ -289,7 +289,7 @@ export function getCompilerInfo(maybeCompiler: string) {
     if (semverValid(maybeVersion) !== null) {
       return { compiler, version: maybeVersion }
     } else {
-      notice(`Invalid semver version ${maybeVersion} used for the compiler.`)
+      info(`Invalid semver version ${maybeVersion} used for the compiler.`)
       return { compiler, version: maybeVersion }
     }
   }
