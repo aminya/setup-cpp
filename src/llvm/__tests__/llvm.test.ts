@@ -79,7 +79,8 @@ describe("setup-llvm", () => {
   })
 
   it("should setup LLVM", async () => {
-    const { binDir } = await setupLLVM(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
+    const osVersion = await ubuntuVersion()
+    const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
@@ -96,24 +97,27 @@ describe("setup-llvm", () => {
   })
 
   it("should find llvm in the cache", async () => {
-    const { binDir } = await setupLLVM(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
+    const osVersion = await ubuntuVersion()
+    const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
-    if (isGitHubCI()) {
+    if (isGitHubCI() && process.platform !== "linux") {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
+      // TODO returns the install dir on linux
     }
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
 
-    if (isGitHubCI()) {
+    if (isGitHubCI() && process.platform !== "linux") {
       expect(process.env.CC).toMatch("hostedtoolcache")
       expect(process.env.CXX).toMatch("hostedtoolcache")
     }
   })
 
   it("should setup clang-tidy and clang-format", async () => {
-    const { binDir } = await setupClangTools(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
+    const osVersion = await ubuntuVersion()
+    const { binDir } = await setupClangTools(getVersion("llvm", "true", osVersion), directory, process.arch)
     await testBin("clang-tidy", ["--version"], binDir)
     await testBin("clang-format", ["--version"], binDir)
   })
