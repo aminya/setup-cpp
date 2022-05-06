@@ -4,7 +4,7 @@ import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { addBinExtension } from "../utils/extension/extension"
-import { extractTar } from "../utils/setup/extract"
+import { extractTar, extractZip } from "../utils/setup/extract"
 import { notice } from "../utils/io/io"
 import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../default_versions"
@@ -23,6 +23,16 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
         url: `https://www.doxygen.nl/files/${folderName}.linux.bin.tar.gz`,
       }
     }
+    case "win32": {
+      const folderName = `doxygen-${version}`
+      return {
+        binRelativeDir: "bin/",
+        binFileName: addBinExtension("doxygen"),
+        extractedFolderName: folderName,
+        extractFunction: extractZip,
+        url: `https://www.doxygen.nl/files/${folderName}.windows.x64.bin.zip`,
+      }
+    }
     default:
       throw new Error(`Unsupported platform '${platform}'`)
   }
@@ -31,10 +41,17 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
 export async function setupDoxygen(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "win32": {
-      await setupChocoPack("doxygen.install", version)
+      let installationInfo: InstallationInfo
+      try {
+        installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
+      } catch (err) {
+        notice(`Failed to download doxygen binary. ${err}. Falling back to choco.`)
+        await setupChocoPack("doxygen.install", version)
+        const binDir = activateWinDoxygen()
+        installationInfo = { binDir }
+      }
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)
-      const binDir = activateWinDoxygen()
-      return { binDir }
+      return installationInfo
     }
     case "darwin": {
       const installationInfo = setupBrewPack("doxygen", undefined)
