@@ -26,7 +26,7 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
     case "win32": {
       const folderName = `doxygen-${version}`
       return {
-        binRelativeDir: "bin/",
+        binRelativeDir: "",
         binFileName: addBinExtension("doxygen"),
         extractedFolderName: folderName,
         extractFunction: extractZip,
