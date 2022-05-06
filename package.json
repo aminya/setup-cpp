@@ -34,7 +34,7 @@
   },
   "prettier": "prettier-config-atomic",
   "dependencies": {
-    "@actions/core": "^1.7.0",
+    "@actions/core": "^1.8.0",
     "@actions/exec": "^1.1.1",
     "@actions/io": "^1.1.2",
     "@actions/tool-cache": "^1.7.2",
