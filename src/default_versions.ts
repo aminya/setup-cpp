@@ -1,6 +1,3 @@
-import { warning } from "./utils/io/io"
-import { ubuntuVersion } from "./utils/env/ubuntu_version"
-
 const DefaultVersions: Record<string, string> = {
   llvm: "13.0.0", // https://github.com/llvm/llvm-project/releases
   clangtidy: "13.0.0",
@@ -17,24 +14,15 @@ const DefaultVersions: Record<string, string> = {
   gcc: process.platform === "win32" ? "11.2.0.07112021" : "11", // https://community.chocolatey.org/packages/mingw#versionhistory and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 
-let ubuntuVersionCached: number[] | null = null
-
 /** Get the default version if passed true or undefined, otherwise return the version itself */
-export function getVersion(name: string, version: string | undefined) {
+export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
   if (version === "true" || (version === undefined && name in DefaultVersions)) {
     // llvm on linux
     if (process.platform === "linux" && ["llvm", "clangtidy", "clangformat"].includes(name)) {
-      try {
-        // get the version if not already done
-        ubuntuVersionCached = ubuntuVersionCached ?? ubuntuVersion()
-      } catch (err) {
-        warning((err as Error).toString())
-        return DefaultVersions[name]
-      }
       // choose the default version for llvm based on ubuntu
-      if (ubuntuVersionCached !== null) {
-        if ([20, 18, 16].includes(ubuntuVersionCached[0]) && ubuntuVersionCached[1] === 4) {
-          return `-13.0.0-x86_64-linux-gnu-ubuntu-${ubuntuVersionCached[0]}.0${ubuntuVersionCached[1]}`
+      if (osVersion !== null) {
+        if ([20, 18, 16].includes(osVersion[0]) && osVersion[1] === 4) {
+          return `-13.0.0-x86_64-linux-gnu-ubuntu-${osVersion[0]}.0${osVersion[1]}`
         }
       }
     }

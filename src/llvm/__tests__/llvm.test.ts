@@ -8,6 +8,7 @@ import path from "path"
 import { addBinExtension } from "../../utils/extension/extension"
 import { chmodSync } from "fs"
 import { getVersion } from "../../default_versions"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 
 jest.setTimeout(400000)
 async function testUrl(version: string) {
@@ -51,7 +52,7 @@ describe("setup-llvm", () => {
   })
 
   it("should setup LLVM", async () => {
-    const { binDir } = await setupLLVM(getVersion("llvm", "true"), directory, process.arch)
+    const { binDir } = await setupLLVM(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
