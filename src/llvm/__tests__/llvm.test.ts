@@ -1,4 +1,4 @@
-import { setupLLVM, VERSIONS, getUrl, setupClangTools } from "../llvm"
+import { setupLLVM, VERSIONS, getUrl, setupClangTools, getLinuxUrl } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
@@ -23,6 +23,33 @@ describe("setup-llvm", () => {
   let directory: string
   beforeAll(async () => {
     directory = await setupTmpDir("llvm")
+  })
+
+  it("Finds URL for ubuntu version", async () => {
+    expect(
+      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-16.04", (_plantform, version) =>
+        getLinuxUrl(version)
+      )
+    ).toStrictEqual([
+      "13.0.0-ubuntu-16.04",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+    ])
+    expect(
+      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.1-ubuntu-18.04", (_plantform, version) =>
+        getLinuxUrl(version)
+      )
+    ).toStrictEqual([
+      "13.0.1-ubuntu-18.04",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
+    ])
+    expect(
+      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-20.04", (_plantform, version) =>
+        getLinuxUrl(version)
+      )
+    ).toStrictEqual([
+      "13.0.0-ubuntu-20.04",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz",
+    ])
   })
 
   it("Finds valid LLVM URLs", async () => {

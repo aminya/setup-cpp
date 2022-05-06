@@ -4,7 +4,12 @@ import semverMajor from "semver/functions/major"
 import { isValidUrl } from "../utils/http/validate_url"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
-import { getSpecificVersionAndUrl, getVersions, semverCoerceIfInvalid } from "../utils/setup/version"
+import {
+  getSpecificVersionAndUrl,
+  getSpecificVersions,
+  getVersions,
+  semverCoerceIfInvalid,
+} from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addBinExtension } from "../utils/extension/extension"
 import { addEnv } from "../utils/env/addEnv"
@@ -158,7 +163,10 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
   "12.0.0": "-ubuntu-20.04",
   "12.0.1": "-ubuntu-16.04",
   "13.0.0": "-ubuntu-20.04",
+  "13.0.0-ubuntu-16.04": "-ubuntu-16.04",
+  "13.0.0-ubuntu-20.04": "-ubuntu-20.04",
   "13.0.1": "-ubuntu-18.04",
+  "13.0.1-ubuntu-18.04": "-ubuntu-18.04",
   "14.0.0": "-ubuntu-18.04",
   // "14.0.1": "-ubuntu-18.04",  // only available for powerpc64le
 }
@@ -167,7 +175,7 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
 const MAX_UBUNTU: string = "14.0.0"
 
 /** Gets an LLVM download URL for the Linux (Ubuntu) platform. */
-function getLinuxUrl(versionGiven: string): string {
+export function getLinuxUrl(versionGiven: string): string {
   let version = versionGiven
 
   const rc = UBUNTU_RC.get(version)
@@ -178,7 +186,12 @@ function getLinuxUrl(versionGiven: string): string {
   let ubuntu: string
   // ubuntu-version is specified
   if (version.includes("ubuntu")) {
-    ubuntu = version
+    const givenUbuntuVersion = version.replace(/-ubuntu-.*/, "")
+    if (!VERSIONS.has(givenUbuntuVersion)) {
+      throw new Error(`Unsupported Ubuntu version: ${givenUbuntuVersion}`)
+    }
+    ubuntu = version.replace(givenUbuntuVersion, "")
+    version = getSpecificVersions(VERSIONS, givenUbuntuVersion)[0]
   } else if (version !== "" && version in UBUNTU_SUFFIX_MAP) {
     ubuntu = UBUNTU_SUFFIX_MAP[version]
   } else {
