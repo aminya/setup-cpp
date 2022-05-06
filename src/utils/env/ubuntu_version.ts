@@ -1,9 +1,8 @@
 import { getUbuntuVersion } from "ubuntu-version"
-import makeSynchronous from "make-synchronous"
 
-export function ubuntuVersion(): number[] | null {
+export async function ubuntuVersion(): Promise<number[] | null> {
   if (process.platform === "linux") {
-    const versionSplitted = makeSynchronous(getUbuntuVersion)()
+    const versionSplitted = await getUbuntuVersion()
 
     if (versionSplitted.length === 0) {
       throw new Error("Failed to get the ubuntu major version.")

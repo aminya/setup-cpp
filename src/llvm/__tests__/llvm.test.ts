@@ -1,4 +1,4 @@
-import { setupLLVM, VERSIONS, getUrl, setupClangTools } from "../llvm"
+import { setupLLVM, VERSIONS, getUrl, setupClangTools, getLinuxUrl } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
@@ -8,6 +8,7 @@ import path from "path"
 import { addBinExtension } from "../../utils/extension/extension"
 import { chmodSync } from "fs"
 import { getVersion } from "../../default_versions"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 
 jest.setTimeout(400000)
 async function testUrl(version: string) {
@@ -22,6 +23,33 @@ describe("setup-llvm", () => {
   let directory: string
   beforeAll(async () => {
     directory = await setupTmpDir("llvm")
+  })
+
+  it("Finds URL for ubuntu version", async () => {
+    expect(
+      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-16.04", (_plantform, version) =>
+        getLinuxUrl(version)
+      )
+    ).toStrictEqual([
+      "13.0.0-ubuntu-16.04",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+    ])
+    expect(
+      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.1-ubuntu-18.04", (_plantform, version) =>
+        getLinuxUrl(version)
+      )
+    ).toStrictEqual([
+      "13.0.1-ubuntu-18.04",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
+    ])
+    expect(
+      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-20.04", (_plantform, version) =>
+        getLinuxUrl(version)
+      )
+    ).toStrictEqual([
+      "13.0.0-ubuntu-20.04",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz",
+    ])
   })
 
   it("Finds valid LLVM URLs", async () => {
@@ -51,7 +79,7 @@ describe("setup-llvm", () => {
   })
 
   it("should setup LLVM", async () => {
-    const { binDir } = await setupLLVM(getVersion("llvm", "true"), directory, process.arch)
+    const { binDir } = await setupLLVM(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
@@ -68,7 +96,7 @@ describe("setup-llvm", () => {
   })
 
   it("should find llvm in the cache", async () => {
-    const { binDir } = await setupLLVM(getVersion("llvm", "true"), directory, process.arch)
+    const { binDir } = await setupLLVM(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     if (isGitHubCI()) {
@@ -85,7 +113,7 @@ describe("setup-llvm", () => {
   })
 
   it("should setup clang-tidy and clang-format", async () => {
-    const { binDir } = await setupClangTools(getVersion("llvm", "true"), directory, process.arch)
+    const { binDir } = await setupClangTools(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
     await testBin("clang-tidy", ["--version"], binDir)
     await testBin("clang-format", ["--version"], binDir)
   })

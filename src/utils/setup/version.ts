@@ -3,6 +3,7 @@ import semverCompare from "semver/functions/compare"
 import semverCoerce from "semver/functions/coerce"
 import semverValid from "semver/functions/valid"
 import { getExecOutput } from "@actions/exec"
+import { info } from "../io/io"
 
 /**
  * Gets the specific versions supported by this action compatible with the supplied (specific or minimum) version in
@@ -37,6 +38,15 @@ export async function getSpecificVersionAndUrl(
   version: string,
   getUrl: (platform: string, version: string) => string | null | Promise<string | null>
 ): Promise<[string, string]> {
+  // specific ubuntu version
+  if (platform === "linux" && version.includes("ubuntu")) {
+    const url = await getUrl(platform, version)
+    // eslint-disable-next-line no-await-in-loop
+    if (url !== null && (await isValidUrl(url))) {
+      return [version, url]
+    }
+  }
+
   if (!versions.has(version)) {
     throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
   }
@@ -96,6 +106,7 @@ export function semverCoerceIfInvalid(version: string) {
       // find the semver version of an integer
       const coercedVersion = semverCoerce(version)
       if (coercedVersion !== null) {
+        info(`Coerced version '${version}' to '${coercedVersion}'`)
         return coercedVersion.version
       }
     } catch (err) {
