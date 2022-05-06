@@ -96,7 +96,7 @@ describe("setup-llvm", () => {
   })
 
   it("should find llvm in the cache", async () => {
-    const { binDir } = await setupLLVM(getVersion("llvm", "true"), directory, process.arch)
+    const { binDir } = await setupLLVM(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     if (isGitHubCI()) {
@@ -113,7 +113,7 @@ describe("setup-llvm", () => {
   })
 
   it("should setup clang-tidy and clang-format", async () => {
-    const { binDir } = await setupClangTools(getVersion("llvm", "true"), directory, process.arch)
+    const { binDir } = await setupClangTools(getVersion("llvm", "true", await ubuntuVersion()), directory, process.arch)
     await testBin("clang-tidy", ["--version"], binDir)
     await testBin("clang-format", ["--version"], binDir)
   })
