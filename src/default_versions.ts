@@ -24,7 +24,7 @@ export function getVersion(name: string, version: string | undefined, osVersion:
       // choose the default version for llvm based on ubuntu
       if (osVersion !== null) {
         if ([20, 18, 16].includes(osVersion[0]) && osVersion[1] === 4) {
-          return `-13.0.0-x86_64-linux-gnu-ubuntu-${osVersion[0]}.0${osVersion[1]}`
+          return `${osVersion[0] === 18 ? "13.0.1" : "13.0.0"}-ubuntu-${osVersion[0]}.0${osVersion[1]}`
         }
       }
     }

@@ -38,6 +38,15 @@ export async function getSpecificVersionAndUrl(
   version: string,
   getUrl: (platform: string, version: string) => string | null | Promise<string | null>
 ): Promise<[string, string]> {
+  // specific ubuntu version
+  if (platform === "linux" && version.includes("ubuntu")) {
+    const url = await getUrl(platform, version)
+    // eslint-disable-next-line no-await-in-loop
+    if (url !== null && (await isValidUrl(url))) {
+      return [version, url]
+    }
+  }
+
   if (!versions.has(version)) {
     throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
   }
