@@ -31,7 +31,7 @@ import numerousLocale from "numerous/locales/en.js"
 import { ubuntuVersion } from "./utils/env/ubuntu_version"
 
 import semverValid from "semver/functions/valid"
-import { getVersion } from "./default_versions"
+import { getVersion, syncVersions } from "./default_versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { error, info, success, warning } from "./utils/io/io"
@@ -100,7 +100,7 @@ const tools: Array<keyof typeof setups> = [
 ]
 
 /** The possible inputs to the program */
-type Inputs = keyof typeof setups | "compiler" | "architecture"
+export type Inputs = keyof typeof setups | "compiler" | "architecture"
 
 // an array of possible inputs
 const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
@@ -112,12 +112,7 @@ export async function main(args: string[]): Promise<number> {
   }
 
   // parse options using mri or github actions
-  const opts = mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
-    string: inputs,
-    default: Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)])),
-    alias: { h: "help" },
-    boolean: "help",
-  })
+  const opts = parseArgs(args)
 
   // print help
   if (opts.help) {
@@ -150,6 +145,12 @@ export async function main(args: string[]): Promise<number> {
     warning((err as Error).toString())
   }
 
+  // sync the version for the llvm tools
+  if (!syncVersions(opts, ["llvm", "clangtidy", "clangformat"])) {
+    error("The same version must be used for llvm, clangformat and clangtidy")
+    return 1
+  }
+
   // loop over the tools and run their setup function
   for (const tool of tools) {
     // get the version or "true" or undefined for this tool from the options
@@ -163,7 +164,6 @@ export async function main(args: string[]): Promise<number> {
       try {
         let installationInfo: InstallationInfo | undefined | void
         if (tool === "vcvarsall") {
-          // eslint-disable-next-line no-await-in-loop
           setupVCVarsall(getVersion(tool, version, osVersion), undefined, arch, undefined, undefined, false, false)
         } else {
           // get the setup function
@@ -292,6 +292,21 @@ main(process.argv)
     error(err as string | Error)
     process.exitCode = 1
   })
+
+export type Opts = mri.Argv<
+  Record<Inputs, string | undefined> & {
+    help: boolean
+  }
+>
+
+export function parseArgs(args: string[]): Opts {
+  return mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
+    string: inputs,
+    default: Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)])),
+    alias: { h: "help" },
+    boolean: "help",
+  })
+}
 
 /** Detecting the compiler version. Divide the given string by `-` and use the second element as the version */
 export function getCompilerInfo(maybeCompiler: string) {
