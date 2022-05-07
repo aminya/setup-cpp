@@ -59,7 +59,7 @@ An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 ```ps1
 # windows example (open shell as admin)
 curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.14.0/setup_cpp_windows.exe"
-./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+.\setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
 ```
