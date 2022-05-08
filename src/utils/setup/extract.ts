@@ -49,7 +49,7 @@ export async function extractZip(file: string, dest?: string): Promise<string> {
   }
 
   let filePath = file
-  if (process.platform === 'win32') {
+  if (process.platform === "win32") {
     filePath = `${file}.zip`
     mv(file, filePath)
   }
