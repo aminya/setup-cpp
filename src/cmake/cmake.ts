@@ -1,4 +1,4 @@
-import { extractZip, extractTar } from "@actions/tool-cache"
+import { extractZip, extractTar } from "../utils/setup/extract"
 import semverLte from "semver/functions/lte"
 import semverCoerce from "semver/functions/coerce"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"

@@ -1,9 +1,10 @@
 import execa from "execa"
-import { mkdirP } from "@actions/io"
+import { mkdirP, mv } from "@actions/io"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
 import { warning } from "../io/io"
-export { extractTar, extractXar, extract7z, extractZip } from "@actions/tool-cache"
+import { extractZip as tcExtractZip } from "@actions/tool-cache"
+export { extractTar, extractXar, extract7z } from "@actions/tool-cache"
 
 let sevenZip: string | undefined
 
@@ -40,4 +41,18 @@ export async function extractTarByExe(file: string, dest: string, flags = ["--st
   }
 
   return dest
+}
+
+export async function extractZip(file: string, dest?: string): Promise<string> {
+  if (!file) {
+    throw new Error("parameter 'file' is required")
+  }
+
+  let filePath = file
+  if (process.platform === 'win32') {
+    filePath = `${file}.zip`
+    mv(file, filePath)
+  }
+
+  return tcExtractZip(filePath, dest)
 }

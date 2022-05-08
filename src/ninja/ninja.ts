@@ -1,4 +1,4 @@
-import { extractZip } from "@actions/tool-cache"
+import { extractZip } from "../utils/setup/extract"
 import { addBinExtension } from "../utils/extension/extension"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 

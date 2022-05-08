@@ -1,6 +1,5 @@
-import { extractZip } from "@actions/tool-cache"
 import { addBinExtension } from "../utils/extension/extension"
-import { extractTarByExe } from "../utils/setup/extract"
+import { extractZip, extractTarByExe } from "../utils/setup/extract"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 
 /** Get the platform name task uses in their download links */
