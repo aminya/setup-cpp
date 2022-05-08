@@ -58,8 +58,8 @@ An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```ps1
 # windows example (open shell as admin)
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.14.0/setup_cpp_windows.exe"
-./setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.14.0/setup_cpp_windows.exe"
+.\setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
 ```
@@ -98,7 +98,7 @@ Open the shell as admin, download via `curl`, then install
 
 ```ps1
 # open shell as admin
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.14.0/setup_cpp.js"
+curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.14.0/setup_cpp.js"
 node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
