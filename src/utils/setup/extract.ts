@@ -3,12 +3,17 @@ import { mkdirP } from "@actions/io"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
 import { warning } from "../io/io"
-export { extractTar, extractXar, extract7z, extractZip } from "@actions/tool-cache"
+export { extractTar, extractXar, extract7z } from "@actions/tool-cache"
 
 let sevenZip: string | undefined
 
 export async function extractExe(file: string, dest: string) {
-  // install 7z if needed
+  await execa(await getSevenZip(), ["x", file, `-o${dest}`], { stdio: "inherit" })
+  return dest
+}
+
+/// install 7z if needed
+async function getSevenZip() {
   if (sevenZip === undefined) {
     if (which.sync("7z", { nothrow: true }) === null) {
       await setupSevenZip("", "", process.arch)
@@ -16,9 +21,7 @@ export async function extractExe(file: string, dest: string) {
     // eslint-disable-next-line require-atomic-updates
     sevenZip = "7z"
   }
-
-  await execa(sevenZip, ["x", file, `-o${dest}`], { stdio: "inherit" })
-  return dest
+  return sevenZip
 }
 
 export async function extractTarByExe(file: string, dest: string, flags = ["--strip-components=0"]) {
