@@ -3,11 +3,12 @@ import { mkdirP } from "@actions/io"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
 import { warning } from "../io/io"
-export { extractTar, extractXar, extract7z } from "@actions/tool-cache"
+export { extractTar, extractXar } from "@actions/tool-cache"
 
 let sevenZip: string | undefined
 
-export async function extractExe(file: string, dest: string) {
+/// Extract 7z using 7z
+export async function extract7Zip(file: string, dest: string) {
   await execa(await getSevenZip(), ["x", file, `-o${dest}`], { stdio: "inherit" })
   return dest
 }
@@ -22,6 +23,16 @@ async function getSevenZip() {
     sevenZip = "7z"
   }
   return sevenZip
+}
+
+/// Extract Exe using 7z
+export async function extractExe(file: string, dest: string) {
+  return extract7Zip(file, dest)
+}
+
+/// Extract Zip using 7z
+export async function extractZip(file: string, dest: string) {
+  return extract7Zip(file, dest)
 }
 
 export async function extractTarByExe(file: string, dest: string, flags = ["--strip-components=0"]) {
