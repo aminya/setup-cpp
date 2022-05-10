@@ -41,15 +41,9 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
 export async function setupDoxygen(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "win32": {
-      let installationInfo: InstallationInfo
-      try {
-        installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-      } catch (err) {
-        notice(`Failed to download doxygen binary. ${err}. Falling back to choco.`)
-        await setupChocoPack("doxygen.install", version)
-        const binDir = activateWinDoxygen()
-        installationInfo = { binDir }
-      }
+      await setupChocoPack("doxygen.install", version)
+      const binDir = activateWinDoxygen()
+      const installationInfo = { binDir }
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)
       return installationInfo
     }
