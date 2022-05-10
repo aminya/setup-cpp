@@ -8,6 +8,7 @@ import { extractTar, extractZip } from "../utils/setup/extract"
 import { notice } from "../utils/io/io"
 import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../default_versions"
+import { existsSync } from "fs"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -74,9 +75,17 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
 function activateWinDoxygen() {
   switch (process.platform) {
     case "win32": {
-      const binDir = "C:/Program Files/doxygen/bin"
-      addPath(binDir)
-      return binDir
+      for (const binDir of [
+        "C:/ProgramData/chocolatey/bin",
+        "C:/Program Files/doxygen/bin",
+        "C:/Program Files (x86)/doxygen",
+      ]) {
+        if (existsSync(binDir)) {
+          addPath(binDir)
+          return binDir
+        }
+      }
+      throw new Error("Failed to find doxygen binary")
     }
     default: {
       throw new Error(`Unsupported platform`)
