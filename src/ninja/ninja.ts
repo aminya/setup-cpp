@@ -1,5 +1,5 @@
-import { extractZip } from "@actions/tool-cache"
 import { addBinExtension } from "../utils/extension/extension"
+import { extractZip } from "../utils/setup/extract"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 
 /** Get the platform name Ninja uses in their download links */

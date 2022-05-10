@@ -46,6 +46,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       try {
         // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
         installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
+        setupAptPack("libclang-cpp9")
       } catch (err) {
         notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
         installationInfo = setupAptPack("doxygen", undefined)
