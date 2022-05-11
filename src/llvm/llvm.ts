@@ -307,11 +307,14 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
   addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
 
-  const llvmMajor = semverMajor(version)
-  if (existsSync(`${directory}/lib/clang/${version}/include`)) {
-    addEnv("CPATH", `${directory}/lib/clang/${version}/include`)
-  } else if (existsSync(`${directory}/lib/clang/${llvmMajor}/include`)) {
-    addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+  // windows builds fail with llvm's CPATH
+  if (process.platform !== "win32") {
+    const llvmMajor = semverMajor(version)
+    if (existsSync(`${directory}/lib/clang/${version}/include`)) {
+      addEnv("CPATH", `${directory}/lib/clang/${version}/include`)
+    } else if (existsSync(`${directory}/lib/clang/${llvmMajor}/include`)) {
+      addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+    }
   }
 
   addEnv("LDFLAGS", `-L${directory}/lib`)
