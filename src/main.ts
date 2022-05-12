@@ -164,7 +164,16 @@ export async function main(args: string[]): Promise<number> {
       try {
         let installationInfo: InstallationInfo | undefined | void
         if (tool === "vcvarsall") {
-          setupVCVarsall(getVersion(tool, version, osVersion), undefined, arch, undefined, undefined, false, false)
+          // eslint-disable-next-line no-await-in-loop
+          await setupVCVarsall(
+            getVersion(tool, version, osVersion),
+            undefined,
+            arch,
+            undefined,
+            undefined,
+            false,
+            false
+          )
         } else {
           // get the setup function
           const setupFunction = setups[tool]
@@ -224,15 +233,19 @@ export async function main(args: string[]): Promise<number> {
         case "visualstudio":
         case "visualcpp":
         case "visualc++": {
-          const installationInfo = setupMSVC(getVersion("msvc", version, osVersion), join(setupCppDir, "msvc"), arch)
+          const installationInfo = await setupMSVC(
+            getVersion("msvc", version, osVersion),
+            join(setupCppDir, "msvc"),
+            arch
+          )
           successMessages.push(getSuccessMessage("msvc", installationInfo))
           break
         }
         case "appleclang":
         case "applellvm": {
           notice("Assuming apple-clang is already installed")
-          addEnv("CC", "clang")
-          addEnv("CXX", "clang++")
+          await addEnv("CC", "clang")
+          await addEnv("CXX", "clang++")
           successMessages.push(getSuccessMessage("apple-clang", undefined))
           break
         }

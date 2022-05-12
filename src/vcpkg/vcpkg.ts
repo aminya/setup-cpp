@@ -13,7 +13,7 @@ import { InstallationInfo } from "../utils/setup/setupBin"
 let hasVCPKG = false
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupVcpkg(_version: string, setupDir: string, _arch: string): InstallationInfo {
+export async function setupVcpkg(_version: string, setupDir: string, _arch: string): Promise<InstallationInfo> {
   if (!hasVCPKG || which.sync("vcpkg", { nothrow: true }) === null) {
     if (process.platform === "linux") {
       // vcpkg download and extraction dependencies
@@ -42,7 +42,7 @@ export function setupVcpkg(_version: string, setupDir: string, _arch: string): I
       execSudo("chown", ["-R", process.env.SUDO_USER, setupDir], setupDir)
     }
 
-    addPath(setupDir)
+    await addPath(setupDir)
     // eslint-disable-next-line require-atomic-updates
     hasVCPKG = true
     return { binDir: setupDir }

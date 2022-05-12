@@ -23,7 +23,7 @@ describe("getCompilerInfo", () => {
 })
 
 describe("syncVersion", () => {
-  it("Syncs llvm tools versions", async () => {
+  it("Syncs llvm tools versions", () => {
     const llvmTools = ["llvm", "clangtidy", "clangformat"] as Inputs[]
     expect(syncVersions(parseArgs(["--llvm", "14.0.0", "--clangtidy", "true"]), llvmTools)).toBe(true)
     expect(syncVersions(parseArgs(["--llvm", "13.0.0", "--clangtidy", "true"]), llvmTools)).toBe(true)

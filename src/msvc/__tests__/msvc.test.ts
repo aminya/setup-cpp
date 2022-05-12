@@ -3,12 +3,12 @@ import { setupMSVC } from "../msvc"
 
 jest.setTimeout(300000)
 describe("setup-msvc", () => {
-  it("should setup the pre-installed msvc", () => {
+  it("should setup the pre-installed msvc", async () => {
     try {
       if (process.platform !== "win32") {
         return
       }
-      setupMSVC("", "", process.arch)
+      await setupMSVC("", "", process.arch)
       console.log(which.sync("cl"))
     } catch (e) {
       // TODO
@@ -16,12 +16,12 @@ describe("setup-msvc", () => {
     }
   })
 
-  it("should setup msvc 2022", () => {
+  it("should setup msvc 2022", async () => {
     try {
       if (process.platform !== "win32") {
         return
       }
-      setupMSVC("2022", "", process.arch)
+      await setupMSVC("2022", "", process.arch)
       console.log(which.sync("cl"))
     } catch (e) {
       // TODO
@@ -29,12 +29,12 @@ describe("setup-msvc", () => {
     }
   })
 
-  it("should setup msvc 2019", () => {
+  it("should setup msvc 2019", async () => {
     try {
       if (process.platform !== "win32") {
         return
       }
-      setupMSVC("2019", "", process.arch)
+      await setupMSVC("2019", "", process.arch)
       console.log(which.sync("cl"))
     } catch (e) {
       // TODO
@@ -42,12 +42,12 @@ describe("setup-msvc", () => {
     }
   })
 
-  it("should setup msvc 2017", () => {
+  it("should setup msvc 2017", async () => {
     try {
       if (process.platform !== "win32") {
         return
       }
-      setupMSVC("2017", "", process.arch)
+      await setupMSVC("2017", "", process.arch)
       console.log(which.sync("cl"))
     } catch (e) {
       // TODO
@@ -55,12 +55,12 @@ describe("setup-msvc", () => {
     }
   })
 
-  it("should setup msvc 2015", () => {
+  it("should setup msvc 2015", async () => {
     try {
       if (process.platform !== "win32") {
         return
       }
-      setupMSVC("2015", "", process.arch)
+      await setupMSVC("2015", "", process.arch)
       console.log(which.sync("cl"))
     } catch (e) {
       // TODO

@@ -8,14 +8,14 @@ import { InstallationInfo } from "../utils/setup/setupBin"
 
 let binDir: string | undefined
 
-export function setupChocolatey(
+export async function setupChocolatey(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _version: string,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _setupDir: string,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _arch: string
-): InstallationInfo | undefined {
+): Promise<InstallationInfo | undefined> {
   if (process.platform !== "win32") {
     return undefined
   }
@@ -54,7 +54,7 @@ export function setupChocolatey(
   )
 
   const chocoPath = `${process.env.ALLUSERSPROFILE}\\chocolatey\\bin`
-  addPath(chocoPath)
+  await addPath(chocoPath)
 
   const maybeChoco = which.sync("choco", { nothrow: true })
   if (maybeChoco !== null) {
