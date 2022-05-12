@@ -301,29 +301,29 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  addEnv("LLVM_PATH", directory) // the output of this action
+  await addEnv("LLVM_PATH", directory) // the output of this action
 
   // Setup LLVM as the compiler
-  addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
-  addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
+  await addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
+  await addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
 
   // windows builds fail with llvm's CPATH
   if (process.platform !== "win32") {
     const llvmMajor = semverMajor(version)
     if (existsSync(`${directory}/lib/clang/${version}/include`)) {
-      addEnv("CPATH", `${directory}/lib/clang/${version}/include`)
+      await addEnv("CPATH", `${directory}/lib/clang/${version}/include`)
     } else if (existsSync(`${directory}/lib/clang/${llvmMajor}/include`)) {
-      addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+      await addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
     }
   }
 
-  addEnv("LDFLAGS", `-L"${directory}/lib"`)
-  addEnv("CPPFLAGS", `-I"${directory}/include"`)
+  await addEnv("LDFLAGS", `-L"${directory}/lib"`)
+  await addEnv("CPPFLAGS", `-I"${directory}/include"`)
 
-  addEnv("CC", `${directory}/bin/clang`)
-  addEnv("CXX", `${directory}/bin/clang++`)
+  await addEnv("CC", `${directory}/bin/clang`)
+  await addEnv("CXX", `${directory}/bin/clang++`)
 
-  addEnv("LIBRARY_PATH", `${directory}/lib`)
+  await addEnv("LIBRARY_PATH", `${directory}/lib`)
 
   await setupMacOSSDK()
 

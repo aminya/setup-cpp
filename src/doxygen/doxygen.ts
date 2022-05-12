@@ -43,7 +43,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("doxygen.install", version)
-      const binDir = activateWinDoxygen()
+      const binDir = await activateWinDoxygen()
       const installationInfo = { binDir }
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)
       return installationInfo
@@ -72,7 +72,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
   }
 }
 
-function activateWinDoxygen() {
+async function activateWinDoxygen() {
   switch (process.platform) {
     case "win32": {
       for (const binDir of [
@@ -81,7 +81,8 @@ function activateWinDoxygen() {
         "C:/Program Files (x86)/doxygen",
       ]) {
         if (existsSync(binDir)) {
-          addPath(binDir)
+          // eslint-disable-next-line no-await-in-loop
+          await addPath(binDir)
           return binDir
         }
       }

@@ -21,10 +21,10 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
       await setupChocoPack("mingw", version)
       if (arch === "x64" && existsSync("C:/tools/mingw64/bin")) {
         binDir = "C:/tools/mingw64/bin"
-        addPath(binDir)
+        await addPath(binDir)
       } else if (arch === "ia32" && existsSync("C:/tools/mingw32/bin")) {
         binDir = "C:/tools/mingw32/bin"
-        addPath(binDir)
+        await addPath(binDir)
       } else if (existsSync(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
         binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
       }
@@ -72,19 +72,19 @@ async function activateGcc(version: string, binDir: string) {
   // const ld = process.env.LD_LIBRARY_PATH ?? ""
   // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
   // // Setup gcc as the compiler
-  // addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`)
-  // addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`)
-  // addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`)
-  // addEnv("LDFLAGS", `-L${installDir}/lib`)
-  // addEnv("CPPFLAGS", `-I${installDir}/include`)
+  // await addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`)
+  // await addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`)
+  // await addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`)
+  // await addEnv("LDFLAGS", `-L${installDir}/lib`)
+  // await addEnv("CPPFLAGS", `-I${installDir}/include`)
   if (process.platform === "win32") {
-    addEnv("CC", `${binDir}/gcc`)
-    addEnv("CXX", `${binDir}/g++`)
+    await addEnv("CC", `${binDir}/gcc`)
+    await addEnv("CXX", `${binDir}/g++`)
   } else {
     const majorVersion = semverMajor(semverCoerce(version) ?? version)
     if (majorVersion >= 5) {
-      addEnv("CC", `${binDir}/gcc-${majorVersion}`)
-      addEnv("CXX", `${binDir}/g++-${majorVersion}`)
+      await addEnv("CC", `${binDir}/gcc-${majorVersion}`)
+      await addEnv("CXX", `${binDir}/g++-${majorVersion}`)
 
       if (process.platform === "linux") {
         await updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
@@ -93,8 +93,8 @@ async function activateGcc(version: string, binDir: string) {
         await updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
       }
     } else {
-      addEnv("CC", `${binDir}/gcc-${version}`)
-      addEnv("CXX", `${binDir}/g++-${version}`)
+      await addEnv("CC", `${binDir}/gcc-${version}`)
+      await addEnv("CXX", `${binDir}/g++-${version}`)
 
       if (process.platform === "linux") {
         await updateAptAlternatives("cc", `${binDir}/gcc-${version}`)

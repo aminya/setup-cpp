@@ -10,7 +10,7 @@ import { error, info, warning } from "../utils/io/io"
 
 type MSVCVersion = "2022" | "17.0" | "2019" | "16.0" | "2017" | "15.0" | "2015" | "14.0" | "2013" | "12.0" | string
 
-export function setupMSVC(
+export async function setupMSVC(
   versionGiven: MSVCVersion,
   _setupDir: string,
   arch: string,
@@ -41,19 +41,19 @@ export function setupMSVC(
     try {
       if (version === "14.0") {
         toolset = "14.0"
-        setupChocoPack("visualcpp-build-tools", "14.0.25420.1", ["--ignore-dependencies"])
+        await setupChocoPack("visualcpp-build-tools", "14.0.25420.1", ["--ignore-dependencies"])
         VCTargetsPath = "C:/Program Files (x86)/MSBuild/Microsoft.Cpp/v4.0/v140"
       } else if (version === "15.0") {
         toolset = "14.16"
-        setupChocoPack("visualstudio2017buildtools", "15.9.41.0", [])
+        await setupChocoPack("visualstudio2017buildtools", "15.9.41.0", [])
         VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2017/BuildTools/VC/Tools/MSVC/14.16" // TODO verify path
       } else if (version === "16.0") {
         toolset = "14.29"
-        setupChocoPack("visualstudio2019buildtools", "16.11.7.0", [])
+        await setupChocoPack("visualstudio2019buildtools", "16.11.7.0", [])
         VCTargetsPath = "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133"
       } else if (version === "17.0") {
         toolset = undefined
-        setupChocoPack("visualstudio2022buildtools", "117.0.5.0", [])
+        await setupChocoPack("visualstudio2022buildtools", "117.0.5.0", [])
         VCTargetsPath = undefined
       } else {
         error(`The given MSVC versions ${versionGiven} is not supported yet.`)
@@ -63,7 +63,7 @@ export function setupMSVC(
     }
   }
   // run vcvarsall.bat environment variables
-  setupVCVarsall(version, VCTargetsPath, arch, toolset, sdk, uwp, spectre)
+  await setupVCVarsall(version, VCTargetsPath, arch, toolset, sdk, uwp, spectre)
 
   if (isGitHubCI()) {
     addMSVCLoggingMatcher()

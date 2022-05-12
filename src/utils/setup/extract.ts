@@ -26,12 +26,12 @@ async function getSevenZip() {
 }
 
 /// Extract Exe using 7z
-export async function extractExe(file: string, dest: string) {
+export function extractExe(file: string, dest: string) {
   return extract7Zip(file, dest)
 }
 
 /// Extract Zip using 7z
-export async function extractZip(file: string, dest: string) {
+export function extractZip(file: string, dest: string) {
   return extract7Zip(file, dest)
 }
 

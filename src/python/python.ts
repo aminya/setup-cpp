@@ -20,18 +20,18 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupPythonViaSystem(version: string, setupDir: string, _arch: string) {
+export async function setupPythonViaSystem(version: string, setupDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
       if (setupDir) {
-        setupChocoPack("python3", version, [`--params=/InstallDir:${setupDir}`])
+        await setupChocoPack("python3", version, [`--params=/InstallDir:${setupDir}`])
       } else {
-        setupChocoPack("python3", version)
+        await setupChocoPack("python3", version)
       }
 
       // Adding the bin dir to the path
       /** The directory which the tool is installed to */
-      activateWinPython(setupDir)
+      await activateWinPython(setupDir)
       return { installDir: setupDir, binDir: setupDir }
     }
     case "darwin": {
@@ -48,7 +48,7 @@ export function setupPythonViaSystem(version: string, setupDir: string, _arch: s
   }
 }
 
-function activateWinPython(binDir: string) {
+async function activateWinPython(binDir: string) {
   info(`Add ${binDir} to PATH`)
-  addPath(binDir)
+  await addPath(binDir)
 }

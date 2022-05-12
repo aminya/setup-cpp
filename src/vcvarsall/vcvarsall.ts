@@ -21,7 +21,7 @@ function getArch(arch: string): string {
   }
 }
 
-export function setupVCVarsall(
+export async function setupVCVarsall(
   vsversion: string,
   VCTargetsPath: string | undefined,
   arch: string,
@@ -32,7 +32,7 @@ export function setupVCVarsall(
 ) {
   if (VCTargetsPath !== undefined && existsSync(VCTargetsPath)) {
     info(`Adding ${VCTargetsPath} to PATH`)
-    addEnv("VCTargetsPath", VCTargetsPath)
+    await addEnv("VCTargetsPath", VCTargetsPath)
   }
 
   setupMSVCDevCmd(getArch(arch), sdk, toolset, uwp, spectre, vsversion)

@@ -8,13 +8,13 @@ import { delimiter } from "path"
 import { escapeSpace } from "../path/escape_space"
 
 /** An add path function that works locally or inside GitHub Actions */
-export function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
+export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
   const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
   try {
     if (isGitHubCI()) {
       exportVariable(name, val)
     } else {
-      addEnvSystem(name, val)
+      await addEnvSystem(name, val)
     }
   } catch (err) {
     try {
@@ -28,13 +28,13 @@ export function addEnv(name: string, valGiven: string | undefined, shouldEscapeS
 }
 
 /** An add path function that works locally or inside GitHub Actions */
-export function addPath(path: string) {
+export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
     if (isGitHubCI()) {
       ghAddPath(path)
     } else {
-      addPathSystem(path)
+      await addPathSystem(path)
     }
   } catch (err) {
     try {
@@ -49,12 +49,12 @@ export function addPath(path: string) {
 
 export const cpprc_path = untildify(".cpprc")
 
-function addEnvSystem(name: string, valGiven: string | undefined) {
+async function addEnvSystem(name: string, valGiven: string | undefined) {
   const val = valGiven ?? ""
   switch (process.platform) {
     case "win32": {
       // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit
-      execPowershell(`[Environment]::SetEnvironmentVariable("${name}", "${val}", "User")`)
+      await execPowershell(`[Environment]::SetEnvironmentVariable("${name}", "${val}", "User")`)
       info(`${name}="${val} was set in the environment."`)
       return
     }
@@ -72,11 +72,11 @@ function addEnvSystem(name: string, valGiven: string | undefined) {
   process.env[name] = val
 }
 
-function addPathSystem(path: string) {
+async function addPathSystem(path: string) {
   switch (process.platform) {
     case "win32": {
       // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
-      execPowershell(
+      await execPowershell(
         `$USER_PATH=([Environment]::GetEnvironmentVariable("PATH", "User")); [Environment]::SetEnvironmentVariable("PATH", "${path};$USER_PATH", "User")`
       )
       info(`${path} was added to the PATH.`)

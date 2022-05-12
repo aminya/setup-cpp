@@ -70,7 +70,7 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       }
     }
     info(`${binDir} to PATH`)
-    addPath(binDir)
+    await addPath(binDir)
   }
 
   return { binDir }
