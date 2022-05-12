@@ -3,7 +3,7 @@ import which from "which"
 
 let powershell: string | undefined
 
-export function execPowershell(command: string) {
+export function execPowershell(command: string, startupFlags: string[] = ["-NoProfile", "-NoLogo", "-NonInteractive"]) {
   if (powershell === undefined) {
     const maybePwsh = which.sync("pwsh", { nothrow: true })
     if (maybePwsh !== null) {
@@ -18,5 +18,5 @@ export function execPowershell(command: string) {
     throw new Error("Could not find powershell")
   }
 
-  execa.sync(powershell, ["-c", command], { stdio: "inherit" })
+  execa.sync(powershell, [...startupFlags, "-c", command], { stdio: "inherit" })
 }
