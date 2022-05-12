@@ -8,7 +8,7 @@ import { delimiter } from "path"
 import { escapeSpace } from "../path/escape_space"
 
 /** An add path function that works locally or inside GitHub Actions */
-export function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = true) {
+export function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
   const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
   try {
     if (isGitHubCI()) {
@@ -28,8 +28,7 @@ export function addEnv(name: string, valGiven: string | undefined, shouldEscapeS
 }
 
 /** An add path function that works locally or inside GitHub Actions */
-export function addPath(pathGiven: string, shouldEscapeSpace: boolean = true) {
-  const path = shouldEscapeSpace ? escapeSpace(pathGiven) : pathGiven
+export function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
     if (isGitHubCI()) {
