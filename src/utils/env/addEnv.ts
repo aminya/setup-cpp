@@ -5,9 +5,11 @@ import { appendFileSync, existsSync, readFileSync } from "fs"
 import { error, warning } from "../io/io"
 import { execPowershell } from "../exec/powershell"
 import { delimiter } from "path"
+import { escapeSpace } from "../path/escape_space"
 
 /** An add path function that works locally or inside GitHub Actions */
-export function addEnv(name: string, val: string | undefined) {
+export function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
+  const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
   try {
     if (isGitHubCI()) {
       exportVariable(name, val)

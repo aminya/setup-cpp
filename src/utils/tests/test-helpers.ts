@@ -7,7 +7,7 @@ import spawn from "cross-spawn"
 import { existsSync } from "fs"
 
 export async function setupTmpDir(testName: string) {
-  const tempDirectory = path.join(tmpdir(), "setup-cpp", testName)
+  const tempDirectory = path.join(tmpdir(), "setup cpp temp", testName)
   try {
     await io.rmRF(tempDirectory)
     await io.mkdirP(tempDirectory)

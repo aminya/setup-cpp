@@ -23,6 +23,7 @@ specifiers:
   cross-env: 7.0.3
   cross-spawn: ^7.0.3
   cspell: ^5.20.0
+  escape-path-with-spaces: ^1.0.0
   eslint: ^8.14.0
   eslint-config-atomic: ^1.17.1
   execa: ^5.1.1
@@ -52,6 +53,7 @@ dependencies:
   '@actions/exec': 1.1.1
   '@actions/io': 1.1.2
   '@actions/tool-cache': 1.7.2
+  escape-path-with-spaces: 1.0.0
   execa: 5.1.1
   mri: 1.2.0
   msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
@@ -3587,6 +3589,10 @@ packages:
     resolution: {integrity: sha512-8/uIhbG12Csjy2JEW7D9pHbreaVaS/OpN3ycnyvElTdwM5n6GY6W6e2IPemfvGZeUMqZ9A/3GqIZMgKnBhAw/Q==}
     engines: {node: '>=8'}
     dev: true
+
+  /escape-path-with-spaces/1.0.0:
+    resolution: {integrity: sha512-+98Hh0yzVa0hldJXlzr0M/8B8LVXW9vNT5boC9k6o896Z52DGRplm3NwMGX0590ryGSegzTf/uaUiusFj2SQbQ==}
+    dev: false
 
   /escape-string-regexp/1.0.5:
     resolution: {integrity: sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=}

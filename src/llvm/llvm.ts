@@ -317,8 +317,8 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     }
   }
 
-  addEnv("LDFLAGS", `-L${directory}/lib`)
-  addEnv("CPPFLAGS", `-I${directory}/include`)
+  addEnv("LDFLAGS", `-L"${directory}/lib"`)
+  addEnv("CPPFLAGS", `-I"${directory}/include"`)
 
   addEnv("CC", `${directory}/bin/clang`)
   addEnv("CXX", `${directory}/bin/clang++`)
