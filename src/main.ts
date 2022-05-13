@@ -244,8 +244,7 @@ export async function main(args: string[]): Promise<number> {
         case "appleclang":
         case "applellvm": {
           notice("Assuming apple-clang is already installed")
-          await addEnv("CC", "clang")
-          await addEnv("CXX", "clang++")
+          await Promise.all([addEnv("CC", "clang"), addEnv("CXX", "clang++")])
           successMessages.push(getSuccessMessage("apple-clang", undefined))
           break
         }

@@ -68,48 +68,52 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
 }
 
 async function activateGcc(version: string, binDir: string) {
+  const promises: Promise<void>[] = []
+  // Setup gcc as the compiler
+
   // TODO
   // const ld = process.env.LD_LIBRARY_PATH ?? ""
   // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
-  // // Setup gcc as the compiler
-  // await addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`)
-  // await addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`)
-  // await addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`)
-  // await addEnv("LDFLAGS", `-L${installDir}/lib`)
-  // await addEnv("CPPFLAGS", `-I${installDir}/include`)
+  // promises.push(
+  //   addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`),
+  //   addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`),
+  //   addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`),
+  //   addEnv("LDFLAGS", `-L${installDir}/lib`),
+  //   addEnv("CPPFLAGS", `-I${installDir}/include`)
+  // )
+
   if (process.platform === "win32") {
-    await addEnv("CC", `${binDir}/gcc`)
-    await addEnv("CXX", `${binDir}/g++`)
+    promises.push(addEnv("CC", `${binDir}/gcc`), addEnv("CXX", `${binDir}/g++`))
   } else {
     const majorVersion = semverMajor(semverCoerce(version) ?? version)
     if (majorVersion >= 5) {
-      await addEnv("CC", `${binDir}/gcc-${majorVersion}`)
-      await addEnv("CXX", `${binDir}/g++-${majorVersion}`)
+      promises.push(addEnv("CC", `${binDir}/gcc-${majorVersion}`), addEnv("CXX", `${binDir}/g++-${majorVersion}`))
 
       if (process.platform === "linux") {
-        await updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
-        await updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
-        await updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`)
-        await updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
+        updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
+        updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
+        updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`)
+        updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
       }
     } else {
-      await addEnv("CC", `${binDir}/gcc-${version}`)
-      await addEnv("CXX", `${binDir}/g++-${version}`)
+      promises.push(addEnv("CC", `${binDir}/gcc-${version}`), addEnv("CXX", `${binDir}/g++-${version}`))
 
       if (process.platform === "linux") {
-        await updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
-        await updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
-        await updateAptAlternatives("gcc", `${binDir}/gcc-${version}`)
-        await updateAptAlternatives("g++", `${binDir}/g++-${version}`)
+        updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
+        updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
+        updateAptAlternatives("gcc", `${binDir}/gcc-${version}`)
+        updateAptAlternatives("g++", `${binDir}/g++-${version}`)
       }
     }
   }
 
-  await setupMacOSSDK()
+  promises.push(setupMacOSSDK())
 
   if (isGitHubCI()) {
     addGccLoggingMatcher()
   }
+
+  await Promise.all(promises)
 }
 
 function addGccLoggingMatcher() {

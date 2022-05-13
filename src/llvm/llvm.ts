@@ -301,45 +301,53 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  await addEnv("LLVM_PATH", directory) // the output of this action
+  const promises = [
+    // the output of this action
+    addEnv("LLVM_PATH", directory),
 
-  // Setup LLVM as the compiler
-  await addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`)
-  await addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`)
+    // Setup LLVM as the compiler
+    addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`),
+    addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`),
+
+    // compiler flags
+    addEnv("LDFLAGS", `-L'${directory}/lib'`),
+    addEnv("CPPFLAGS", `-I'${directory}/include'`),
+
+    // compiler paths
+    addEnv("CC", `${directory}/bin/clang`),
+    addEnv("CXX", `${directory}/bin/clang++`),
+
+    addEnv("LIBRARY_PATH", `${directory}/lib`),
+
+    // os sdks
+    setupMacOSSDK(),
+  ]
 
   // windows builds fail with llvm's CPATH
   if (process.platform !== "win32") {
     const llvmMajor = semverMajor(version)
     if (existsSync(`${directory}/lib/clang/${version}/include`)) {
-      await addEnv("CPATH", `${directory}/lib/clang/${version}/include`)
+      promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
     } else if (existsSync(`${directory}/lib/clang/${llvmMajor}/include`)) {
-      await addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`)
+      promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`))
     }
   }
 
-  await addEnv("LDFLAGS", `-L'${directory}/lib'`)
-  await addEnv("CPPFLAGS", `-I'${directory}/include'`)
-
-  await addEnv("CC", `${directory}/bin/clang`)
-  await addEnv("CXX", `${directory}/bin/clang++`)
-
-  await addEnv("LIBRARY_PATH", `${directory}/lib`)
-
-  await setupMacOSSDK()
-
   if (process.platform === "linux") {
-    await updateAptAlternatives("cc", `${directory}/bin/clang`)
-    await updateAptAlternatives("cxx", `${directory}/bin/clang++`)
-    await updateAptAlternatives("clang", `${directory}/bin/clang`)
-    await updateAptAlternatives("clang++", `${directory}/bin/clang++`)
-    await updateAptAlternatives("lld", `${directory}/bin/lld`)
-    await updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`)
-    await updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
+    updateAptAlternatives("cc", `${directory}/bin/clang`)
+    updateAptAlternatives("cxx", `${directory}/bin/clang++`)
+    updateAptAlternatives("clang", `${directory}/bin/clang`)
+    updateAptAlternatives("clang++", `${directory}/bin/clang++`)
+    updateAptAlternatives("lld", `${directory}/bin/lld`)
+    updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`)
+    updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
   }
 
   if (isGitHubCI()) {
     addLLVMLoggingMatcher()
   }
+
+  await Promise.all(promises)
 }
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
