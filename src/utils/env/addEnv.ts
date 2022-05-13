@@ -12,17 +12,17 @@ export async function addEnv(name: string, valGiven: string | undefined, shouldE
   const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
   try {
     if (isGitHubCI()) {
-      exportVariable(name, val)
+      try {
+        exportVariable(name, val)
+      } catch (err) {
+        error(err as Error)
+        await addEnvSystem(name, val)
+      }
     } else {
       await addEnvSystem(name, val)
     }
   } catch (err) {
-    try {
-      error(err as Error)
-      return addEnvSystem(name, val)
-    } catch (err2) {
-      error(err2 as Error)
-    }
+    error(err as Error)
     setFailed(`Failed to export environment variable ${name}=${val}. You should add it manually.`)
   }
 }
@@ -32,17 +32,17 @@ export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
     if (isGitHubCI()) {
-      ghAddPath(path)
+      try {
+        ghAddPath(path)
+      } catch (err) {
+        error(err as Error)
+        await addPathSystem(path)
+      }
     } else {
       await addPathSystem(path)
     }
   } catch (err) {
-    try {
-      error(err as Error)
-      return addPathSystem(path)
-    } catch (err2) {
-      error(err2 as Error)
-    }
+    error(err as Error)
     setFailed(`Failed to add ${path} to the percistent PATH. You should add it manually.`)
   }
 }
