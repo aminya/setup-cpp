@@ -9,6 +9,7 @@ import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import path from "path"
 import { warning, info } from "../utils/io/io"
 import { isGitHubCI } from "../utils/env/isci"
+import { addBinExtension } from "../utils/extension/extension"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGcc(version: string, _setupDir: string, arch: string) {
@@ -83,7 +84,7 @@ async function activateGcc(version: string, binDir: string) {
   // )
 
   if (process.platform === "win32") {
-    promises.push(addEnv("CC", `${binDir}/gcc`), addEnv("CXX", `${binDir}/g++`))
+    promises.push(addEnv("CC", addBinExtension(`${binDir}/gcc`)), addEnv("CXX", addBinExtension(`${binDir}/g++`)))
   } else {
     const majorVersion = semverMajor(semverCoerce(version) ?? version)
     if (majorVersion >= 5) {

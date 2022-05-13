@@ -314,8 +314,8 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     addEnv("CPPFLAGS", `-I'${directory}/include'`),
 
     // compiler paths
-    addEnv("CC", `${directory}/bin/clang`),
-    addEnv("CXX", `${directory}/bin/clang++`),
+    addEnv("CC", addBinExtension(`${directory}/bin/clang`)),
+    addEnv("CXX", addBinExtension(`${directory}/bin/clang++`)),
 
     addEnv("LIBRARY_PATH", `${directory}/lib`),
 
