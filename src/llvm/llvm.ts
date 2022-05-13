@@ -317,8 +317,8 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     }
   }
 
-  await addEnv("LDFLAGS", `-L"${directory}/lib"`)
-  await addEnv("CPPFLAGS", `-I"${directory}/include"`)
+  await addEnv("LDFLAGS", `-L'${directory}/lib'`)
+  await addEnv("CPPFLAGS", `-I'${directory}/include'`)
 
   await addEnv("CC", `${directory}/bin/clang`)
   await addEnv("CXX", `${directory}/bin/clang++`)

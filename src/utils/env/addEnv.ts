@@ -55,14 +55,14 @@ async function addEnvSystem(name: string, valGiven: string | undefined) {
     case "win32": {
       // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit
       await execPowershell(`[Environment]::SetEnvironmentVariable("${name}", "${val}", "User")`)
-      info(`${name}="${val} was set in the environment."`)
+      info(`${name}="${val}" was set in the environment.`)
       return
     }
     case "linux":
     case "darwin": {
       setupCppInProfile()
       appendFileSync(cpprc_path, `\nexport ${name}="${val}"\n`)
-      info(`${name}="${val} was added to "${cpprc_path}"`)
+      info(`${name}="${val}" was added to "${cpprc_path}`)
       return
     }
     default: {
