@@ -8,7 +8,7 @@ ADD "./dist/" "/"
 WORKDIR "/"
 
 # run installation
-RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --make true
+RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true
 
 CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/bash" ]
@@ -17,8 +17,8 @@ ENTRYPOINT [ "/bin/bash" ]
 FROM base AS builder
 ADD ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
-RUN bash -c 'source ~/.cpprc \ 
-    && make build'
+RUN bash -c 'source ~/.cpprc \
+    && task build'
 
 ### Running environment
 # use a distroless image or ubuntu:22.04 if you wish
