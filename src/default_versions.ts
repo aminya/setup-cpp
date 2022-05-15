@@ -6,12 +6,12 @@ const DefaultVersions: Record<string, string> = {
   clangformat: "13.0.0",
   ninja: "1.10.2", // https://github.com/ninja-build/ninja/releases
   cmake: "3.23.1", // https://github.com/Kitware/CMake/releases
-  gcovr: "5.0", // https://pypi.org/project/gcovr/
-  conan: "1.47.0", // https://github.com/conan-io/conan/releases
-  meson: "0.61.4", // https://github.com/mesonbuild/meson/releases
+  gcovr: "5.1", // https://pypi.org/project/gcovr/
+  conan: "1.48.0", // https://github.com/conan-io/conan/releases
+  meson: "0.62.1", // https://github.com/mesonbuild/meson/releases
   python: "3.8.10",
   kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
-  task: "3.12.0", // https://github.com/go-task/task/releases
+  task: "3.12.1", // https://github.com/go-task/task/releases
   doxygen: process.platform === "darwin" ? "1.9.3" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen
   gcc: process.platform === "win32" ? "11.2.0.07112021" : "11", // https://community.chocolatey.org/packages/mingw#versionhistory and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }

@@ -9,7 +9,7 @@ RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.
 RUN chmod +x ./setup_cpp_linux
 
 # install llvm, cmake, ninja, and ccache
-RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
+RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
 
 CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/bash" ]
@@ -19,7 +19,7 @@ FROM base AS builder
 ADD ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
-    && make build'
+    && task build'
 
 ### Running environment
 # use a distroless image or ubuntu:22.04 if you wish
