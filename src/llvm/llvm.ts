@@ -310,8 +310,8 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`),
 
     // compiler flags
-    addEnv("LDFLAGS", `-L'${directory}/lib'`),
-    addEnv("CPPFLAGS", `-I'${directory}/include'`),
+    addEnv("LDFLAGS", `-L"${directory}/lib"`),
+    addEnv("CPPFLAGS", `-I"${directory}/include"`),
 
     // compiler paths
     addEnv("CC", addBinExtension(`${directory}/bin/clang`)),
