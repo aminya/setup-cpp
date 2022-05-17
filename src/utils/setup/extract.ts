@@ -9,7 +9,7 @@ let sevenZip: string | undefined
 
 /// Extract 7z using 7z
 export async function extract7Zip(file: string, dest: string) {
-  await execa(await getSevenZip(), ["x", file, `-o${dest}`], { stdio: "inherit" })
+  await execa(await getSevenZip(), ["x", file, `-o${dest}`, "-y"], { stdio: "inherit" })
   return dest
 }
 
