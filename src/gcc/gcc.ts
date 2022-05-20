@@ -7,27 +7,31 @@ import semverMajor from "semver/functions/major"
 import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import path from "path"
-import { warning, info, notice } from "../utils/io/io"
+import { warning, info } from "../utils/io/io"
 import { isGitHubCI } from "../utils/env/isci"
 import { addBinExtension } from "../utils/extension/extension"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
 
 interface MingwInfo {
-  mingwVersion: string
-  llvmVersion?: string
-  number: string
-  runtime: "ucrt" | "msvcrt" // ucrt is the modern runtime and should be preferred
+  releaseName: string
+  fileSuffix: string
 }
 
+// https://github.com/brechtsanders/winlibs_mingw/releases
 const GccToMingwInfo = {
-  "12": { mingwVersion: "10.0.0", number: "r1", runtime: "msvcrt" },
-  "12.1.0-msvcrt": { mingwVersion: "10.0.0", number: "r1", runtime: "msvcrt" },
-  "11": { mingwVersion: "10.0.0", llvmVersion: "14.0.3", number: "r3", runtime: "ucrt" },
-  "11.3.0-ucrt": { mingwVersion: "10.0.0", llvmVersion: "14.0.3", number: "r3", runtime: "ucrt" },
-  "11.3.0-msvcrt": { mingwVersion: "10.0.0", llvmVersion: "14.0.3", number: "r3", runtime: "msvcrt" },
-  "11.2.0-ucrt": { mingwVersion: "9.0.0", number: "r5", runtime: "ucrt" },
-  "11.2.0-msvcrt": { mingwVersion: "9.0.0", number: "r6", runtime: "msvcrt" }, // TODO -w64-
+  "12": { releaseName: "12.1.0-10.0.0-msvcrt-r1", fileSuffix: "12.1.0-mingw-w64msvcrt-10.0.0-r1" },
+  "12.1.0-msvcrt": { releaseName: "12.1.0-10.0.0-msvcrt-r1", fileSuffix: "12.1.0-mingw-w64msvcrt-10.0.0-r1" },
+  "11": { releaseName: "11.3.0-14.0.3-10.0.0-ucrt-r3", fileSuffix: "11.3.0-mingw-w64ucrt-10.0.0-r3" },
+  "11.3.0-ucrt": { releaseName: "11.3.0-14.0.3-10.0.0-ucrt-r3", fileSuffix: "11.3.0-mingw-w64ucrt-10.0.0-r3" },
+  "11.3.0-msvcrt": { releaseName: "11.3.0-14.0.3-10.0.0-msvcrt-r3", fileSuffix: "11.3.0-mingw-w64msvcrt-10.0.0-r3" },
+  "11.2.0-ucrt": { releaseName: "11.2.0-9.0.0-ucrt-r5", fileSuffix: "11.2.0-mingw-w64ucrt-9.0.0-r5" },
+  "11.2.0-msvcrt": { releaseName: "11.2.0-9.0.0-msvcrt-r5", fileSuffix: "11.2.0-mingw-w64msvcrt-9.0.0-r5" },
+  "10": { releaseName: "10.3.0-12.0.0-9.0.0-r2", fileSuffix: "10.3.0-llvm-12.0.0-mingw-w64-9.0.0-r2" },
+  "10.3.0": { releaseName: "10.3.0-12.0.0-9.0.0-r2", fileSuffix: "10.3.0-llvm-12.0.0-mingw-w64-9.0.0-r2" },
+  "10.2.0": { releaseName: "10.2.0-7.0.0-r4", fileSuffix: "10.2.0-llvm-10.0.1-mingw-w64-7.0.0-r4" },
+  "9": { releaseName: "9.4.0-9.0.0-r1", fileSuffix: "9.4.0-mingw-w64-9.0.0-r1" },
+  "9.4.0": { releaseName: "9.4.0-9.0.0-r1", fileSuffix: "9.4.0-mingw-w64-9.0.0-r1" },
 } as Record<string, MingwInfo | undefined>
 
 function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {
@@ -38,13 +42,13 @@ function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: str
         throw new Error(`mingw version ${version} is not supported`)
       }
       const mingwArch = arch === "ia32" ? "i686" : "x86_64"
-      const llvmVersionString = mingwInfo.llvmVersion !== undefined ? `${mingwInfo.llvmVersion}-` : ""
+      const exceptionModel: "seh" | "dwarf" = "seh" // SEH is native windows exception model https://github.com/brechtsanders/winlibs_mingw/issues/4#issuecomment-599296483
       return {
         binRelativeDir: "./bin",
         binFileName: addBinExtension("g++"),
         extractedFolderName: "mingw64",
         extractFunction: extract7Zip,
-        url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${version}-${llvmVersionString}${mingwInfo.mingwVersion}-${mingwInfo.runtime}-${mingwInfo.number}/winlibs-${mingwArch}-posix-seh-gcc-${version}-mingw-w64${mingwInfo.runtime}-${mingwInfo.mingwVersion}-${mingwInfo.number}.7z`,
+        url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${mingwInfo.releaseName}/winlibs-${mingwArch}-posix-${exceptionModel}-gcc-${mingwInfo.fileSuffix}.7z`,
       }
     }
     default:
@@ -63,7 +67,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
       try {
         installationInfo = await setupBin("g++", version, getGccPackageInfo, setupDir, arch)
       } catch (err) {
-        notice(`Failed to download g++ binary. ${err}. Falling back to chocolatey.`)
+        info(`Failed to download g++ binary. ${err}. Falling back to chocolatey.`)
         installationInfo = await setupChocoMingw(version, arch)
       }
       break
