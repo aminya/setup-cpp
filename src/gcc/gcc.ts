@@ -19,16 +19,7 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
       if (arch === "arm" || arch === "arm64") {
         await setupChocoPack("gcc-arm-embedded", version)
       }
-      await setupChocoPack("mingw", version)
-      if (arch === "x64" && existsSync("C:/tools/mingw64/bin")) {
-        binDir = "C:/tools/mingw64/bin"
-        await addPath(binDir)
-      } else if (arch === "ia32" && existsSync("C:/tools/mingw32/bin")) {
-        binDir = "C:/tools/mingw32/bin"
-        await addPath(binDir)
-      } else if (existsSync(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
-        binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
-      }
+      binDir = await setupChocoMingw(version, arch)
       break
     }
     case "darwin": {
@@ -66,6 +57,21 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
     return { binDir }
   }
   return undefined
+}
+
+async function setupChocoMingw(version: string, arch: string) {
+  await setupChocoPack("mingw", version)
+  let binDir: string | undefined
+  if (arch === "x64" && existsSync("C:/tools/mingw64/bin")) {
+    binDir = "C:/tools/mingw64/bin"
+    await addPath(binDir)
+  } else if (arch === "ia32" && existsSync("C:/tools/mingw32/bin")) {
+    binDir = "C:/tools/mingw32/bin"
+    await addPath(binDir)
+  } else if (existsSync(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
+    binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
+  }
+  return binDir
 }
 
 async function activateGcc(version: string, binDir: string) {
