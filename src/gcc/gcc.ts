@@ -7,33 +7,79 @@ import semverMajor from "semver/functions/major"
 import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import path from "path"
-import { warning, info } from "../utils/io/io"
+import { warning, info, notice } from "../utils/io/io"
 import { isGitHubCI } from "../utils/env/isci"
 import { addBinExtension } from "../utils/extension/extension"
+import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
+import { extract7Zip } from "../utils/setup/extract"
+
+interface MingwInfo {
+  mingwVersion: string
+  llvmVersion?: string
+  number: string
+  runtime: "ucrt" | "msvcrt" // ucrt is the modern runtime and should be preferred
+}
+
+const GccToMingwInfo = {
+  "12": { mingwVersion: "10.0.0", number: "r1", runtime: "msvcrt" },
+  "12.1.0-msvcrt": { mingwVersion: "10.0.0", number: "r1", runtime: "msvcrt" },
+  "11": { mingwVersion: "10.0.0", llvmVersion: "14.0.3", number: "r3", runtime: "ucrt" },
+  "11.3.0-ucrt": { mingwVersion: "10.0.0", llvmVersion: "14.0.3", number: "r3", runtime: "ucrt" },
+  "11.3.0-msvcrt": { mingwVersion: "10.0.0", llvmVersion: "14.0.3", number: "r3", runtime: "msvcrt" },
+  "11.2.0-ucrt": { mingwVersion: "9.0.0", number: "r5", runtime: "ucrt" },
+  "11.2.0-msvcrt": { mingwVersion: "9.0.0", number: "r6", runtime: "msvcrt" }, // TODO -w64-
+} as Record<string, MingwInfo | undefined>
+
+function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {
+  switch (platform) {
+    case "win32": {
+      const mingwInfo = GccToMingwInfo[version]
+      if (mingwInfo === undefined) {
+        throw new Error(`mingw version ${version} is not supported`)
+      }
+      const mingwArch = arch === "ia32" ? "i686" : "x86_64"
+      const llvmVersionString = mingwInfo.llvmVersion !== undefined ? `${mingwInfo.llvmVersion}-` : ""
+      return {
+        binRelativeDir: "./bin",
+        binFileName: addBinExtension("g++"),
+        extractedFolderName: "mingw64",
+        extractFunction: extract7Zip,
+        url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${version}-${llvmVersionString}${mingwInfo.mingwVersion}-${mingwInfo.runtime}-${mingwInfo.number}/winlibs-${mingwArch}-posix-seh-gcc-${version}-mingw-w64${mingwInfo.runtime}-${mingwInfo.mingwVersion}-${mingwInfo.number}.7z`,
+      }
+    }
+    default:
+      throw new Error(`Unsupported platform '${platform}'`)
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupGcc(version: string, _setupDir: string, arch: string) {
-  let binDir: string | undefined
+export async function setupGcc(version: string, setupDir: string, arch: string) {
+  let installationInfo: InstallationInfo | undefined
   switch (process.platform) {
     case "win32": {
       if (arch === "arm" || arch === "arm64") {
         await setupChocoPack("gcc-arm-embedded", version)
       }
-      binDir = await setupChocoMingw(version, arch)
+      try {
+        installationInfo = await setupBin("g++", version, getGccPackageInfo, setupDir, arch)
+      } catch (err) {
+        notice(`Failed to download g++ binary. ${err}. Falling back to chocolatey.`)
+        installationInfo = await setupChocoMingw(version, arch)
+      }
       break
     }
     case "darwin": {
-      binDir = setupBrewPack("gcc", version).binDir
+      installationInfo = setupBrewPack("gcc", version)
       break
     }
     case "linux": {
       if (arch === "x64") {
         setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
-        binDir = setupAptPack("g++", version, []).binDir
+        installationInfo = setupAptPack("g++", version, [])
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
-        binDir = setupAptPack("g++-multilib", version, []).binDir
+        installationInfo = setupAptPack("g++-multilib", version, [])
       }
       break
     }
@@ -52,14 +98,14 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
       throw new Error(`Unsupported platform for ${arch}`)
     }
   }
-  if (binDir !== undefined) {
-    await activateGcc(version, binDir)
-    return { binDir }
+  if (installationInfo !== undefined) {
+    await activateGcc(version, installationInfo.binDir)
+    return installationInfo
   }
   return undefined
 }
 
-async function setupChocoMingw(version: string, arch: string) {
+async function setupChocoMingw(version: string, arch: string): Promise<InstallationInfo | undefined> {
   await setupChocoPack("mingw", version)
   let binDir: string | undefined
   if (arch === "x64" && existsSync("C:/tools/mingw64/bin")) {
@@ -71,7 +117,10 @@ async function setupChocoMingw(version: string, arch: string) {
   } else if (existsSync(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
     binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   }
-  return binDir
+  if (binDir !== undefined) {
+    return { binDir }
+  }
+  return undefined
 }
 
 async function activateGcc(version: string, binDir: string) {
