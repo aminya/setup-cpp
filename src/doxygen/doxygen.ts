@@ -9,6 +9,7 @@ import { notice } from "../utils/io/io"
 import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../default_versions"
 import { existsSync } from "fs"
+import { join } from "path"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -80,7 +81,7 @@ async function activateWinDoxygen() {
         "C:/Program Files/doxygen/bin",
         "C:/Program Files (x86)/doxygen",
       ]) {
-        if (existsSync(binDir)) {
+        if (existsSync(join(binDir, "doxygen.exe"))) {
           // eslint-disable-next-line no-await-in-loop
           await addPath(binDir)
           return binDir
