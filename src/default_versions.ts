@@ -16,16 +16,49 @@ const DefaultVersions: Record<string, string> = {
   gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 
+/// If an ubuntu versions is not in this map:
+// - the newer ubuntu versions use the first entry (e.g. v20),
+// - the older ones use ""
+const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
+  llvm: {
+    20: "13.0.0-ubuntu-20.04",
+    18: "13.0.1-ubuntu-18.04",
+    16: "13.0.0-ubuntu-16.04",
+  },
+  clangtidy: {
+    20: "13.0.0-ubuntu-20.04",
+    18: "13.0.1-ubuntu-18.04",
+    16: "13.0.0-ubuntu-16.04",
+  },
+  clangformat: {
+    20: "13.0.0-ubuntu-20.04",
+    18: "13.0.1-ubuntu-18.04",
+    16: "13.0.0-ubuntu-16.04",
+  },
+  gcovr: {
+    20: "5.1",
+    18: "5.0",
+  },
+  meson: {
+    20: "0.62.1",
+    18: "0.61.4",
+  },
+  doxygen: {
+    20: "1.9.4",
+  },
+}
+
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
   if (useDefault(version, name)) {
-    // llvm on linux
-    if (process.platform === "linux" && ["llvm", "clangtidy", "clangformat"].includes(name)) {
-      // choose the default version for llvm based on ubuntu
-      if (osVersion !== null) {
-        if ([20, 18, 16].includes(osVersion[0]) && osVersion[1] === 4) {
-          return `${osVersion[0] === 18 ? "13.0.1" : "13.0.0"}-ubuntu-${osVersion[0]}.0${osVersion[1]}`
-        }
+    // choose the default linux version based on ubuntu version
+    if (process.platform === "linux" && osVersion !== null && name in DefaultUbuntuVersion) {
+      const osVersionMaj = osVersion[0]
+      const newest = parseInt(Object.keys(DefaultUbuntuVersion[name])[0], 10) // newest version with the default
+      if (osVersionMaj >= newest) {
+        return DefaultUbuntuVersion[name][osVersionMaj]
+      } else {
+        return ""
       }
     }
     // anything else
