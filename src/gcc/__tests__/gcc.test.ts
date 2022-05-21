@@ -10,7 +10,7 @@ jest.setTimeout(3000000)
 describe("setup-gcc", () => {
   let directory: string
   beforeAll(async () => {
-    directory = await setupTmpDir("doxygen")
+    directory = await setupTmpDir("gcc")
   })
 
   it("should setup gcc", async () => {
@@ -37,6 +37,6 @@ describe("setup-gcc", () => {
   })
 
   afterAll(async () => {
-    await cleanupTmpDir("doxygen")
+    await cleanupTmpDir("gcc")
   }, 100000)
 })
