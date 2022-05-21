@@ -1,4 +1,4 @@
-import { testBin } from "../../utils/tests/test-helpers"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { setupGcc } from "../gcc"
 import { getVersion } from "../../default_versions"
 import path from "path"
@@ -8,9 +8,14 @@ import { chmodSync } from "fs"
 
 jest.setTimeout(3000000)
 describe("setup-gcc", () => {
+  let directory: string
+  beforeAll(async () => {
+    directory = await setupTmpDir("doxygen")
+  })
+
   it("should setup gcc", async () => {
-    const version = getVersion("gcc", undefined) || "11"
-    const installInfo = await setupGcc(version, "", process.arch)
+    const version = getVersion("gcc", undefined)
+    const installInfo = await setupGcc(version, directory, process.arch)
 
     let gpp = "g++"
     if (process.platform !== "win32") {
@@ -30,4 +35,8 @@ describe("setup-gcc", () => {
     }
     execa.sync(main_exe, { cwd: __dirname, stdio: "inherit" })
   })
+
+  afterAll(async () => {
+    await cleanupTmpDir("doxygen")
+  }, 100000)
 })

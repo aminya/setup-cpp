@@ -44,7 +44,7 @@ function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: str
       const mingwArch = arch === "ia32" ? "i686" : "x86_64"
       const exceptionModel: "seh" | "dwarf" = "seh" // SEH is native windows exception model https://github.com/brechtsanders/winlibs_mingw/issues/4#issuecomment-599296483
       return {
-        binRelativeDir: "./bin",
+        binRelativeDir: "bin/",
         binFileName: addBinExtension("g++"),
         extractedFolderName: "mingw64",
         extractFunction: extract7Zip,
