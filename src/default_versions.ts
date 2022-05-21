@@ -29,9 +29,9 @@ export function getVersion(name: string, version: string | undefined, osVersion:
         if (osVersion[0] < 20) {
           switch (name) {
             case "gcovr":
-              return "5.0"
+              return osVersion[0] === 18 ? "5.0" : "" /* pip default */
             case "meson":
-              return "0.61.4"
+              return osVersion[0] === 18 ? "0.61.4" : "" /* pip default */
             case "doxygen":
               return "1.9.1"
             default: {

@@ -33,23 +33,23 @@ describe("syncVersion", () => {
     expect(syncVersions(opts, llvmTools)).toBe(true)
     expect(opts.llvm).toBe(opts.clangtidy)
   })
+})
 
-  describe("getVersion", () => {
-    it("gcovr", () => {
-      expect(getVersion("gcovr", "5.0")).toBe("5.0")
-      if (process.platform === "linux") {
-        expect(getVersion("gcovr", "true", [20, 4])).toBe("5.1")
-        expect(getVersion("gcovr", "true", [18, 4])).toBe("5.0")
-      }
-    })
+describe("getVersion", () => {
+  it("gcovr", () => {
+    expect(getVersion("gcovr", "5.0")).toBe("5.0")
+    if (process.platform === "linux") {
+      expect(getVersion("gcovr", "true", [20, 4])).toBe("5.1")
+      expect(getVersion("gcovr", "true", [18, 4])).toBe("5.0")
+    }
+  })
 
-    it("llvm", () => {
-      expect(getVersion("llvm", "13.0.0")).toBe("13.0.0")
-      if (process.platform === "linux") {
-        expect(getVersion("llvm", "true", [20, 4])).toBe("13.0.0-ubuntu-20.04")
-        expect(getVersion("llvm", "true", [18, 4])).toBe("13.0.1-ubuntu-18.04")
-        expect(getVersion("llvm", "true", [16, 4])).toBe("13.0.0-ubuntu-16.04")
-      }
-    })
+  it("llvm", () => {
+    expect(getVersion("llvm", "13.0.0")).toBe("13.0.0")
+    if (process.platform === "linux") {
+      expect(getVersion("llvm", "true", [20, 4])).toBe("13.0.0-ubuntu-20.04")
+      expect(getVersion("llvm", "true", [18, 4])).toBe("13.0.1-ubuntu-18.04")
+      expect(getVersion("llvm", "true", [16, 4])).toBe("13.0.0-ubuntu-16.04")
+    }
   })
 })
