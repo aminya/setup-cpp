@@ -3,6 +3,7 @@ import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-help
 import { InstallationInfo } from "../../utils/setup/setupBin"
 import { getVersion } from "../../default_versions"
 import which from "which"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 
 jest.setTimeout(300000)
 describe("setup-doxygen", () => {
@@ -12,7 +13,11 @@ describe("setup-doxygen", () => {
   })
 
   it("should setup doxygen and dot", async () => {
-    const installInfo = await setupDoxygen(getVersion("doxygen", undefined), directory, process.arch)
+    const installInfo = await setupDoxygen(
+      getVersion("doxygen", undefined, await ubuntuVersion()),
+      directory,
+      process.arch
+    )
 
     await testBin("doxygen", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
 

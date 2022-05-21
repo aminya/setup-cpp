@@ -25,17 +25,18 @@ export function getVersion(name: string, version: string | undefined, osVersion:
         if ([20, 18, 16].includes(osVersion[0]) && osVersion[1] === 4) {
           return `${osVersion[0] === 18 ? "13.0.1" : "13.0.0"}-ubuntu-${osVersion[0]}.0${osVersion[1]}`
         }
-      }
-      if (osVersion[0] < 20) {
-        switch (name) {
-          case "gcovr":
-            return "5.0"
-          case "meson":
-            return "0.61.4"
-          case "doxygen":
-            return "1.9.1"
-          default: {
-            // nothing
+      } else {
+        if (osVersion[0] < 20) {
+          switch (name) {
+            case "gcovr":
+              return "5.0"
+            case "meson":
+              return "0.61.4"
+            case "doxygen":
+              return "1.9.1"
+            default: {
+              // nothing
+            }
           }
         }
       }
