@@ -41,6 +41,7 @@ words:
   - libtinfo
   - msbuild
   - msvc
+  - msvcrt
   - msys
   - multilib
   - mxschmitt
@@ -55,6 +56,7 @@ words:
   - setx
   - terserrc
   - tsbuildinfo
+  - ucrt
   - untildify
   - vcpkg
   - vcvarsall

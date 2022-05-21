@@ -13,7 +13,7 @@ const DefaultVersions: Record<string, string> = {
   kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
   task: "3.12.1", // https://github.com/go-task/task/releases
   doxygen: process.platform === "darwin" ? "1.9.3" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen
-  gcc: process.platform === "win32" ? "11.2.0.07112021" : "11", // https://community.chocolatey.org/packages/mingw#versionhistory and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
+  gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */

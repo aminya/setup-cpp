@@ -10,39 +10,80 @@ import path from "path"
 import { warning, info } from "../utils/io/io"
 import { isGitHubCI } from "../utils/env/isci"
 import { addBinExtension } from "../utils/extension/extension"
+import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
+import { extract7Zip } from "../utils/setup/extract"
+
+interface MingwInfo {
+  releaseName: string
+  fileSuffix: string
+}
+
+// https://github.com/brechtsanders/winlibs_mingw/releases
+const GccToMingwInfo = {
+  "12": { releaseName: "12.1.0-10.0.0-msvcrt-r1", fileSuffix: "12.1.0-mingw-w64msvcrt-10.0.0-r1" },
+  "12.1.0-msvcrt": { releaseName: "12.1.0-10.0.0-msvcrt-r1", fileSuffix: "12.1.0-mingw-w64msvcrt-10.0.0-r1" },
+  "11": { releaseName: "11.3.0-14.0.3-10.0.0-ucrt-r3", fileSuffix: "11.3.0-mingw-w64ucrt-10.0.0-r3" },
+  "11.3.0-ucrt": { releaseName: "11.3.0-14.0.3-10.0.0-ucrt-r3", fileSuffix: "11.3.0-mingw-w64ucrt-10.0.0-r3" },
+  "11.3.0-msvcrt": { releaseName: "11.3.0-14.0.3-10.0.0-msvcrt-r3", fileSuffix: "11.3.0-mingw-w64msvcrt-10.0.0-r3" },
+  "11.2.0-ucrt": { releaseName: "11.2.0-9.0.0-ucrt-r5", fileSuffix: "11.2.0-mingw-w64ucrt-9.0.0-r5" },
+  "11.2.0-msvcrt": { releaseName: "11.2.0-9.0.0-msvcrt-r5", fileSuffix: "11.2.0-mingw-w64msvcrt-9.0.0-r5" },
+  "10": { releaseName: "10.3.0-12.0.0-9.0.0-r2", fileSuffix: "10.3.0-llvm-12.0.0-mingw-w64-9.0.0-r2" },
+  "10.3.0": { releaseName: "10.3.0-12.0.0-9.0.0-r2", fileSuffix: "10.3.0-llvm-12.0.0-mingw-w64-9.0.0-r2" },
+  "10.2.0": { releaseName: "10.2.0-7.0.0-r4", fileSuffix: "10.2.0-llvm-10.0.1-mingw-w64-7.0.0-r4" },
+  "9": { releaseName: "9.4.0-9.0.0-r1", fileSuffix: "9.4.0-mingw-w64-9.0.0-r1" },
+  "9.4.0": { releaseName: "9.4.0-9.0.0-r1", fileSuffix: "9.4.0-mingw-w64-9.0.0-r1" },
+} as Record<string, MingwInfo | undefined>
+
+function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {
+  switch (platform) {
+    case "win32": {
+      const mingwInfo = GccToMingwInfo[version]
+      if (mingwInfo === undefined) {
+        throw new Error(`mingw version ${version} is not supported`)
+      }
+      const mingwArch = arch === "ia32" ? "i686" : "x86_64"
+      const exceptionModel: "seh" | "dwarf" = "seh" // SEH is native windows exception model https://github.com/brechtsanders/winlibs_mingw/issues/4#issuecomment-599296483
+      return {
+        binRelativeDir: "bin/",
+        binFileName: addBinExtension("g++"),
+        extractedFolderName: "mingw64",
+        extractFunction: extract7Zip,
+        url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${mingwInfo.releaseName}/winlibs-${mingwArch}-posix-${exceptionModel}-gcc-${mingwInfo.fileSuffix}.7z`,
+      }
+    }
+    default:
+      throw new Error(`Unsupported platform '${platform}'`)
+  }
+}
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupGcc(version: string, _setupDir: string, arch: string) {
-  let binDir: string | undefined
+export async function setupGcc(version: string, setupDir: string, arch: string) {
+  let installationInfo: InstallationInfo | undefined
   switch (process.platform) {
     case "win32": {
       if (arch === "arm" || arch === "arm64") {
         await setupChocoPack("gcc-arm-embedded", version)
       }
-      await setupChocoPack("mingw", version)
-      if (arch === "x64" && existsSync("C:/tools/mingw64/bin")) {
-        binDir = "C:/tools/mingw64/bin"
-        await addPath(binDir)
-      } else if (arch === "ia32" && existsSync("C:/tools/mingw32/bin")) {
-        binDir = "C:/tools/mingw32/bin"
-        await addPath(binDir)
-      } else if (existsSync(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
-        binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
+      try {
+        installationInfo = await setupBin("g++", version, getGccPackageInfo, setupDir, arch)
+      } catch (err) {
+        info(`Failed to download g++ binary. ${err}. Falling back to chocolatey.`)
+        installationInfo = await setupChocoMingw(version, arch)
       }
       break
     }
     case "darwin": {
-      binDir = setupBrewPack("gcc", version).binDir
+      installationInfo = setupBrewPack("gcc", version)
       break
     }
     case "linux": {
       if (arch === "x64") {
         setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
-        binDir = setupAptPack("g++", version, []).binDir
+        installationInfo = setupAptPack("g++", version, [])
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
-        binDir = setupAptPack("g++-multilib", version, []).binDir
+        installationInfo = setupAptPack("g++-multilib", version, [])
       }
       break
     }
@@ -61,8 +102,26 @@ export async function setupGcc(version: string, _setupDir: string, arch: string)
       throw new Error(`Unsupported platform for ${arch}`)
     }
   }
+  if (installationInfo !== undefined) {
+    await activateGcc(version, installationInfo.binDir)
+    return installationInfo
+  }
+  return undefined
+}
+
+async function setupChocoMingw(version: string, arch: string): Promise<InstallationInfo | undefined> {
+  await setupChocoPack("mingw", version)
+  let binDir: string | undefined
+  if (arch === "x64" && existsSync("C:/tools/mingw64/bin")) {
+    binDir = "C:/tools/mingw64/bin"
+    await addPath(binDir)
+  } else if (arch === "ia32" && existsSync("C:/tools/mingw32/bin")) {
+    binDir = "C:/tools/mingw32/bin"
+    await addPath(binDir)
+  } else if (existsSync(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
+    binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
+  }
   if (binDir !== undefined) {
-    await activateGcc(version, binDir)
     return { binDir }
   }
   return undefined
