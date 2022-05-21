@@ -56,6 +56,9 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
     }
     case "linux": {
       let installationInfo: InstallationInfo
+      if (version === "") {
+        installationInfo = setupAptPack("doxygen", undefined)
+      }
       try {
         // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
         installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)

@@ -33,7 +33,7 @@ export function getVersion(name: string, version: string | undefined, osVersion:
             case "meson":
               return osVersion[0] === 18 ? "0.61.4" : "" /* pip default */
             case "doxygen":
-              return "1.9.1"
+              return "" /* apt default */
             default: {
               // nothing
             }
