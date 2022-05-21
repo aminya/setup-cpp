@@ -19,15 +19,28 @@ const DefaultVersions: Record<string, string> = {
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
   if (useDefault(version, name)) {
-    // llvm on linux
-    if (process.platform === "linux" && ["llvm", "clangtidy", "clangformat"].includes(name)) {
-      // choose the default version for llvm based on ubuntu
-      if (osVersion !== null) {
+    // choose the default linux version based on ubuntu version
+    if (process.platform === "linux" && osVersion !== null) {
+      if (["llvm", "clangtidy", "clangformat"].includes(name)) {
         if ([20, 18, 16].includes(osVersion[0]) && osVersion[1] === 4) {
           return `${osVersion[0] === 18 ? "13.0.1" : "13.0.0"}-ubuntu-${osVersion[0]}.0${osVersion[1]}`
         }
       }
+      if (osVersion[0] < 20) {
+        switch (name) {
+          case "gcovr":
+            return "5.0"
+          case "meson":
+            return "0.61.4"
+          case "doxygen":
+            return "1.9.1"
+          default: {
+            // nothing
+          }
+        }
+      }
     }
+
     // anything else
     return DefaultVersions[name]
   } else {
