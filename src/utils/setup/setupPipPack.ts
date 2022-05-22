@@ -44,6 +44,9 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       // ensure that pip is installed on Linux (happens when python is found but pip not installed)
       setupAptPack("python3-pip")
     }
+
+    // install wheel (required for Conan, Meson, etc.)
+    execa.sync(python, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
   }
 
   execa.sync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
