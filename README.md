@@ -14,33 +14,18 @@ The package can be used locally or from CI services like GitHub Actions.
 
 `setup-cpp` can install all of these tools:
 
-- cmake
-- ninja
-- llvm
-- gcc
-- msvc
-- vcvarsall
-- vcpkg
-- meson
-- conan
-- make
-- task
-- ccache
-- cppcheck
-- clangtidy
-- clangformat
-- doxygen
-- gcovr
-- opencppcoverage
-- kcov
+| category              | tools                                                        |
+| --------------------- | ------------------------------------------------------------ |
+| compiler and analyzer | llvm, gcc, msvc, vcvarsall, cppcheck, clangtidy, clangformat |
+| build system          | cmake, ninja, meson, make, task                              |
+| package manager       | vcpkg, conan, choco, brew                                    |
+| cache                 | cppcache                                                     |
+| documentation         | doxygen, graphviz                                            |
+| coverage              | gcovr, opencppcoverage, kcov                                 |
+| other                 | python, sevenzip                                             |
 
-`setup-cpp` can also install the following. These are automatically installed if needed for the above Cpp tools (e.g., python is required for conan).
 
-- python
-- choco
-- brew
-- sevenzip
-- graphviz
+`setup-cpp` automatically installs the dependencies above tools if needed for the selected tool (e.g., `python` is required for `conan`).
 
 # Usage
 
