@@ -24,7 +24,7 @@ jobs:
         node:
           - 14 # installed on the images
         pnpm:
-          - 6
+          - 7
         cache_reset_counter:
           - 0
     steps:
