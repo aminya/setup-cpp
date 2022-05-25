@@ -1,5 +1,8 @@
 import { Inputs, Opts } from "./main"
 
+// passing "" to a tool installed by a package manager (apt, brew, choco) will result in the default version of that package manager.
+// the directly downloaded tools require a given version ("" doesn't work).
+
 const DefaultVersions: Record<string, string> = {
   llvm: "13.0.0", // https://github.com/llvm/llvm-project/releases
   clangtidy: "13.0.0",
@@ -9,11 +12,12 @@ const DefaultVersions: Record<string, string> = {
   gcovr: "5.1", // https://pypi.org/project/gcovr/
   conan: "1.48.0", // https://github.com/conan-io/conan/releases
   meson: "0.62.1", // https://github.com/mesonbuild/meson/releases
-  python: "3.8.10",
+  python: "3.8.10", // semver
   kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
   task: "3.12.1", // https://github.com/go-task/task/releases
   doxygen: process.platform === "darwin" ? "1.9.3" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen
   gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
+  cppcheck: process.platform === "win32" ? "2.7" : "",
 }
 
 /// If an ubuntu versions is not in this map:
@@ -24,16 +28,19 @@ const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
+    14: "13.0.0-ubuntu-16.04",
   },
   clangtidy: {
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
+    14: "13.0.0-ubuntu-16.04",
   },
   clangformat: {
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
+    14: "13.0.0-ubuntu-16.04",
   },
   gcovr: {
     20: "5.1",
