@@ -24,7 +24,6 @@ The package can be used locally or from CI services like GitHub Actions.
 | coverage              | gcovr, opencppcoverage, kcov                                 |
 | other                 | python, sevenzip                                             |
 
-
 `setup-cpp` automatically installs the dependencies above tools if needed for the selected tool (e.g., `python` is required for `conan`).
 
 # Usage
