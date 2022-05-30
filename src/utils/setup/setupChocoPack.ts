@@ -5,6 +5,7 @@ import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"
 import execa from "execa"
 import { info } from "@actions/core"
+import { notice } from "../io/io"
 
 let hasChoco = false
 
@@ -32,7 +33,16 @@ export async function setupChocoPack(name: string, version?: string, args: strin
       stdio: "inherit",
     })
   } else {
-    execa.sync("choco", ["install", "-y", name, ...args], { env, extendEnv: false, stdio: "inherit" })
+    try {
+      execa.sync("choco", ["install", "-y", name, ...args], { env, extendEnv: false, stdio: "inherit" })
+    } catch (err) {
+      // if the package requires a reboot, downgrade the error to a notice
+      if ((err as Error).message.includes("exit code 3010")) {
+        notice(`${name} might require a reboot for the completion of the installation.`)
+      } else {
+        throw err
+      }
+    }
   }
 
   const binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
