@@ -17,7 +17,6 @@ const DefaultVersions: Record<string, string> = {
   task: "3.12.1", // https://github.com/go-task/task/releases
   doxygen: process.platform === "darwin" ? "1.9.3" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen
   gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
-  cppcheck: process.platform === "win32" ? "2.7" : "",
 }
 
 /// If an ubuntu versions is not in this map:
