@@ -16,7 +16,7 @@ const DefaultVersions: Record<string, string> = {
   kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
   task: "3.12.1", // https://github.com/go-task/task/releases
   doxygen: process.platform === "darwin" ? "1.9.3" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen
-  gcc: "12", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
+  gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 
 /// If an ubuntu versions is not in this map:
