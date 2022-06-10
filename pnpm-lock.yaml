@@ -25,7 +25,7 @@ specifiers:
   cspell: ^6.1.2
   escape-path-with-spaces: ^1.0.0
   eslint: ^8.17.0
-  eslint-config-atomic: ^1.17.1
+  eslint-config-atomic: ^1.18.0
   execa: ^5.1.1
   jest: ^28.1.1
   loose-ts-check: ^1.2.0
@@ -77,7 +77,7 @@ devDependencies:
   cross-spawn: 7.0.3
   cspell: 6.1.2
   eslint: 8.17.0
-  eslint-config-atomic: 1.17.1
+  eslint-config-atomic: 1.18.0
   jest: 28.1.1_@types+node@17.0.41
   loose-ts-check: 1.2.0
   npm-check-updates: 13.1.2
@@ -2850,7 +2850,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001352
-      electron-to-chromium: 1.4.150
+      electron-to-chromium: 1.4.151
       escalade: 3.1.1
       node-releases: 2.0.5
       picocolors: 1.0.0
@@ -3634,8 +3634,8 @@ packages:
     resolution: {integrity: sha512-CEj8FwwNA4cVH2uFCoHUrmojhYh1vmCdOaneKJXwkeY1i9jnlslVo9dx+hQ5Hl9GnH/Bwy/IjxAyOePyPKYnzA==}
     dev: true
 
-  /electron-to-chromium/1.4.150:
-    resolution: {integrity: sha512-MP3oBer0X7ZeS9GJ0H6lmkn561UxiwOIY9TTkdxVY7lI9G6GVCKfgJaHaDcakwdKxBXA4T3ybeswH/WBIN/KTA==}
+  /electron-to-chromium/1.4.151:
+    resolution: {integrity: sha512-XaG2LpZi9fdiWYOqJh0dJy4SlVywCvpgYXhzOlZTp4JqSKqxn5URqOjbm9OMYB3aInA2GuHQiem1QUOc1yT0Pw==}
     dev: true
 
   /emittery/0.10.2:
@@ -3803,8 +3803,8 @@ packages:
     dev: true
     optional: true
 
-  /eslint-config-atomic/1.17.1:
-    resolution: {integrity: sha512-LFytMqabif4bB59bV8s3pc1gN/UNzRY53l5F8mzZQLKmSETXQ2UDTEJ62l8xyQocMsDcaCaY5ALNmJqBngIAFQ==}
+  /eslint-config-atomic/1.18.0:
+    resolution: {integrity: sha512-a5d+flotDyzV+pefVGHxKmZWrid9MYcFXrhTsRnYCkAUcfM6WUWESlq8/8MHnKVd600+VPMeNbb3illDbMp3jA==}
     dependencies:
       '@babel/core': 7.18.2
       '@babel/eslint-parser': 7.18.2_gzibxbxtyhdf6opvsfbldcsogi
@@ -3824,6 +3824,7 @@ packages:
       eslint-plugin-yaml: 0.5.0
       prettier: 2.6.2
       read-pkg-up: 7.0.1
+      semver: 7.3.7
       typescript: 4.7.3
     optionalDependencies:
       coffeescript: 1.12.7
@@ -7821,7 +7822,7 @@ packages:
     dev: true
 
   /text-table/0.2.0:
-    resolution: {integrity: sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=}
+    resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
 
   /throat/6.0.1:
