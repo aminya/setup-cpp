@@ -7,15 +7,15 @@ const DefaultVersions: Record<string, string> = {
   llvm: "13.0.0", // https://github.com/llvm/llvm-project/releases
   clangtidy: "13.0.0",
   clangformat: "13.0.0",
-  ninja: "1.10.2", // https://github.com/ninja-build/ninja/releases
-  cmake: "3.23.1", // https://github.com/Kitware/CMake/releases
+  ninja: "1.11.0", // https://github.com/ninja-build/ninja/releases
+  cmake: "3.23.2", // https://github.com/Kitware/CMake/releases
   gcovr: "5.1", // https://pypi.org/project/gcovr/
-  conan: "1.48.0", // https://github.com/conan-io/conan/releases
-  meson: "0.62.1", // https://github.com/mesonbuild/meson/releases
+  conan: "1.48.2", // https://github.com/conan-io/conan/releases
+  meson: "0.62.2", // https://github.com/mesonbuild/meson/releases
   python: "3.8.10", // semver
   kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
   task: "3.12.1", // https://github.com/go-task/task/releases
-  doxygen: process.platform === "darwin" ? "1.9.3" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen
+  doxygen: "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen
   gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 
