@@ -34,10 +34,10 @@ function isPyPyVersion(versionSpec: string) {
 
 export async function setupActionsPython(version: string, _setupDir: string, arch: string) {
   if (process.env.AGENT_TOOLSDIRECTORY?.trim()) {
-    debug(`Python is expected to be installed into AGENT_TOOLSDIRECTORY=${process.env["AGENT_TOOLSDIRECTORY"]}`)
-    process.env["RUNNER_TOOL_CACHE"] = process.env["AGENT_TOOLSDIRECTORY"]
+    debug(`Python is expected to be installed into AGENT_TOOLSDIRECTORY=${process.env.AGENT_TOOLSDIRECTORY}`)
+    process.env.RUNNER_TOOL_CACHE = process.env.AGENT_TOOLSDIRECTORY
   } else {
-    debug(`Python is expected to be installed into RUNNER_TOOL_CACHE==${process.env["RUNNER_TOOL_CACHE"]}`)
+    debug(`Python is expected to be installed into RUNNER_TOOL_CACHE==${process.env.RUNNER_TOOL_CACHE}`)
   }
   // const version = resolveVersionInput(versionGiven)
   if (version) {
