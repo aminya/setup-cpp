@@ -1,6 +1,7 @@
 import { addPath, addEnv } from "../utils/env/addEnv"
 import { existsSync } from "fs"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import semverMajor from "semver/functions/major"
@@ -12,6 +13,7 @@ import { isGitHubCI } from "../utils/env/isci"
 import { addBinExtension } from "../utils/extension/extension"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
+import which from "which"
 
 interface MingwInfo {
   releaseName: string
@@ -79,12 +81,19 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
     }
     case "linux": {
       if (arch === "x64") {
-        setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
-        installationInfo = setupAptPack("g++", version, [])
+        if (which.sync("pacman", { nothrow: true })) {
+          installationInfo = setupPacmanPack("gcc", version)
+        } else {
+          setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
+          installationInfo = setupAptPack("g++", version, [])
+        }
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
-        setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
-        installationInfo = setupAptPack("g++-multilib", version, [])
+        if (which.sync("pacman", { nothrow: true })) {
+          setupPacmanPack("gcc-multilib", version)
+        } else {
+          setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
+        }
       }
       break
     }

@@ -1,7 +1,9 @@
 import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
+import which from "which"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupMake(version: string, _setupDir: string, _arch: string) {
@@ -15,6 +17,9 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
       return { binDir: "/usr/local/opt/make/libexec/gnubin" }
     }
     case "linux": {
+      if (which.sync("pacman", { nothrow: true })) {
+        return setupPacmanPack("make", version)
+      }
       return setupAptPack("make", version)
     }
     default: {

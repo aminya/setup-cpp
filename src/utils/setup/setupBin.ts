@@ -6,6 +6,8 @@ import { existsSync } from "fs"
 import { tmpdir } from "os"
 import { isGitHubCI } from "../env/isci"
 import { setupAptPack } from "./setupAptPack"
+import { setupPacmanPack } from "./setupPacmanPack"
+import which from "which"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -88,9 +90,15 @@ export async function setupBin(
     if (!didInit) {
       if (process.platform === "linux") {
         // extraction dependencies
-        setupAptPack("unzip")
-        setupAptPack("tar")
-        setupAptPack("xz-utils")
+        if (which.sync("pacman", { nothrow: true })) {
+          setupPacmanPack("unzip")
+          setupPacmanPack("tar")
+          setupPacmanPack("xz")
+        } else {
+          setupAptPack("unzip")
+          setupAptPack("tar")
+          setupAptPack("xz-utils")
+        }
       }
       // eslint-disable-next-line require-atomic-updates
       didInit = true

@@ -20,6 +20,7 @@ import { existsSync } from "fs"
 import { isGitHubCI } from "../utils/env/isci"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../default_versions"
+import which from "which"
 
 //================================================
 // Version
@@ -285,7 +286,12 @@ async function _setupLLVM(version: string, setupDir: string, arch: string) {
     if (process.platform === "linux") {
       // install llvm build dependencies
       await setupGcc(getVersion("gcc", undefined), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
-      setupAptPack("libtinfo-dev")
+      if (which.sync("pacman", { nothrow: true })) {
+        // setupPacmanPack("ncurses")
+        // TODO: install libtinfo ?
+      } else {
+        setupAptPack("libtinfo-dev")
+      }
     }
     // eslint-disable-next-line require-atomic-updates
     didInit = true

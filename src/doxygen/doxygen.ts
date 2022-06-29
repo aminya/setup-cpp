@@ -1,5 +1,6 @@
 import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
@@ -10,6 +11,7 @@ import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../default_versions"
 import { existsSync } from "fs"
 import { join } from "path"
+import which from "which"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -57,15 +59,23 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
     case "linux": {
       let installationInfo: InstallationInfo
       if (version === "") {
-        installationInfo = setupAptPack("doxygen", undefined)
-      } else {
-        try {
-          // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
-          installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-          setupAptPack("libclang-cpp9")
-        } catch (err) {
-          notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
+        if (which.sync("pacman", { nothrow: true })) {
+          installationInfo = setupPacmanPack("doxygen", undefined)
+        } else {
           installationInfo = setupAptPack("doxygen", undefined)
+        }
+      } else {
+        if (which.sync("pacman", { nothrow: true })) {
+          installationInfo = setupPacmanPack("doxygen", version)
+        } else {
+          try {
+            // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
+            installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
+            setupAptPack("libclang-cpp9")
+          } catch (err) {
+            notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
+            installationInfo = setupAptPack("doxygen", undefined)
+          }
         }
       }
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)

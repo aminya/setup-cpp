@@ -8,6 +8,7 @@ import { execSudo } from "../utils/exec/sudo"
 import { addBinExtension } from "../utils/extension/extension"
 import { extractTarByExe } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { PackageInfo, setupBin } from "../utils/setup/setupBin"
 
 function getKcovPackageInfo(version: string): PackageInfo {
@@ -42,8 +43,13 @@ async function buildKcov(file: string, dest: string) {
     await setupCmake(getVersion("cmake", undefined), join(untildify(""), "cmake"), "")
   }
   if (process.platform === "linux") {
-    setupAptPack("libdw-dev")
-    setupAptPack("libcurl4-openssl-dev")
+    if (which.sync("pacman", { nothrow: true })) {
+      setupPacmanPack("libdwarf")
+      setupPacmanPack("libcurl-openssl")
+    } else {
+      setupAptPack("libdw-dev")
+      setupAptPack("libcurl4-openssl-dev")
+    }
   }
   await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
   await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
@@ -54,6 +60,12 @@ async function buildKcov(file: string, dest: string) {
 export async function setupKcov(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "linux": {
+      if (which.sync("pacman", { nothrow: true })) {
+        // TODO install kcov ? setupPacmanPack("kcov")
+        const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
+        setupPacmanPack("binutils")
+        return installationInfo
+      }
       const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
       setupAptPack("libbinutils")
       return installationInfo
