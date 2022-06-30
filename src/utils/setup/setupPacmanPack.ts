@@ -1,10 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
 import { execSudo } from "../exec/sudo"
-import { info } from "@actions/core"
-import { isGitHubCI } from "../env/isci"
-import { cpprc_path, setupCppInProfile } from "../env/addEnv"
-import { appendFileSync } from "fs"
+import { info } from "../io/io"
 
 let didUpdate: boolean = false
 let didInit: boolean = false
@@ -21,10 +18,11 @@ export function setupPacmanPack(name: string, version?: string, aur?: string): I
   }
 
   if (!didInit) {
-    // install base-devel
     // set time - zone
     // TZ = Canada / Pacific
     // ln - snf / usr / share / zoneinfo / $TZ / etc / localtime && echo $TZ > /etc/timezone
+
+    // install base-devel
     execSudo(pacman, ["-Sy", "--noconfirm", "base-devel"])
     didInit = true
   }
@@ -40,16 +38,4 @@ export function setupPacmanPack(name: string, version?: string, aur?: string): I
   }
 
   return { binDir: "/usr/bin/" }
-}
-
-export function updateAptAlternatives(name: string, path: string) {
-  if (isGitHubCI()) {
-    return execSudo("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
-  } else {
-    setupCppInProfile()
-    return appendFileSync(
-      cpprc_path,
-      `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 40; fi\n`
-    )
-  }
 }
