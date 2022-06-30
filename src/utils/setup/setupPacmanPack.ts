@@ -10,11 +10,7 @@ let didUpdate: boolean = false
 let didInit: boolean = false
 
 /** A function that installs a package using pacman */
-export function setupPacmanPack(
-  name: string,
-  version?: string,
-  aur?: string,
-): InstallationInfo {
+export function setupPacmanPack(name: string, version?: string, aur?: string): InstallationInfo {
   info(`Installing ${name} ${version ?? ""} via pacman`)
 
   const pacman = "pacman"
@@ -29,11 +25,7 @@ export function setupPacmanPack(
     // set time - zone
     // TZ = Canada / Pacific
     // ln - snf / usr / share / zoneinfo / $TZ / etc / localtime && echo $TZ > /etc/timezone
-    execSudo(pacman, [
-      "-Sy",
-      "--noconfirm",
-      "base-devel",
-    ])
+    execSudo(pacman, ["-Sy", "--noconfirm", "base-devel"])
     didInit = true
   }
 

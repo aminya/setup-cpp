@@ -10,6 +10,4 @@ Before running the tests locally, backup your environment variables because faul
 
 <https://stackoverflow.com/a/5147185/7910299>
 
-
 Install [container-structure-test](https://github.com/GoogleContainerTools/container-structure-test) for docker testing.
-
