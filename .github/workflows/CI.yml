@@ -84,12 +84,14 @@ jobs:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip docker]') }}
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         os:
           - ubuntu-20.04
         container:
           - "ubuntu_node.dockerfile"
           - "ubuntu_20.04_node.dockerfile"
+          - "arch_node.dockerfile"
         node:
           - 14
         pnpm:

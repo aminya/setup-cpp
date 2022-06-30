@@ -1,9 +1,11 @@
 import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isGitHubCI } from "../utils/env/isci"
 import { warning, info } from "../utils/io/io"
+import { isArch } from "../utils/env/isArch"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
@@ -38,6 +40,11 @@ export async function setupPythonViaSystem(version: string, setupDir: string, _a
       return setupBrewPack("python3", version)
     }
     case "linux": {
+      if (isArch()) {
+        const installInfo = setupPacmanPack("python", version)
+        setupPacmanPack("python-pip")
+        return installInfo
+      }
       const installInfo = setupAptPack("python3", version)
       setupAptPack("python3-pip")
       return installInfo

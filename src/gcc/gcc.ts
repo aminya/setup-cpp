@@ -1,6 +1,7 @@
 import { addPath, addEnv } from "../utils/env/addEnv"
 import { existsSync } from "fs"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import semverMajor from "semver/functions/major"
@@ -12,6 +13,8 @@ import { isGitHubCI } from "../utils/env/isci"
 import { addBinExtension } from "../utils/extension/extension"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
+import { isArch } from "../utils/env/isArch"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 interface MingwInfo {
   releaseName: string
@@ -79,12 +82,19 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
     }
     case "linux": {
       if (arch === "x64") {
-        setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
-        installationInfo = setupAptPack("g++", version, [])
+        if (isArch()) {
+          installationInfo = setupPacmanPack("gcc", version)
+        } else {
+          setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
+          installationInfo = setupAptPack("g++", version, [])
+        }
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
-        setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
-        installationInfo = setupAptPack("g++-multilib", version, [])
+        if (isArch()) {
+          setupPacmanPack("gcc-multilib", version)
+        } else {
+          setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
+        }
       }
       break
     }
@@ -150,7 +160,7 @@ async function activateGcc(version: string, binDir: string) {
     if (majorVersion >= 5) {
       promises.push(addEnv("CC", `${binDir}/gcc-${majorVersion}`), addEnv("CXX", `${binDir}/g++-${majorVersion}`))
 
-      if (process.platform === "linux") {
+      if (isUbuntu()) {
         updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
         updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
         updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`)
@@ -159,7 +169,7 @@ async function activateGcc(version: string, binDir: string) {
     } else {
       promises.push(addEnv("CC", `${binDir}/gcc-${version}`), addEnv("CXX", `${binDir}/g++-${version}`))
 
-      if (process.platform === "linux") {
+      if (isUbuntu()) {
         updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
         updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
         updateAptAlternatives("gcc", `${binDir}/gcc-${version}`)

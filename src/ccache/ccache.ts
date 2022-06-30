@@ -1,6 +1,8 @@
 import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
+import { isArch } from "../utils/env/isArch"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setupCcache(version: string, _setupDir: string, _arch: string) {
@@ -12,6 +14,9 @@ export function setupCcache(version: string, _setupDir: string, _arch: string) {
       return setupBrewPack("ccache", version)
     }
     case "linux": {
+      if (isArch()) {
+        return setupPacmanPack("ccache", version)
+      }
       return setupAptPack("ccache", version)
     }
     default: {

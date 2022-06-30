@@ -8,7 +8,9 @@ import { execSudo } from "../utils/exec/sudo"
 import { addShellExtension, addShellHere } from "../utils/extension/extension"
 import { notice } from "../utils/io/io"
 import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { InstallationInfo } from "../utils/setup/setupBin"
+import { isArch } from "../utils/env/isArch"
 
 let hasVCPKG = false
 
@@ -17,12 +19,21 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
   if (!hasVCPKG || which.sync("vcpkg", { nothrow: true }) === null) {
     if (process.platform === "linux") {
       // vcpkg download and extraction dependencies
-      setupAptPack("curl")
-      setupAptPack("zip")
-      setupAptPack("unzip")
-      setupAptPack("tar")
-      setupAptPack("git")
-      setupAptPack("pkg-config")
+      if (isArch()) {
+        setupPacmanPack("curl")
+        setupPacmanPack("zip")
+        setupPacmanPack("unzip")
+        setupPacmanPack("tar")
+        setupPacmanPack("git")
+        setupPacmanPack("pkg-config")
+      } else {
+        setupAptPack("curl")
+        setupAptPack("zip")
+        setupAptPack("unzip")
+        setupAptPack("tar")
+        setupAptPack("git")
+        setupAptPack("pkg-config")
+      }
     }
 
     if (!existsSync(join(setupDir, addShellExtension("bootstrap-vcpkg")))) {

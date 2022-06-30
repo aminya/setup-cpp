@@ -1,7 +1,9 @@
 import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
+import { isArch } from "../utils/env/isArch"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupCppcheck(version: string | undefined, _setupDir: string, _arch: string) {
@@ -15,6 +17,9 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
       return setupBrewPack("cppcheck", version)
     }
     case "linux": {
+      if (isArch()) {
+        return setupPacmanPack("cppcheck", version)
+      }
       return setupAptPack("cppcheck", version)
     }
     default: {

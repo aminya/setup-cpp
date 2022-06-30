@@ -1,4 +1,5 @@
 import { Inputs, Opts } from "./main"
+import { isArch } from "./utils/env/isArch"
 
 // passing "" to a tool installed by a package manager (apt, brew, choco) will result in the default version of that package manager.
 // the directly downloaded tools require a given version ("" doesn't work).
@@ -14,7 +15,7 @@ const DefaultVersions: Record<string, string> = {
   meson: "0.62.2", // https://github.com/mesonbuild/meson/releases
   kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
   task: "3.12.1", // https://github.com/go-task/task/releases
-  doxygen: "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen
+  doxygen: isArch() ? "1.9.3-1" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 

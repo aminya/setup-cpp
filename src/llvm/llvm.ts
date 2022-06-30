@@ -20,6 +20,8 @@ import { existsSync } from "fs"
 import { isGitHubCI } from "../utils/env/isci"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../default_versions"
+import { isArch } from "../utils/env/isArch"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 //================================================
 // Version
@@ -285,7 +287,12 @@ async function _setupLLVM(version: string, setupDir: string, arch: string) {
     if (process.platform === "linux") {
       // install llvm build dependencies
       await setupGcc(getVersion("gcc", undefined), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
-      setupAptPack("libtinfo-dev")
+      if (isArch()) {
+        // setupPacmanPack("ncurses")
+        // TODO: install libtinfo ?
+      } else {
+        setupAptPack("libtinfo-dev")
+      }
     }
     // eslint-disable-next-line require-atomic-updates
     didInit = true
@@ -333,7 +340,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     }
   }
 
-  if (process.platform === "linux") {
+  if (isUbuntu()) {
     updateAptAlternatives("cc", `${directory}/bin/clang`)
     updateAptAlternatives("cxx", `${directory}/bin/clang++`)
     updateAptAlternatives("clang", `${directory}/bin/clang`)

@@ -1,0 +1,4 @@
+.parcel-cache/
+node_modules/
+dev/docker/
+dev/container-tests/
