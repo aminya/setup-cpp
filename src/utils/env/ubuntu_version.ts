@@ -1,7 +1,8 @@
 import { getUbuntuVersion } from "ubuntu-version"
+import { isUbuntu } from "./isUbuntu"
 
 export async function ubuntuVersion(): Promise<number[] | null> {
-  if (process.platform === "linux") {
+  if (isUbuntu()) {
     const versionSplitted = await getUbuntuVersion()
 
     if (versionSplitted.length === 0) {
