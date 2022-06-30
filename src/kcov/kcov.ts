@@ -10,6 +10,7 @@ import { extractTarByExe } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { PackageInfo, setupBin } from "../utils/setup/setupBin"
+import { isArch } from "../utils/env/isArch"
 
 function getKcovPackageInfo(version: string): PackageInfo {
   const version_number = parseInt(version.replace(/^v/, ""), 10)
@@ -43,7 +44,7 @@ async function buildKcov(file: string, dest: string) {
     await setupCmake(getVersion("cmake", undefined), join(untildify(""), "cmake"), "")
   }
   if (process.platform === "linux") {
-    if (which.sync("pacman", { nothrow: true })) {
+    if (isArch()) {
       setupPacmanPack("libdwarf")
       setupPacmanPack("libcurl-openssl")
     } else {
@@ -60,7 +61,7 @@ async function buildKcov(file: string, dest: string) {
 export async function setupKcov(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "linux": {
-      if (which.sync("pacman", { nothrow: true })) {
+      if (isArch()) {
         // TODO install kcov ? setupPacmanPack("kcov")
         const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
         setupPacmanPack("binutils")

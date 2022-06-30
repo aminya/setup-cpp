@@ -5,7 +5,7 @@ import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isGitHubCI } from "../utils/env/isci"
 import { warning, info } from "../utils/io/io"
-import which from "which"
+import { isArch } from "../utils/env/isArch"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
@@ -40,7 +40,7 @@ export async function setupPythonViaSystem(version: string, setupDir: string, _a
       return setupBrewPack("python3", version)
     }
     case "linux": {
-      if (which.sync("pacman", { nothrow: true })) {
+      if (isArch()) {
         const installInfo = setupPacmanPack("python", version)
         setupPacmanPack("python-pip")
         return installInfo

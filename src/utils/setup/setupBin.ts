@@ -7,7 +7,7 @@ import { tmpdir } from "os"
 import { isGitHubCI } from "../env/isci"
 import { setupAptPack } from "./setupAptPack"
 import { setupPacmanPack } from "./setupPacmanPack"
-import which from "which"
+import { isArch } from "../env/isArch"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -90,7 +90,7 @@ export async function setupBin(
     if (!didInit) {
       if (process.platform === "linux") {
         // extraction dependencies
-        if (which.sync("pacman", { nothrow: true })) {
+        if (isArch()) {
           setupPacmanPack("unzip")
           setupPacmanPack("tar")
           setupPacmanPack("xz")

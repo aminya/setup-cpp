@@ -11,6 +11,7 @@ import { getVersion } from "../../default_versions"
 import { InstallationInfo } from "./setupBin"
 import { setupAptPack } from "./setupAptPack"
 import { setupPacmanPack } from "./setupPacmanPack"
+import { isArch } from "../env/isArch"
 
 let python: string | undefined
 let binDir: string | undefined
@@ -43,7 +44,7 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       execa.sync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
     } else if (process.platform === "linux") {
       // ensure that pip is installed on Linux (happens when python is found but pip not installed)
-      if (which.sync("pacman", { nothrow: true })) {
+      if (isArch()) {
         setupPacmanPack("python-pip")
       } else {
         setupAptPack("python3-pip")

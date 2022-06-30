@@ -11,7 +11,7 @@ import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../default_versions"
 import { existsSync } from "fs"
 import { join } from "path"
-import which from "which"
+import { isArch } from "../utils/env/isArch"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,13 +59,13 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
     case "linux": {
       let installationInfo: InstallationInfo
       if (version === "") {
-        if (which.sync("pacman", { nothrow: true })) {
+        if (isArch()) {
           installationInfo = setupPacmanPack("doxygen", undefined)
         } else {
           installationInfo = setupAptPack("doxygen", undefined)
         }
       } else {
-        if (which.sync("pacman", { nothrow: true })) {
+        if (isArch()) {
           installationInfo = setupPacmanPack("doxygen", version)
         } else {
           try {

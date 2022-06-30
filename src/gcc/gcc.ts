@@ -13,7 +13,7 @@ import { isGitHubCI } from "../utils/env/isci"
 import { addBinExtension } from "../utils/extension/extension"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
-import which from "which"
+import { isArch } from "../utils/env/isArch"
 
 interface MingwInfo {
   releaseName: string
@@ -81,7 +81,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
     }
     case "linux": {
       if (arch === "x64") {
-        if (which.sync("pacman", { nothrow: true })) {
+        if (isArch()) {
           installationInfo = setupPacmanPack("gcc", version)
         } else {
           setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
@@ -89,7 +89,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
         }
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
-        if (which.sync("pacman", { nothrow: true })) {
+        if (isArch()) {
           setupPacmanPack("gcc-multilib", version)
         } else {
           setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
