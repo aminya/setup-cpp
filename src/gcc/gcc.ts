@@ -14,6 +14,7 @@ import { addBinExtension } from "../utils/extension/extension"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
 import { isArch } from "../utils/env/isArch"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 interface MingwInfo {
   releaseName: string
@@ -159,7 +160,7 @@ async function activateGcc(version: string, binDir: string) {
     if (majorVersion >= 5) {
       promises.push(addEnv("CC", `${binDir}/gcc-${majorVersion}`), addEnv("CXX", `${binDir}/g++-${majorVersion}`))
 
-      if (process.platform === "linux") {
+      if (isUbuntu()) {
         updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
         updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
         updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`)
@@ -168,7 +169,7 @@ async function activateGcc(version: string, binDir: string) {
     } else {
       promises.push(addEnv("CC", `${binDir}/gcc-${version}`), addEnv("CXX", `${binDir}/g++-${version}`))
 
-      if (process.platform === "linux") {
+      if (isUbuntu()) {
         updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
         updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
         updateAptAlternatives("gcc", `${binDir}/gcc-${version}`)

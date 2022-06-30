@@ -21,6 +21,7 @@ import { isGitHubCI } from "../utils/env/isci"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../default_versions"
 import { isArch } from "../utils/env/isArch"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 //================================================
 // Version
@@ -339,7 +340,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     }
   }
 
-  if (process.platform === "linux") {
+  if (isUbuntu()) {
     updateAptAlternatives("cc", `${directory}/bin/clang`)
     updateAptAlternatives("cxx", `${directory}/bin/clang++`)
     updateAptAlternatives("clang", `${directory}/bin/clang`)
