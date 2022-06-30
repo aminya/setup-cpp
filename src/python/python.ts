@@ -6,6 +6,9 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isGitHubCI } from "../utils/env/isci"
 import { warning, info } from "../utils/io/io"
 import { isArch } from "../utils/env/isArch"
+import which from "which"
+import { InstallationInfo } from "../utils/setup/setupBin"
+import { dirname, join } from "path"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
@@ -21,8 +24,12 @@ export async function setupPython(version: string, setupDir: string, arch: strin
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupPythonViaSystem(version: string, setupDir: string, _arch: string) {
+export async function setupPythonViaSystem(
+  version: string,
+  setupDir: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _arch: string
+): Promise<InstallationInfo> {
   switch (process.platform) {
     case "win32": {
       if (setupDir) {
@@ -30,11 +37,15 @@ export async function setupPythonViaSystem(version: string, setupDir: string, _a
       } else {
         await setupChocoPack("python3", version)
       }
-
       // Adding the bin dir to the path
+      const pythonBinPath =
+        which.sync("python3.exe", { nothrow: true }) ??
+        which.sync("python.exe", { nothrow: true }) ??
+        join(setupDir, "python.exe")
+      const pythonSetupDir = dirname(pythonBinPath)
       /** The directory which the tool is installed to */
-      await activateWinPython(setupDir)
-      return { installDir: setupDir, binDir: setupDir }
+      await activateWinPython(pythonSetupDir)
+      return { installDir: pythonSetupDir, binDir: pythonSetupDir }
     }
     case "darwin": {
       return setupBrewPack("python3", version)
