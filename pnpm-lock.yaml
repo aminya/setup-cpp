@@ -38,7 +38,7 @@ specifiers:
   prettier: 2.7.1
   prettier-config-atomic: ^3.0.10
   semver: 7.3.7
-  setup-python: github:actions/setup-python#ffcd00020c213885323d35524aa155f17870b8dd
+  setup-python: github:actions/setup-python#f0bcf8be037eba11327da6eaf40cd99a2a092494
   shx: 0.3.4
   terser-config-atomic: ^0.1.1
   time-delta: github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e
@@ -59,7 +59,7 @@ dependencies:
   msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
   numerous: 1.0.3
   semver: 7.3.7
-  setup-python: github.com/actions/setup-python/ffcd00020c213885323d35524aa155f17870b8dd
+  setup-python: github.com/actions/setup-python/f0bcf8be037eba11327da6eaf40cd99a2a092494
   time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
   ubuntu-version: 2.0.0
   untildify: 4.0.0
@@ -92,8 +92,8 @@ devDependencies:
 
 packages:
 
-  /@actions/cache/2.0.6:
-    resolution: {integrity: sha512-Z39ZrWaTRRPaV/AOQdY7hve+Iy/HloH5prpz+k+0lZgGQs/3SeO0UYSIakVuXOk2pdMZnl0Nv0PoK1rmh9YfGQ==}
+  /@actions/cache/3.0.0:
+    resolution: {integrity: sha512-GL9CT1Fnu+pqs8TTB621q8Xa8Cilw2n9MwvbgMedetH7L1q2n6jY61gzbwGbKgtVbp3gVJ12aNMi4osSGXx3KQ==}
     dependencies:
       '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
@@ -8192,12 +8192,12 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
-  github.com/actions/setup-python/ffcd00020c213885323d35524aa155f17870b8dd:
-    resolution: {tarball: https://codeload.github.com/actions/setup-python/tar.gz/ffcd00020c213885323d35524aa155f17870b8dd}
+  github.com/actions/setup-python/f0bcf8be037eba11327da6eaf40cd99a2a092494:
+    resolution: {tarball: https://codeload.github.com/actions/setup-python/tar.gz/f0bcf8be037eba11327da6eaf40cd99a2a092494}
     name: setup-python
     version: 4.0.0
     dependencies:
-      '@actions/cache': 2.0.6
+      '@actions/cache': 3.0.0
       '@actions/core': 1.9.0
       '@actions/exec': 1.1.1
       '@actions/glob': 0.2.1

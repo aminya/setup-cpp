@@ -49,7 +49,7 @@
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
     "numerous": "1.0.3",
     "semver": "7.3.7",
-    "setup-python": "github:actions/setup-python#ffcd00020c213885323d35524aa155f17870b8dd",
+    "setup-python": "github:actions/setup-python#f0bcf8be037eba11327da6eaf40cd99a2a092494",
     "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",
     "ubuntu-version": "^2.0.0",
     "untildify": "^4.0.0",
