@@ -5,7 +5,12 @@
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
+  "exports": {
+    "import": "./dist/setup-cpp.mjs",
+    "require": "./dist/setup-cpp.js"
+  },
   "main": "./dist/setup_cpp.js",
+  "module": "./dist/setup_cpp.mjs",
   "source": "./src/main.ts",
   "bin": {
     "setup-cpp": "./dist/setup_cpp.js",
@@ -121,7 +126,14 @@
     "main": {
       "context": "node",
       "includeNodeModules": true,
-      "optimize": true
+      "optimize": true,
+      "outputFormat": "commonjs"
+    },
+    "module": {
+      "context": "node",
+      "includeNodeModules": true,
+      "optimize": true,
+      "outputFormat": "esmodule"
     }
   }
 }

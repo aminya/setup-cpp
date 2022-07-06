@@ -49,5 +49,5 @@ export async function testBin(
     expect(status).toBe(0)
   }
 
-  expect(await io.which(name, true)).toBe(bin)
+  expect((await io.which(name, true)).includes(bin))
 }

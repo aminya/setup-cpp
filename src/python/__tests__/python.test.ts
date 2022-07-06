@@ -3,6 +3,7 @@ import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-help
 import { getVersion } from "../../default_versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import { isGitHubCI } from "../../utils/env/isci"
+import { info } from "../../utils/io/io"
 
 jest.setTimeout(300000)
 describe("setup-python", () => {
@@ -13,13 +14,11 @@ describe("setup-python", () => {
 
   it("should setup python in GitHub Actions", async () => {
     if (isGitHubCI()) {
-      const installInfo = await setupPython(
-        getVersion("python", "true", await ubuntuVersion()),
-        directory,
-        process.arch
-      )
+      info("Installing python in GitHub Actions")
+      const { setupActionsPython } = await import("../actions_python")
+      await setupActionsPython(getVersion("python", "true", await ubuntuVersion()), directory, process.arch)
 
-      await testBin("python", ["--version"], installInfo?.binDir)
+      await testBin("python", ["--version"])
     }
   })
 
