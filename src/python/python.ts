@@ -16,6 +16,7 @@ export async function setupPython(version: string, setupDir: string, arch: strin
     return setupPythonViaSystem(version, setupDir, arch)
   }
   try {
+    info("Installing python in GitHub Actions")
     const { setupActionsPython } = await import("./actions_python")
     return setupActionsPython(version, setupDir, arch)
   } catch (err) {
