@@ -26,6 +26,7 @@ words:
   - devel
   - dyld
   - eabi
+  - esmodule
   - execa
   - ftxui
   - gcovr
