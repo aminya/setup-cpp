@@ -1,14 +1,13 @@
 ## base image
-FROM archlinux as base
+FROM fedora as base
 
-RUN pacman -Syuu --noconfirm
-RUN pacman-db-upgrade
+RUN dnf -y check-update
 
 # nodejs
-RUN pacman -S --noconfirm --needed nodejs
+RUN dnf -y install nodejs
 
 # curl for downloading setup-cpp
-RUN pacman -S --noconfirm --needed curl
+RUN dnf -y install curl
 
 # add setup_cpp.js
 COPY "./dist/" "/"
@@ -18,7 +17,6 @@ WORKDIR "/"
 RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true
 
 # clean up
-RUN pacman -Scc --noconfirm
 RUN rm -rf /tmp/*
 
 CMD source ~/.cpprc

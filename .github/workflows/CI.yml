@@ -92,6 +92,7 @@ jobs:
           - "ubuntu_node.dockerfile"
           - "ubuntu_20.04_node.dockerfile"
           - "arch_node.dockerfile"
+          - "fedora_node.dockerfile"
         node:
           - 14
         pnpm:
