@@ -1,7 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
 import { execSudo } from "../exec/sudo"
-import { info } from "../io/io"
+import { info, warning } from "../io/io"
 
 let didUpdate: boolean = false
 
@@ -17,7 +17,12 @@ export function setupDnfPack(name: string, version?: string): InstallationInfo {
   }
 
   if (version !== undefined && version !== "") {
-    execSudo(dnf, ["-y", "install", `${name}-${version}`])
+    try {
+      execSudo(dnf, ["-y", "install", `${name}-${version}`])
+    } catch (err) {
+      warning(`${(err as Error).toString()}\nInstalling the default version available via dnf`)
+      execSudo(dnf, ["-y", "install", name])
+    }
   } else {
     execSudo(dnf, ["-y", "install", name])
   }
