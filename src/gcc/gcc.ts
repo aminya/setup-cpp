@@ -15,6 +15,8 @@ import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin
 import { extract7Zip } from "../utils/setup/extract"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
 
 interface MingwInfo {
   releaseName: string
@@ -84,6 +86,8 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
       if (arch === "x64") {
         if (isArch()) {
           installationInfo = setupPacmanPack("gcc", version)
+        } else if (hasDnf()) {
+          installationInfo = setupDnfPack("gcc", version)
         } else {
           setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
           installationInfo = setupAptPack("g++", version, [])

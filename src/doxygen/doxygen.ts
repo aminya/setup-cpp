@@ -12,6 +12,8 @@ import { getVersion } from "../default_versions"
 import { existsSync } from "fs"
 import { join } from "path"
 import { isArch } from "../utils/env/isArch"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -61,6 +63,8 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       if (version === "") {
         if (isArch()) {
           installationInfo = setupPacmanPack("doxygen", undefined)
+        } else if (hasDnf()) {
+          return setupDnfPack("doxygen", version)
         } else {
           installationInfo = setupAptPack("doxygen", undefined)
         }

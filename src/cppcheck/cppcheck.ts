@@ -4,6 +4,8 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isArch } from "../utils/env/isArch"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupCppcheck(version: string | undefined, _setupDir: string, _arch: string) {
@@ -19,6 +21,8 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
     case "linux": {
       if (isArch()) {
         return setupPacmanPack("cppcheck", version)
+      } else if (hasDnf()) {
+        return setupDnfPack("ccache", version)
       }
       return setupAptPack("cppcheck", version)
     }

@@ -11,6 +11,8 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { InstallationInfo } from "../utils/setup/setupBin"
 import { isArch } from "../utils/env/isArch"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
 
 let hasVCPKG = false
 
@@ -26,6 +28,13 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
         setupPacmanPack("tar")
         setupPacmanPack("git")
         setupPacmanPack("pkg-config")
+      } else if (hasDnf()) {
+        setupDnfPack("curl")
+        setupDnfPack("zip")
+        setupDnfPack("unzip")
+        setupDnfPack("tar")
+        setupDnfPack("git")
+        setupDnfPack("pkg-config")
       } else {
         setupAptPack("curl")
         setupAptPack("zip")

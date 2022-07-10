@@ -9,6 +9,8 @@ import { isArch } from "../utils/env/isArch"
 import which from "which"
 import { InstallationInfo } from "../utils/setup/setupBin"
 import { dirname, join } from "path"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
@@ -52,13 +54,16 @@ export async function setupPythonViaSystem(
       return setupBrewPack("python3", version)
     }
     case "linux": {
+      let installInfo: InstallationInfo
       if (isArch()) {
-        const installInfo = setupPacmanPack("python", version)
+        installInfo = setupPacmanPack("python", version)
         setupPacmanPack("python-pip")
-        return installInfo
+      } else if (hasDnf()) {
+        installInfo = setupDnfPack("python3", version)
+      } else {
+        installInfo = setupAptPack("python3", version)
+        setupAptPack("python3-pip")
       }
-      const installInfo = setupAptPack("python3", version)
-      setupAptPack("python3-pip")
       return installInfo
     }
     default: {
