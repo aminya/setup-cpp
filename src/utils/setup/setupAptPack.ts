@@ -29,9 +29,6 @@ export function setupAptPack(
 
   if (!didInit) {
     // install apt utils and certificates (usually missing from docker containers)
-    // set time - zone
-    // TZ = Canada / Pacific
-    // ln - snf / usr / share / zoneinfo / $TZ / etc / localtime && echo $TZ > /etc/timezone
     execSudo(apt, [
       "install",
       "--fix-broken",
