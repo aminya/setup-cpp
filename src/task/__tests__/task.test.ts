@@ -1,6 +1,6 @@
 import { setupTask } from "../task"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { isGitHubCI } from "../../utils/env/isci"
+import { isGitHubCI } from "../../utils/env/isCI"
 import { getVersion } from "../../default_versions"
 
 jest.setTimeout(300000)

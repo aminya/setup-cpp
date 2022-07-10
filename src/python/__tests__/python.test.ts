@@ -2,7 +2,7 @@ import { setupPython } from "../python"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../default_versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
-import { isGitHubCI } from "../../utils/env/isci"
+import { isGitHubCI } from "../../utils/env/isCI"
 import { info } from "../../utils/io/io"
 
 jest.setTimeout(300000)

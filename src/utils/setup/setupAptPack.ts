@@ -3,7 +3,7 @@ import { InstallationInfo } from "./setupBin"
 import { execSudo } from "../exec/sudo"
 import { info } from "@actions/core"
 import { warning } from "../io/io"
-import { isGitHubCI } from "../env/isci"
+import { isGitHubCI } from "../env/isCI"
 import { cpprc_path, setupCppInProfile } from "../env/addEnv"
 import { appendFileSync } from "fs"
 

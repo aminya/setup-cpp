@@ -1,5 +1,5 @@
 import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/core"
-import { isGitHubCI } from "./isci"
+import { isGitHubCI } from "./isCI"
 import { untildify_user as untildify } from "../path/untildify"
 import { appendFileSync, existsSync, readFileSync } from "fs"
 import { error, warning } from "../io/io"

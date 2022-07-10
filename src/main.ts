@@ -17,7 +17,7 @@ import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
 import { setupPython } from "./python/python"
 import mri from "mri"
 import { untildify_user as untildify } from "./utils/path/untildify"
-import { isGitHubCI } from "./utils/env/isci"
+import { isGitHubCI } from "./utils/env/isCI"
 import * as timeDelta from "time-delta"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

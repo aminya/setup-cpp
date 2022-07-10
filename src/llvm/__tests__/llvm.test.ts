@@ -2,7 +2,7 @@ import { setupLLVM, VERSIONS, getUrl, setupClangTools, getLinuxUrl } from "../ll
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { isGitHubCI } from "../../utils/env/isci"
+import { isGitHubCI } from "../../utils/env/isCI"
 import execa from "execa"
 import path from "path"
 import { addBinExtension } from "../../utils/extension/extension"
