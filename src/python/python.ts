@@ -11,6 +11,7 @@ import { InstallationInfo } from "../utils/setup/setupBin"
 import { dirname, join } from "path"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
@@ -60,9 +61,11 @@ export async function setupPythonViaSystem(
         setupPacmanPack("python-pip")
       } else if (hasDnf()) {
         installInfo = setupDnfPack("python3", version)
-      } else {
+      } else if (isUbuntu()) {
         installInfo = setupAptPack("python3", version)
         setupAptPack("python3-pip")
+      } else {
+        throw new Error(`Unsupported linux distributions`)
       }
       return installInfo
     }

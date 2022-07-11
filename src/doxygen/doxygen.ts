@@ -14,6 +14,7 @@ import { join } from "path"
 import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -60,27 +61,27 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
     }
     case "linux": {
       let installationInfo: InstallationInfo
-      if (version === "") {
+      if (version === "" || isArch() || hasDnf()) {
         if (isArch()) {
-          installationInfo = setupPacmanPack("doxygen", undefined)
+          installationInfo = setupPacmanPack("doxygen", version)
         } else if (hasDnf()) {
           return setupDnfPack("doxygen", version)
+        } else if (isUbuntu()) {
+          installationInfo = setupAptPack("doxygen", version)
         } else {
+          throw new Error(`Unsupported linux distributions`)
+        }
+      } else if (isUbuntu()) {
+        try {
+          // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
+          installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
+          setupAptPack("libclang-cpp9")
+        } catch (err) {
+          notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
           installationInfo = setupAptPack("doxygen", undefined)
         }
       } else {
-        if (isArch()) {
-          installationInfo = setupPacmanPack("doxygen", version)
-        } else {
-          try {
-            // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
-            installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-            setupAptPack("libclang-cpp9")
-          } catch (err) {
-            notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
-            installationInfo = setupAptPack("doxygen", undefined)
-          }
-        }
+        throw new Error(`Unsupported linux distributions`)
       }
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)
       return installationInfo
