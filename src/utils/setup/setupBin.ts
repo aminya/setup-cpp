@@ -8,6 +8,8 @@ import { isGitHubCI } from "../env/isCI"
 import { setupAptPack } from "./setupAptPack"
 import { setupPacmanPack } from "./setupPacmanPack"
 import { isArch } from "../env/isArch"
+import { hasDnf } from "../env/hasDnf"
+import { setupDnfPack } from "./setupDnfPack"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -94,6 +96,10 @@ export async function setupBin(
           setupPacmanPack("unzip")
           setupPacmanPack("tar")
           setupPacmanPack("xz")
+        } else if (hasDnf()) {
+          setupDnfPack("unzip")
+          setupDnfPack("tar")
+          setupDnfPack("xz")
         } else {
           setupAptPack("unzip")
           setupAptPack("tar")
