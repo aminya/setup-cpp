@@ -18,10 +18,6 @@ export function setupPacmanPack(name: string, version?: string, aur?: string): I
   }
 
   if (!didInit) {
-    // set time - zone
-    // TZ = Canada / Pacific
-    // ln - snf / usr / share / zoneinfo / $TZ / etc / localtime && echo $TZ > /etc/timezone
-
     // install base-devel
     execSudo(pacman, ["-Sy", "--noconfirm", "base-devel"])
     didInit = true

@@ -5,6 +5,9 @@ import { InstallationInfo } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isArch } from "../utils/env/isArch"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGraphviz(version: string, _setupDir: string, _arch: string) {
@@ -19,8 +22,12 @@ export async function setupGraphviz(version: string, _setupDir: string, _arch: s
     case "linux": {
       if (isArch()) {
         return setupPacmanPack("graphviz", version)
+      } else if (hasDnf()) {
+        return setupDnfPack("graphviz", version)
+      } else if (isUbuntu()) {
+        return setupAptPack("graphviz", version)
       }
-      return setupAptPack("graphviz", version)
+      throw new Error(`Unsupported linux distribution`)
     }
     default: {
       throw new Error(`Unsupported platform`)

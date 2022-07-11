@@ -3,6 +3,7 @@ import { mkdirP } from "@actions/io"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
 import { warning } from "../io/io"
+import { folderUserAccess } from "../fs/userAccess"
 export { extractTar, extractXar } from "@actions/tool-cache"
 
 let sevenZip: string | undefined
@@ -10,6 +11,7 @@ let sevenZip: string | undefined
 /// Extract 7z using 7z
 export async function extract7Zip(file: string, dest: string) {
   await execa(await getSevenZip(), ["x", file, `-o${dest}`, "-y"], { stdio: "inherit" })
+  folderUserAccess(dest)
   return dest
 }
 
@@ -53,5 +55,6 @@ export async function extractTarByExe(file: string, dest: string, flags = ["--st
     }
   }
 
+  folderUserAccess(dest)
   return dest
 }

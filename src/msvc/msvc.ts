@@ -3,7 +3,7 @@ import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { vsversion_to_versionnumber, findVcvarsall } from "msvc-dev-cmd/lib.js"
-import { isGitHubCI } from "../utils/env/isci"
+import { isGitHubCI } from "../utils/env/isCI"
 import path from "path"
 import { existsSync } from "fs"
 import { error, info, warning } from "../utils/io/io"

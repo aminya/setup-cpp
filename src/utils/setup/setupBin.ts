@@ -4,10 +4,13 @@ import { addPath } from "../env/addEnv"
 import { join } from "path"
 import { existsSync } from "fs"
 import { tmpdir } from "os"
-import { isGitHubCI } from "../env/isci"
+import { isGitHubCI } from "../env/isCI"
 import { setupAptPack } from "./setupAptPack"
 import { setupPacmanPack } from "./setupPacmanPack"
 import { isArch } from "../env/isArch"
+import { hasDnf } from "../env/hasDnf"
+import { setupDnfPack } from "./setupDnfPack"
+import { isUbuntu } from "../env/isUbuntu"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -94,7 +97,11 @@ export async function setupBin(
           setupPacmanPack("unzip")
           setupPacmanPack("tar")
           setupPacmanPack("xz")
-        } else {
+        } else if (hasDnf()) {
+          setupDnfPack("unzip")
+          setupDnfPack("tar")
+          setupDnfPack("xz")
+        } else if (isUbuntu()) {
           setupAptPack("unzip")
           setupAptPack("tar")
           setupAptPack("xz-utils")

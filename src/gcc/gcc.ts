@@ -9,12 +9,14 @@ import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import path from "path"
 import { warning, info } from "../utils/io/io"
-import { isGitHubCI } from "../utils/env/isci"
+import { isGitHubCI } from "../utils/env/isCI"
 import { addBinExtension } from "../utils/extension/extension"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
 
 interface MingwInfo {
   releaseName: string
@@ -84,7 +86,11 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
       if (arch === "x64") {
         if (isArch()) {
           installationInfo = setupPacmanPack("gcc", version)
-        } else {
+        } else if (hasDnf()) {
+          installationInfo = setupDnfPack("gcc", version)
+          setupDnfPack("gcc-c++", version)
+          setupDnfPack("libstdc++-devel", undefined)
+        } else if (isUbuntu()) {
           setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
           installationInfo = setupAptPack("g++", version, [])
         }
@@ -92,7 +98,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         if (isArch()) {
           setupPacmanPack("gcc-multilib", version)
-        } else {
+        } else if (isUbuntu()) {
           setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
         }
       }

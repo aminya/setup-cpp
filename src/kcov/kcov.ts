@@ -11,6 +11,9 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { isArch } from "../utils/env/isArch"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 function getKcovPackageInfo(version: string): PackageInfo {
   const version_number = parseInt(version.replace(/^v/, ""), 10)
@@ -47,7 +50,10 @@ async function buildKcov(file: string, dest: string) {
     if (isArch()) {
       setupPacmanPack("libdwarf")
       setupPacmanPack("libcurl-openssl")
-    } else {
+    } else if (hasDnf()) {
+      setupDnfPack("libdwarf-devel")
+      setupDnfPack("libcurl-devel")
+    } else if (isUbuntu()) {
       setupAptPack("libdw-dev")
       setupAptPack("libcurl4-openssl-dev")
     }
@@ -61,14 +67,14 @@ async function buildKcov(file: string, dest: string) {
 export async function setupKcov(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "linux": {
-      if (isArch()) {
-        // TODO install kcov ? setupPacmanPack("kcov")
-        const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
-        setupPacmanPack("binutils")
-        return installationInfo
-      }
       const installationInfo = await setupBin("kcov", version, getKcovPackageInfo, setupDir, arch)
-      setupAptPack("libbinutils")
+      if (isArch()) {
+        setupPacmanPack("binutils")
+      } else if (hasDnf()) {
+        setupDnfPack("binutils")
+      } else if (isUbuntu()) {
+        setupAptPack("libbinutils")
+      }
       return installationInfo
     }
     default: {

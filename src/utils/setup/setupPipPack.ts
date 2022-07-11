@@ -12,6 +12,9 @@ import { InstallationInfo } from "./setupBin"
 import { setupAptPack } from "./setupAptPack"
 import { setupPacmanPack } from "./setupPacmanPack"
 import { isArch } from "../env/isArch"
+import { isUbuntu } from "../env/isUbuntu"
+import { hasDnf } from "../env/hasDnf"
+import { setupDnfPack } from "./setupDnfPack"
 
 let python: string | undefined
 let binDir: string | undefined
@@ -46,7 +49,9 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       // ensure that pip is installed on Linux (happens when python is found but pip not installed)
       if (isArch()) {
         setupPacmanPack("python-pip")
-      } else {
+      } else if (hasDnf()) {
+        setupDnfPack("python3-pip")
+      } else if (isUbuntu()) {
         setupAptPack("python3-pip")
       }
     }

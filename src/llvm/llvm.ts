@@ -17,7 +17,7 @@ import { setOutput } from "@actions/core"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { info, warning } from "../utils/io/io"
 import { existsSync } from "fs"
-import { isGitHubCI } from "../utils/env/isci"
+import { isGitHubCI } from "../utils/env/isCI"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../default_versions"
 import { isArch } from "../utils/env/isArch"
@@ -290,7 +290,7 @@ async function _setupLLVM(version: string, setupDir: string, arch: string) {
       if (isArch()) {
         // setupPacmanPack("ncurses")
         // TODO: install libtinfo ?
-      } else {
+      } else if (isUbuntu()) {
         setupAptPack("libtinfo-dev")
       }
     }

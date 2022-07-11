@@ -3,12 +3,15 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { isGitHubCI } from "../utils/env/isci"
+import { isGitHubCI } from "../utils/env/isCI"
 import { warning, info } from "../utils/io/io"
 import { isArch } from "../utils/env/isArch"
 import which from "which"
 import { InstallationInfo } from "../utils/setup/setupBin"
 import { dirname, join } from "path"
+import { hasDnf } from "../utils/env/hasDnf"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!isGitHubCI()) {
@@ -52,13 +55,19 @@ export async function setupPythonViaSystem(
       return setupBrewPack("python3", version)
     }
     case "linux": {
+      let installInfo: InstallationInfo
       if (isArch()) {
-        const installInfo = setupPacmanPack("python", version)
+        installInfo = setupPacmanPack("python", version)
         setupPacmanPack("python-pip")
-        return installInfo
+      } else if (hasDnf()) {
+        installInfo = setupDnfPack("python3", version)
+        setupDnfPack("python3-pip")
+      } else if (isUbuntu()) {
+        installInfo = setupAptPack("python3", version)
+        setupAptPack("python3-pip")
+      } else {
+        throw new Error(`Unsupported linux distributions`)
       }
-      const installInfo = setupAptPack("python3", version)
-      setupAptPack("python3-pip")
       return installInfo
     }
     default: {
