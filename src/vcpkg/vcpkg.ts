@@ -13,6 +13,7 @@ import { InstallationInfo } from "../utils/setup/setupBin"
 import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 let hasVCPKG = false
 
@@ -35,7 +36,7 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
         setupDnfPack("tar")
         setupDnfPack("git")
         setupDnfPack("pkg-config")
-      } else {
+      } else if (isUbuntu()) {
         setupAptPack("curl")
         setupAptPack("zip")
         setupAptPack("unzip")

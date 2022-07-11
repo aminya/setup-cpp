@@ -6,6 +6,7 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupCppcheck(version: string | undefined, _setupDir: string, _arch: string) {
@@ -23,8 +24,10 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
         return setupPacmanPack("cppcheck", version)
       } else if (hasDnf()) {
         return setupDnfPack("ccache", version)
+      } else if (isUbuntu()) {
+        return setupAptPack("cppcheck", version)
       }
-      return setupAptPack("cppcheck", version)
+      throw new Error(`Unsupported linux distribution`)
     }
     default: {
       throw new Error(`Unsupported platform`)

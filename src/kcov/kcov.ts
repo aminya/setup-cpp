@@ -13,6 +13,7 @@ import { PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 function getKcovPackageInfo(version: string): PackageInfo {
   const version_number = parseInt(version.replace(/^v/, ""), 10)
@@ -52,7 +53,7 @@ async function buildKcov(file: string, dest: string) {
     } else if (hasDnf()) {
       setupDnfPack("libdwarf-devel")
       setupDnfPack("libcurl-devel")
-    } else {
+    } else if (isUbuntu()) {
       setupAptPack("libdw-dev")
       setupAptPack("libcurl4-openssl-dev")
     }
@@ -71,7 +72,7 @@ export async function setupKcov(version: string, setupDir: string, arch: string)
         setupPacmanPack("binutils")
       } else if (hasDnf()) {
         setupDnfPack("binutils")
-      } else {
+      } else if (isUbuntu()) {
         setupAptPack("libbinutils")
       }
       return installationInfo

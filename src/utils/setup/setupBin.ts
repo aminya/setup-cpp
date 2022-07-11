@@ -10,6 +10,7 @@ import { setupPacmanPack } from "./setupPacmanPack"
 import { isArch } from "../env/isArch"
 import { hasDnf } from "../env/hasDnf"
 import { setupDnfPack } from "./setupDnfPack"
+import { isUbuntu } from "../env/isUbuntu"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -100,7 +101,7 @@ export async function setupBin(
           setupDnfPack("unzip")
           setupDnfPack("tar")
           setupDnfPack("xz")
-        } else {
+        } else if (isUbuntu()) {
           setupAptPack("unzip")
           setupAptPack("tar")
           setupAptPack("xz-utils")

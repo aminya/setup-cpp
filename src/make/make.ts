@@ -6,6 +6,7 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { isUbuntu } from "../utils/env/isUbuntu"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupMake(version: string, _setupDir: string, _arch: string) {
@@ -23,8 +24,10 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
         return setupPacmanPack("make", version)
       } else if (hasDnf()) {
         return setupDnfPack("make", version)
+      } else if (isUbuntu()) {
+        return setupAptPack("make", version)
       }
-      return setupAptPack("make", version)
+      throw new Error(`Unsupported linux distribution`)
     }
     default: {
       throw new Error(`Unsupported platform`)

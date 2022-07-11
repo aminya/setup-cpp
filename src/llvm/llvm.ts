@@ -290,7 +290,7 @@ async function _setupLLVM(version: string, setupDir: string, arch: string) {
       if (isArch()) {
         // setupPacmanPack("ncurses")
         // TODO: install libtinfo ?
-      } else {
+      } else if (isUbuntu()) {
         setupAptPack("libtinfo-dev")
       }
     }
