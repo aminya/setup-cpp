@@ -3,8 +3,6 @@ import { existsSync } from "fs"
 import { dirname, join } from "path"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
-import { isRoot } from "../utils/env/sudo"
-import { execSudo } from "../utils/exec/sudo"
 import { addShellExtension, addShellHere } from "../utils/extension/extension"
 import { notice } from "../utils/io/io"
 import { setupAptPack } from "../utils/setup/setupAptPack"
@@ -14,6 +12,7 @@ import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
+import { folderUserAccess } from "../utils/fs/userAccess"
 
 let hasVCPKG = false
 
@@ -54,14 +53,7 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
 
     execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
 
-    // change the owner to the SUDO_USER in setupDir. vcpkg requires this so it can install things without sudo
-    if (
-      (process.platform === "linux" || process.platform === "darwin") &&
-      isRoot() &&
-      process.env.SUDO_USER !== undefined
-    ) {
-      execSudo("chown", ["-R", process.env.SUDO_USER, setupDir], setupDir)
-    }
+    folderUserAccess(setupDir)
 
     await addPath(setupDir)
     // eslint-disable-next-line require-atomic-updates
