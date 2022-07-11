@@ -61,6 +61,7 @@ export async function setupPythonViaSystem(
         setupPacmanPack("python-pip")
       } else if (hasDnf()) {
         installInfo = setupDnfPack("python3", version)
+        setupDnfPack("python3-pip")
       } else if (isUbuntu()) {
         installInfo = setupAptPack("python3", version)
         setupAptPack("python3-pip")
