@@ -1,8 +1,6 @@
 ## base image
 FROM fedora as base
 
-RUN dnf -y check-update
-
 # nodejs
 RUN dnf -y install nodejs
 

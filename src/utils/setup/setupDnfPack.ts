@@ -3,7 +3,7 @@ import { InstallationInfo } from "./setupBin"
 import { execSudo } from "../exec/sudo"
 import { info, warning } from "../io/io"
 
-let didUpdate: boolean = false
+// let didUpdate: boolean = false
 
 /** A function that installs a package using dnf */
 export function setupDnfPack(name: string, version?: string): InstallationInfo {
@@ -11,10 +11,10 @@ export function setupDnfPack(name: string, version?: string): InstallationInfo {
 
   const dnf = "dnf"
 
-  if (!didUpdate) {
-    execSudo(dnf, ["-y", "check-update"])
-    didUpdate = true
-  }
+  // if (!didUpdate) {
+  //   execSudo(dnf, ["-y", "check-update"])
+  //   didUpdate = true
+  // }
 
   if (version !== undefined && version !== "") {
     try {
