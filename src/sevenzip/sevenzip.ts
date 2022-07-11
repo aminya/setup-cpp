@@ -20,7 +20,8 @@ export function setupSevenZip(version: string, _setupDir: string, _arch: string)
       if (isArch()) {
         return setupPacmanPack("p7zip", version)
       } else if (hasDnf()) {
-        return setupDnfPack("p7zip", version)
+        setupDnfPack("p7zip", version)
+        return setupDnfPack("p7zip-plugins", version)
       } else if (isUbuntu()) {
         return setupAptPack("p7zip-full", version)
       }
