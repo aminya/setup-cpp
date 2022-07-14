@@ -3,7 +3,7 @@ import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isValidUrl } from "../../utils/http/validate_url"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { isGitHubCI } from "../../utils/env/isCI"
-import execa from "execa"
+import { execaSync } from "execa"
 import path from "path"
 import { addBinExtension } from "../../utils/extension/extension"
 import { chmodSync } from "fs"
@@ -89,11 +89,11 @@ describe("setup-llvm", () => {
     // test compilation
     const file = path.join(__dirname, "main.cpp")
     const main_exe = path.join(__dirname, addBinExtension("main"))
-    execa.sync("clang++", [file, "-o", main_exe], { cwd: __dirname })
+    execaSync("clang++", [file, "-o", main_exe], { cwd: __dirname })
     if (process.platform !== "win32") {
       chmodSync(main_exe, "755")
     }
-    execa.sync(main_exe, { cwd: __dirname, stdio: "inherit" })
+    execaSync(main_exe, { cwd: __dirname, stdio: "inherit" })
   })
 
   it("should find llvm in the cache", async () => {

@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { getExecOutput } from "@actions/exec"
-import execa from "execa"
+import { execaSync } from "execa"
 import which from "which"
 import { info } from "@actions/core"
 import { addPath } from "../env/addEnv"
@@ -44,7 +44,7 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     if (process.platform === "win32") {
       // downgrade pip on Windows
       // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
-      execa.sync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
+      execaSync(python, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
     } else if (process.platform === "linux") {
       // ensure that pip is installed on Linux (happens when python is found but pip not installed)
       if (isArch()) {
@@ -57,10 +57,10 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     }
 
     // install wheel (required for Conan, Meson, etc.)
-    execa.sync(python, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
+    execaSync(python, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
   }
 
-  execa.sync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
+  execaSync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
     stdio: "inherit",
   })
 

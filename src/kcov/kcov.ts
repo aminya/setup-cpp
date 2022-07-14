@@ -1,4 +1,4 @@
-import execa from "execa"
+import { execa } from "execa"
 import { join } from "path"
 import untildify from "untildify"
 import which from "which"

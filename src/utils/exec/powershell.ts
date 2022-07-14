@@ -1,4 +1,4 @@
-import execa from "execa"
+import { execa } from "execa"
 import which from "which"
 
 let powershell: string | undefined

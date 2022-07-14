@@ -1,4 +1,4 @@
-import execa from "execa"
+import { execaSync } from "execa"
 import { existsSync } from "fs"
 import { dirname, join } from "path"
 import which from "which"
@@ -46,12 +46,12 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
     }
 
     if (!existsSync(join(setupDir, addShellExtension("bootstrap-vcpkg")))) {
-      execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
+      execaSync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
     } else {
       notice(`Vcpkg folder already exists at ${setupDir}. This might mean that ~/vcpkg is restored from the cache.`)
     }
 
-    execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
+    execaSync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
 
     folderUserAccess(setupDir)
 

@@ -1,4 +1,4 @@
-import execa from "execa"
+import { execa } from "execa"
 import { mkdirP } from "@actions/io"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
