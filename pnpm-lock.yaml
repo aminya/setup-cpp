@@ -38,7 +38,7 @@ specifiers:
   prettier: 2.7.1
   prettier-config-atomic: ^3.0.10
   semver: 7.3.7
-  setup-python: github:actions/setup-python#f0bcf8be037eba11327da6eaf40cd99a2a092494
+  setup-python: github:actions/setup-python#c474c82340438924daab9282d07300bfe7e3692d
   shx: 0.3.4
   terser-config-atomic: ^0.1.1
   time-delta: github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e
@@ -59,7 +59,7 @@ dependencies:
   msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
   numerous: 1.0.3
   semver: 7.3.7
-  setup-python: github.com/actions/setup-python/f0bcf8be037eba11327da6eaf40cd99a2a092494
+  setup-python: github.com/actions/setup-python/c474c82340438924daab9282d07300bfe7e3692d
   time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
   ubuntu-version: 2.0.0
   untildify: 4.0.0
@@ -8343,8 +8343,8 @@ packages:
       readable-stream: 3.6.0
     dev: true
 
-  github.com/actions/setup-python/f0bcf8be037eba11327da6eaf40cd99a2a092494:
-    resolution: {tarball: https://codeload.github.com/actions/setup-python/tar.gz/f0bcf8be037eba11327da6eaf40cd99a2a092494}
+  github.com/actions/setup-python/c474c82340438924daab9282d07300bfe7e3692d:
+    resolution: {tarball: https://codeload.github.com/actions/setup-python/tar.gz/c474c82340438924daab9282d07300bfe7e3692d}
     name: setup-python
     version: 4.0.0
     dependencies:
