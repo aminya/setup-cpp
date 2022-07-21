@@ -145,7 +145,7 @@ export async function setupMingw(version: string, setupDir: string, arch: string
     case "linux": {
       if (arch === "x64") {
         if (isArch()) {
-          // TODO: install via AUR: mingw-w64 
+          // TODO: install via AUR: mingw-w64
           throw new Error(`Unsupported platform for ${arch}`)
         } else if (hasDnf()) {
           // TODO: install cross-compiler for Fedora
@@ -174,7 +174,7 @@ export async function setupMingw(version: string, setupDir: string, arch: string
     }
   }
   if (installationInfo !== undefined) {
-    // TODO: setup alternative and update CC/CXX env. ?
+    // TODO: setup alternatives and update CC/CXX env. ?
     //Setting up g++-mingw-w64-i686-win32 (10.3.0-14ubuntu1+24.3) ...
     // update-alternatives: using /usr/bin/i686-w64-mingw32-g++-win32 to provide /usr/bin/i686-w64-mingw32-g++ (i686-w64-mingw32-g++) in auto mode
     //Setting up g++-mingw-w64-x86-64-win32 (10.3.0-14ubuntu1+24.3) ...

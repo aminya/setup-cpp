@@ -227,8 +227,12 @@ export async function main(args: string[]): Promise<number> {
           successMessages.push(getSuccessMessage("gcc", installationInfo))
           break
         }
-        case "mingw":{
-          const installationInfo = await setupMingw(getVersion("mingw", version, osVersion), join(setupCppDir, "gcc"), arch)
+        case "mingw": {
+          const installationInfo = await setupMingw(
+            getVersion("mingw", version, osVersion),
+            join(setupCppDir, "gcc"),
+            arch
+          )
           successMessages.push(getSuccessMessage("mingw", installationInfo))
           break
         }

@@ -33,13 +33,13 @@ ENV CC "x86_64-w64-mingw32-gcc"
 ENV CXX "x86_64-w64-mingw32-g++"
 
 # TODO: better setup for cmake toolchains ?
-COPY ./cmake/x86_64-w64-mingw32-toolchain.cmake /home/cmake/x86_64-w64-mingw32-toolchain.cmake
+COPY ./dev/cmake/x86_64-w64-mingw32.toolchain.cmake /home/cmake/x86_64-w64-mingw32.toolchain.cmake
 
 #### Building
 FROM base AS builder
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
-# TODO: add cmake args: -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="/home/cmake/x86_64-w64-mingw32-toolchain.cmake" -DVCPKG_TARGET_TRIPLET="x64-mingw-dynamic"
-#       or add `CONFIGURE_FLAGS: -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="/home/cmake/x86_64-w64-mingw32-toolchain.cmake" -DVCPKG_TARGET_TRIPLET="x64-mingw-dynamic"` into a new task mingw_build
+# TODO: add cmake args: -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="/home/cmake/x86_64-w64-mingw32.toolchain.cmake" -DVCPKG_TARGET_TRIPLET="x64-mingw-dynamic"
+#       or add `CONFIGURE_FLAGS: -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="/home/cmake/x86_64-w64-mingw32.toolchain.cmake" -DVCPKG_TARGET_TRIPLET="x64-mingw-dynamic"` into a new task mingw_build
 RUN bash -c 'source ~/.cpprc \
     && task mingw_build'
