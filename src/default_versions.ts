@@ -24,18 +24,21 @@ const DefaultVersions: Record<string, string> = {
 // - the older ones use ""
 const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
   llvm: {
+    22: "13.0.0-ubuntu-20.04",
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
     14: "13.0.0-ubuntu-16.04",
   },
   clangtidy: {
+    22: "13.0.0-ubuntu-20.04",
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
     14: "13.0.0-ubuntu-16.04",
   },
   clangformat: {
+    22: "13.0.0-ubuntu-20.04",
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
