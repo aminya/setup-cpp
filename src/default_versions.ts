@@ -63,6 +63,13 @@ const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
     16: "legacy",
     14: "legacy",
   },
+  kcov: {
+    22: "40",
+    20: "40-binary", // https://github.com/SimonKagstrom/kcov/releases
+    18: "40",
+    16: "40",
+    14: "40",
+  },
 }
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
