@@ -14,7 +14,8 @@ import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { removeVPrefix } from "../utils/setup/version"
+import { addVPrefix, removeVPrefix } from "../utils/setup/version"
+import { info } from "../utils/io/io"
 
 function getDownloadKcovPackageInfo(version_number: string): PackageInfo {
   return {
@@ -62,36 +63,34 @@ async function buildKcov(file: string, dest: string) {
 }
 
 export async function setupKcov(versionGiven: string, setupDir: string, arch: string) {
-  switch (process.platform) {
-    case "linux": {
-      // parse version
-      const versionSplit = versionGiven.split("-")
-      let version = versionSplit[0]
-      const installMethod = versionSplit[1] as "binary" | undefined
-      const version_number = removeVPrefix(version)
-      // fix inconsistency in tagging
-      if (version_number === 38) {
-        version = "v38"
-      }
-
-      let installationInfo: InstallationInfo
-      if (installMethod === "binary" && version_number >= 39) {
-        installationInfo = await setupBin("kcov", version, getDownloadKcovPackageInfo, setupDir, arch)
-        if (isArch()) {
-          setupPacmanPack("binutils")
-        } else if (hasDnf()) {
-          setupDnfPack("binutils")
-        } else if (isUbuntu()) {
-          setupAptPack("libbinutils")
-        }
-        return installationInfo
-      } else {
-        installationInfo = await setupBin("kcov", version, getBuildKcovPackageInfo, setupDir, arch)
-      }
-      return installationInfo
-    }
-    default: {
-      throw new Error(`Unsupported platform for ${arch}`)
-    }
+  if (process.platform === "win32") {
+    info("Kcov is not supported on Windows")
+    return
   }
+
+  // parse version
+  const versionSplit = versionGiven.split("-")
+  let version = addVPrefix(versionSplit[0])
+  const installMethod = versionSplit[1] as "binary" | undefined
+  const version_number = removeVPrefix(version)
+  // fix inconsistency in tagging
+  if (version_number === 38) {
+    version = "v38"
+  }
+
+  let installationInfo: InstallationInfo
+  if (installMethod === "binary" && version_number >= 39) {
+    installationInfo = await setupBin("kcov", version, getDownloadKcovPackageInfo, setupDir, arch)
+    if (isArch()) {
+      setupPacmanPack("binutils")
+    } else if (hasDnf()) {
+      setupDnfPack("binutils")
+    } else if (isUbuntu()) {
+      setupAptPack("libbinutils")
+    }
+    return installationInfo
+  } else {
+    installationInfo = await setupBin("kcov", version, getBuildKcovPackageInfo, setupDir, arch)
+  }
+  return installationInfo
 }

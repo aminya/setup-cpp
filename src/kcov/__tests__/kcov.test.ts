@@ -2,13 +2,26 @@ import { setupKcov } from "../kcov"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { InstallationInfo } from "../../utils/setup/setupBin"
 import which from "which"
+import { info } from "@actions/core"
 
 jest.setTimeout(300000)
 describe("setup-Kcov", () => {
-  if (process.platform !== "linux") {
-    it.todo("should setup kcov on non-linux")
+  if (process.platform === "win32") {
+    it.todo("should setup kcov on windows")
     return
   }
+
+  it("should setup Kcov v40", async () => {
+    const directory = await setupTmpDir("kcov-v40")
+    const { binDir } = (await setupKcov("40-binary", directory, "")) as InstallationInfo
+    // the prebuild binary only works on ubuntu 20.04
+    try {
+      await testBin("kcov", ["--version"], binDir)
+    } catch (err) {
+      info((err as Error).message)
+    }
+    await cleanupTmpDir("kcov-v40")
+  })
 
   it("should setup Kcov v40", async () => {
     const directory = await setupTmpDir("kcov-v40")
