@@ -1,5 +1,6 @@
 import { dirname } from "path"
 import which from "which"
+import { isUbuntu } from "../utils/env/isUbuntu"
 import { execSudo } from "../utils/exec/sudo"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 
@@ -7,7 +8,7 @@ let binDir: string | undefined
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setupNala(version: string, _setupDir: string, _arch: string) {
-  if (process.platform !== "linux") {
+  if (!isUbuntu()) {
     return undefined
   }
   if (typeof binDir === "string") {

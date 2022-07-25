@@ -6,6 +6,7 @@ import { warning } from "../io/io"
 import { isGitHubCI } from "../env/isCI"
 import { cpprc_path, setupCppInProfile } from "../env/addEnv"
 import { appendFileSync } from "fs"
+import which from "which"
 
 let didUpdate: boolean = false
 let didInit: boolean = false
@@ -19,7 +20,12 @@ export function setupAptPack(
 ): InstallationInfo {
   info(`Installing ${name} ${version ?? ""} via apt`)
 
-  const apt = "apt-get"
+  let apt: string
+  if (which.sync("nala", { nothrow: true }) !== null) {
+    apt = "nala"
+  } else {
+    apt = "apt-get"
+  }
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 

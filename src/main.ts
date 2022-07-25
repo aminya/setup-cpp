@@ -43,6 +43,7 @@ import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
 import { setupGraphviz } from "./graphviz/graphviz"
 import { setupNala } from "./nala/nala"
+import { isUbuntu } from "./utils/env/isUbuntu"
 
 /** The setup functions */
 const setups = {
@@ -152,6 +153,10 @@ export async function main(args: string[]): Promise<number> {
   if (!syncVersions(opts, ["llvm", "clangtidy", "clangformat"])) {
     error("The same version must be used for llvm, clangformat and clangtidy")
     return 1
+  }
+
+  if (isUbuntu()) {
+    setupNala(getVersion("nala", undefined, osVersion), "", arch)
   }
 
   // loop over the tools and run their setup function

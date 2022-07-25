@@ -1,10 +1,11 @@
 import { setupNala } from "../nala"
 import { testBin } from "../../utils/tests/test-helpers"
+import { isUbuntu } from "../../utils/env/isUbuntu"
 
 jest.setTimeout(300000)
 describe("setup-nala", () => {
   it("should setup nala", async () => {
-    if (process.platform !== "linux") {
+    if (!isUbuntu()) {
       return
     }
     const installInfo = setupNala("", "", process.arch)
