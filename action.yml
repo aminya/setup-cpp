@@ -75,6 +75,9 @@ inputs:
   sevenzip:
     description: "The 7z version to install."
     required: false
+  nala:
+    description: 'The nala version to install ("legacy" or "").'
+    required: false
 
 runs:
   using: "node12"

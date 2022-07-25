@@ -42,6 +42,7 @@ import { setupKcov } from "./kcov/kcov"
 import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
 import { setupGraphviz } from "./graphviz/graphviz"
+import { setupNala } from "./nala/nala"
 
 /** The setup functions */
 const setups = {
@@ -69,6 +70,7 @@ const setups = {
   make: setupMake,
   task: setupTask,
   sevenzip: setupSevenZip,
+  nala: setupNala,
 }
 
 /** The tools that can be installed */
@@ -97,6 +99,7 @@ const tools: Array<keyof typeof setups> = [
   "make",
   "task",
   "sevenzip",
+  "nala",
 ]
 
 /** The possible inputs to the program */

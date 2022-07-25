@@ -14,7 +14,8 @@ let didInit: boolean = false
 export function setupAptPack(
   name: string,
   version?: string,
-  repositories: boolean | string[] = true
+  repositories: string[] = [],
+  update = false
 ): InstallationInfo {
   info(`Installing ${name} ${version ?? ""} via apt`)
 
@@ -22,7 +23,7 @@ export function setupAptPack(
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
-  if (!didUpdate) {
+  if (!didUpdate || update) {
     execSudo(apt, ["update", "-y"])
     didUpdate = true
   }
