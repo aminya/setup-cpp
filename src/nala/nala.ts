@@ -24,12 +24,12 @@ export function setupNala(version: string, _setupDir: string, _arch: string) {
   // https://github.com/volitank/nala#-installation
   execSudo("/bin/bash", [
     "-c",
-    `echo "deb http://deb.volian.org/volian/ scar main" | sudo tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
+    `echo "deb http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
   ])
   setupAptPack("wget")
   execSudo("/bin/bash", [
     "-c",
-    `wget -qO - https://deb.volian.org/volian/scar.key | sudo tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null`,
+    `wget -qO - https://deb.volian.org/volian/scar.key | tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null`,
   ])
 
   if (version !== "legacy") {
