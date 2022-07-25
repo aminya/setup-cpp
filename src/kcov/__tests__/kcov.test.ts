@@ -6,8 +6,8 @@ import { info } from "@actions/core"
 
 jest.setTimeout(300000)
 describe("setup-Kcov", () => {
-  if (process.platform === "win32") {
-    it.todo("should setup kcov on windows")
+  if (process.platform !== "win32") {
+    it.todo("should setup kcov on non-Windows")
     return
   }
 

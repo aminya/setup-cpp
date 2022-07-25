@@ -115,7 +115,7 @@ export async function setupBin(
       const downloaded = await downloadTool(url)
       await extractFunction?.(downloaded, setupDir)
     } catch (err) {
-      throw new Error(`Failed to download ${name} ${version} ${arch}: ${err}`)
+      throw new Error(`Failed to download ${name} ${version} ${arch} from ${url}: ${err}`)
     }
   }
 

@@ -59,12 +59,12 @@ async function buildKcov(file: string, dest: string) {
   await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
   await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
   execSudo("cmake", ["--install", "./build"], out)
-  return out
+  return "user/local/bin" // the cmake install prefix
 }
 
 export async function setupKcov(versionGiven: string, setupDir: string, arch: string) {
-  if (process.platform === "win32") {
-    info("Kcov is not supported on Windows")
+  if (process.platform !== "win32") {
+    info("Kcov is not supported on non-linux")
     return
   }
 
