@@ -4,7 +4,6 @@ import untildify from "untildify"
 import which from "which"
 import { setupCmake } from "../cmake/cmake"
 import { getVersion } from "../default_versions"
-import { execSudo } from "../utils/exec/sudo"
 import { addBinExtension } from "../utils/extension/extension"
 import { extractTarByExe } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
@@ -58,8 +57,9 @@ async function buildKcov(file: string, dest: string) {
   }
   await execa("cmake", ["-S", "./", "-B", "./build"], { cwd: out, stdio: "inherit" })
   await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
-  execSudo("cmake", ["--install", "./build"], out)
-  return "user/local/bin" // the cmake install prefix
+  //   execSudo("cmake", ["--install", "./build"], out)
+  //   return "user/local/bin" // the cmake install prefix
+  return out
 }
 
 export async function setupKcov(versionGiven: string, setupDir: string, arch: string) {

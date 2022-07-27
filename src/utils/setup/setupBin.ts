@@ -113,11 +113,11 @@ export async function setupBin(
 
     try {
       const downloaded = await downloadTool(url)
-      const extractedBinDir = await extractFunction?.(downloaded, setupDir)
-      if (typeof extractedBinDir === "string") {
-        binDir = extractedBinDir
-        installDir = extractedBinDir
-      }
+      await extractFunction?.(downloaded, setupDir)
+      // if (typeof extractedBinDir === "string") {
+      //   binDir = extractedBinDir
+      //   installDir = extractedBinDir
+      // }
     } catch (err) {
       throw new Error(`Failed to download ${name} ${version} ${arch} from ${url}: ${err}`)
     }
