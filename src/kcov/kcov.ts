@@ -63,7 +63,7 @@ async function buildKcov(file: string, dest: string) {
 }
 
 export async function setupKcov(versionGiven: string, setupDir: string, arch: string) {
-  if (process.platform !== "win32") {
+  if (process.platform !== "linux") {
     info("Kcov is not supported on non-linux")
     return
   }
