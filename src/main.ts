@@ -156,7 +156,12 @@ export async function main(args: string[]): Promise<number> {
   }
 
   if (isUbuntu()) {
-    setupNala(getVersion("nala", undefined, osVersion), "", arch)
+    try {
+      setupNala(getVersion("nala", undefined, osVersion), "", arch)
+    } catch (err) {
+      warning((err as Error).toString())
+      // continue with apt-get
+    }
   }
 
   // loop over the tools and run their setup function
