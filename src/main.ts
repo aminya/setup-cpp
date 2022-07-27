@@ -43,6 +43,7 @@ import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
 import { setupGraphviz } from "./graphviz/graphviz"
 import { setupNala } from "./nala/nala"
+import { isUbuntu } from "./utils/env/isUbuntu"
 
 /** The setup functions */
 const setups = {
@@ -156,14 +157,14 @@ export async function main(args: string[]): Promise<number> {
 
   // https://gitlab.com/volian/nala/-/issues/115
   //
-  // if (isUbuntu()) {
-  //   try {
-  //     setupNala(getVersion("nala", undefined, osVersion), "", arch)
-  //   } catch (err) {
-  //     warning((err as Error).toString())
-  //     // continue with apt-get
-  //   }
-  // }
+  if (isUbuntu()) {
+    try {
+      setupNala(getVersion("nala", undefined, osVersion), "", arch)
+    } catch (err) {
+      warning((err as Error).toString())
+      // continue with apt-get
+    }
+  }
 
   // loop over the tools and run their setup function
   for (const tool of tools) {
