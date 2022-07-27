@@ -34,7 +34,7 @@ export function setupAptPack(
     didInit = true
   }
 
-  if (Array.isArray(repositories)) {
+  if (Array.isArray(repositories) && repositories.length !== 0) {
     for (const repo of repositories) {
       // eslint-disable-next-line no-await-in-loop
       execSudo("add-apt-repository", ["--update", "-y", repo])
