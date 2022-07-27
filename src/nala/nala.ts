@@ -22,12 +22,12 @@ export function setupNala(version: string, _setupDir: string, _arch: string) {
   }
 
   // https://github.com/volitank/nala#-installation
+  execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "A87015F3DA22D980"])
   execSudo("/bin/bash", [
     "-c",
     `echo "deb http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
   ])
   setupAptPack("wget")
-  execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "A87015F3DA22D980"])
   execSudo("/bin/bash", [
     "-c",
     `wget -qO - https://deb.volian.org/volian/scar.key | tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null`,
