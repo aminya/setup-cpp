@@ -32,9 +32,13 @@ export function setupNala(version: string, _setupDir: string, _arch: string) {
     `echo "deb http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
   ])
 
-  if (version !== "legacy") {
-    setupAptPack("nala", undefined, [], true)
-  } else {
+  try {
+    if (version !== "legacy") {
+      setupAptPack("nala", undefined, [], true)
+    } else {
+      setupAptPack("nala-legacy", undefined, [], true)
+    }
+  } catch (err) {
     setupAptPack("nala-legacy", undefined, [], true)
   }
 
