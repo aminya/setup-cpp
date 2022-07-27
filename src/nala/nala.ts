@@ -2,7 +2,6 @@ import { dirname } from "path"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { execSudo } from "../utils/exec/sudo"
-import { warning } from "../utils/io/io"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 
 let binDir: string | undefined
@@ -23,12 +22,7 @@ export function setupNala(version: string, _setupDir: string, _arch: string) {
   }
 
   // https://github.com/volitank/nala#-installation
-  try {
-    execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "A87015F3DA22D980"])
-  } catch (err) {
-    // https://gitlab.com/volian/nala/-/issues/115
-    warning((err as Error).toString())
-  }
+  execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "A87015F3DA22D980"])
   execSudo("/bin/bash", [
     "-c",
     `echo "deb http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
