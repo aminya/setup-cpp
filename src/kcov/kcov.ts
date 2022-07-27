@@ -17,9 +17,9 @@ import { isUbuntu } from "../utils/env/isUbuntu"
 import { addVPrefix, removeVPrefix } from "../utils/setup/version"
 import { info } from "../utils/io/io"
 
-function getDownloadKcovPackageInfo(version_number: string): PackageInfo {
+function getDownloadKcovPackageInfo(version: string): PackageInfo {
   return {
-    url: `https://github.com/SimonKagstrom/kcov/releases/download/v${version_number}/kcov-amd64.tar.gz`,
+    url: `https://github.com/SimonKagstrom/kcov/releases/download/${version}/kcov-amd64.tar.gz`,
     extractedFolderName: "",
     binRelativeDir: "usr/local/bin",
     binFileName: addBinExtension("kcov"),
