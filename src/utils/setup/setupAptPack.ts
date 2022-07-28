@@ -59,6 +59,10 @@ function getApt() {
   let apt: string
   if (which.sync("nala", { nothrow: true }) !== null) {
     apt = "nala"
+
+    // enable utf8 otherwise it fails because of the usage of ASCII encoding
+    process.env.LANG = "C.UTF-8"
+    process.env.LC_ALL = "C.UTF-8"
   } else {
     apt = "apt-get"
   }
