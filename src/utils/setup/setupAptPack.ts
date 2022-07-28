@@ -59,10 +59,6 @@ function getApt() {
   let apt: string
   if (which.sync("nala", { nothrow: true }) !== null) {
     apt = "nala"
-
-    // enable utf8 otherwise it fails because of the usage of ASCII encoding
-    addEnv("LANG", "C.UTF-8")
-    addEnv("LC_ALL", "C.UTF-8")
   } else {
     apt = "apt-get"
   }
@@ -90,6 +86,11 @@ function initApt(apt: string) {
     execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "1E9377A2BA9EF27F"])
   } catch (err) {
     warning(`Failed to add keys: ${err}`)
+  }
+  if (apt === "nala") {
+    // enable utf8 otherwise it fails because of the usage of ASCII encoding
+    addEnv("LANG", "C.UTF-8")
+    addEnv("LC_ALL", "C.UTF-8")
   }
 }
 
