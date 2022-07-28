@@ -26,7 +26,10 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
     "volian-archive-scar-unstable.gpg",
     "https://deb.volian.org/volian/scar.key"
   )
-  execSudo("/bin/bash", ["-c", `echo "deb http://deb.volian.org/volian/ scar main" | tee ${keyFileName}`])
+  execSudo("/bin/bash", [
+    "-c",
+    `echo "deb [signed-by=${keyFileName}] http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
+  ])
 
   try {
     if (version !== "legacy") {
