@@ -82,8 +82,8 @@ export async function setupBin(
     }
   }
 
-  const installDir = join(setupDir, extractedFolderName)
-  const binDir = join(installDir, binRelativeDir)
+  let installDir = join(setupDir, extractedFolderName)
+  let binDir = join(installDir, binRelativeDir)
   const binFile = join(binDir, binFileName)
 
   // download ane extract the package into the installation directory.
@@ -114,8 +114,12 @@ export async function setupBin(
     try {
       const downloaded = await downloadTool(url)
       await extractFunction?.(downloaded, setupDir)
+      // if (typeof extractedBinDir === "string") {
+      //   binDir = extractedBinDir
+      //   installDir = extractedBinDir
+      // }
     } catch (err) {
-      throw new Error(`Failed to download ${name} ${version} ${arch}: ${err}`)
+      throw new Error(`Failed to download ${name} ${version} ${arch} from ${url}: ${err}`)
     }
   }
 

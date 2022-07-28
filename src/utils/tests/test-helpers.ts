@@ -37,6 +37,7 @@ export async function testBin(
 ) {
   let bin = name
   if (typeof binDir === "string") {
+    console.log(`Testing the existence of ${binDir}`)
     expect(binDir).toBeDefined()
     expect(binDir).not.toHaveLength(0)
     expect(existsSync(binDir)).toBeTruthy()

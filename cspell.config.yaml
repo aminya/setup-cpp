@@ -22,6 +22,7 @@ words:
   - CPPFLAGS
   - cpprc
   - Cpython
+  - DCMAKE
   - deps
   - devel
   - dyld
