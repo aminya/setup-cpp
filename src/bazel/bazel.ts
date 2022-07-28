@@ -11,10 +11,12 @@ import { execSudo } from "../utils/exec/sudo"
 export async function setupBazel(version: string, _setupDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
-      return setupChocoPack("bazel", version)
+      // install bazelisk because it contains both
+      return setupChocoPack("bazelisk", version)
     }
     case "darwin": {
-      return setupBrewPack("bazel", version)
+      // install bazelisk because it contains both
+      return setupBrewPack("bazelisk", version)
     }
     case "linux": {
       if (isArch()) {
