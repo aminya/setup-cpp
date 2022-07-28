@@ -59,7 +59,7 @@ async function buildKcov(file: string, dest: string) {
   await execa("cmake", ["--build", "./build", "--config", "Release"], { cwd: out, stdio: "inherit" })
   //   execSudo("cmake", ["--install", "./build"], out)
   //   return "user/local/bin" // the cmake install prefix
-  return out
+  return join(out, "build")
 }
 
 export async function setupKcov(versionGiven: string, setupDir: string, arch: string) {
