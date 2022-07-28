@@ -17,7 +17,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 | category              | tools                                                        |
 | --------------------- | ------------------------------------------------------------ |
 | compiler and analyzer | llvm, gcc, msvc, vcvarsall, cppcheck, clangtidy, clangformat |
-| build system          | cmake, ninja, meson, make, task                              |
+| build system          | cmake, ninja, meson, make, task, bazel                       |
 | package manager       | vcpkg, conan, choco, brew, nala                              |
 | cache                 | cppcache                                                     |
 | documentation         | doxygen, graphviz                                            |
