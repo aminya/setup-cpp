@@ -12,6 +12,9 @@ words:
   - aarch
   - aminya
   - applellvm
+  - bazel
+  - copr
+  - vbatts
   - buildtools
   - caxa
   - ccache

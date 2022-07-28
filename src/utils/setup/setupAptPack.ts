@@ -2,7 +2,6 @@
 import { InstallationInfo } from "./setupBin"
 import { execSudo } from "../exec/sudo"
 import { info } from "@actions/core"
-import { warning } from "../io/io"
 import { isGitHubCI } from "../env/isCI"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
 import { appendFileSync, existsSync } from "fs"
@@ -18,9 +17,9 @@ export async function setupAptPack(
   repositories: string[] = [],
   update = false
 ): Promise<InstallationInfo> {
-  info(`Installing ${name} ${version ?? ""} via apt`)
-
   const apt: string = getApt()
+
+  info(`Installing ${name} ${version ?? ""} via ${apt}`)
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
@@ -80,8 +79,8 @@ async function initApt(apt: string) {
     "ca-certificates",
     "gnupg",
   ])
-  addAptKey(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg")
-  addAptKey(["1E9377A2BA9EF27F"], "setup-cpp-launchpad-toolchain.gpg")
+  addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg")
+  addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg")
   if (apt === "nala") {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
     await addEnv("LANG", "C.UTF-8")
@@ -89,24 +88,33 @@ async function initApt(apt: string) {
   }
 }
 
-function addAptKey(keys: string[], name: string) {
-  try {
-    if (!existsSync(`/root/.gnupg/${name}`)) {
-      for (const key of keys) {
-        execSudo("gpg", [
-          "--no-default-keyring",
-          "--keyring",
-          name,
-          "--keyserver",
-          "keyserver.ubuntu.com",
-          "--recv-keys",
-          key,
-        ])
-      }
+export function addAptKeyViaServer(keys: string[], name: string, server = "keyserver.ubuntu.com") {
+  const fileName = `/etc/apt/trusted.gpg.d/${name}`
+  if (!existsSync(fileName)) {
+    for (const key of keys) {
+      execSudo("gpg", [
+        "--no-default-keyring",
+        "--keyring",
+        `gnupg-ring:${fileName}`,
+        "--keyserver",
+        server,
+        "--recv-keys",
+        key,
+      ])
+      execSudo("chmod", ["644", fileName])
     }
-  } catch (err) {
-    warning(`Failed to add keys: ${err}`)
   }
+  return fileName
+}
+
+export async function addAptKeyViaDownload(name: string, url: string) {
+  const fileName = `/etc/apt/trusted.gpg.d/${name}`
+  if (!existsSync(fileName)) {
+    await setupAptPack("curl", undefined)
+    execSudo("bash", ["-c", `curl -s ${url} | gpg --no-default-keyring --keyring gnupg-ring:${fileName} --import`])
+    execSudo("chmod", ["644", fileName])
+  }
+  return fileName
 }
 
 export function updateAptAlternatives(name: string, path: string) {

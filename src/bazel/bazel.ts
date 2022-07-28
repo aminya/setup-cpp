@@ -1,4 +1,4 @@
-import { setupAptPack } from "../utils/setup/setupAptPack"
+import { addAptKeyViaDownload, setupAptPack } from "../utils/setup/setupAptPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { isArch } from "../utils/env/isArch"
@@ -26,14 +26,13 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
         return setupDnfPack("bazel4", undefined)
       } else if (isUbuntu()) {
         // https://bazel.build/install/ubuntu
+        const keyFileName = await addAptKeyViaDownload(
+          "bazel-archive-keyring.gpg",
+          "https://bazel.build/bazel-release.pub.gpg"
+        )
         execSudo("bash", [
           "-c",
-          "wget -qO - https://bazel.build/bazel-release.pub.gpg | gpg --dearmor >bazel-archive-keyring.gpg > /dev/null",
-        ])
-        execSudo("bash", ["-c", "mv bazel-archive-keyring.gpg /usr/share/keyrings"])
-        execSudo("bash", [
-          "-c",
-          'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/bazel-archive-keyring.gpg] https://storage.googleapis.com/bazel-apt stable jdk1.8" | sudo tee /etc/apt/sources.list.d/bazel.list',
+          `echo "deb [arch=amd64 signed-by=${keyFileName}] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list`,
         ])
         return setupAptPack("bazel", version, [], true)
       }
