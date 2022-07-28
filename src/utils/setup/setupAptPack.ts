@@ -5,7 +5,7 @@ import { info } from "@actions/core"
 import { warning } from "../io/io"
 import { isGitHubCI } from "../env/isCI"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
-import { appendFileSync } from "fs"
+import { appendFileSync, existsSync } from "fs"
 import which from "which"
 
 let didUpdate: boolean = false
@@ -80,17 +80,32 @@ function initApt(apt: string) {
     "ca-certificates",
     "gnupg",
   ])
-  try {
-    execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "3B4FE6ACC0B21F32"])
-    execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "40976EAF437D05B5"])
-    execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "1E9377A2BA9EF27F"])
-  } catch (err) {
-    warning(`Failed to add keys: ${err}`)
-  }
+  addAptKey(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg")
+  addAptKey(["1E9377A2BA9EF27F"], "setup-cpp-launchpad-toolchain.gpg")
   if (apt === "nala") {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
     addEnv("LANG", "C.UTF-8")
     addEnv("LC_ALL", "C.UTF-8")
+  }
+}
+
+function addAptKey(keys: string[], name: string) {
+  try {
+    if (!existsSync(`/root/.gnupg/${name}`)) {
+      for (const key of keys) {
+        execSudo("gpg", [
+          "--no-default-keyring",
+          "--keyring",
+          name,
+          "--keyserver",
+          "keyserver.ubuntu.com",
+          "--recv-keys",
+          key,
+        ])
+      }
+    }
+  } catch (err) {
+    warning(`Failed to add keys: ${err}`)
   }
 }
 
