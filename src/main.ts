@@ -43,10 +43,10 @@ import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
 import { setupGraphviz } from "./graphviz/graphviz"
 import { setupNala } from "./nala/nala"
-import { isUbuntu } from "./utils/env/isUbuntu"
 
 /** The setup functions */
 const setups = {
+  nala: setupNala,
   cmake: setupCmake,
   ninja: setupNinja,
   python: setupPython,
@@ -71,11 +71,11 @@ const setups = {
   make: setupMake,
   task: setupTask,
   sevenzip: setupSevenZip,
-  nala: setupNala,
 }
 
 /** The tools that can be installed */
 const tools: Array<keyof typeof setups> = [
+  "nala",
   "choco",
   "brew",
   "python",
@@ -100,7 +100,6 @@ const tools: Array<keyof typeof setups> = [
   "make",
   "task",
   "sevenzip",
-  "nala",
 ]
 
 /** The possible inputs to the program */
@@ -153,17 +152,6 @@ export async function main(args: string[]): Promise<number> {
   if (!syncVersions(opts, ["llvm", "clangtidy", "clangformat"])) {
     error("The same version must be used for llvm, clangformat and clangtidy")
     return 1
-  }
-
-  // https://gitlab.com/volian/nala/-/issues/115
-  //
-  if (isUbuntu()) {
-    try {
-      setupNala(getVersion("nala", undefined, osVersion), "", arch)
-    } catch (err) {
-      warning((err as Error).toString())
-      // continue with apt-get
-    }
   }
 
   // loop over the tools and run their setup function
@@ -387,6 +375,7 @@ All the available tools:
 --python
 --choco
 --brew
+--nala
 --sevenzip
 --graphviz
       `)

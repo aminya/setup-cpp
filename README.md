@@ -10,7 +10,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 `setup-cpp` is supported on many platforms. It is continuously tested on several configurations including Windows (11, 10, 2022, 2019), Linux (Ubuntu 22.04, Ubuntu 20.04, Fedora, ArchLinux), and macOS (12, 11, 10.15). `setup-cpp` is backed by unit tests for each tool and integration tests for compiling cpp projects.
 
-# Features
+## Features
 
 `setup-cpp` is **modular** and you can choose to install any of these tools:
 
@@ -18,7 +18,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 | --------------------- | ------------------------------------------------------------ |
 | compiler and analyzer | llvm, gcc, msvc, vcvarsall, cppcheck, clangtidy, clangformat |
 | build system          | cmake, ninja, meson, make, task                              |
-| package manager       | vcpkg, conan, choco, brew                                    |
+| package manager       | vcpkg, conan, choco, brew, nala                              |
 | cache                 | cppcache                                                     |
 | documentation         | doxygen, graphviz                                            |
 | coverage              | gcovr, opencppcoverage, kcov                                 |
@@ -26,15 +26,15 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 `setup-cpp` automatically installs the dependencies above tools if needed for the selected tool (e.g., `python` is required for `conan`).
 
-# Usage
+## Usage
 
-## From Terminal
+### From Terminal
 
 You should download the executable file or the js file (if Nodejs installed), and run it with the available options.
 
 Tip: You can automate downloading using `wget`, `curl`, or other similar tools.
 
-### Executable
+#### Executable
 
 Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.18.0), and run it with the available options.
 
@@ -72,7 +72,7 @@ NOTE: On Unix systems, when `setup-cpp` is used locally or in other CI services 
 
 NOTE: On Unix systems, you will not need `sudo` if you are already a root user (e.g., in a GitLab runner or Docker).
 
-### With Nodejs
+#### With Nodejs
 
 Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.18.0/setup_cpp.js), and run it with the available options.
 
@@ -97,7 +97,7 @@ sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true
 source ~/.cpprc # activate cpp environment variables
 ```
 
-## Inside GitHub Actions
+### Inside GitHub Actions
 
 Here is a complete cross-platform example that tests llvm, gcc, and msvc. It also uses cmake, ninja, vcpkg, and cppcheck.
 
@@ -158,7 +158,7 @@ jobs:
           # ...
 ```
 
-## Inside Docker
+### Inside Docker
 
 Here is an example for using setup_cpp to make a builder image that has the Cpp tools you need.
 
@@ -213,7 +213,7 @@ After build, run the following to start an interactive shell in your container
 docker run -it setup_cpp
 ```
 
-## Inside Docker inside GitHub Actions
+### Inside Docker inside GitHub Actions
 
 You can use the docker file discussed in the previous section inside GitHub Actions like the following:
 
@@ -235,7 +235,7 @@ jobs:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 ```
 
-## Inside GitLab pipelines
+### Inside GitLab pipelines
 
 The following gives an example for setting up a C++ environment inside GitLab pipelines.
 
@@ -292,11 +292,11 @@ test_linux_gcc:
     - *test
 ```
 
-# Articles
+## Articles
 
 [Setup-Cpp on Dev.to](https://dev.to/aminya/setup-cpp-3ia4)
 
-# Usage Examples
+## Usage Examples
 
 - [cpp_vcpkg_project project](https://github.com/aminya/cpp_vcpkg_project)
 - [ftxui](https://github.com/ArthurSonzogni/FTXUI)
