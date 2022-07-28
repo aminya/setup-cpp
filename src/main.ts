@@ -42,9 +42,11 @@ import { setupKcov } from "./kcov/kcov"
 import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
 import { setupGraphviz } from "./graphviz/graphviz"
+import { setupNala } from "./nala/nala"
 
 /** The setup functions */
 const setups = {
+  nala: setupNala,
   cmake: setupCmake,
   ninja: setupNinja,
   python: setupPython,
@@ -73,6 +75,7 @@ const setups = {
 
 /** The tools that can be installed */
 const tools: Array<keyof typeof setups> = [
+  "nala",
   "choco",
   "brew",
   "python",
@@ -372,6 +375,7 @@ All the available tools:
 --python
 --choco
 --brew
+--nala
 --sevenzip
 --graphviz
       `)

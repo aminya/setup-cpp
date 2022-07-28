@@ -55,6 +55,14 @@ const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
   doxygen: {
     20: "1.9.4",
   },
+  nala: {
+    22: "",
+    21: "legacy",
+    20: "legacy",
+    18: "legacy",
+    16: "legacy",
+    14: "legacy",
+  },
 }
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */

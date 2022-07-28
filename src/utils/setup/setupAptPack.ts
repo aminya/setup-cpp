@@ -4,8 +4,9 @@ import { execSudo } from "../exec/sudo"
 import { info } from "@actions/core"
 import { warning } from "../io/io"
 import { isGitHubCI } from "../env/isCI"
-import { cpprc_path, setupCppInProfile } from "../env/addEnv"
+import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
 import { appendFileSync } from "fs"
+import which from "which"
 
 let didUpdate: boolean = false
 let didInit: boolean = false
@@ -14,46 +15,31 @@ let didInit: boolean = false
 export function setupAptPack(
   name: string,
   version?: string,
-  repositories: boolean | string[] = true
+  repositories: string[] = [],
+  update = false
 ): InstallationInfo {
   info(`Installing ${name} ${version ?? ""} via apt`)
 
-  const apt = "apt-get"
+  let apt: string = getApt()
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
-  if (!didUpdate) {
-    execSudo(apt, ["update", "-y"])
+  if (!didUpdate || update) {
+    updateRepos(apt)
     didUpdate = true
   }
 
   if (!didInit) {
-    // install apt utils and certificates (usually missing from docker containers)
-    execSudo(apt, [
-      "install",
-      "--fix-broken",
-      "-y",
-      "software-properties-common",
-      "apt-utils",
-      "ca-certificates",
-      "gnupg",
-    ])
-    try {
-      execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "3B4FE6ACC0B21F32"])
-      execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "40976EAF437D05B5"])
-      execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "1E9377A2BA9EF27F"])
-    } catch (err) {
-      warning(`Failed to add keys: ${err}`)
-    }
+    initApt(apt)
     didInit = true
   }
 
-  if (Array.isArray(repositories)) {
+  if (Array.isArray(repositories) && repositories.length !== 0) {
     for (const repo of repositories) {
       // eslint-disable-next-line no-await-in-loop
       execSudo("add-apt-repository", ["--update", "-y", repo])
     }
-    execSudo(apt, ["update", "-y"])
+    updateRepos(apt)
   }
 
   if (version !== undefined && version !== "") {
@@ -67,6 +53,44 @@ export function setupAptPack(
   }
 
   return { binDir: "/usr/bin/" }
+}
+
+function getApt() {
+  let apt: string
+  if (which.sync("nala", { nothrow: true }) !== null) {
+    apt = "nala"
+
+    // enable utf8 otherwise it fails because of the usage of ASCII encoding
+    addEnv("LANG", "C.UTF-8")
+    addEnv("LC_ALL", "C.UTF-8")
+  } else {
+    apt = "apt-get"
+  }
+  return apt
+}
+
+function updateRepos(apt: string) {
+  execSudo(apt, apt !== "nala" ? ["update", "-y"] : ["update"])
+}
+
+/** Install apt utils and certificates (usually missing from docker containers) */
+function initApt(apt: string) {
+  execSudo(apt, [
+    "install",
+    "--fix-broken",
+    "-y",
+    "software-properties-common",
+    "apt-utils",
+    "ca-certificates",
+    "gnupg",
+  ])
+  try {
+    execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "3B4FE6ACC0B21F32"])
+    execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "40976EAF437D05B5"])
+    execSudo("apt-key", ["adv", "--keyserver", "keyserver.ubuntu.com", "--recv-keys", "1E9377A2BA9EF27F"])
+  } catch (err) {
+    warning(`Failed to add keys: ${err}`)
+  }
 }
 
 export function updateAptAlternatives(name: string, path: string) {
