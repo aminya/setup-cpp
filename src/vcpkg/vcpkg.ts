@@ -36,12 +36,12 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
         setupDnfPack("git")
         setupDnfPack("pkg-config")
       } else if (isUbuntu()) {
-        setupAptPack("curl")
-        setupAptPack("zip")
-        setupAptPack("unzip")
-        setupAptPack("tar")
-        setupAptPack("git")
-        setupAptPack("pkg-config")
+        await setupAptPack("curl")
+        await setupAptPack("zip")
+        await setupAptPack("unzip")
+        await setupAptPack("tar")
+        await setupAptPack("git")
+        await setupAptPack("pkg-config")
       }
     }
 

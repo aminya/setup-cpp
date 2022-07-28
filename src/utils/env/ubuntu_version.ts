@@ -6,7 +6,7 @@ import { isUbuntu } from "./isUbuntu"
 export async function ubuntuVersion(): Promise<number[] | null> {
   if (isUbuntu()) {
     if (which.sync("lsb_release", { nothrow: true }) === null) {
-      setupAptPack("lsb-release")
+      await setupAptPack("lsb-release")
     }
     const versionSplitted = await getUbuntuVersion()
 

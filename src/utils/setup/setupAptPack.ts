@@ -12,15 +12,15 @@ let didUpdate: boolean = false
 let didInit: boolean = false
 
 /** A function that installs a package using apt */
-export function setupAptPack(
+export async function setupAptPack(
   name: string,
   version?: string,
   repositories: string[] = [],
   update = false
-): InstallationInfo {
+): Promise<InstallationInfo> {
   info(`Installing ${name} ${version ?? ""} via apt`)
 
-  let apt: string = getApt()
+  const apt: string = getApt()
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
@@ -30,7 +30,7 @@ export function setupAptPack(
   }
 
   if (!didInit) {
-    initApt(apt)
+    await initApt(apt)
     didInit = true
   }
 
@@ -70,7 +70,7 @@ function updateRepos(apt: string) {
 }
 
 /** Install apt utils and certificates (usually missing from docker containers) */
-function initApt(apt: string) {
+async function initApt(apt: string) {
   execSudo(apt, [
     "install",
     "--fix-broken",
@@ -84,8 +84,8 @@ function initApt(apt: string) {
   addAptKey(["1E9377A2BA9EF27F"], "setup-cpp-launchpad-toolchain.gpg")
   if (apt === "nala") {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
-    addEnv("LANG", "C.UTF-8")
-    addEnv("LC_ALL", "C.UTF-8")
+    await addEnv("LANG", "C.UTF-8")
+    await addEnv("LC_ALL", "C.UTF-8")
   }
 }
 

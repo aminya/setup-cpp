@@ -7,7 +7,7 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 let binDir: string | undefined
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupNala(version: string, _setupDir: string, _arch: string) {
+export async function setupNala(version: string, _setupDir: string, _arch: string) {
   if (!isUbuntu()) {
     return undefined
   }
@@ -22,7 +22,7 @@ export function setupNala(version: string, _setupDir: string, _arch: string) {
   }
 
   // https://github.com/volitank/nala#-installation
-  setupAptPack("wget")
+  await setupAptPack("wget")
   execSudo("/bin/bash", [
     "-c",
     `wget -qO - https://deb.volian.org/volian/scar.key | tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null`,
@@ -34,15 +34,15 @@ export function setupNala(version: string, _setupDir: string, _arch: string) {
 
   try {
     if (version !== "legacy") {
-      setupAptPack("nala", undefined, [], true)
+      await setupAptPack("nala", undefined, [], true)
     } else {
-      setupAptPack("nala-legacy", undefined, [], true)
+      await setupAptPack("nala-legacy", undefined, [], true)
     }
   } catch (err) {
-    setupAptPack("nala-legacy", undefined, [], true)
+    await setupAptPack("nala-legacy", undefined, [], true)
   }
 
-  binDir = "/usr/bin"
+  binDir = "/usr/bin" // eslint-disable-line require-atomic-updates
 
   return { binDir }
 }

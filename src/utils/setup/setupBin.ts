@@ -82,8 +82,8 @@ export async function setupBin(
     }
   }
 
-  let installDir = join(setupDir, extractedFolderName)
-  let binDir = join(installDir, binRelativeDir)
+  const installDir = join(setupDir, extractedFolderName)
+  const binDir = join(installDir, binRelativeDir)
   const binFile = join(binDir, binFileName)
 
   // download ane extract the package into the installation directory.
@@ -102,9 +102,9 @@ export async function setupBin(
           setupDnfPack("tar")
           setupDnfPack("xz")
         } else if (isUbuntu()) {
-          setupAptPack("unzip")
-          setupAptPack("tar")
-          setupAptPack("xz-utils")
+          await setupAptPack("unzip")
+          await setupAptPack("tar")
+          await setupAptPack("xz-utils")
         }
       }
       // eslint-disable-next-line require-atomic-updates

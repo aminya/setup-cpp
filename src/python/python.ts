@@ -63,8 +63,8 @@ export async function setupPythonViaSystem(
         installInfo = setupDnfPack("python3", version)
         setupDnfPack("python3-pip")
       } else if (isUbuntu()) {
-        installInfo = setupAptPack("python3", version)
-        setupAptPack("python3-pip")
+        installInfo = await setupAptPack("python3", version)
+        await setupAptPack("python3-pip")
       } else {
         throw new Error(`Unsupported linux distributions`)
       }

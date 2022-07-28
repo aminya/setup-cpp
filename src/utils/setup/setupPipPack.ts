@@ -52,7 +52,7 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
       } else if (hasDnf()) {
         setupDnfPack("python3-pip")
       } else if (isUbuntu()) {
-        setupAptPack("python3-pip")
+        await setupAptPack("python3-pip")
       }
     }
 

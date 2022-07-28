@@ -8,7 +8,7 @@ describe("setup-nala", () => {
     if (!isUbuntu()) {
       return
     }
-    const installInfo = setupNala("", "", process.arch)
+    const installInfo = await setupNala("", "", process.arch)
     await testBin("nala", ["--version"], installInfo?.binDir)
   })
 })

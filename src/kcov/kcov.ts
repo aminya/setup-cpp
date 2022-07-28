@@ -41,7 +41,7 @@ async function buildKcov(file: string, dest: string) {
   const out = await extractTarByExe(file, dest, ["--strip-components=1"])
 
   // build after extraction using CMake
-  let cmake = await getCmake()
+  const cmake = await getCmake()
 
   if (process.platform === "linux") {
     if (isArch()) {
@@ -51,8 +51,8 @@ async function buildKcov(file: string, dest: string) {
       setupDnfPack("libdwarf-devel")
       setupDnfPack("libcurl-devel")
     } else if (isUbuntu()) {
-      setupAptPack("libdw-dev")
-      setupAptPack("libcurl4-openssl-dev")
+      await setupAptPack("libdw-dev")
+      await setupAptPack("libcurl4-openssl-dev")
     }
   }
   const buildDir = join(out, "build")
@@ -72,7 +72,7 @@ async function getCmake() {
     const { binDir } = await setupCmake(getVersion("cmake", undefined), join(untildify_user(""), "cmake"), "")
     cmake = join(binDir, "cmake")
   }
-  let ninja = which.sync("ninja", { nothrow: true })
+  const ninja = which.sync("ninja", { nothrow: true })
   if (ninja === null) {
     await setupNinja(getVersion("ninja", undefined), join(untildify_user(""), "ninja"), "")
   }
@@ -103,7 +103,7 @@ export async function setupKcov(versionGiven: string, setupDir: string, arch: st
     } else if (hasDnf()) {
       setupDnfPack("binutils")
     } else if (isUbuntu()) {
-      setupAptPack("libbinutils")
+      await setupAptPack("libbinutils")
     }
     return installationInfo
   } else {
