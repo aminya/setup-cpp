@@ -88,9 +88,14 @@ async function initApt(apt: string) {
   }
 }
 
+function initGpg() {
+  execSudo("gpg", ["-k"])
+}
+
 export function addAptKeyViaServer(keys: string[], name: string, server = "keyserver.ubuntu.com") {
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
   if (!existsSync(fileName)) {
+    initGpg()
     for (const key of keys) {
       execSudo("gpg", [
         "--no-default-keyring",
@@ -110,6 +115,7 @@ export function addAptKeyViaServer(keys: string[], name: string, server = "keyse
 export async function addAptKeyViaDownload(name: string, url: string) {
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
   if (!existsSync(fileName)) {
+    initGpg()
     await setupAptPack("curl", undefined)
     execSudo("bash", ["-c", `curl -s ${url} | gpg --no-default-keyring --keyring gnupg-ring:${fileName} --import`])
     execSudo("chmod", ["644", fileName])
