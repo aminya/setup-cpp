@@ -4,7 +4,7 @@ import { execSudo } from "../exec/sudo"
 import { info } from "@actions/core"
 import { warning } from "../io/io"
 import { isGitHubCI } from "../env/isCI"
-import { cpprc_path, setupCppInProfile } from "../env/addEnv"
+import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
 import { appendFileSync } from "fs"
 import which from "which"
 
@@ -61,8 +61,8 @@ function getApt() {
     apt = "nala"
 
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
-    process.env.LANG = "C.UTF-8"
-    process.env.LC_ALL = "C.UTF-8"
+    addEnv("LANG", "C.UTF-8")
+    addEnv("LC_ALL", "C.UTF-8")
   } else {
     apt = "apt-get"
   }
