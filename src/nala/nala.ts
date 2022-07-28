@@ -2,7 +2,7 @@ import { dirname } from "path"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { execSudo } from "../utils/exec/sudo"
-import { setupAptPack } from "../utils/setup/setupAptPack"
+import { addAptKeyViaDownload, setupAptPack } from "../utils/setup/setupAptPack"
 
 let binDir: string | undefined
 
@@ -22,14 +22,13 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
   }
 
   // https://github.com/volitank/nala#-installation
-  await setupAptPack("wget")
+  const keyFileName = await addAptKeyViaDownload(
+    "volian-archive-scar-unstable.gpg",
+    "https://deb.volian.org/volian/scar.key"
+  )
   execSudo("/bin/bash", [
     "-c",
-    `wget -qO - https://deb.volian.org/volian/scar.key | tee /etc/apt/trusted.gpg.d/volian-archive-scar-unstable.gpg > /dev/null`,
-  ])
-  execSudo("/bin/bash", [
-    "-c",
-    `echo "deb http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
+    `echo "deb [signed-by=${keyFileName}] http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
   ])
 
   try {

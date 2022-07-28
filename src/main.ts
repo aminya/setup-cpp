@@ -43,6 +43,7 @@ import { addEnv } from "./utils/env/addEnv"
 import { setupSevenZip } from "./sevenzip/sevenzip"
 import { setupGraphviz } from "./graphviz/graphviz"
 import { setupNala } from "./nala/nala"
+import { setupBazel } from "./bazel/bazel"
 
 /** The setup functions */
 const setups = {
@@ -51,6 +52,7 @@ const setups = {
   ninja: setupNinja,
   python: setupPython,
   vcpkg: setupVcpkg,
+  bazel: setupBazel,
   conan: setupConan,
   meson: setupMeson,
   gcovr: setupGcovr,
@@ -80,6 +82,7 @@ const tools: Array<keyof typeof setups> = [
   "brew",
   "python",
   "vcpkg",
+  "bazel",
   "cmake",
   "ninja",
   "conan",
@@ -359,6 +362,7 @@ All the available tools:
 --cmake
 --ninja
 --vcpkg
+--bazel
 --meson
 --conan
 --make
