@@ -12,6 +12,10 @@ words:
   - aarch
   - aminya
   - applellvm
+  - bazel
+  - bazelisk
+  - copr
+  - vbatts
   - buildtools
   - caxa
   - ccache
@@ -22,6 +26,7 @@ words:
   - CPPFLAGS
   - cpprc
   - Cpython
+  - DCMAKE
   - deps
   - devel
   - dyld
@@ -46,6 +51,7 @@ words:
   - msys
   - multilib
   - mxschmitt
+  - nala
   - noconfirm
   - noprogressbar
   - nothrow

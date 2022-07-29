@@ -115,3 +115,14 @@ export function semverCoerceIfInvalid(version: string) {
   }
   return version
 }
+
+export function removeVPrefix(version: string) {
+  return parseInt(version.replace(/^v/, ""), 10)
+}
+
+export function addVPrefix(version: string) {
+  if (!version.match(/^v/)) {
+    return `v${version}`
+  }
+  return version
+}

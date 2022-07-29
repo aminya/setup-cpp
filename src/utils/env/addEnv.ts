@@ -79,14 +79,14 @@ async function addPathSystem(path: string) {
       await execPowershell(
         `$USER_PATH=([Environment]::GetEnvironmentVariable("PATH", "User")); [Environment]::SetEnvironmentVariable("PATH", "${path};$USER_PATH", "User")`
       )
-      info(`${path} was added to the PATH.`)
+      info(`"${path}" was added to the PATH.`)
       return
     }
     case "linux":
     case "darwin": {
       setupCppInProfile()
-      appendFileSync(cpprc_path, `\nexport PATH=${path}:$PATH\n`)
-      info(`${path} was added to "${cpprc_path}"`)
+      appendFileSync(cpprc_path, `\nexport PATH="${path}:$PATH"\n`)
+      info(`"${path}" was added to "${cpprc_path}"`)
       return
     }
     default: {

@@ -294,7 +294,7 @@ async function _setupLLVM(version: string, setupDir: string, arch: string) {
         // setupPacmanPack("ncurses")
         // TODO: install libtinfo ?
       } else if (isUbuntu()) {
-        setupAptPack("libtinfo-dev")
+        await setupAptPack("libtinfo-dev")
       }
     }
     // eslint-disable-next-line require-atomic-updates

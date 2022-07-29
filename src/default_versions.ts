@@ -25,18 +25,21 @@ const DefaultVersions: Record<string, string> = {
 // - the older ones use ""
 const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
   llvm: {
+    22: "13.0.0-ubuntu-20.04",
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
     14: "13.0.0-ubuntu-16.04",
   },
   clangtidy: {
+    22: "13.0.0-ubuntu-20.04",
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
     14: "13.0.0-ubuntu-16.04",
   },
   clangformat: {
+    22: "13.0.0-ubuntu-20.04",
     20: "13.0.0-ubuntu-20.04",
     18: "13.0.1-ubuntu-18.04",
     16: "13.0.0-ubuntu-16.04",
@@ -60,6 +63,21 @@ const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
     18: "7.3.0",
   },
   */
+  nala: {
+    22: "",
+    21: "legacy",
+    20: "legacy",
+    18: "legacy",
+    16: "legacy",
+    14: "legacy",
+  },
+  kcov: {
+    22: "40",
+    20: "40-binary", // https://github.com/SimonKagstrom/kcov/releases
+    18: "40",
+    16: "40",
+    14: "40",
+  },
 }
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */

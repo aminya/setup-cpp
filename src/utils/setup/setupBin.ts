@@ -102,9 +102,9 @@ export async function setupBin(
           setupDnfPack("tar")
           setupDnfPack("xz")
         } else if (isUbuntu()) {
-          setupAptPack("unzip")
-          setupAptPack("tar")
-          setupAptPack("xz-utils")
+          await setupAptPack("unzip")
+          await setupAptPack("tar")
+          await setupAptPack("xz-utils")
         }
       }
       // eslint-disable-next-line require-atomic-updates
@@ -114,8 +114,12 @@ export async function setupBin(
     try {
       const downloaded = await downloadTool(url)
       await extractFunction?.(downloaded, setupDir)
+      // if (typeof extractedBinDir === "string") {
+      //   binDir = extractedBinDir
+      //   installDir = extractedBinDir
+      // }
     } catch (err) {
-      throw new Error(`Failed to download ${name} ${version} ${arch}: ${err}`)
+      throw new Error(`Failed to download ${name} ${version} ${arch} from ${url}: ${err}`)
     }
   }
 
