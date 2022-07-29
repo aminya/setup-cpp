@@ -91,6 +91,8 @@ jobs:
           - ubuntu-20.04
         container:
           - "ubuntu_node.dockerfile"
+          - "ubuntu_node.mingw.dockerfile"
+          - "ubuntu_22.04_node.dockerfile"
           - "ubuntu_20.04_node.dockerfile"
           - "arch_node.dockerfile"
           - "fedora_node.dockerfile"

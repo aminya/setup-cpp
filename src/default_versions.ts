@@ -17,6 +17,7 @@ const DefaultVersions: Record<string, string> = {
   task: "3.14.0", // https://github.com/go-task/task/releases
   doxygen: isArch() ? "1.9.3-1" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
+  //mingw: "10", // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc-mingw
 }
 
 /// If an ubuntu versions is not in this map:
@@ -55,6 +56,13 @@ const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
   doxygen: {
     20: "1.9.4",
   },
+  /*
+  mingw: {
+    21: "10.3.0",
+    20: "9.3.0",
+    18: "7.3.0",
+  },
+  */
   nala: {
     22: "",
     21: "legacy",
