@@ -152,8 +152,8 @@ export async function setupMingw(version: string, setupDir: string, arch: string
           throw new Error(`Unsupported platform for ${arch}`)
         } else if (isUbuntu()) {
           // install mingw-w64
-          setupAptPack("gcc-mingw-w64", version, ["ppa:ubuntu-toolchain-r/test"])
-          installationInfo = setupAptPack("g++-mingw-w64", version, [])
+          await setupAptPack("gcc-mingw-w64", version, ["ppa:ubuntu-toolchain-r/test"])
+          installationInfo = await setupAptPack("g++-mingw-w64", version, [])
         }
       } else if (arch === "x32") {
         if (isArch()) {
@@ -163,8 +163,8 @@ export async function setupMingw(version: string, setupDir: string, arch: string
           // TODO: install cross-compiler for Fedora
           throw new Error(`Unsupported platform for ${arch}`)
         } else if (isUbuntu()) {
-          setupAptPack("gcc-mingw-w64-i686", version, ["ppa:ubuntu-toolchain-r/test"])
-          installationInfo = setupAptPack("g++-mingw-w64-i686", version, [])
+          await setupAptPack("gcc-mingw-w64-i686", version, ["ppa:ubuntu-toolchain-r/test"])
+          installationInfo = await setupAptPack("g++-mingw-w64-i686", version, [])
         }
       }
       break
