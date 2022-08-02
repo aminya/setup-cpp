@@ -39,7 +39,7 @@
     "start.docker.arch": "docker run -t setup_cpp:arch .",
     "start.docker.fedora": "docker run -t setup_cpp:fedora .",
     "start.docker.ubuntu": "docker run -t setup_cpp:ubuntu .",
-    "test": "run-p --aggregate-output --continue-on-error test.lint test.unit",
+    "test": "run-p --continue-on-error test.lint test.unit",
     "test.docker.arch": "docker build -f ./dev/docker/arch_node.dockerfile --target base -t setup_cpp:arch-base . && container-structure-test test --image setup_cpp:arch-base --config ./dev/container-tests/arch.yml",
     "test.docker.fedora": "docker build -f ./dev/docker/fedora_node.dockerfile --target base -t setup_cpp:fedora-base . && container-structure-test test --image setup_cpp:fedora-base --config ./dev/container-tests/fedora.yml",
     "test.docker.ubuntu": "docker build -f ./dev/docker/ubuntu_node.dockerfile --target base -t setup_cpp:ubuntu-base . && container-structure-test test --image setup_cpp:ubuntu-base --config ./dev/container-tests/ubuntu.yml",
