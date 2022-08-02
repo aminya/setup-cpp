@@ -18,3 +18,4 @@ temp-*
 exe/
 *.log
 *.exe
+.cache/

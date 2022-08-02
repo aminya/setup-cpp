@@ -28,7 +28,7 @@
     "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/ && shx cp ./src/msvc/msvc_matcher.json ./dist && shx cp ./src/python/python_matcher.json ./dist/ && shx cp ./src/llvm/llvm_matcher.json ./dist/ ",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "format": "prettier --write .",
-    "lint": "eslint . --fix",
+    "lint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
     "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./dev/scripts/pack-exe.js",
     "prepare": "npm run build",
     "start.docker": "docker run -t setup_cpp .",
@@ -41,7 +41,7 @@
     "test.docker.fedora": "docker build -f ./dev/docker/fedora_node.dockerfile --target base -t setup_cpp:fedora-base . && container-structure-test test --image setup_cpp:fedora-base --config ./dev/container-tests/fedora.yml",
     "test.docker.ubuntu": "docker build -f ./dev/docker/ubuntu_node.dockerfile --target base -t setup_cpp:ubuntu-base . && container-structure-test test --image setup_cpp:ubuntu-base --config ./dev/container-tests/ubuntu.yml",
     "test.format": "prettier . --check",
-    "test.lint": "eslint .",
+    "test.lint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/",
     "test.tsc": "tsc --noEmit | loose-ts-check",
     "test.unit": "jest --runInBand"
   },
