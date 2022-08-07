@@ -44,6 +44,7 @@ import { setupSevenZip } from "./sevenzip/sevenzip"
 import { setupGraphviz } from "./graphviz/graphviz"
 import { setupNala } from "./nala/nala"
 import { setupBazel } from "./bazel/bazel"
+import { setupPowershell } from "./powershell/powershell"
 
 /** The setup functions */
 const setups = {
@@ -61,6 +62,7 @@ const setups = {
   gcc: setupGcc,
   choco: setupChocolatey,
   brew: setupBrew,
+  powershell: setupPowershell,
   ccache: setupCcache,
   doxygen: setupDoxygen,
   graphviz: setupGraphviz,
@@ -81,6 +83,7 @@ const tools: Array<keyof typeof setups> = [
   "choco",
   "brew",
   "python",
+  "powershell",
   "vcpkg",
   "bazel",
   "cmake",

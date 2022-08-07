@@ -8,7 +8,7 @@ import { InstallationInfo } from "./setupBin"
 let hasBrew = false
 
 /** A function that installs a package using brew */
-export function setupBrewPack(name: string, version?: string): InstallationInfo {
+export function setupBrewPack(name: string, version?: string, extraArgs: string[] = []): InstallationInfo {
   info(`Installing ${name} ${version ?? ""} via brew`)
 
   if (!hasBrew || which.sync("brew", { nothrow: true }) === null) {
@@ -17,7 +17,7 @@ export function setupBrewPack(name: string, version?: string): InstallationInfo 
   }
 
   // brew is not thread-safe
-  execa.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name], {
+  execa.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name, ...extraArgs], {
     stdio: "inherit",
   })
 
