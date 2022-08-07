@@ -1,0 +1,34 @@
+{
+  "name": "exec-powershell",
+  "version": "1.0.0",
+  "description": "Run a powershell command.",
+  "homepage": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "execa": "^5.1.1",
+    "which": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/which": "^2.0.1"
+  },
+  "keywords": [
+    "powershell",
+    "pwsh",
+    "exec",
+    "execa",
+    "spawn",
+    "system",
+    "github-actions",
+    "github",
+    "actions",
+    "gitlab",
+    "ci"
+  ]
+}

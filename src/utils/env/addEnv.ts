@@ -7,7 +7,11 @@ import { execPowershell } from "../exec/powershell"
 import { delimiter } from "path"
 import { escapeSpace } from "../path/escape_space"
 
-/** An add path function that works locally or inside GitHub Actions */
+/**
+ * Add an environment variable.
+ *
+ * This function is cross-platforms and works in all the local or CI systems.
+ */
 export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
   const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
   try {
@@ -27,7 +31,11 @@ export async function addEnv(name: string, valGiven: string | undefined, shouldE
   }
 }
 
-/** An add path function that works locally or inside GitHub Actions */
+/**
+ * Add a path to the PATH environment variable.
+ *
+ * This function is cross-platforms and works in all the local or CI systems.
+ */
 export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
