@@ -13,7 +13,7 @@ import { execSudo } from "../utils/exec/sudo"
 export async function setupPowershell(version: string | undefined, _setupDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
-      await setupChocoPack("powershell", version)
+      await setupChocoPack("powershell-core", version)
       const binDir = "C:/Program Files/PowerShell/7"
       await addPath(binDir)
       return { binDir }
