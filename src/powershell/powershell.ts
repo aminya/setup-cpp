@@ -40,7 +40,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
           "-c",
           `echo "deb [arch=amd64 signed-by=${keyFileName}] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list`,
         ])
-        return setupAptPack("powershell", version)
+        return setupAptPack("powershell", version, [], true)
       }
       throw new Error(`Unsupported linux distribution`)
     }
