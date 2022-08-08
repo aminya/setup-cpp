@@ -8,6 +8,6 @@ export function folderUserAccess(folder: string) {
     isSudo() &&
     process.env.SUDO_USER !== undefined
   ) {
-    execRootSync("chown", ["-R", process.env.SUDO_USER, folder], { cwd: folder, stdio: "inherit" })
+    execRootSync("chown", ["-R", process.env.SUDO_USER, folder], { cwd: folder, stdio: "inherit", shell: true })
   }
 }
