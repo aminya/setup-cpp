@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
-import { execRootSync } from "sudo-tools"
+import { execRootSync } from "root-tools"
 import { info, warning } from "../io/io"
 
 // let didUpdate: boolean = false

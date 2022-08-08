@@ -1,6 +1,6 @@
 import { join } from "path"
 import untildify from "untildify"
-import { isSudo } from "sudo-tools"
+import { isSudo } from "root-tools"
 
 export function untildify_user(path: string) {
   if (isSudo() && typeof process.env.SUDO_USER === "string") {

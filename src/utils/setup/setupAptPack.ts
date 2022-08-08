@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
-import { execRootSync } from "sudo-tools"
+import { execRootSync } from "root-tools"
 import { info } from "@actions/core"
 import { isGitHubCI } from "../env/isCI"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"

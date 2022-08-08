@@ -1,5 +1,5 @@
-import { isSudo } from "sudo-tools"
-import { execRootSync } from "sudo-tools"
+import { isSudo } from "root-tools"
+import { execRootSync } from "root-tools"
 
 /// change the owner to the SUDO_USER. This is required so the user can use the folder without sudo
 export function folderUserAccess(folder: string) {

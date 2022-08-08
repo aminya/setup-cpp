@@ -41,10 +41,10 @@ importers:
       parcel: 2.6.2
       prettier: 2.7.1
       prettier-config-atomic: ^3.0.10
+      root-tools: workspace:*
       semver: 7.3.7
       setup-python: github:actions/setup-python#c474c82340438924daab9282d07300bfe7e3692d
       shx: 0.3.4
-      sudo-tools: workspace:*
       terser-config-atomic: ^0.1.1
       time-delta: github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e
       ts-jest: ^28.0.7
@@ -63,9 +63,9 @@ importers:
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
+      root-tools: link:packages/sudo-tools
       semver: 7.3.7
       setup-python: github.com/actions/setup-python/c474c82340438924daab9282d07300bfe7e3692d
-      sudo-tools: link:packages/sudo-tools
       time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
       ubuntu-version: 2.0.0
       untildify: 4.0.0
