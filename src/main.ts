@@ -17,7 +17,7 @@ import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
 import { setupPython } from "./python/python"
 import mri from "mri"
 import { untildify_user as untildify } from "./utils/path/untildify"
-import { isGitHubCI } from "./utils/env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import * as timeDelta from "time-delta"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -113,7 +113,7 @@ const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 
 /** The main entry function */
 export async function main(args: string[]): Promise<number> {
-  if (!isGitHubCI()) {
+  if (ciDetect() !== "github") {
     process.env.ACTIONS_ALLOW_UNSECURE_COMMANDS = "true"
   }
 
@@ -281,7 +281,7 @@ export async function main(args: string[]): Promise<number> {
 
   info("setup_cpp finished")
 
-  if (!isGitHubCI()) {
+  if (ciDetect() !== "github") {
     switch (process.platform) {
       case "win32": {
         warning("Run `RefreshEnv.cmd` or restart your shell to update the environment.")

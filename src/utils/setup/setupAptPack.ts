@@ -2,7 +2,7 @@
 import { InstallationInfo } from "./setupBin"
 import { execRootSync } from "root-tools"
 import { info } from "@actions/core"
-import { isGitHubCI } from "../env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
 import { appendFileSync, existsSync } from "fs"
 import which from "which"
@@ -124,7 +124,7 @@ export async function addAptKeyViaDownload(name: string, url: string) {
 }
 
 export function updateAptAlternatives(name: string, path: string) {
-  if (isGitHubCI()) {
+  if (ciDetect() === "github") {
     return execRootSync("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
   } else {
     setupCppInProfile()

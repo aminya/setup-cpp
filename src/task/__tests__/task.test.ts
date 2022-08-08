@@ -1,6 +1,6 @@
 import { setupTask } from "../task"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { isGitHubCI } from "../../utils/env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import { getVersion } from "../../default_versions"
 
 jest.setTimeout(300000)
@@ -18,7 +18,7 @@ describe("setup-task", () => {
 
   it("should find task in the cache", async () => {
     const { binDir } = await setupTask(getVersion("task", "true"), directory, process.arch)
-    if (isGitHubCI()) {
+    if (ciDetect() === "github") {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
     }
   })

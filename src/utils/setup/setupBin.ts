@@ -4,7 +4,7 @@ import { addPath } from "../env/addEnv"
 import { join } from "path"
 import { existsSync } from "fs"
 import { tmpdir } from "os"
-import { isGitHubCI } from "../env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import { setupAptPack } from "./setupAptPack"
 import { setupPacmanPack } from "./setupPacmanPack"
 import { isArch } from "../env/isArch"
@@ -64,7 +64,7 @@ export async function setupBin(
   )
 
   // Restore from cache (if found).
-  if (isGitHubCI()) {
+  if (ciDetect() === "github") {
     try {
       const dir = find(name, version)
       if (dir) {
@@ -129,7 +129,7 @@ export async function setupBin(
   await addPath(binDir)
 
   // check if inside Github Actions. If so, cache the installation
-  if (isGitHubCI() && typeof process.env.RUNNER_TOOL_CACHE === "string") {
+  if (ciDetect() === "github" && typeof process.env.RUNNER_TOOL_CACHE === "string") {
     await cacheDir(setupDir, name, version)
   }
 

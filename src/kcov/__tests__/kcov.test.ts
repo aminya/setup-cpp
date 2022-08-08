@@ -39,7 +39,7 @@ describe("setup-Kcov", () => {
 
   // it("should find Kcov in the cache", async () => {
   //   const binDir = await testKcov("v39", directory)
-  //   if (isGitHubCI()) {
+  //   if (ciDetect() === "github") {
   //     expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
   //   }
   //   await cleanupTmpDir("kcov-v39")

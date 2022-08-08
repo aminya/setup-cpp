@@ -1,5 +1,5 @@
 import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/core"
-import { isGitHubCI } from "./isCI"
+import ciDetect from "@npmcli/ci-detect"
 import { untildify_user as untildify } from "../path/untildify"
 import { appendFileSync, existsSync, readFileSync } from "fs"
 import { error, warning } from "../io/io"
@@ -15,7 +15,7 @@ import { escapeSpace } from "../path/escape_space"
 export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
   const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
   try {
-    if (isGitHubCI()) {
+    if (ciDetect() === "github") {
       try {
         exportVariable(name, val)
       } catch (err) {
@@ -39,7 +39,7 @@ export async function addEnv(name: string, valGiven: string | undefined, shouldE
 export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
-    if (isGitHubCI()) {
+    if (ciDetect() === "github") {
       try {
         ghAddPath(path)
       } catch (err) {

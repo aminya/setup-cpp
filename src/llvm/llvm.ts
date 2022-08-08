@@ -17,7 +17,7 @@ import { setOutput } from "@actions/core"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { info, warning } from "../utils/io/io"
 import { existsSync } from "fs"
-import { isGitHubCI } from "../utils/env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../default_versions"
 import { isArch } from "../utils/env/isArch"
@@ -353,7 +353,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
   }
 
-  if (isGitHubCI()) {
+  if (ciDetect() === "github") {
     addLLVMLoggingMatcher()
   }
 
@@ -362,7 +362,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
 export function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
-  if (isGitHubCI()) {
+  if (ciDetect() === "github") {
     addLLVMLoggingMatcher()
   }
   return _setupLLVM(version, setupDir, arch)

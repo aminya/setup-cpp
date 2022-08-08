@@ -16,6 +16,7 @@ importers:
       '@actions/exec': ^1.1.1
       '@actions/io': ^1.1.2
       '@actions/tool-cache': ^2.0.1
+      '@npmcli/ci-detect': ^2.0.0
       '@types/cross-spawn': ^6.0.2
       '@types/jest': ^28.1.6
       '@types/mri': ^1.1.1
@@ -61,6 +62,7 @@ importers:
       '@actions/exec': 1.1.1
       '@actions/io': 1.1.2
       '@actions/tool-cache': 2.0.1
+      '@npmcli/ci-detect': 2.0.0
       escape-path-with-spaces: 1.0.0
       exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
@@ -1377,6 +1379,11 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
     dev: true
+
+  /@npmcli/ci-detect/2.0.0:
+    resolution: {integrity: sha512-8yQtQ9ArHh/TzdUDKQwEvwCgpDuhSWTDAbiKMl3854PcT+Dk4UmWaiawuFTLy9n5twzXOBXVflWe+90/ffXQrA==}
+    engines: {node: ^12.13.0 || ^14.15.0 || >=16}
+    dev: false
 
   /@npmcli/fs/2.1.1:
     resolution: {integrity: sha512-1Q0uzx6c/NVNGszePbr5Gc2riSU1zLpNlo/1YWntH+eaPmMgBssAW0qXofCVkpdj3ce4swZtlDYQu+NKiYcptg==}
