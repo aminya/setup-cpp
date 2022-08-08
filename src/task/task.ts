@@ -1,4 +1,4 @@
-import { addBinExtension } from "../utils/extension/extension"
+import { addBinExtension } from "extension-tools"
 import { extractTarByExe, extractZip } from "../utils/setup/extract"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 

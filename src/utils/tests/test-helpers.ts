@@ -1,7 +1,7 @@
 import * as io from "@actions/io"
 import { tmpdir } from "os"
 import * as path from "path"
-import { addBinExtension } from "../extension/extension"
+import { addBinExtension } from "extension-tools"
 import { join } from "path"
 import spawn from "cross-spawn"
 import { existsSync } from "fs"

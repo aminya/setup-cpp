@@ -11,7 +11,7 @@ import {
   semverCoerceIfInvalid,
 } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { addBinExtension } from "../utils/extension/extension"
+import { addBinExtension } from "extension-tools"
 import { addEnv } from "../utils/env/addEnv"
 import { setOutput } from "@actions/core"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"

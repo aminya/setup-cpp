@@ -3,7 +3,7 @@ import { setupGcc } from "../gcc"
 import { getVersion } from "../../default_versions"
 import path from "path"
 import execa from "execa"
-import { addBinExtension } from "../../utils/extension/extension"
+import { addBinExtension } from "extension-tools"
 import { chmodSync } from "fs"
 
 jest.setTimeout(3000000)

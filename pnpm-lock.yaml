@@ -31,6 +31,7 @@ importers:
       eslint-config-atomic: ^1.18.1
       exec-powershell: workspace:*
       execa: ^5.1.1
+      extension-tools: workspace:*
       gen-readme: ^1.6.0
       jest: ^28.1.3
       loose-ts-check: ^1.2.0
@@ -63,6 +64,7 @@ importers:
       escape-path-with-spaces: 1.0.0
       exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
+      extension-tools: link:packages/extension-tools
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
@@ -111,6 +113,9 @@ importers:
       which: 2.0.2
     devDependencies:
       '@types/which': 2.0.1
+
+  packages/extension-tools:
+    specifiers: {}
 
   packages/sudo-tools:
     specifiers:

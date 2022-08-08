@@ -5,7 +5,7 @@ import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-help
 import { isGitHubCI } from "../../utils/env/isCI"
 import execa from "execa"
 import path from "path"
-import { addBinExtension } from "../../utils/extension/extension"
+import { addBinExtension } from "extension-tools"
 import { chmodSync } from "fs"
 import { getVersion } from "../../default_versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"

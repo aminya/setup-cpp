@@ -2,7 +2,7 @@ import { extractTar } from "@actions/tool-cache"
 import semverLte from "semver/functions/lte"
 import semverCoerce from "semver/functions/coerce"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
-import { addBinExtension } from "../utils/extension/extension"
+import { addBinExtension } from "extension-tools"
 import { extractZip } from "../utils/setup/extract"
 
 /** Get the platform data for cmake */
