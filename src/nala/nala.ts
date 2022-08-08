@@ -1,7 +1,7 @@
 import { dirname } from "path"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { execSudo } from "sudo-tools"
+import { execRoot } from "sudo-tools"
 import { addAptKeyViaDownload, setupAptPack } from "../utils/setup/setupAptPack"
 
 let binDir: string | undefined
@@ -26,7 +26,7 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
     "volian-archive-scar-unstable.gpg",
     "https://deb.volian.org/volian/scar.key"
   )
-  execSudo("/bin/bash", [
+  execRoot("/bin/bash", [
     "-c",
     `echo "deb [signed-by=${keyFileName}] http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
   ])

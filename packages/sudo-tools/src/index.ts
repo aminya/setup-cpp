@@ -8,7 +8,7 @@ let isSudoCache: boolean | undefined = undefined
  *
  * @note it caches the result for the subsequent calls to this function.
  */
-export function isRoot(): boolean {
+export function isSudo(): boolean {
   if (isSudoCache !== undefined) {
     return isSudoCache
   }
@@ -19,14 +19,14 @@ export function isRoot(): boolean {
 
 /** Prepend `sudo` to the command if sudo is available */
 export function prependSudo(command: string) {
-  if (isRoot()) {
+  if (isSudo()) {
     return `sudo ${command}`
   }
   return command
 }
 
 /**
- * Execute a command as sudo if sudo is available. Otherwise executes the command without sudo.
+ * Execute a command as root if sudo is available. Otherwise executes the command normally without sudo.
  *
  * @param program The program to spawn
  * @param args The command arguments
@@ -34,8 +34,8 @@ export function prependSudo(command: string) {
  *
  *   Defaults to `{ stdio: "inherit" }`
  */
-export function execSudo(program: string, args: string[] = [], execOptions: execa.SyncOptions = { stdio: "inherit" }) {
-  if (isRoot()) {
+export function execRoot(program: string, args: string[] = [], execOptions: execa.SyncOptions = { stdio: "inherit" }) {
+  if (isSudo()) {
     return execa.commandSync(`sudo ${[program, ...args].map((arg) => `'${arg}'`).join(" ")}`, execOptions)
   } else {
     return execa.sync(program, args, execOptions)
