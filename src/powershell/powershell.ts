@@ -7,7 +7,7 @@ import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { execSudo } from "../utils/exec/sudo"
+import { execRootSync } from "root-tools"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupPowershell(version: string | undefined, _setupDir: string, _arch: string) {
@@ -26,7 +26,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
         return setupPacmanPack("powershell-bin", version, "yay")
       } else if (hasDnf()) {
         setupDnfPack("curl")
-        execSudo("/bin/bash", [
+        execRootSync("/bin/bash", [
           "-c",
           `curl https://packages.microsoft.com/config/rhel/8/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo`,
         ])
@@ -36,7 +36,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
           "microsoft.asc",
           "https://packages.microsoft.com/keys/microsoft.asc"
         )
-        execSudo("/bin/bash", [
+        execRootSync("/bin/bash", [
           "-c",
           `echo "deb [arch=amd64 signed-by=${keyFileName}] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list`,
         ])
