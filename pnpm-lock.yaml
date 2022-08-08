@@ -70,7 +70,7 @@ importers:
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
-      root-tools: link:packages/sudo-tools
+      root-tools: link:packages/root-tools
       semver: 7.3.7
       setup-python: github.com/actions/setup-python/c474c82340438924daab9282d07300bfe7e3692d
       time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
@@ -119,7 +119,7 @@ importers:
   packages/extension-tools:
     specifiers: {}
 
-  packages/sudo-tools:
+  packages/root-tools:
     specifiers:
       '@types/which': ^2.0.1
       execa: ^5.1.1
