@@ -56,6 +56,7 @@ importers:
       typescript: ^4.7.4
       ubuntu-version: ^2.0.0
       untildify-user: workspace:*
+      user-access: workspace:*
       which: ^2.0.2
     dependencies:
       '@actions/core': 1.9.0
@@ -76,6 +77,7 @@ importers:
       time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
       ubuntu-version: 2.0.0
       untildify-user: link:packages/untildify-user
+      user-access: link:packages/user-access
       which: 2.0.2
     devDependencies:
       '@types/cross-spawn': 6.0.2
@@ -137,6 +139,12 @@ importers:
     dependencies:
       root-tools: link:../root-tools
       untildify: 4.0.0
+
+  packages/user-access:
+    specifiers:
+      root-tools: workspace:*
+    dependencies:
+      root-tools: link:../root-tools
 
 packages:
 

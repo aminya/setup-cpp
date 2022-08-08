@@ -48,7 +48,7 @@ Execute a command as root if sudo is available. Otherwise executes the command n
 
 - program (`string`) - The program to spawn
 - args (`string[]`) - The command arguments
-- execOptions (`execa.SyncOptions`) - The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+- execOptions (`execa.SyncOptions`) - The options passed to `execa`. Defaults to `{ stdio: "inherit", shell: true }`
 
 **returns:** execa.ExecaSyncReturnValue<string>
 
@@ -60,7 +60,7 @@ Asynchronously execute a command as root if sudo is available. Otherwise execute
 
 - program (`string`) - The program to spawn
 - args (`string[]`) - The command arguments
-- execOptions (`execa.Options`) - The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+- execOptions (`execa.Options`) - The options passed to `execa`. Defaults to `{ stdio: "inherit", shell: true }`
 
 **returns:** execa.ExecaChildProcess<string>
 

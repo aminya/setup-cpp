@@ -1,7 +1,7 @@
 {
-  "name": "untildify-user",
+  "name": "user-access",
   "version": "1.0.0",
-  "description": "Untildify a path for the current user even if it is root",
+  "description": "Give user access to the given path",
   "homepage": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
@@ -11,18 +11,18 @@
     "build": "tsc"
   },
   "dependencies": {
-    "root-tools": "workspace:*",
-    "untildify": "^4.0.0"
+    "root-tools": "workspace:*"
   },
   "keywords": [
-    "tilde",
-    "expansion",
-    "expand",
-    "untildify",
+    "chown",
+    "recursive",
+    "user-access",
+    "user",
+    "access",
     "path",
+    "fs",
     "home",
     "directory",
-    "user",
     "shell",
     "bash"
   ]

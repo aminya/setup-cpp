@@ -69,6 +69,7 @@
     "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",
     "ubuntu-version": "^2.0.0",
     "untildify-user": "workspace:*",
+    "user-access": "workspace:*",
     "which": "^2.0.2"
   },
   "devDependencies": {
