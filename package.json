@@ -60,6 +60,7 @@
     "exec-powershell": "workspace:*",
     "execa": "^5.1.1",
     "extension-tools": "workspace:*",
+    "is-link-working": "^2.2.0",
     "mri": "^1.2.0",
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
     "numerous": "1.0.3",
@@ -122,6 +123,9 @@
     "ninja",
     "meson"
   ],
+  "alias": {
+    "electron": false
+  },
   "pnpm": {
     "overrides": {
       "semver": "7.3.7",
