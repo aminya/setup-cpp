@@ -104,6 +104,17 @@ importers:
     devDependencies:
       '@types/which': 2.0.1
 
+  packages/sudo-tools:
+    specifiers:
+      '@types/which': ^2.0.1
+      execa: ^5.1.1
+      which: ^2.0.2
+    dependencies:
+      execa: 5.1.1
+      which: 2.0.2
+    devDependencies:
+      '@types/which': 2.0.1
+
 packages:
 
   /@actions/cache/3.0.0:
