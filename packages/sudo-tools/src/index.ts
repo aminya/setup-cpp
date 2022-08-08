@@ -39,3 +39,20 @@ export function execRootSync(
     return execa.sync(program, args, execOptions)
   }
 }
+
+/**
+ * Asynchronously execute a command as root if sudo is available. Otherwise executes the command normally without sudo.
+ *
+ * @param program The program to spawn
+ * @param args The command arguments
+ * @param execOptions The options passed to `execa`.
+ *
+ *   Defaults to `{ stdio: "inherit" }`
+ */
+export function execRoot(program: string, args: string[] = [], execOptions: execa.Options = { stdio: "inherit" }) {
+  if (isSudo()) {
+    return execa.command(`sudo ${[program, ...args].map((arg) => `'${arg}'`).join(" ")}`, execOptions)
+  } else {
+    return execa(program, args, execOptions)
+  }
+}

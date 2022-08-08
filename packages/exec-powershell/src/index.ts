@@ -5,7 +5,7 @@ import which from "which"
 let powershell: string | undefined
 
 /**
- * Execute a powershell command.
+ * Asynchronously execute a powershell command.
  *
  * @param command The powershell command to execute
  * @param startupFlags The optional startup flags to be passed to powershell.
