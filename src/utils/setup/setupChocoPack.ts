@@ -5,7 +5,7 @@ import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"
 import execa from "execa"
 import { info } from "@actions/core"
-import { notice } from "../io/io"
+import { notice } from "ci-log"
 
 let hasChoco = false
 

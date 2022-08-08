@@ -2,7 +2,7 @@ import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/
 import ciDetect from "@npmcli/ci-detect"
 import { untildifyUser } from "untildify-user"
 import { appendFileSync, existsSync, readFileSync } from "fs"
-import { error, warning } from "../io/io"
+import { error, warning } from "ci-log"
 import { execPowershell } from "exec-powershell"
 import { delimiter } from "path"
 import escapeSpace from "escape-path-with-spaces"

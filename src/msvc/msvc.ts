@@ -6,7 +6,7 @@ import { vsversion_to_versionnumber, findVcvarsall } from "msvc-dev-cmd/lib.js"
 import ciDetect from "@npmcli/ci-detect"
 import path from "path"
 import { existsSync } from "fs"
-import { error, info, warning } from "../utils/io/io"
+import { error, info, warning } from "ci-log"
 
 type MSVCVersion = "2022" | "17.0" | "2019" | "16.0" | "2017" | "15.0" | "2015" | "14.0" | "2013" | "12.0" | string
 

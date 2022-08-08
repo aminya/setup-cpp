@@ -2,7 +2,7 @@ import execa from "execa"
 import { mkdirP } from "@actions/io"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
-import { warning } from "../io/io"
+import { warning } from "ci-log"
 import { giveUserAccess } from "user-access"
 export { extractTar, extractXar } from "@actions/tool-cache"
 

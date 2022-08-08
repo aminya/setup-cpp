@@ -1,6 +1,6 @@
 import { getExecOutput } from "@actions/exec"
 import { addEnv } from "../utils/env/addEnv"
-import { error } from "../utils/io/io"
+import { error } from "ci-log"
 
 export async function setupMacOSSDK() {
   if (process.platform === "darwin") {

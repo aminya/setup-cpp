@@ -13,7 +13,7 @@ import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { addVPrefix, removeVPrefix } from "../utils/setup/version"
-import { info } from "../utils/io/io"
+import { info } from "ci-log"
 import { untildifyUser } from "untildify-user"
 import { setupNinja } from "../ninja/ninja"
 

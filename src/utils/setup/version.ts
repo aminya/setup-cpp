@@ -3,7 +3,7 @@ import semverCompare from "semver/functions/compare"
 import semverCoerce from "semver/functions/coerce"
 import semverValid from "semver/functions/valid"
 import { getExecOutput } from "@actions/exec"
-import { info } from "../io/io"
+import { info } from "ci-log"
 
 /**
  * Gets the specific versions supported by this action compatible with the supplied (specific or minimum) version in
