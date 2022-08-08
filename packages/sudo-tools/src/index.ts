@@ -1,20 +1,9 @@
 import which from "which"
 import execa from "execa"
 
-let isSudoCache: boolean | undefined = undefined
-
-/**
- * Detect if sudo is available and the user has root privileges
- *
- * @note it caches the result for the subsequent calls to this function.
- */
+/** Detect if sudo is available and the user has root privileges */
 export function isSudo(): boolean {
-  if (isSudoCache !== undefined) {
-    return isSudoCache
-  }
-  // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition
-  isSudoCache = (Boolean(process.env.CI) || isRoot()) && which.sync("sudo", { nothrow: true }) !== null
-  return isSudoCache
+  return (Boolean(process.env.CI) || isRoot()) && which.sync("sudo", { nothrow: true }) !== null
 }
 
 /** Detect if the process has root privileges */
