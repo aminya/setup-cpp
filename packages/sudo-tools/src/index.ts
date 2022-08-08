@@ -3,7 +3,7 @@ import execa from "execa"
 
 /** Detect if sudo is available and the user has root privileges */
 export function isSudo(): boolean {
-  return isRoot() && which.sync("sudo", { nothrow: true }) !== null
+  return (Boolean(process.env.CI) || isRoot()) && which.sync("sudo", { nothrow: true }) !== null
 }
 
 /** Detect if the process has root privileges */
