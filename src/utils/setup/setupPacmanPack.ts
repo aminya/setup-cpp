@@ -1,7 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
 import { execRootSync } from "root-tools"
-import { info } from "../io/io"
+import { info } from "ci-log"
 
 let didUpdate: boolean = false
 let didInit: boolean = false

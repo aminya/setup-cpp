@@ -1,7 +1,7 @@
 import { useCpythonVersion } from "setup-python/src/find-python"
 import { findPyPyVersion } from "setup-python/src/find-pypy"
 import { existsSync } from "fs"
-import { info, warning } from "../utils/io/io"
+import { info, warning } from "ci-log"
 import { debug } from "@actions/core"
 import path from "path"
 import ciDetect from "@npmcli/ci-detect"

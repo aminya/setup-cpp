@@ -24,6 +24,7 @@ importers:
       '@types/semver': ^7.3.10
       '@types/which': ^2.0.1
       caxa: ^2.1.0
+      ci-log: workspace:*
       cross-env: 7.0.3
       cross-spawn: ^7.0.3
       cspell: ^6.5.0
@@ -65,11 +66,12 @@ importers:
       '@actions/io': 1.1.2
       '@actions/tool-cache': 2.0.1
       '@npmcli/ci-detect': github.com/aminya/ci-detect/37fe40075bebec96794ba0a7c4a6d5c70cbea00d
+      ci-log: link:packages/ci-log
       escape-path-with-spaces: github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3
       exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
       extension-tools: link:packages/extension-tools
-      get-works: link:packages/ok-status
+      get-works: link:packages/get-works
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
@@ -109,6 +111,14 @@ importers:
       ts-readme: 1.1.3_typescript@4.7.4
       typescript: 4.7.4
 
+  packages/ci-log:
+    specifiers:
+      '@actions/core': ^1.9.0
+      '@npmcli/ci-detect': github:aminya/ci-detect#37fe40075bebec96794ba0a7c4a6d5c70cbea00d
+    dependencies:
+      '@actions/core': 1.9.0
+      '@npmcli/ci-detect': github.com/aminya/ci-detect/37fe40075bebec96794ba0a7c4a6d5c70cbea00d
+
   packages/exec-powershell:
     specifiers:
       '@types/which': ^2.0.1
@@ -123,7 +133,7 @@ importers:
   packages/extension-tools:
     specifiers: {}
 
-  packages/ok-status:
+  packages/get-works:
     specifiers:
       root-tools: workspace:*
     dependencies:

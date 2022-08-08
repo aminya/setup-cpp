@@ -1,0 +1,29 @@
+{
+  "name": "ci-log",
+  "version": "1.0.0",
+  "description": "Colorful logging and print for any environment including GitHub Actions",
+  "homepage": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@actions/core": "^1.9.0",
+    "@npmcli/ci-detect": "github:aminya/ci-detect#37fe40075bebec96794ba0a7c4a6d5c70cbea00d"
+  },
+  "keywords": [
+    "log",
+    "print",
+    "GitHub",
+    "actions",
+    "Gitlab",
+    "CI",
+    "color",
+    "console",
+    "info",
+    "notifications"
+  ]
+}

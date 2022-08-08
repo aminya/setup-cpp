@@ -3,7 +3,7 @@ import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-help
 import { getVersion } from "../../default_versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import ciDetect from "@npmcli/ci-detect"
-import { info } from "../../utils/io/io"
+import { info } from "ci-log"
 
 jest.setTimeout(300000)
 describe("setup-python", () => {
