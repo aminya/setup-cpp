@@ -1,7 +1,7 @@
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import semverMajor from "semver/functions/major"
-import { isValidUrl } from "../utils/http/validate_url"
+import { getWorks } from "get-works"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
 import {
@@ -11,13 +11,13 @@ import {
   semverCoerceIfInvalid,
 } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { addBinExtension } from "../utils/extension/extension"
+import { addBinExtension } from "extension-tools"
 import { addEnv } from "../utils/env/addEnv"
 import { setOutput } from "@actions/core"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { info, warning } from "../utils/io/io"
 import { existsSync } from "fs"
-import { isGitHubCI } from "../utils/env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../default_versions"
 import { isArch } from "../utils/env/isArch"
@@ -231,7 +231,7 @@ async function getWin32Url(version: string): Promise<string | null> {
   let fallback = false
   if (olderThan9_1) {
     url = getReleaseUrl(version, prefix, suffix)
-    if (!(await isValidUrl(url))) {
+    if (!(await getWorks(url))) {
       fallback = true // fallback to github
     }
   }
@@ -353,7 +353,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
   }
 
-  if (isGitHubCI()) {
+  if (ciDetect() === "github-actions") {
     addLLVMLoggingMatcher()
   }
 
@@ -362,7 +362,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
 export function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
-  if (isGitHubCI()) {
+  if (ciDetect() === "github-actions") {
     addLLVMLoggingMatcher()
   }
   return _setupLLVM(version, setupDir, arch)

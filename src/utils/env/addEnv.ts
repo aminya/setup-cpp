@@ -1,17 +1,21 @@
 import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/core"
-import { isGitHubCI } from "./isCI"
-import { untildify_user as untildify } from "../path/untildify"
+import ciDetect from "@npmcli/ci-detect"
+import { untildifyUser } from "untildify-user"
 import { appendFileSync, existsSync, readFileSync } from "fs"
 import { error, warning } from "../io/io"
-import { execPowershell } from "../exec/powershell"
+import { execPowershell } from "exec-powershell"
 import { delimiter } from "path"
-import { escapeSpace } from "../path/escape_space"
+import escapeSpace from "escape-path-with-spaces"
 
-/** An add path function that works locally or inside GitHub Actions */
+/**
+ * Add an environment variable.
+ *
+ * This function is cross-platforms and works in all the local or CI systems.
+ */
 export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
-  const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
+  const val = shouldEscapeSpace ? escapeSpace(valGiven ?? "") : valGiven
   try {
-    if (isGitHubCI()) {
+    if (ciDetect() === "github-actions") {
       try {
         exportVariable(name, val)
       } catch (err) {
@@ -27,11 +31,15 @@ export async function addEnv(name: string, valGiven: string | undefined, shouldE
   }
 }
 
-/** An add path function that works locally or inside GitHub Actions */
+/**
+ * Add a path to the PATH environment variable.
+ *
+ * This function is cross-platforms and works in all the local or CI systems.
+ */
 export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
-    if (isGitHubCI()) {
+    if (ciDetect() === "github-actions") {
       try {
         ghAddPath(path)
       } catch (err) {
@@ -47,7 +55,7 @@ export async function addPath(path: string) {
   }
 }
 
-export const cpprc_path = untildify(".cpprc")
+export const cpprc_path = untildifyUser(".cpprc")
 
 async function addEnvSystem(name: string, valGiven: string | undefined) {
   const val = valGiven ?? ""
@@ -121,12 +129,12 @@ export function setupCppInProfile() {
 
   try {
     // source cpprc in .profile
-    const profile_path = untildify(".profile")
+    const profile_path = untildifyUser(".profile")
     appendFileSync(profile_path, source_cpprc_string)
     info(`${source_cpprc_string} was added to ${profile_path}`)
 
     // source cpprc in .bashrc too
-    const bashrc_path = untildify(".bashrc")
+    const bashrc_path = untildifyUser(".bashrc")
     appendFileSync(bashrc_path, source_cpprc_string)
     info(`${source_cpprc_string} was added to ${bashrc_path}`)
   } catch (err) {

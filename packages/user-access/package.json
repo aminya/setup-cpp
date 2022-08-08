@@ -1,0 +1,29 @@
+{
+  "name": "user-access",
+  "version": "1.0.0",
+  "description": "Give user access to the given path",
+  "homepage": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "root-tools": "workspace:*"
+  },
+  "keywords": [
+    "chown",
+    "recursive",
+    "user-access",
+    "user",
+    "access",
+    "path",
+    "fs",
+    "home",
+    "directory",
+    "shell",
+    "bash"
+  ]
+}

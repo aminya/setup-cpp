@@ -11,9 +11,7 @@ temp-*
 *.tsbuildinfo
 
 # Build directories
-./dist/
-!./dist/setup_cpp.js
-!./dist/setup_cpp.js.map
+packages/*/dist/
 .parcel-cache
 exe/
 *.log

@@ -4,7 +4,7 @@ import { existsSync } from "fs"
 import { info, warning } from "../utils/io/io"
 import { debug } from "@actions/core"
 import path from "path"
-import { isGitHubCI } from "../utils/env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import { isCacheFeatureAvailable, IS_LINUX, IS_WINDOWS } from "setup-python/src/utils"
 import { getCacheDistributor } from "setup-python/src/cache-distributions/cache-factory"
 
@@ -72,7 +72,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
     }
   }
 
-  if (isGitHubCI()) {
+  if (ciDetect() === "github-actions") {
     addPythonLoggingMatcher()
   }
 

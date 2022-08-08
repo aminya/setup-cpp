@@ -9,8 +9,8 @@ import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import path from "path"
 import { warning, info } from "../utils/io/io"
-import { isGitHubCI } from "../utils/env/isCI"
-import { addBinExtension } from "../utils/extension/extension"
+import ciDetect from "@npmcli/ci-detect"
+import { addBinExtension } from "extension-tools"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
 import { isArch } from "../utils/env/isArch"
@@ -186,7 +186,7 @@ async function activateGcc(version: string, binDir: string) {
 
   promises.push(setupMacOSSDK())
 
-  if (isGitHubCI()) {
+  if (ciDetect() === "github-actions") {
     addGccLoggingMatcher()
   }
 

@@ -3,7 +3,7 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { isGitHubCI } from "../utils/env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import { warning, info } from "../utils/io/io"
 import { isArch } from "../utils/env/isArch"
 import which from "which"
@@ -14,7 +14,7 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
-  if (!isGitHubCI()) {
+  if (ciDetect() !== "github-actions") {
     // TODO parse version
     return setupPythonViaSystem(version, setupDir, arch)
   }

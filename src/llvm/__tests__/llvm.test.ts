@@ -1,11 +1,11 @@
 import { setupLLVM, VERSIONS, getUrl, setupClangTools, getLinuxUrl } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
-import { isValidUrl } from "../../utils/http/validate_url"
+import { getWorks } from "get-works"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { isGitHubCI } from "../../utils/env/isCI"
+import ciDetect from "@npmcli/ci-detect"
 import execa from "execa"
 import path from "path"
-import { addBinExtension } from "../../utils/extension/extension"
+import { addBinExtension } from "extension-tools"
 import { chmodSync } from "fs"
 import { getVersion } from "../../default_versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
@@ -14,7 +14,7 @@ jest.setTimeout(400000)
 async function testUrl(version: string) {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, process.platform, version, getUrl)
 
-  if (!(await isValidUrl(url))) {
+  if (!(await getWorks(url))) {
     throw new Error(`Failed to install Version: ${version} => ${specificVersion} \n URL: ${url}`)
   }
 }
@@ -101,7 +101,7 @@ describe("setup-llvm", () => {
     const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
-    if (isGitHubCI() && process.platform !== "linux") {
+    if (ciDetect() === "github-actions" && process.platform !== "linux") {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
       // TODO returns the install dir on linux
     }
@@ -109,7 +109,7 @@ describe("setup-llvm", () => {
     expect(process.env.CC?.includes("clang")).toBeTruthy()
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
 
-    if (isGitHubCI() && process.platform !== "linux") {
+    if (ciDetect() === "github-actions" && process.platform !== "linux") {
       expect(process.env.CC).toMatch("hostedtoolcache")
       expect(process.env.CXX).toMatch("hostedtoolcache")
     }

@@ -3,7 +3,7 @@ import { existsSync } from "fs"
 import { dirname, join } from "path"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
-import { addShellExtension, addShellHere } from "../utils/extension/extension"
+import { addShellExtension, addShellHere } from "extension-tools"
 import { notice } from "../utils/io/io"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
@@ -12,7 +12,7 @@ import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { folderUserAccess } from "../utils/fs/userAccess"
+import { giveUserAccess } from "user-access"
 
 let hasVCPKG = false
 
@@ -53,7 +53,7 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
 
     execa.sync(addShellExtension(addShellHere("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
 
-    folderUserAccess(setupDir)
+    giveUserAccess(setupDir)
 
     await addPath(setupDir)
     // eslint-disable-next-line require-atomic-updates

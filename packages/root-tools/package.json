@@ -1,0 +1,41 @@
+{
+  "name": "root-tools",
+  "version": "1.0.0",
+  "description": "Tools for working with root and sudo such as executing command as root, detecting root, etc.",
+  "homepage": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "execa": "^5.1.1",
+    "which": "^2.0.2"
+  },
+  "devDependencies": {
+    "@types/which": "^2.0.1"
+  },
+  "keywords": [
+    "sudo",
+    "root",
+    "is-root",
+    "is-sudo",
+    "exec-sudo",
+    "exec-root",
+    "isroot",
+    "issudo",
+    "exec",
+    "execa",
+    "spawn",
+    "system",
+    "unix",
+    "linux",
+    "github-actions",
+    "github",
+    "actions",
+    "gitlab",
+    "ci"
+  ]
+}

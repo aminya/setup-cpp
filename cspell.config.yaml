@@ -14,13 +14,12 @@ words:
   - applellvm
   - bazel
   - bazelisk
-  - copr
-  - vbatts
   - buildtools
   - caxa
   - ccache
   - choco
   - cmake
+  - copr
   - CPATH
   - Cppcheck
   - CPPFLAGS
@@ -38,6 +37,7 @@ words:
   - ghes
   - Graphviz
   - isci
+  - isroot
   - kcov
   - LDFLAGS
   - lefticus
@@ -68,6 +68,7 @@ words:
   - tsbuildinfo
   - ucrt
   - untildify
+  - vbatts
   - vcpkg
   - vcvarsall
   - visualc

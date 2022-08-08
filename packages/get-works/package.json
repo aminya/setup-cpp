@@ -1,0 +1,26 @@
+{
+  "name": "get-works",
+  "version": "1.0.0",
+  "description": "Check if the GET request for the given URL works",
+  "homepage": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "root-tools": "workspace:*"
+  },
+  "keywords": [
+    "url",
+    "link",
+    "uri",
+    "working",
+    "check",
+    "alive",
+    "ok",
+    "broken"
+  ]
+}

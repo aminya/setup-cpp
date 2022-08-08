@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
-import { execSudo } from "../exec/sudo"
+import { execRootSync } from "root-tools"
 import { info } from "../io/io"
 
 let didUpdate: boolean = false
@@ -13,24 +13,24 @@ export function setupPacmanPack(name: string, version?: string, aur?: string): I
   const pacman = "pacman"
 
   if (!didUpdate) {
-    execSudo(pacman, ["-Syuu", "--noconfirm"])
+    execRootSync(pacman, ["-Syuu", "--noconfirm"])
     didUpdate = true
   }
 
   if (!didInit) {
     // install base-devel
-    execSudo(pacman, ["-Sy", "--noconfirm", "base-devel"])
+    execRootSync(pacman, ["-Sy", "--noconfirm", "base-devel"])
     didInit = true
   }
 
   if (version !== undefined && version !== "") {
     try {
-      execSudo(aur ?? pacman, ["-S", "--noconfirm", `${name}=${version}`])
+      execRootSync(aur ?? pacman, ["-S", "--noconfirm", `${name}=${version}`])
     } catch {
-      execSudo(aur ?? pacman, ["-S", "--noconfirm", `${name}${version}`])
+      execRootSync(aur ?? pacman, ["-S", "--noconfirm", `${name}${version}`])
     }
   } else {
-    execSudo(aur ?? pacman, ["-S", "--noconfirm", name])
+    execRootSync(aur ?? pacman, ["-S", "--noconfirm", name])
   }
 
   return { binDir: "/usr/bin/" }

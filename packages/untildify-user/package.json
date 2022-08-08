@@ -1,0 +1,29 @@
+{
+  "name": "untildify-user",
+  "version": "1.0.0",
+  "description": "Untildify a path for the current user even if it is root",
+  "homepage": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "root-tools": "workspace:*",
+    "untildify": "^4.0.0"
+  },
+  "keywords": [
+    "tilde",
+    "expansion",
+    "expand",
+    "untildify",
+    "path",
+    "home",
+    "directory",
+    "user",
+    "shell",
+    "bash"
+  ]
+}

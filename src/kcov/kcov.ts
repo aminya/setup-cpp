@@ -3,7 +3,7 @@ import { join } from "path"
 import which from "which"
 import { setupCmake } from "../cmake/cmake"
 import { getVersion } from "../default_versions"
-import { addBinExtension } from "../utils/extension/extension"
+import { addBinExtension } from "extension-tools"
 import { extractTarByExe } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
@@ -14,7 +14,7 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { addVPrefix, removeVPrefix } from "../utils/setup/version"
 import { info } from "../utils/io/io"
-import { untildify_user } from "../utils/path/untildify"
+import { untildifyUser } from "untildify-user"
 import { setupNinja } from "../ninja/ninja"
 
 function getDownloadKcovPackageInfo(version: string): PackageInfo {
@@ -61,7 +61,7 @@ async function buildKcov(file: string, dest: string) {
     stdio: "inherit",
   })
   await execa(cmake, ["--build", buildDir, "--config", "Release"], { cwd: out, stdio: "inherit" })
-  //   execSudo(cmake, ["--install", buildDir], out)
+  //   execRootSync(cmake, ["--install", buildDir], out)
   //   return "user/local/bin" // the cmake install prefix
   return out
 }
@@ -69,12 +69,12 @@ async function buildKcov(file: string, dest: string) {
 async function getCmake() {
   let cmake = which.sync("cmake", { nothrow: true })
   if (cmake === null) {
-    const { binDir } = await setupCmake(getVersion("cmake", undefined), join(untildify_user(""), "cmake"), "")
+    const { binDir } = await setupCmake(getVersion("cmake", undefined), join(untildifyUser(""), "cmake"), "")
     cmake = join(binDir, "cmake")
   }
   const ninja = which.sync("ninja", { nothrow: true })
   if (ninja === null) {
-    await setupNinja(getVersion("ninja", undefined), join(untildify_user(""), "ninja"), "")
+    await setupNinja(getVersion("ninja", undefined), join(untildifyUser(""), "ninja"), "")
   }
   return cmake
 }
