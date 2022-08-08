@@ -186,7 +186,7 @@ async function activateGcc(version: string, binDir: string) {
 
   promises.push(setupMacOSSDK())
 
-  if (ciDetect() === "github") {
+  if (ciDetect() === "github-actions") {
     addGccLoggingMatcher()
   }
 

@@ -124,7 +124,7 @@ export async function addAptKeyViaDownload(name: string, url: string) {
 }
 
 export function updateAptAlternatives(name: string, path: string) {
-  if (ciDetect() === "github") {
+  if (ciDetect() === "github-actions") {
     return execRootSync("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
   } else {
     setupCppInProfile()

@@ -55,7 +55,7 @@
     "@actions/exec": "^1.1.1",
     "@actions/io": "^1.1.2",
     "@actions/tool-cache": "^2.0.1",
-    "@npmcli/ci-detect": "^2.0.0",
+    "@npmcli/ci-detect": "github:aminya/ci-detect#37fe40075bebec96794ba0a7c4a6d5c70cbea00d",
     "escape-path-with-spaces": "^1.0.0",
     "exec-powershell": "workspace:*",
     "execa": "^5.1.1",

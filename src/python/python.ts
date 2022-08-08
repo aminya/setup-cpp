@@ -14,7 +14,7 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
-  if (ciDetect() !== "github") {
+  if (ciDetect() !== "github-actions") {
     // TODO parse version
     return setupPythonViaSystem(version, setupDir, arch)
   }

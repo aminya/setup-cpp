@@ -13,7 +13,7 @@ describe("setup-python", () => {
   })
 
   it("should setup python in GitHub Actions", async () => {
-    if (ciDetect() === "github") {
+    if (ciDetect() === "github-actions") {
       info("Installing python in GitHub Actions")
       const { setupActionsPython } = await import("../actions_python")
       await setupActionsPython(getVersion("python", "true", await ubuntuVersion()), directory, process.arch)

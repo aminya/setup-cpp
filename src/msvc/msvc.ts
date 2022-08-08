@@ -65,7 +65,7 @@ export async function setupMSVC(
   // run vcvarsall.bat environment variables
   await setupVCVarsall(version, VCTargetsPath, arch, toolset, sdk, uwp, spectre)
 
-  if (ciDetect() === "github") {
+  if (ciDetect() === "github-actions") {
     addMSVCLoggingMatcher()
   }
 }

@@ -64,7 +64,7 @@ export async function setupBin(
   )
 
   // Restore from cache (if found).
-  if (ciDetect() === "github") {
+  if (ciDetect() === "github-actions") {
     try {
       const dir = find(name, version)
       if (dir) {
@@ -129,7 +129,7 @@ export async function setupBin(
   await addPath(binDir)
 
   // check if inside Github Actions. If so, cache the installation
-  if (ciDetect() === "github" && typeof process.env.RUNNER_TOOL_CACHE === "string") {
+  if (ciDetect() === "github-actions" && typeof process.env.RUNNER_TOOL_CACHE === "string") {
     await cacheDir(setupDir, name, version)
   }
 

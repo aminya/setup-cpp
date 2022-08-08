@@ -72,7 +72,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
     }
   }
 
-  if (ciDetect() === "github") {
+  if (ciDetect() === "github-actions") {
     addPythonLoggingMatcher()
   }
 

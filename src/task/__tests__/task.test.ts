@@ -18,7 +18,7 @@ describe("setup-task", () => {
 
   it("should find task in the cache", async () => {
     const { binDir } = await setupTask(getVersion("task", "true"), directory, process.arch)
-    if (ciDetect() === "github") {
+    if (ciDetect() === "github-actions") {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
     }
   })

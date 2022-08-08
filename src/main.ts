@@ -113,7 +113,7 @@ const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 
 /** The main entry function */
 export async function main(args: string[]): Promise<number> {
-  if (ciDetect() !== "github") {
+  if (ciDetect() !== "github-actions") {
     process.env.ACTIONS_ALLOW_UNSECURE_COMMANDS = "true"
   }
 
@@ -281,7 +281,7 @@ export async function main(args: string[]): Promise<number> {
 
   info("setup_cpp finished")
 
-  if (ciDetect() !== "github") {
+  if (ciDetect() !== "github-actions") {
     switch (process.platform) {
       case "win32": {
         warning("Run `RefreshEnv.cmd` or restart your shell to update the environment.")

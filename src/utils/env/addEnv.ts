@@ -15,7 +15,7 @@ import { escapeSpace } from "../path/escape_space"
 export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
   const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
   try {
-    if (ciDetect() === "github") {
+    if (ciDetect() === "github-actions") {
       try {
         exportVariable(name, val)
       } catch (err) {
@@ -39,7 +39,7 @@ export async function addEnv(name: string, valGiven: string | undefined, shouldE
 export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
-    if (ciDetect() === "github") {
+    if (ciDetect() === "github-actions") {
       try {
         ghAddPath(path)
       } catch (err) {

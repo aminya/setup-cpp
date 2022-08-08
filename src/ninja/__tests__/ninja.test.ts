@@ -22,7 +22,7 @@ describe("setup-ninja", () => {
 
   it("should find Ninja in the cache", async () => {
     const binDir = await testNinja(directory)
-    if (ciDetect() === "github") {
+    if (ciDetect() === "github-actions") {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
     }
   })

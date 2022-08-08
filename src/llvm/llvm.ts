@@ -353,7 +353,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
   }
 
-  if (ciDetect() === "github") {
+  if (ciDetect() === "github-actions") {
     addLLVMLoggingMatcher()
   }
 
@@ -362,7 +362,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
 export function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
-  if (ciDetect() === "github") {
+  if (ciDetect() === "github-actions") {
     addLLVMLoggingMatcher()
   }
   return _setupLLVM(version, setupDir, arch)
