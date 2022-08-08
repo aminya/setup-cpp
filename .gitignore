@@ -11,8 +11,7 @@ temp-*
 *.tsbuildinfo
 
 # Build directories
-dist/
-!./dist/
+packages/*/dist/
 .parcel-cache
 exe/
 *.log
