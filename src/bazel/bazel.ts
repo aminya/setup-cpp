@@ -5,7 +5,7 @@ import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { execRoot } from "sudo-tools"
+import { execRootSync } from "sudo-tools"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupBazel(version: string, _setupDir: string, _arch: string) {
@@ -24,7 +24,7 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
       } else if (hasDnf()) {
         // https://bazel.build/install/redhat
         setupDnfPack("dnf-plugins-core", undefined)
-        execRoot("dnf", ["copr", "enable", "vbatts/bazel"])
+        execRootSync("dnf", ["copr", "enable", "vbatts/bazel"])
         return setupDnfPack("bazel4", undefined)
       } else if (isUbuntu()) {
         // https://bazel.build/install/ubuntu
@@ -32,7 +32,7 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
           "bazel-archive-keyring.gpg",
           "https://bazel.build/bazel-release.pub.gpg"
         )
-        execRoot("bash", [
+        execRootSync("bash", [
           "-c",
           `echo "deb [arch=amd64 signed-by=${keyFileName}] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list`,
         ])

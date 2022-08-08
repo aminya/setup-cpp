@@ -61,7 +61,7 @@ async function buildKcov(file: string, dest: string) {
     stdio: "inherit",
   })
   await execa(cmake, ["--build", buildDir, "--config", "Release"], { cwd: out, stdio: "inherit" })
-  //   execRoot(cmake, ["--install", buildDir], out)
+  //   execRootSync(cmake, ["--install", buildDir], out)
   //   return "user/local/bin" // the cmake install prefix
   return out
 }

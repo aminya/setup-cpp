@@ -28,7 +28,11 @@ export function prependSudo(command: string) {
  *
  *   Defaults to `{ stdio: "inherit" }`
  */
-export function execRoot(program: string, args: string[] = [], execOptions: execa.SyncOptions = { stdio: "inherit" }) {
+export function execRootSync(
+  program: string,
+  args: string[] = [],
+  execOptions: execa.SyncOptions = { stdio: "inherit" }
+) {
   if (isSudo()) {
     return execa.commandSync(`sudo ${[program, ...args].map((arg) => `'${arg}'`).join(" ")}`, execOptions)
   } else {

@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
-import { execRoot } from "sudo-tools"
+import { execRootSync } from "sudo-tools"
 import { info } from "@actions/core"
 import { isGitHubCI } from "../env/isCI"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
@@ -36,19 +36,19 @@ export async function setupAptPack(
   if (Array.isArray(repositories) && repositories.length !== 0) {
     for (const repo of repositories) {
       // eslint-disable-next-line no-await-in-loop
-      execRoot("add-apt-repository", ["--update", "-y", repo])
+      execRootSync("add-apt-repository", ["--update", "-y", repo])
     }
     updateRepos(apt)
   }
 
   if (version !== undefined && version !== "") {
     try {
-      execRoot(apt, ["install", "--fix-broken", "-y", `${name}=${version}`])
+      execRootSync(apt, ["install", "--fix-broken", "-y", `${name}=${version}`])
     } catch {
-      execRoot(apt, ["install", "--fix-broken", "-y", `${name}-${version}`])
+      execRootSync(apt, ["install", "--fix-broken", "-y", `${name}-${version}`])
     }
   } else {
-    execRoot(apt, ["install", "--fix-broken", "-y", name])
+    execRootSync(apt, ["install", "--fix-broken", "-y", name])
   }
 
   return { binDir: "/usr/bin/" }
@@ -65,12 +65,12 @@ function getApt() {
 }
 
 function updateRepos(apt: string) {
-  execRoot(apt, apt !== "nala" ? ["update", "-y"] : ["update"])
+  execRootSync(apt, apt !== "nala" ? ["update", "-y"] : ["update"])
 }
 
 /** Install apt utils and certificates (usually missing from docker containers) */
 async function initApt(apt: string) {
-  execRoot(apt, [
+  execRootSync(apt, [
     "install",
     "--fix-broken",
     "-y",
@@ -89,7 +89,7 @@ async function initApt(apt: string) {
 }
 
 function initGpg() {
-  execRoot("gpg", ["-k"])
+  execRootSync("gpg", ["-k"])
 }
 
 export function addAptKeyViaServer(keys: string[], name: string, server = "keyserver.ubuntu.com") {
@@ -97,7 +97,7 @@ export function addAptKeyViaServer(keys: string[], name: string, server = "keyse
   if (!existsSync(fileName)) {
     initGpg()
     for (const key of keys) {
-      execRoot("gpg", [
+      execRootSync("gpg", [
         "--no-default-keyring",
         "--keyring",
         `gnupg-ring:${fileName}`,
@@ -106,7 +106,7 @@ export function addAptKeyViaServer(keys: string[], name: string, server = "keyse
         "--recv-keys",
         key,
       ])
-      execRoot("chmod", ["644", fileName])
+      execRootSync("chmod", ["644", fileName])
     }
   }
   return fileName
@@ -117,15 +117,15 @@ export async function addAptKeyViaDownload(name: string, url: string) {
   if (!existsSync(fileName)) {
     initGpg()
     await setupAptPack("curl", undefined)
-    execRoot("bash", ["-c", `curl -s ${url} | gpg --no-default-keyring --keyring gnupg-ring:${fileName} --import`])
-    execRoot("chmod", ["644", fileName])
+    execRootSync("bash", ["-c", `curl -s ${url} | gpg --no-default-keyring --keyring gnupg-ring:${fileName} --import`])
+    execRootSync("chmod", ["644", fileName])
   }
   return fileName
 }
 
 export function updateAptAlternatives(name: string, path: string) {
   if (isGitHubCI()) {
-    return execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
+    return execRootSync("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
   } else {
     setupCppInProfile()
     return appendFileSync(
