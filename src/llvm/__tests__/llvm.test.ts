@@ -1,6 +1,6 @@
 import { setupLLVM, VERSIONS, getUrl, setupClangTools, getLinuxUrl } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
-import isLinkWorking from "is-link-working"
+import { getWorks } from "get-works"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import ciDetect from "@npmcli/ci-detect"
 import execa from "execa"
@@ -14,7 +14,7 @@ jest.setTimeout(400000)
 async function testUrl(version: string) {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, process.platform, version, getUrl)
 
-  if (!(await isLinkWorking(url))) {
+  if (!(await getWorks(url))) {
     throw new Error(`Failed to install Version: ${version} => ${specificVersion} \n URL: ${url}`)
   }
 }

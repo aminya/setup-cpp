@@ -60,7 +60,7 @@
     "exec-powershell": "workspace:*",
     "execa": "^5.1.1",
     "extension-tools": "workspace:*",
-    "is-link-working": "github:aminya/node-is-link-working#4a10987",
+    "get-works": "workspace:*",
     "mri": "^1.2.0",
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
     "numerous": "1.0.3",

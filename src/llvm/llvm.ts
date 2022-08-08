@@ -1,7 +1,7 @@
 import * as path from "path"
 import semverLte from "semver/functions/lte"
 import semverMajor from "semver/functions/major"
-import isLinkWorking from "is-link-working"
+import { getWorks } from "get-works"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
 import {
@@ -231,7 +231,7 @@ async function getWin32Url(version: string): Promise<string | null> {
   let fallback = false
   if (olderThan9_1) {
     url = getReleaseUrl(version, prefix, suffix)
-    if (!(await isLinkWorking(url))) {
+    if (!(await getWorks(url))) {
       fallback = true // fallback to github
     }
   }
