@@ -1,4 +1,4 @@
-import { isUrlOnline } from "is-url-online"
+import { isValidUrl } from "../http/validate_url"
 import semverCompare from "semver/functions/compare"
 import semverCoerce from "semver/functions/coerce"
 import semverValid from "semver/functions/valid"
@@ -42,7 +42,7 @@ export async function getSpecificVersionAndUrl(
   if (platform === "linux" && version.includes("ubuntu")) {
     const url = await getUrl(platform, version)
     // eslint-disable-next-line no-await-in-loop
-    if (url !== null && (await isUrlOnline(url))) {
+    if (url !== null && (await isValidUrl(url))) {
       return [version, url]
     }
   }
@@ -55,7 +55,7 @@ export async function getSpecificVersionAndUrl(
     // eslint-disable-next-line no-await-in-loop
     const url = await getUrl(platform, specificVersion)
     // eslint-disable-next-line no-await-in-loop
-    if (url !== null && (await isUrlOnline(url))) {
+    if (url !== null && (await isValidUrl(url))) {
       return [specificVersion, url]
     }
   }
