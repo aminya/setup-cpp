@@ -28,14 +28,16 @@ export function prependSudo(command: string) {
 /**
  * Execute a command as sudo if sudo is available. Otherwise executes the command without sudo.
  *
- * @param file The file to spawn
+ * @param program The program to spawn
  * @param args The command arguments
  * @param execOptions The options passed to `execa`.
+ *
+ *   Defaults to `{ stdio: "inherit" }`
  */
-export function execSudo(file: string, args: string[], execOptions: execa.SyncOptions = { stdio: "inherit" }) {
+export function execSudo(program: string, args: string[] = [], execOptions: execa.SyncOptions = { stdio: "inherit" }) {
   if (isRoot()) {
-    return execa.commandSync(`sudo ${[file, ...args].map((arg) => `'${arg}'`).join(" ")}`, execOptions)
+    return execa.commandSync(`sudo ${[program, ...args].map((arg) => `'${arg}'`).join(" ")}`, execOptions)
   } else {
-    return execa.sync(file, args, execOptions)
+    return execa.sync(program, args, execOptions)
   }
 }

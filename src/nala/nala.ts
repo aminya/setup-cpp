@@ -1,7 +1,7 @@
 import { dirname } from "path"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { execSudo } from "../utils/exec/sudo"
+import { execSudo } from "sudo-tools"
 import { addAptKeyViaDownload, setupAptPack } from "../utils/setup/setupAptPack"
 
 let binDir: string | undefined

@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
-import { execSudo } from "../exec/sudo"
+import { execSudo } from "sudo-tools"
 import { info, warning } from "../io/io"
 
 // let didUpdate: boolean = false

@@ -62,6 +62,7 @@
     "numerous": "1.0.3",
     "semver": "7.3.7",
     "setup-python": "github:actions/setup-python#c474c82340438924daab9282d07300bfe7e3692d",
+    "sudo-tools": "workspace:*",
     "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",
     "ubuntu-version": "^2.0.0",
     "untildify": "^4.0.0",

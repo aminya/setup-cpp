@@ -1,5 +1,5 @@
-import { isRoot } from "../env/sudo"
-import { execSudo } from "../exec/sudo"
+import { isRoot } from "sudo-tools"
+import { execSudo } from "sudo-tools"
 
 /// change the owner to the SUDO_USER. This is required so the user can use the folder without sudo
 export function folderUserAccess(folder: string) {
@@ -8,6 +8,6 @@ export function folderUserAccess(folder: string) {
     isRoot() &&
     process.env.SUDO_USER !== undefined
   ) {
-    execSudo("chown", ["-R", process.env.SUDO_USER, folder], folder)
+    execSudo("chown", ["-R", process.env.SUDO_USER, folder], { cwd: folder, stdio: "inherit" })
   }
 }

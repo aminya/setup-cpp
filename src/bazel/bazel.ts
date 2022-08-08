@@ -5,7 +5,7 @@ import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { execSudo } from "../utils/exec/sudo"
+import { execSudo } from "sudo-tools"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupBazel(version: string, _setupDir: string, _arch: string) {
