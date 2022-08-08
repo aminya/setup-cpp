@@ -5,7 +5,7 @@ import { appendFileSync, existsSync, readFileSync } from "fs"
 import { error, warning } from "../io/io"
 import { execPowershell } from "exec-powershell"
 import { delimiter } from "path"
-import { escapeSpace } from "../path/escape_space"
+import escapeSpace from "escape-path-with-spaces"
 
 /**
  * Add an environment variable.
@@ -13,7 +13,7 @@ import { escapeSpace } from "../path/escape_space"
  * This function is cross-platforms and works in all the local or CI systems.
  */
 export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
-  const val = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
+  const val = shouldEscapeSpace ? escapeSpace(valGiven ?? "") : valGiven
   try {
     if (ciDetect() === "github-actions") {
       try {

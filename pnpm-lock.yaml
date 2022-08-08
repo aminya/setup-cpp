@@ -27,7 +27,7 @@ importers:
       cross-env: 7.0.3
       cross-spawn: ^7.0.3
       cspell: ^6.5.0
-      escape-path-with-spaces: ^1.0.0
+      escape-path-with-spaces: github:aminya/escape-path-with-spaces#d9f81ee649203ddc55783a2f96ada59df06118e3
       eslint: ^8.21.0
       eslint-config-atomic: ^1.18.1
       exec-powershell: workspace:*
@@ -63,7 +63,7 @@ importers:
       '@actions/io': 1.1.2
       '@actions/tool-cache': 2.0.1
       '@npmcli/ci-detect': github.com/aminya/ci-detect/37fe40075bebec96794ba0a7c4a6d5c70cbea00d
-      escape-path-with-spaces: 1.0.0
+      escape-path-with-spaces: github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3
       exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
       extension-tools: link:packages/extension-tools
@@ -4137,10 +4137,6 @@ packages:
     resolution: {integrity: sha512-2Sd4ShcWxbx6OY1IHyla/CVNwvg7XwZVoXZHcSu9w9SReNP1EzzD5T8NWKIR38fIqEns9kDWKUQTXXAmlDrdPg==}
     engines: {node: '>=12'}
     dev: true
-
-  /escape-path-with-spaces/1.0.0:
-    resolution: {integrity: sha512-+98Hh0yzVa0hldJXlzr0M/8B8LVXW9vNT5boC9k6o896Z52DGRplm3NwMGX0590ryGSegzTf/uaUiusFj2SQbQ==}
-    dev: false
 
   /escape-string-regexp/1.0.5:
     resolution: {integrity: sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==}
@@ -9409,6 +9405,12 @@ packages:
     name: '@npmcli/ci-detect'
     version: 2.0.0
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
+    dev: false
+
+  github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3:
+    resolution: {tarball: https://codeload.github.com/aminya/escape-path-with-spaces/tar.gz/d9f81ee649203ddc55783a2f96ada59df06118e3}
+    name: escape-path-with-spaces
+    version: 1.0.0
     dev: false
 
   github.com/aminya/msvc-dev-cmd/9f672c1:
