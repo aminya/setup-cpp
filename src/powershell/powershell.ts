@@ -35,11 +35,11 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
       } else if (isUbuntu()) {
         await setupAptPack("curl")
         const ubuntuVerSplitted = (await ubuntuVersion())!
-        const ubuntuVersionString = `${ubuntuVerSplitted[0]}.${ubuntuVerSplitted[1]}`
+        const ubuntuVersionString = `${ubuntuVerSplitted[0]}.0${ubuntuVerSplitted[1]}`
 
-        execRootSync("/bin/bash", [
-          "-c",
-          `curl -LJO "https://packages.microsoft.com/config/ubuntu/${ubuntuVersionString}/packages-microsoft-prod.deb"`,
+        execRootSync("curl", [
+          "-LJO",
+          `https://packages.microsoft.com/config/ubuntu/${ubuntuVersionString}/packages-microsoft-prod.deb`,
         ])
         execRootSync("dpkg", ["-i", "packages-microsoft-prod.deb"])
 
