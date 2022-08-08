@@ -25,6 +25,26 @@ export function execPowershell(
 }
 
 /**
+ * Execute a powershell command.
+ *
+ * @param command The powershell command to execute
+ * @param startupFlags The optional startup flags to be passed to powershell.
+ *
+ *   Defaults to `["-NoProfile", "-NoLogo", "-NonInteractive"]`. This means that the Powershell profile is not sourced first.
+ * @param execOptions The options passed to `execa`.
+ *
+ *   Defaults to `{ stdio: "inherit" }`
+ * @note It prefers `pwsh` over `powershell`
+ */
+export function execPowershellSync(
+  command: string,
+  startupFlags: string[] = ["-NoProfile", "-NoLogo", "-NonInteractive"],
+  execOptions: execa.SyncOptions = { stdio: "inherit" }
+) {
+  return execa.sync(getPowerShell(), [...startupFlags, "-c", command], execOptions)
+}
+
+/**
  * Get the path to the powershell executable.
  *
  * @note It prefers `pwsh` over `powershell`
