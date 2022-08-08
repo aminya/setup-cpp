@@ -8,19 +8,17 @@ let powershell: string | undefined
  * Asynchronously execute a powershell command.
  *
  * @param command The powershell command to execute
- * @param startupFlags The optional startup flags to be passed to powershell.
- *
- *   Defaults to `["-NoProfile", "-NoLogo", "-NonInteractive"]`. This means that the Powershell profile is not sourced first.
- * @param execOptions The options passed to `execa`.
- *
- *   Defaults to `{ stdio: "inherit" }`
+ * @param startupFlags The optional startup flags to be passed to powershell. Defaults to `["-NoProfile", "-NoLogo",
+ *   "-NonInteractive"]`. This means that the Powershell profile is not sourced first.
+ * @param execOptions The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+ * @returns A promise to the execution result
  * @note It prefers `pwsh` over `powershell`
  */
 export function execPowershell(
   command: string,
   startupFlags: string[] = ["-NoProfile", "-NoLogo", "-NonInteractive"],
   execOptions: execa.Options = { stdio: "inherit" }
-) {
+): execa.ExecaChildProcess<string> {
   return execa(getPowerShell(), [...startupFlags, "-c", command], execOptions)
 }
 
@@ -28,19 +26,17 @@ export function execPowershell(
  * Execute a powershell command.
  *
  * @param command The powershell command to execute
- * @param startupFlags The optional startup flags to be passed to powershell.
- *
- *   Defaults to `["-NoProfile", "-NoLogo", "-NonInteractive"]`. This means that the Powershell profile is not sourced first.
- * @param execOptions The options passed to `execa`.
- *
- *   Defaults to `{ stdio: "inherit" }`
+ * @param startupFlags The optional startup flags to be passed to powershell. Defaults to `["-NoProfile", "-NoLogo",
+ *   "-NonInteractive"]`. This means that the Powershell profile is not sourced first.
+ * @param execOptions The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+ * @returns The execution result
  * @note It prefers `pwsh` over `powershell`
  */
 export function execPowershellSync(
   command: string,
   startupFlags: string[] = ["-NoProfile", "-NoLogo", "-NonInteractive"],
   execOptions: execa.SyncOptions = { stdio: "inherit" }
-) {
+): execa.ExecaSyncReturnValue<string> {
   return execa.sync(getPowerShell(), [...startupFlags, "-c", command], execOptions)
 }
 

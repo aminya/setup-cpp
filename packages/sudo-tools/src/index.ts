@@ -24,15 +24,14 @@ export function prependSudo(command: string) {
  *
  * @param program The program to spawn
  * @param args The command arguments
- * @param execOptions The options passed to `execa`.
- *
- *   Defaults to `{ stdio: "inherit" }`
+ * @param execOptions The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+ * @returns The execution result
  */
 export function execRootSync(
   program: string,
   args: string[] = [],
   execOptions: execa.SyncOptions = { stdio: "inherit" }
-) {
+): execa.ExecaSyncReturnValue<string> {
   if (isSudo()) {
     return execa.commandSync(`sudo ${[program, ...args].map((arg) => `'${arg}'`).join(" ")}`, execOptions)
   } else {
@@ -45,11 +44,14 @@ export function execRootSync(
  *
  * @param program The program to spawn
  * @param args The command arguments
- * @param execOptions The options passed to `execa`.
- *
- *   Defaults to `{ stdio: "inherit" }`
+ * @param execOptions The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+ * @returns A promise to the execution result
  */
-export function execRoot(program: string, args: string[] = [], execOptions: execa.Options = { stdio: "inherit" }) {
+export function execRoot(
+  program: string,
+  args: string[] = [],
+  execOptions: execa.Options = { stdio: "inherit" }
+): execa.ExecaChildProcess<string> {
   if (isSudo()) {
     return execa.command(`sudo ${[program, ...args].map((arg) => `'${arg}'`).join(" ")}`, execOptions)
   } else {
