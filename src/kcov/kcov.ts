@@ -14,7 +14,7 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { addVPrefix, removeVPrefix } from "../utils/setup/version"
 import { info } from "../utils/io/io"
-import { untildify_user } from "../utils/path/untildify"
+import { untildifyUser } from "untildify-user"
 import { setupNinja } from "../ninja/ninja"
 
 function getDownloadKcovPackageInfo(version: string): PackageInfo {
@@ -69,12 +69,12 @@ async function buildKcov(file: string, dest: string) {
 async function getCmake() {
   let cmake = which.sync("cmake", { nothrow: true })
   if (cmake === null) {
-    const { binDir } = await setupCmake(getVersion("cmake", undefined), join(untildify_user(""), "cmake"), "")
+    const { binDir } = await setupCmake(getVersion("cmake", undefined), join(untildifyUser(""), "cmake"), "")
     cmake = join(binDir, "cmake")
   }
   const ninja = which.sync("ninja", { nothrow: true })
   if (ninja === null) {
-    await setupNinja(getVersion("ninja", undefined), join(untildify_user(""), "ninja"), "")
+    await setupNinja(getVersion("ninja", undefined), join(untildifyUser(""), "ninja"), "")
   }
   return cmake
 }

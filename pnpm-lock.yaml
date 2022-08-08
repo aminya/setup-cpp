@@ -55,7 +55,7 @@ importers:
       ts-readme: ^1.1.3
       typescript: ^4.7.4
       ubuntu-version: ^2.0.0
-      untildify: ^4.0.0
+      untildify-user: workspace:*
       which: ^2.0.2
     dependencies:
       '@actions/core': 1.9.0
@@ -75,7 +75,7 @@ importers:
       setup-python: github.com/actions/setup-python/c474c82340438924daab9282d07300bfe7e3692d
       time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
       ubuntu-version: 2.0.0
-      untildify: 4.0.0
+      untildify-user: link:packages/untildify-user
       which: 2.0.2
     devDependencies:
       '@types/cross-spawn': 6.0.2
@@ -129,6 +129,14 @@ importers:
       which: 2.0.2
     devDependencies:
       '@types/which': 2.0.1
+
+  packages/untildify-user:
+    specifiers:
+      root-tools: workspace:*
+      untildify: ^4.0.0
+    dependencies:
+      root-tools: link:../root-tools
+      untildify: 4.0.0
 
 packages:
 

@@ -6,7 +6,6 @@
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
   "source": "./src/index.ts",
   "scripts": {
     "build": "tsc"
