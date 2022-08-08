@@ -13,8 +13,13 @@ export function isSudo(): boolean {
     return isSudoCache
   }
   // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions, @typescript-eslint/no-unnecessary-condition
-  isSudoCache = (Boolean(process.env.CI) || process.getuid?.() === 0) && which.sync("sudo", { nothrow: true }) !== null
+  isSudoCache = (Boolean(process.env.CI) || isRoot()) && which.sync("sudo", { nothrow: true }) !== null
   return isSudoCache
+}
+
+/** Detect if the process has root privileges */
+export function isRoot(): boolean {
+  return process.getuid?.() === 0
 }
 
 /** Prepend `sudo` to the command if sudo is available */
