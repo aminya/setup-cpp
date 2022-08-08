@@ -3,7 +3,7 @@ import { isGitHubCI } from "./isCI"
 import { untildify_user as untildify } from "../path/untildify"
 import { appendFileSync, existsSync, readFileSync } from "fs"
 import { error, warning } from "../io/io"
-import { execPowershell } from "../exec/powershell"
+import { execPowershell } from "exec-powershell"
 import { delimiter } from "path"
 import { escapeSpace } from "../path/escape_space"
 

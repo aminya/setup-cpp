@@ -29,6 +29,7 @@ importers:
       escape-path-with-spaces: ^1.0.0
       eslint: ^8.21.0
       eslint-config-atomic: ^1.18.1
+      exec-powershell: workspace:*
       execa: ^5.1.1
       jest: ^28.1.3
       loose-ts-check: ^1.2.0
@@ -56,6 +57,7 @@ importers:
       '@actions/io': 1.1.2
       '@actions/tool-cache': 2.0.1
       escape-path-with-spaces: 1.0.0
+      exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
