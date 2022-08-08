@@ -1,6 +1,6 @@
 import { setupLLVM, VERSIONS, getUrl, setupClangTools, getLinuxUrl } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
-import { isValidUrl } from "../../utils/http/validate_url"
+import { isUrlOnline } from "is-url-online"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import ciDetect from "@npmcli/ci-detect"
 import execa from "execa"
@@ -14,7 +14,7 @@ jest.setTimeout(400000)
 async function testUrl(version: string) {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, process.platform, version, getUrl)
 
-  if (!(await isValidUrl(url))) {
+  if (!(await isUrlOnline(url))) {
     throw new Error(`Failed to install Version: ${version} => ${specificVersion} \n URL: ${url}`)
   }
 }
