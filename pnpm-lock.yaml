@@ -35,7 +35,7 @@ importers:
       execa: ^5.1.1
       extension-tools: workspace:*
       gen-readme: ^1.6.0
-      get-works: workspace:*
+      is-url-online: ^1.5.0
       jest: ^28.1.3
       loose-ts-check: ^1.2.0
       mri: ^1.2.0
@@ -71,7 +71,7 @@ importers:
       exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
       extension-tools: link:packages/extension-tools
-      get-works: link:packages/get-works
+      is-url-online: 1.5.0
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
@@ -132,12 +132,6 @@ importers:
 
   packages/extension-tools:
     specifiers: {}
-
-  packages/get-works:
-    specifiers:
-      root-tools: workspace:*
-    dependencies:
-      root-tools: link:../root-tools
 
   packages/root-tools:
     specifiers:
@@ -5765,6 +5759,10 @@ packages:
   /is-typedarray/1.0.0:
     resolution: {integrity: sha512-cyA56iCMHAh5CdzjJIa4aohJyeO1YbwLi3Jc35MmRU6poroFjIGZzUzupGiRPOjgHg9TLu43xbpwXk523fMxKA==}
     dev: true
+
+  /is-url-online/1.5.0:
+    resolution: {integrity: sha512-uN7eZhWzxuiJs0OeMIzzMcU5OqUrS0OBoLrorPi3gExjsIO1zkaT5kXfsSbai7FmPzLNg2j8NdbJqgr5l8S2xw==}
+    dev: false
 
   /is-url/1.2.4:
     resolution: {integrity: sha512-ITvGim8FhRiYe4IQ5uHSkj7pVaPDrCTkNd3yq3cV7iZAcJdHTUMPMEHcqSOy9xZ9qFenQCvi+2wjH9a1nXqHww==}
