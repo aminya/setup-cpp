@@ -61,7 +61,7 @@
     "exec-powershell": "workspace:*",
     "execa": "^5.1.1",
     "extension-tools": "workspace:*",
-    "get-works": "workspace:*",
+    "is-url-online": "^1.5.0",
     "mri": "^1.2.0",
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
     "numerous": "1.0.3",
