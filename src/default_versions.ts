@@ -52,9 +52,6 @@ const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
     20: "0.63.0",
     18: "0.61.4",
   },
-  doxygen: {
-    20: "1.9.4",
-  },
   nala: {
     22: "",
     21: "legacy",
