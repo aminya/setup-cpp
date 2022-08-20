@@ -1,4 +1,4 @@
-import { addBinExtension } from "extension-tools"
+import { addExeExt } from "patha"
 import { extractTarByExe, extractZip } from "../utils/setup/extract"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 
@@ -35,7 +35,7 @@ function getTaskPackageInfo(version: string, platform: NodeJS.Platform, arch: st
   const extension = isZip ? "zip" : "tar.gz"
   return {
     binRelativeDir: "",
-    binFileName: addBinExtension("task"),
+    binFileName: addExeExt("task"),
     extractedFolderName: "",
     extractFunction: isZip ? extractZip : extractTarByExe,
     url: `https://github.com/go-task/task/releases/download/v${version}/task_${taskPlatform}_${taskArch}.${extension}`,

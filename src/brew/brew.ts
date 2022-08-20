@@ -1,5 +1,5 @@
 import { execFileSync } from "child_process"
-import { dirname } from "path"
+import { dirname } from "patha"
 import which from "which"
 
 let binDir: string | undefined

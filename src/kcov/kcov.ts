@@ -1,9 +1,8 @@
 import execa from "execa"
-import { join } from "path"
+import { join, addExeExt } from "patha"
 import which from "which"
 import { setupCmake } from "../cmake/cmake"
 import { getVersion } from "../default_versions"
-import { addBinExtension } from "extension-tools"
 import { extractTarByExe } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
@@ -22,7 +21,7 @@ function getDownloadKcovPackageInfo(version: string): PackageInfo {
     url: `https://github.com/SimonKagstrom/kcov/releases/download/${version}/kcov-amd64.tar.gz`,
     extractedFolderName: "",
     binRelativeDir: "usr/local/bin",
-    binFileName: addBinExtension("kcov"),
+    binFileName: addExeExt("kcov"),
     extractFunction: extractTarByExe,
   }
 }
@@ -32,7 +31,7 @@ function getBuildKcovPackageInfo(version: string): PackageInfo {
     url: `https://github.com/SimonKagstrom/kcov/archive/refs/tags/${version}.tar.gz`,
     extractedFolderName: "",
     binRelativeDir: "build/src",
-    binFileName: addBinExtension("kcov"),
+    binFileName: addExeExt("kcov"),
     extractFunction: buildKcov,
   }
 }

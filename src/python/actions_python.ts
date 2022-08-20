@@ -3,7 +3,7 @@ import { findPyPyVersion } from "setup-python/src/find-pypy"
 import { existsSync } from "fs"
 import { info, warning } from "ci-log"
 import { debug } from "@actions/core"
-import path from "path"
+import { join } from "patha"
 import ciDetect from "@npmcli/ci-detect"
 import { isCacheFeatureAvailable, IS_LINUX, IS_WINDOWS } from "setup-python/src/utils"
 import { getCacheDistributor } from "setup-python/src/cache-distributions/cache-factory"
@@ -80,7 +80,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
 }
 
 function addPythonLoggingMatcher() {
-  const matcherPath = path.join(__dirname, "python_matcher.json")
+  const matcherPath = join(__dirname, "python_matcher.json")
   if (!existsSync(matcherPath)) {
     return warning("the python_matcher.json file does not exist in the same folder as setup_cpp.js")
   }

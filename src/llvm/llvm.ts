@@ -1,4 +1,4 @@
-import * as path from "path"
+import { join, delimiter, addExeExt } from "patha"
 import semverLte from "semver/functions/lte"
 import semverMajor from "semver/functions/major"
 import { isUrlOnline } from "is-url-online"
@@ -11,7 +11,6 @@ import {
   semverCoerceIfInvalid,
 } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { addBinExtension } from "extension-tools"
 import { addEnv } from "../utils/env/addEnv"
 import { setOutput } from "@actions/core"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
@@ -267,7 +266,7 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform, _a
     url,
     extractedFolderName: "",
     binRelativeDir: "bin",
-    binFileName: addBinExtension("clang"),
+    binFileName: addExeExt("clang"),
     extractFunction:
       platform === "win32"
         ? extractExe
@@ -306,7 +305,7 @@ async function _setupLLVM(version: string, setupDir: string, arch: string) {
 export async function activateLLVM(directory: string, versionGiven: string) {
   const version = semverCoerceIfInvalid(versionGiven)
 
-  const lib = path.join(directory, "lib")
+  const lib = join(directory, "lib")
 
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
@@ -316,16 +315,16 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     addEnv("LLVM_PATH", directory),
 
     // Setup LLVM as the compiler
-    addEnv("LD_LIBRARY_PATH", `${lib}${path.delimiter}${ld}`),
-    addEnv("DYLD_LIBRARY_PATH", `${lib}${path.delimiter}${dyld}`),
+    addEnv("LD_LIBRARY_PATH", `${lib}${delimiter}${ld}`),
+    addEnv("DYLD_LIBRARY_PATH", `${lib}${delimiter}${dyld}`),
 
     // compiler flags
     addEnv("LDFLAGS", `-L"${directory}/lib"`),
     addEnv("CPPFLAGS", `-I"${directory}/include"`),
 
     // compiler paths
-    addEnv("CC", addBinExtension(`${directory}/bin/clang`)),
-    addEnv("CXX", addBinExtension(`${directory}/bin/clang++`)),
+    addEnv("CC", addExeExt(`${directory}/bin/clang`)),
+    addEnv("CXX", addExeExt(`${directory}/bin/clang++`)),
 
     addEnv("LIBRARY_PATH", `${directory}/lib`),
 
@@ -369,7 +368,7 @@ export function setupClangTools(version: string, setupDir: string, arch: string)
 }
 
 function addLLVMLoggingMatcher() {
-  const matcherPath = path.join(__dirname, "llvm_matcher.json")
+  const matcherPath = join(__dirname, "llvm_matcher.json")
   if (!existsSync(matcherPath)) {
     return warning("the llvm_matcher.json file does not exist in the same folder as setup_cpp.js")
   }

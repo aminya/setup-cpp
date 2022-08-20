@@ -1,7 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import execa from "execa"
 import { existsSync } from "fs"
-import { dirname } from "path"
+import { dirname } from "patha"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
 import { InstallationInfo } from "../utils/setup/setupBin"

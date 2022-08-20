@@ -1,7 +1,7 @@
 import { find, downloadTool, cacheDir } from "@actions/tool-cache"
 import { info } from "@actions/core"
 import { addPath } from "../env/addEnv"
-import { join } from "path"
+import { join } from "patha"
 import { existsSync } from "fs"
 import { tmpdir } from "os"
 import ciDetect from "@npmcli/ci-detect"

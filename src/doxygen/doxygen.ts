@@ -4,13 +4,12 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { addBinExtension } from "extension-tools"
+import { addExeExt, join } from "patha"
 import { extractTar, extractZip } from "../utils/setup/extract"
 import { notice } from "ci-log"
 import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../default_versions"
 import { existsSync } from "fs"
-import { join } from "path"
 import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
@@ -24,7 +23,7 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
       const folderName = `doxygen-${version}`
       return {
         binRelativeDir: "bin/",
-        binFileName: addBinExtension("doxygen"),
+        binFileName: addExeExt("doxygen"),
         extractedFolderName: folderName,
         extractFunction: extractTar,
         url: `https://www.doxygen.nl/files/${folderName}.linux.bin.tar.gz`,
@@ -34,7 +33,7 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
       const folderName = `doxygen-${version}`
       return {
         binRelativeDir: "",
-        binFileName: addBinExtension("doxygen"),
+        binFileName: addExeExt("doxygen"),
         extractedFolderName: folderName,
         extractFunction: extractZip,
         url: `https://www.doxygen.nl/files/${folderName}.windows.x64.bin.zip`,

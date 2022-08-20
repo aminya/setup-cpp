@@ -7,10 +7,9 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import semverMajor from "semver/functions/major"
 import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import path from "path"
+import { join, addExeExt } from "patha"
 import { warning, info } from "ci-log"
 import ciDetect from "@npmcli/ci-detect"
-import { addBinExtension } from "extension-tools"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
 import { isArch } from "../utils/env/isArch"
@@ -54,7 +53,7 @@ function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: str
       const exceptionModel: "seh" | "dwarf" = "seh" // SEH is native windows exception model https://github.com/brechtsanders/winlibs_mingw/issues/4#issuecomment-599296483
       return {
         binRelativeDir: "bin/",
-        binFileName: addBinExtension("g++"),
+        binFileName: addExeExt("g++"),
         extractedFolderName: "mingw64",
         extractFunction: extract7Zip,
         url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${mingwInfo.releaseName}/winlibs-${mingwArch}-posix-${exceptionModel}-gcc-${mingwInfo.fileSuffix}.7z`,
@@ -163,7 +162,7 @@ async function activateGcc(version: string, binDir: string) {
   // )
 
   if (process.platform === "win32") {
-    promises.push(addEnv("CC", addBinExtension(`${binDir}/gcc`)), addEnv("CXX", addBinExtension(`${binDir}/g++`)))
+    promises.push(addEnv("CC", addExeExt(`${binDir}/gcc`)), addEnv("CXX", addExeExt(`${binDir}/g++`)))
   } else {
     const majorVersion = semverMajor(semverCoerce(version) ?? version)
     if (majorVersion >= 5) {
@@ -197,7 +196,7 @@ async function activateGcc(version: string, binDir: string) {
 }
 
 function addGccLoggingMatcher() {
-  const matcherPath = path.join(__dirname, "gcc_matcher.json")
+  const matcherPath = join(__dirname, "gcc_matcher.json")
   if (!existsSync(matcherPath)) {
     return warning("the gcc_matcher.json file does not exist in the same folder as setup_cpp.js")
   }

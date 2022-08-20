@@ -33,7 +33,6 @@ importers:
       eslint-config-atomic: ^1.18.1
       exec-powershell: workspace:1.0.0
       execa: ^5.1.1
-      extension-tools: workspace:1.0.0
       gen-readme: ^1.6.0
       is-url-online: ^1.5.0
       jest: ^28.1.3
@@ -44,6 +43,7 @@ importers:
       npm-run-all2: ^6.0.2
       numerous: 1.0.3
       parcel: 2.7.0
+      patha: ^0.3.0
       prettier: 2.7.1
       prettier-config-atomic: ^3.0.10
       readme-md-generator: ^1.0.0
@@ -70,11 +70,11 @@ importers:
       escape-path-with-spaces: github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3
       exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
-      extension-tools: link:packages/extension-tools
       is-url-online: 1.5.0
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
+      patha: 0.3.0
       root-tools: link:packages/root-tools
       semver: 7.3.7
       setup-python: github.com/actions/setup-python/c474c82340438924daab9282d07300bfe7e3692d
@@ -129,9 +129,6 @@ importers:
       which: 2.0.2
     devDependencies:
       '@types/which': 2.0.1
-
-  packages/extension-tools:
-    specifiers: {}
 
   packages/root-tools:
     specifiers:
@@ -2473,6 +2470,12 @@ packages:
     resolution: {integrity: sha512-RI1L7N4JnW5gQw2spvL7Sllfuf1SaHdrZpCHiBlCXjIlufi1SMNnbu2teze3/QE67Fg2tBlH7W+mi4hVNk4p0A==}
     dev: true
 
+  /@types/replace-ext/2.0.0:
+    resolution: {integrity: sha512-9aGCj2qmL1YHLXfqfzwP1h7fDfeB4l0gSXRndq+20lJ+kljS3/ngOpcn1RJGhZCe5C2JzWu07nElCKcJ6iAJbg==}
+    requiresBuild: true
+    dev: false
+    optional: true
+
   /@types/responselike/1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
     dependencies:
@@ -4188,6 +4191,11 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
     dev: true
+
+  /escape-string-regexp/5.0.0:
+    resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
+    engines: {node: '>=12'}
+    dev: false
 
   /eslint-config-airbnb-base/14.2.1_2iahngt3u2tkbdlu6s4gkur3pu:
     resolution: {integrity: sha512-GOrQyDtVEc1Xy20U7vsB2yAoB4nBlfH5HZJeatRXHleO+OS5Ot+MWij4Dpltw4/DyIkqUfqz1epfhVR5XWWQPA==}
@@ -7594,6 +7602,12 @@ packages:
       lines-and-columns: 1.2.4
     dev: true
 
+  /path-browserify/1.0.1:
+    resolution: {integrity: sha512-b7uo2UCUOYZcnF/3ID0lulOJi/bafxa1xPe7ZPsammBSpjSWQkjNxlt635YGS2MiR9GjvuXCtz2emr3jbsz98g==}
+    requiresBuild: true
+    dev: false
+    optional: true
+
   /path-exists/4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
     engines: {node: '>=8'}
@@ -7616,6 +7630,18 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
     dev: true
+
+  /patha/0.3.0:
+    resolution: {integrity: sha512-8rE5/pFLwaKXE5D0SBIByEJyd36PyABurJCZNcSV+C2Rp+aiP0CwLZME2cY5XVQg91pctOxHJadzT2sZ0enIMQ==}
+    dependencies:
+      escape-string-regexp: 5.0.0
+      replace-ext: 2.0.0
+    optionalDependencies:
+      '@types/node': 18.7.6
+      '@types/replace-ext': 2.0.0
+      path-browserify: 1.0.1
+      process: 0.11.10
+    dev: false
 
   /picocolors/1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
@@ -8100,6 +8126,11 @@ packages:
     resolution: {integrity: sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==}
     engines: {node: '>=0.10'}
     dev: true
+
+  /replace-ext/2.0.0:
+    resolution: {integrity: sha512-UszKE5KVK6JvyD92nzMn9cDapSk6w/CaFZ96CnmDMUqH9oowfxF/ZjRITD25H4DnOQClLA4/j7jLGXXLVKxAug==}
+    engines: {node: '>= 10'}
+    dev: false
 
   /require-directory/2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
