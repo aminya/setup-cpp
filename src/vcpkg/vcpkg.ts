@@ -44,13 +44,17 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
       }
     }
 
-    if (!existsSync(join(setupDir, addShExt("bootstrap-vcpkg")))) {
+    if (!existsSync(join(setupDir, addShExt("bootstrap-vcpkg", ".bat")))) {
       execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
     } else {
       notice(`Vcpkg folder already exists at ${setupDir}. This might mean that ~/vcpkg is restored from the cache.`)
     }
 
-    execa.sync(addShExt(addShRelativePrefix("bootstrap-vcpkg")), { cwd: setupDir, shell: true, stdio: "inherit" })
+    execa.sync(addShExt(addShRelativePrefix("bootstrap-vcpkg"), ".bat"), {
+      cwd: setupDir,
+      shell: true,
+      stdio: "inherit",
+    })
 
     giveUserAccess(setupDir)
 
