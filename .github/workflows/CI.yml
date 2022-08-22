@@ -29,12 +29,12 @@ jobs:
         cache_reset_counter:
           - 0
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
 
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.pnpm-store
@@ -44,7 +44,7 @@ jobs:
             "setupcpp-cache-OS:${{ matrix.os }}-"
 
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
 
@@ -65,7 +65,7 @@ jobs:
 
       - name: Upload Executable
         if: "contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-20.04') || contains(matrix.os, 'macos-11')"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           path: |
             ./exe
@@ -101,12 +101,12 @@ jobs:
         cache_reset_counter:
           - 0
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: true
 
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/.pnpm-store
@@ -115,7 +115,7 @@ jobs:
           restore-keys: |
             "setupcpp-docker-cache-OS:${{ matrix.os }}"
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
 
@@ -132,5 +132,3 @@ jobs:
         id: docker_build
         run: |
           docker build -f ./dev/docker/${{ matrix.container }} -t setup_cpp .
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
