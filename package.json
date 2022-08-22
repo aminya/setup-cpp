@@ -77,13 +77,13 @@
     "@types/cross-spawn": "^6.0.2",
     "@types/jest": "^28.1.7",
     "@types/mri": "^1.1.1",
-    "@types/node": "^18.7.8",
+    "@types/node": "^18.7.9",
     "@types/semver": "^7.3.12",
     "@types/which": "^2.0.1",
     "caxa": "^2.1.0",
     "cross-env": "7.0.3",
     "cross-spawn": "^7.0.3",
-    "cspell": "^6.7.0",
+    "cspell": "^6.8.0",
     "eslint": "^8.22.0",
     "eslint-config-atomic": "^1.18.1",
     "gen-readme": "^1.6.0",
@@ -124,7 +124,8 @@
     "meson"
   ],
   "alias": {
-    "electron": false
+    "electron": false,
+    "patha": "patha/dist/index.node.mjs"
   },
   "pnpm": {
     "overrides": {
