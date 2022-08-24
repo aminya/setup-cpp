@@ -1,4 +1,5 @@
-import { join, delimiter, addExeExt } from "patha"
+import { join, addExeExt } from "patha"
+import { delimiter } from "path"
 import semverLte from "semver/functions/lte"
 import semverMajor from "semver/functions/major"
 import { isUrlOnline } from "is-url-online"
