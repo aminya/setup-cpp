@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "admina": "0.1.0"
+    "admina": "0.1.1"
   },
   "keywords": [
     "chown",

@@ -16,7 +16,7 @@
     "inlineSources": true,
     "preserveSymlinks": true,
     "removeComments": false,
-    "skipLibCheck": false,
+    "skipLibCheck": true,
     "lib": ["ES2020", "dom"],
     "target": "ES2020",
     "allowJs": true,
