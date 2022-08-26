@@ -23,6 +23,7 @@ importers:
       '@types/node': ^18.7.9
       '@types/semver': ^7.3.12
       '@types/which': ^2.0.1
+      admina: ^0.1.0
       caxa: ^2.1.0
       ci-log: workspace:1.0.0
       cross-env: 7.0.3
@@ -47,7 +48,6 @@ importers:
       prettier: 2.7.1
       prettier-config-atomic: ^3.0.10
       readme-md-generator: ^1.0.0
-      root-tools: workspace:1.0.0
       semver: 7.3.7
       setup-python: github:actions/setup-python#c474c82340438924daab9282d07300bfe7e3692d
       shx: 0.3.4
@@ -66,6 +66,7 @@ importers:
       '@actions/io': 1.1.2
       '@actions/tool-cache': 2.0.1
       '@npmcli/ci-detect': github.com/aminya/ci-detect/37fe40075bebec96794ba0a7c4a6d5c70cbea00d
+      admina: 0.1.0
       ci-log: link:packages/ci-log
       escape-path-with-spaces: github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3
       exec-powershell: link:packages/exec-powershell
@@ -75,7 +76,6 @@ importers:
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
       patha: 0.4.0
-      root-tools: link:packages/root-tools
       semver: 7.3.7
       setup-python: github.com/actions/setup-python/c474c82340438924daab9282d07300bfe7e3692d
       time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
@@ -130,30 +130,19 @@ importers:
     devDependencies:
       '@types/which': 2.0.1
 
-  packages/root-tools:
-    specifiers:
-      '@types/which': ^2.0.1
-      execa: ^5.1.1
-      which: ^2.0.2
-    dependencies:
-      execa: 5.1.1
-      which: 2.0.2
-    devDependencies:
-      '@types/which': 2.0.1
-
   packages/untildify-user:
     specifiers:
-      root-tools: workspace:*
+      admina: 0.1.0
       untildify: ^4.0.0
     dependencies:
-      root-tools: link:../root-tools
+      admina: 0.1.0
       untildify: 4.0.0
 
   packages/user-access:
     specifiers:
-      root-tools: workspace:*
+      admina: 0.1.0
     dependencies:
-      root-tools: link:../root-tools
+      admina: 0.1.0
 
 packages:
 
@@ -746,8 +735,8 @@ packages:
       '@cspell/dict-docker': 1.1.1
       '@cspell/dict-dotnet': 2.0.1
       '@cspell/dict-elixir': 2.0.1
-      '@cspell/dict-en-gb': 1.1.33
       '@cspell/dict-en_us': 2.3.2
+      '@cspell/dict-en-gb': 1.1.33
       '@cspell/dict-filetypes': 2.1.1
       '@cspell/dict-fonts': 2.0.1
       '@cspell/dict-fullstack': 2.0.6
@@ -2669,6 +2658,14 @@ packages:
     hasBin: true
     dev: true
 
+  /admina/0.1.0:
+    resolution: {integrity: sha512-3EfJlYMi6LeUv+diMPZWR1uhzC2/ESXzkk3BMvQl0yVsZ2kgiH7ZOWiB+Y7915w69jtDyTpliprlwOagC5hNnw==}
+    dependencies:
+      execa: 5.1.1
+      is-admin: 4.0.0
+      which: 2.0.2
+    dev: false
+
   /agent-base/6.0.2:
     resolution: {integrity: sha512-RZNwNclF7+MS/8bDg70amg32dyeZGZxiDuQmZxKLAlQjr3jGyLx+4Kkk58UO7D2QdgFIQCovuSuZESne6RG6XQ==}
     engines: {node: '>= 6.0.0'}
@@ -3519,7 +3516,7 @@ packages:
     dev: true
 
   /concat-map/0.0.1:
-    resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
+    resolution: {integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=}
 
   /config-chain/1.1.13:
     resolution: {integrity: sha512-qj+f8APARXHrM0hraqXYb2/bOVSV4PvJQlNZ/DVj0QrmNM2q2euizkeuVckQ57J+W0mRH6Hvi+k50M4Jul2VRQ==}
@@ -5567,6 +5564,13 @@ packages:
   /ip/2.0.0:
     resolution: {integrity: sha512-WKa+XuLG1A1R0UWhl2+1XQSi+fZWMsYKffMZTTYsiZaUD8k2yDAj5atimTUD2TZkyCkNEeYE5NhFZmupOGtjYQ==}
     dev: true
+
+  /is-admin/4.0.0:
+    resolution: {integrity: sha512-ODl+ygFCyHXMauhn+0mBebcwO1tiB+b4FoBiIC97gFDcmdO3JMD+YmIhSA8+1KVZuGwfsX8ANo2yblgW5KUPTg==}
+    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
+    dependencies:
+      execa: 5.1.1
+    dev: false
 
   /is-arrayish/0.2.1:
     resolution: {integrity: sha512-zz06S8t0ozoDXMG+ube26zeCTNXcKIPJZJi8hBrF4idCLms4CG9QtK7qBl1boi5ODzFpjswb5JPmHCbMpjaYzg==}

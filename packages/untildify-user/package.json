@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "root-tools": "workspace:*",
+    "admina": "0.1.0",
     "untildify": "^4.0.0"
   },
   "keywords": [

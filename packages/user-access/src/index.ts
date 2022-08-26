@@ -1,4 +1,4 @@
-import { isSudo, execRootSync } from "root-tools"
+import { isSudo, execRootSync } from "admina"
 
 /**
  * Give the user access to the given path and its sub-directories. It changes the owner to the SUDO_USER. This allows

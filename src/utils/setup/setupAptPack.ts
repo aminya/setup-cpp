@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
-import { execRootSync } from "root-tools"
+import { execRootSync } from "admina"
 import { info } from "@actions/core"
 import ciDetect from "@npmcli/ci-detect"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
