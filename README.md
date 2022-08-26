@@ -120,8 +120,8 @@ jobs:
       matrix:
         os:
           - windows-2022
-          - ubuntu-20.04
-          - macos-11
+          - ubuntu-22.04
+          - macos-12
         compiler:
           - llvm
           - gcc
@@ -130,9 +130,9 @@ jobs:
           - os: "windows-2022"
             compiler: "msvc"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             ~/vcpkg
@@ -224,15 +224,13 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build
         id: docker_build
         run: |
           docker build -f ./dev/docker/debian.dockerfile -t setup_cpp .
-        env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: true
 ```
 
 ### Inside GitLab pipelines
