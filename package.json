@@ -59,11 +59,11 @@
     "escape-path-with-spaces": "github:aminya/escape-path-with-spaces#d9f81ee649203ddc55783a2f96ada59df06118e3",
     "exec-powershell": "workspace:1.0.0",
     "execa": "^5.1.1",
-    "extension-tools": "workspace:1.0.0",
     "is-url-online": "^1.5.0",
     "mri": "^1.2.0",
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
     "numerous": "1.0.3",
+    "patha": "^0.4.0",
     "root-tools": "workspace:1.0.0",
     "semver": "7.3.7",
     "setup-python": "github:actions/setup-python#c474c82340438924daab9282d07300bfe7e3692d",
@@ -77,13 +77,13 @@
     "@types/cross-spawn": "^6.0.2",
     "@types/jest": "^28.1.7",
     "@types/mri": "^1.1.1",
-    "@types/node": "^18.7.6",
+    "@types/node": "^18.7.9",
     "@types/semver": "^7.3.12",
     "@types/which": "^2.0.1",
     "caxa": "^2.1.0",
     "cross-env": "7.0.3",
     "cross-spawn": "^7.0.3",
-    "cspell": "^6.7.0",
+    "cspell": "^6.8.0",
     "eslint": "^8.22.0",
     "eslint-config-atomic": "^1.18.1",
     "gen-readme": "^1.6.0",
@@ -124,7 +124,8 @@
     "meson"
   ],
   "alias": {
-    "electron": false
+    "electron": false,
+    "patha": "patha/dist/index.node.mjs"
   },
   "pnpm": {
     "overrides": {

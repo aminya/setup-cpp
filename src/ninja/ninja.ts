@@ -1,4 +1,4 @@
-import { addBinExtension } from "extension-tools"
+import { addExeExt } from "patha"
 import { extractZip } from "../utils/setup/extract"
 import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 
@@ -22,7 +22,7 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform, _arch: 
   const ninjaPlatform = getNinjaPlatform(platform)
   return {
     binRelativeDir: "",
-    binFileName: addBinExtension("ninja"),
+    binFileName: addExeExt("ninja"),
     extractedFolderName: "",
     extractFunction: extractZip,
     url: `https://github.com/ninja-build/ninja/releases/download/v${version}/ninja-${ninjaPlatform}.zip`,

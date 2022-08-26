@@ -1,9 +1,8 @@
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { setupGcc } from "../gcc"
 import { getVersion } from "../../default_versions"
-import path from "path"
+import { join, addExeExt } from "patha"
 import execa from "execa"
-import { addBinExtension } from "extension-tools"
 import { chmodSync } from "fs"
 
 jest.setTimeout(3000000)
@@ -27,8 +26,8 @@ describe("setup-gcc", () => {
     expect(process.env.CXX?.includes("g++")).toBeTruthy()
 
     // test compilation
-    const file = path.join(__dirname, "main.cpp")
-    const main_exe = path.join(__dirname, addBinExtension("main"))
+    const file = join(__dirname, "main.cpp")
+    const main_exe = join(__dirname, addExeExt("main"))
     execa.sync("g++", [file, "-o", main_exe], { cwd: __dirname })
     if (process.platform !== "win32") {
       chmodSync(main_exe, "755")

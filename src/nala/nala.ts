@@ -1,4 +1,4 @@
-import { dirname } from "path"
+import { dirname } from "patha"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { execRootSync } from "root-tools"

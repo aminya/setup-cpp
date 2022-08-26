@@ -4,7 +4,7 @@ import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 // @ts-ignore
 import { vsversion_to_versionnumber, findVcvarsall } from "msvc-dev-cmd/lib.js"
 import ciDetect from "@npmcli/ci-detect"
-import path from "path"
+import { join } from "patha"
 import { existsSync } from "fs"
 import { error, info, warning } from "ci-log"
 
@@ -71,7 +71,7 @@ export async function setupMSVC(
 }
 
 function addMSVCLoggingMatcher() {
-  const matcherPath = path.join(__dirname, "msvc_matcher.json")
+  const matcherPath = join(__dirname, "msvc_matcher.json")
   if (!existsSync(matcherPath)) {
     return warning("the msvc_matcher.json file does not exist in the same folder as setup_cpp.js")
   }

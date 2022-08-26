@@ -4,8 +4,7 @@ import { isUrlOnline } from "is-url-online"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import ciDetect from "@npmcli/ci-detect"
 import execa from "execa"
-import path from "path"
-import { addBinExtension } from "extension-tools"
+import path, { addExeExt } from "patha"
 import { chmodSync } from "fs"
 import { getVersion } from "../../default_versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
@@ -88,7 +87,7 @@ describe("setup-llvm", () => {
 
     // test compilation
     const file = path.join(__dirname, "main.cpp")
-    const main_exe = path.join(__dirname, addBinExtension("main"))
+    const main_exe = path.join(__dirname, addExeExt("main"))
     execa.sync("clang++", [file, "-o", main_exe], { cwd: __dirname })
     if (process.platform !== "win32") {
       chmodSync(main_exe, "755")

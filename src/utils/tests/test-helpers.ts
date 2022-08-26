@@ -1,8 +1,7 @@
 import * as io from "@actions/io"
 import { tmpdir } from "os"
-import * as path from "path"
-import { addBinExtension } from "extension-tools"
-import { join } from "path"
+import * as path from "patha"
+import { addExeExt, join } from "patha"
 import spawn from "cross-spawn"
 import { existsSync } from "fs"
 
@@ -41,7 +40,7 @@ export async function testBin(
     expect(binDir).toBeDefined()
     expect(binDir).not.toHaveLength(0)
     expect(existsSync(binDir)).toBeTruthy()
-    bin = join(binDir, addBinExtension(name))
+    bin = join(binDir, addExeExt(name))
   }
 
   if (args !== null) {
