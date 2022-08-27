@@ -7,7 +7,7 @@ import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { execRootSync } from "root-tools"
+import { execRootSync } from "admina"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

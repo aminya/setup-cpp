@@ -1,7 +1,7 @@
 import { dirname } from "patha"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { execRootSync } from "root-tools"
+import { execRootSync } from "admina"
 import { addAptKeyViaDownload, setupAptPack } from "../utils/setup/setupAptPack"
 
 let binDir: string | undefined
