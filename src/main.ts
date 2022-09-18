@@ -160,6 +160,8 @@ export async function main(args: string[]): Promise<number> {
     return 1
   }
 
+  let hasLLVM = false // used to unset CPPFLAGS of LLVM when other compilers are used as the main compiler
+
   // loop over the tools and run their setup function
   for (const tool of tools) {
     // get the version or "true" or undefined for this tool from the options
@@ -187,8 +189,10 @@ export async function main(args: string[]): Promise<number> {
           // get the setup function
           const setupFunction = setups[tool]
 
+          hasLLVM = ["llvm", "clangformat", "clangtidy"].includes(tool)
+
           // the tool installation directory (for the functions that ue it)
-          const setupDir = join(setupCppDir, ["llvm", "clangformat", "clangtidy"].includes(tool) ? "llvm" : tool)
+          const setupDir = join(setupCppDir, hasLLVM ? "llvm" : tool)
 
           // eslint-disable-next-line no-await-in-loop
           installationInfo = await setupFunction(getVersion(tool, version, osVersion), setupDir, arch)
@@ -232,6 +236,12 @@ export async function main(args: string[]): Promise<number> {
         case "cygwin":
         case "msys": {
           const installationInfo = await setupGcc(getVersion("gcc", version, osVersion), join(setupCppDir, "gcc"), arch)
+
+          if (hasLLVM) {
+            // remove the CPPFLAGS of LLVM that include the LLVM headers
+            await addEnv("CPPFLAGS", "")
+          }
+
           successMessages.push(getSuccessMessage("gcc", installationInfo))
           break
         }
@@ -247,6 +257,12 @@ export async function main(args: string[]): Promise<number> {
             join(setupCppDir, "msvc"),
             arch
           )
+
+          if (hasLLVM) {
+            // remove the CPPFLAGS of LLVM that include the LLVM headers
+            await addEnv("CPPFLAGS", "")
+          }
+
           successMessages.push(getSuccessMessage("msvc", installationInfo))
           break
         }
