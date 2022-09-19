@@ -149,7 +149,7 @@
         "node": ">=12.x"
       },
       "includeNodeModules": true,
-      "optimize": false,
+      "optimize": true,
       "outputFormat": "commonjs"
     }
   }
