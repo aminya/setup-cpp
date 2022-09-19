@@ -145,8 +145,11 @@
   "targets": {
     "main": {
       "context": "node",
+      "engines": {
+        "node": ">=12.x"
+      },
       "includeNodeModules": true,
-      "optimize": true,
+      "optimize": false,
       "outputFormat": "commonjs"
     }
   }
