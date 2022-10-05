@@ -8,14 +8,14 @@ const DefaultVersions: Record<string, string> = {
   llvm: "13.0.0", // https://github.com/llvm/llvm-project/releases
   clangtidy: "13.0.0",
   clangformat: "13.0.0",
-  ninja: "1.11.0", // https://github.com/ninja-build/ninja/releases
-  cmake: "3.23.2", // https://github.com/Kitware/CMake/releases
-  gcovr: "5.1", // https://pypi.org/project/gcovr/
-  conan: "1.50.0", // https://github.com/conan-io/conan/releases
-  meson: "0.63.0", // https://github.com/mesonbuild/meson/releases
+  ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
+  cmake: "3.24.2", // https://github.com/Kitware/CMake/releases
+  gcovr: "5.2", // https://pypi.org/project/gcovr/
+  conan: "1.53.0", // https://github.com/conan-io/conan/releases
+  meson: "0.63.3", // https://github.com/mesonbuild/meson/releases
   kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
-  task: "3.14.0", // https://github.com/go-task/task/releases
-  doxygen: isArch() ? "1.9.3-1" : "1.9.4", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
+  task: "3.16.0", // https://github.com/go-task/task/releases
+  doxygen: isArch() ? "1.9.3-1" : "1.9.5", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: "11", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 
@@ -45,11 +45,12 @@ const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
     14: "13.0.0-ubuntu-16.04",
   },
   gcovr: {
-    20: "5.1",
+    22: "5.2",
+    20: "5.2",
     18: "5.0",
   },
   meson: {
-    20: "0.63.0",
+    20: "0.63.3",
     18: "0.61.4",
   },
   nala: {
