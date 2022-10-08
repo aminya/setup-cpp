@@ -297,13 +297,23 @@ test_linux_gcc:
 ## Usage Examples
 
 - [cpp_vcpkg_project project](https://github.com/aminya/cpp_vcpkg_project)
-- [ftxui](https://github.com/ArthurSonzogni/FTXUI)
 - [project_optins](https://github.com/aminya/project_options)
 - [cpp-best-practices starter project](https://github.com/cpp-best-practices/cpp_starter_project)
+- [ftxui](https://github.com/ArthurSonzogni/FTXUI)
+- [inja](https://github.com/pantor/inja)
+- [teslamotors/fixed-containers](https://github.com/teslamotors/fixed-containers)
+- [zeromq.js](https://github.com/zeromq/zeromq.js)
 - [json2cpp](https://github.com/lefticus/json2cpp)
 - [lefticus/tools](https://github.com/lefticus/tools)
-- [libclang](https://github.com/atilaneves/libclang)
 - [dpp](https://github.com/atilaneves/dpp)
+- [DSpellCheck](https://github.com/Predelnik/DSpellCheck)
+- [simdjson-rust](https://github.com/SunDoge/simdjson-rust)
+- [CXXIter](https://github.com/seijikun/CXXIter)
+- [git-tui](https://github.com/ArthurSonzogni/git-tui)
+- [libclang](https://github.com/atilaneves/libclang)
 - [d-tree-sitter](https://github.com/aminya/d-tree-sitter)
+- [atom-community/papm](https://github.com/atom-community/papm)
+- [ecs_benchmark](https://github.com/abeimler/ecs_benchmark)
+- [smk](https://github.com/ArthurSonzogni/smk)
 
 See all of the usage examples on GitHub [here](https://github.com/search?q=aminya%2Fsetup-cpp+path%3A.github%2Fworkflows%2F+language%3AYAML+fork%3Atrue&type=code).
