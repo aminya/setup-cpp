@@ -39,7 +39,8 @@ describe("getVersion", () => {
   it("gcovr", () => {
     expect(getVersion("gcovr", "5.0")).toBe("5.0")
     if (process.platform === "linux") {
-      expect(getVersion("gcovr", "true", [20, 4])).toBe("5.1")
+      expect(getVersion("gcovr", "true", [22, 4])).toBe("5.2")
+      expect(getVersion("gcovr", "true", [20, 4])).toBe("5.2")
       expect(getVersion("gcovr", "true", [18, 4])).toBe("5.0")
     }
   })
