@@ -71,6 +71,9 @@ export const VERSIONS: Set<string> = getVersions([
   "14.0.4",
   "14.0.5",
   "14.0.6",
+  "15.0.0",
+  "15.0.1",
+  "15.0.2",
 ])
 
 //================================================
@@ -174,6 +177,7 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
   "13.0.1-ubuntu-18.04": "-ubuntu-18.04",
   "14.0.0": "-ubuntu-18.04",
   // "14.0.1": "-ubuntu-18.04",  // only available for powerpc64le
+  "15.0.2": "-rhel86",
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
@@ -188,25 +192,34 @@ export function getLinuxUrl(versionGiven: string): string {
     version = rc
   }
 
-  let ubuntu: string
+  let linuxVersion: string
   // ubuntu-version is specified
   if (version.includes("ubuntu")) {
     const givenUbuntuVersion = version.replace(/-ubuntu-.*/, "")
     if (!VERSIONS.has(givenUbuntuVersion)) {
       throw new Error(`Unsupported Ubuntu version: ${givenUbuntuVersion}`)
     }
-    ubuntu = version.replace(givenUbuntuVersion, "")
+    linuxVersion = version.replace(givenUbuntuVersion, "")
     version = getSpecificVersions(VERSIONS, givenUbuntuVersion)[0]
   } else if (version !== "" && version in UBUNTU_SUFFIX_MAP) {
-    ubuntu = UBUNTU_SUFFIX_MAP[version]
+    linuxVersion = UBUNTU_SUFFIX_MAP[version]
   } else {
     // default to the maximum version
-    ubuntu = UBUNTU_SUFFIX_MAP[MAX_UBUNTU]
-    warning(`Falling back to LLVM version ${MAX_UBUNTU} ${ubuntu} for the Ubuntu.`)
+    linuxVersion = UBUNTU_SUFFIX_MAP[MAX_UBUNTU]
+    warning(`Falling back to LLVM version ${MAX_UBUNTU} ${linuxVersion} for the Ubuntu.`)
   }
 
   const prefix = "clang+llvm-"
-  const suffix = version === "5.0.0" ? `-linux-x86_64${ubuntu}.tar.xz` : `-x86_64-linux-gnu${ubuntu}.tar.xz`
+
+  let suffix: string
+  if (version === "5.0.0") {
+    suffix = `-linux-x86_64${linuxVersion}.tar.xz`
+  } else if (version === "15.0.2") {
+    suffix = `x86_64-unknown-linux-gnu${linuxVersion}.tar.xz`
+  } else {
+    suffix = `-x86_64-linux-gnu${linuxVersion}.tar.xz`
+  }
+
   if (semverLte(version, "9.0.1")) {
     return getReleaseUrl(version, prefix, suffix)
   } else {
