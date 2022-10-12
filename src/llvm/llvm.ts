@@ -181,7 +181,7 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
-const MAX_UBUNTU: string = "14.0.0"
+const MAX_UBUNTU: string = "15.0.2"
 
 /** Gets an LLVM download URL for the Linux (Ubuntu) platform. */
 export function getLinuxUrl(versionGiven: string): string {
