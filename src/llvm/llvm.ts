@@ -214,8 +214,8 @@ export function getLinuxUrl(versionGiven: string): string {
   let suffix: string
   if (version === "5.0.0") {
     suffix = `-linux-x86_64${linuxVersion}.tar.xz`
-  } else if (version === "15.0.2") {
-    suffix = `x86_64-unknown-linux-gnu${linuxVersion}.tar.xz`
+  } else if (linuxVersion.includes("-rhel86")) {
+    suffix = `-x86_64-unknown-linux-gnu${linuxVersion}.tar.xz`
   } else {
     suffix = `-x86_64-linux-gnu${linuxVersion}.tar.xz`
   }
