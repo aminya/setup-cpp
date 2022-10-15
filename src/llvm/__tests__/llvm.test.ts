@@ -124,6 +124,7 @@ describe("setup-llvm", () => {
 
   it("should setup LLVM 15.0.2", async () => {
     await cleanupTmpDir("llvm")
+    await cleanupTmpDir("/Users/runner/hostedtoolcache/llvm")
 
     const { binDir } = await setupLLVM("15.0.2", directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
