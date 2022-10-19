@@ -4,7 +4,7 @@ RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends nodejs
 
 # add setup_cpp.js
-COPY "./dist/" "/"
+COPY "./dist/node12" "/"
 WORKDIR "/"
 
 # run installation

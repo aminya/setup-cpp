@@ -12,7 +12,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_lts.x | bash -
 RUN apt-get install -y --no-install-recommends nodejs
 
 # add setup_cpp.js
-ADD "./dist/" "/"
+COPY "./dist/node12" "/"
 WORKDIR "/"
 
 # run installation

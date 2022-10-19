@@ -80,8 +80,8 @@ inputs:
     required: false
 
 runs:
-  using: "node12"
-  main: "dist/setup_cpp.js"
+  using: "node16"
+  main: "dist/node16/setup_cpp.js"
 
 branding:
   icon: "award"
