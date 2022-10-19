@@ -8,7 +8,7 @@ RUN dnf -y install nodejs
 RUN dnf -y install curl
 
 # add setup_cpp.js
-COPY "./dist/" "/"
+COPY "./dist/node12" "/"
 WORKDIR "/"
 
 # run installation
