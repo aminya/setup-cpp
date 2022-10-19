@@ -1,13 +1,14 @@
 import { setupLLVM, VERSIONS, getUrl, setupClangTools, getLinuxUrl } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isUrlOnline } from "is-url-online"
-import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
+import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import ciDetect from "@npmcli/ci-detect"
 import execa from "execa"
 import path, { addExeExt } from "patha"
 import { chmodSync } from "fs"
 import { getVersion } from "../../default_versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
+import * as io from "@actions/io"
 
 jest.setTimeout(400000)
 async function testUrl(version: string) {
@@ -123,8 +124,8 @@ describe("setup-llvm", () => {
   })
 
   it("should setup LLVM 15.0.2", async () => {
-    await cleanupTmpDir("llvm")
-    await cleanupTmpDir("/Users/runner/hostedtoolcache/llvm")
+    await io.rmRF(directory)
+    await io.rmRF("/Users/runner/hostedtoolcache/llvm")
 
     const { binDir } = await setupLLVM("15.0.2", directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
@@ -143,6 +144,6 @@ describe("setup-llvm", () => {
   })
 
   afterAll(async () => {
-    await cleanupTmpDir("llvm")
+    await io.rmRF(directory)
   }, 100000)
 })
