@@ -33,7 +33,7 @@
     "lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
     "lint.prettier": "prettier --write .",
     "lint.tsc": "tsc --noEmit | loose-ts-check",
-    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./dev/scripts/pack-exe.js",
+    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && ts-node --esm ./dev/scripts/pack-exe.ts",
     "prepare": "pnpm run -r build && pnpm run -w build",
     "start.docker": "docker run -t setup_cpp .",
     "start.docker.arch": "docker run -t setup_cpp:arch .",
@@ -98,6 +98,7 @@
     "shx": "0.3.4",
     "terser-config-atomic": "^0.1.1",
     "ts-jest": "^29.0.3",
+    "ts-node": "^10.9.1",
     "ts-readme": "^1.1.3",
     "typescript": "^4.8.4"
   },
