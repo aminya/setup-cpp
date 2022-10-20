@@ -94,7 +94,6 @@ jobs:
       - name: Place Artifacts
         run: |
           mv -v artifact/* ./
-          mv -v artifact/.[^.]* ./
           chmod +x -R ./exe/
 
       - name: Draft the release
