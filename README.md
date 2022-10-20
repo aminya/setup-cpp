@@ -297,7 +297,7 @@ test_linux_gcc:
 ## Usage Examples
 
 - [cpp_vcpkg_project project](https://github.com/aminya/cpp_vcpkg_project)
-- [project_optins](https://github.com/aminya/project_options)
+- [project_options](https://github.com/aminya/project_options)
 - [cpp-best-practices starter project](https://github.com/cpp-best-practices/cpp_starter_project)
 - [ftxui](https://github.com/ArthurSonzogni/FTXUI)
 - [inja](https://github.com/pantor/inja)
