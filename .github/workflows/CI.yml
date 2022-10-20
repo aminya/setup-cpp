@@ -25,7 +25,7 @@ jobs:
           - macos-12
           - macos-11
         node:
-          - 14 # installed on the images
+          - 16
         pnpm:
           - 7
         cache_reset_counter:
