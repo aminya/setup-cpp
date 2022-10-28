@@ -36,6 +36,7 @@ words:
   - gcovr
   - ghes
   - Graphviz
+  - inja
   - isci
   - isroot
   - kcov
@@ -58,9 +59,11 @@ words:
   - npmrc
   - Opencppcoverage
   - OSSDK
+  - papm
   - patha
   - pnpm
   - pwsh
+  - pygments
   - pypy
   - setupcpp
   - setx
