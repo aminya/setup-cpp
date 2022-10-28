@@ -9,16 +9,12 @@ commandTests:
     command: g++
     args: ["--version"]
     expectedOutput: [".*g\\+\\+.*GCC.*"]
-  - name: cmake
-    command: cmake
-    args: ["--version"]
-    expectedOutput: [".*cmake version.*"]
   - name: make
     command: make
     args: ["--version"]
     expectedOutput: [".*GNU Make.*"]
   - name: ninja
-    command: ninja
+    command: /root/ninja/ninja
     args: ["--version"]
     expectedOutput: [".*1.*"]
   - name: gcovr

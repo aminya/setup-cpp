@@ -12,14 +12,15 @@ export function setupPacmanPack(name: string, version?: string, aur?: string): I
 
   const pacman = "pacman"
 
-  if (!didUpdate) {
-    execRootSync(pacman, ["-Syuu", "--noconfirm"])
+  // yay can't run as root, so skip update
+  if (!didUpdate && aur !== "yay") {
+    execRootSync(pacman, ["-Sy", "--noconfirm"])
     didUpdate = true
   }
 
   if (!didInit) {
     // install base-devel
-    execRootSync(pacman, ["-Sy", "--noconfirm", "base-devel"])
+    execRootSync(pacman, ["-S", "--noconfirm", "base-devel"])
     didInit = true
   }
 

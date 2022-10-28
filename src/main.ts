@@ -45,6 +45,8 @@ import { setupGraphviz } from "./graphviz/graphviz"
 import { setupNala } from "./nala/nala"
 import { setupBazel } from "./bazel/bazel"
 import { setupPowershell } from "./powershell/powershell"
+import { isArch } from "./utils/env/isArch"
+import { setupPacmanPack } from "./utils/setup/setupPacmanPack"
 
 /** The setup functions */
 const setups = {
@@ -161,6 +163,15 @@ export async function main(args: string[]): Promise<number> {
   }
 
   let hasLLVM = false // used to unset CPPFLAGS of LLVM when other compilers are used as the main compiler
+
+  // install python-pygments to avoid conflicts with cppcheck and gcovr on arch linux
+  if (process.platform === "linux") {
+    if (isArch()) {
+      if (opts.cppcheck && opts.gcovr) {
+        setupPacmanPack("python-pygments")
+      }
+    }
+  }
 
   // loop over the tools and run their setup function
   for (const tool of tools) {
