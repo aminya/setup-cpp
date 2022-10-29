@@ -63,6 +63,7 @@ words:
   - patha
   - pnpm
   - pwsh
+  - pygments
   - pypy
   - setupcpp
   - setx
