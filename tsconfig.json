@@ -2,7 +2,7 @@
   "compilerOptions": {
     "strict": true,
     "strictNullChecks": true,
-    "noUnusedLocals": true,
+    "noUnusedLocals": false,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noImplicitAny": true,
@@ -28,5 +28,5 @@
     "outDir": "./dist"
   },
   "compileOnSave": false,
-  "include": ["./src", "packages/untildify-user/untildify.ts"]
+  "include": ["./src", "dev/scripts", "packages/untildify-user/untildify.ts"]
 }

@@ -11,7 +11,7 @@ RUN pacman -S --noconfirm --needed nodejs
 RUN pacman -S --noconfirm --needed curl
 
 # add setup_cpp.js
-COPY "./dist/" "/"
+COPY "./dist/node12" "/"
 WORKDIR "/"
 
 # run installation

@@ -47,20 +47,31 @@ export async function getSpecificVersionAndUrl(
     }
   }
 
+  // if the given set doesn't include the version, throw an error
   if (!versions.has(version)) {
     throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
   }
+
+  const offlineUrls: string[] = []
 
   for (const specificVersion of getSpecificVersions(versions, version)) {
     // eslint-disable-next-line no-await-in-loop
     const url = await getUrl(platform, specificVersion)
     // eslint-disable-next-line no-await-in-loop
-    if (url !== null && (await isUrlOnline(url))) {
-      return [specificVersion, url]
+    if (url !== null) {
+      if (await isUrlOnline(url)) {
+        return [specificVersion, url]
+      } else {
+        offlineUrls.push(url)
+      }
     }
   }
 
-  throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
+  throw new Error(
+    `Unsupported target! (platform='${platform}', version='${version}'). The offline urls tested:\n${offlineUrls.join(
+      "\n"
+    )}`
+  )
 }
 
 export const defaultVersionRegex = /v?(\d\S*)/
