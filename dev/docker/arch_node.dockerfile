@@ -17,9 +17,6 @@ WORKDIR "/"
 # run installation
 RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true
 
-# TODO fails!
-# --cppcheck true
-
 # clean up
 RUN pacman -Scc --noconfirm
 RUN rm -rf /tmp/*
