@@ -1,10 +1,9 @@
-import { Inputs, Opts } from "./main"
-import { isArch } from "./utils/env/isArch"
+import { isArch } from "../utils/env/isArch"
 
 // passing "" to a tool installed by a package manager (apt, brew, choco) will result in the default version of that package manager.
 // the directly downloaded tools require a given version ("" doesn't work).
 
-const DefaultVersions: Record<string, string> = {
+export const DefaultVersions: Record<string, string> = {
   llvm: "13.0.0", // https://github.com/llvm/llvm-project/releases
   clangtidy: "13.0.0",
   clangformat: "13.0.0",
@@ -22,7 +21,7 @@ const DefaultVersions: Record<string, string> = {
 /// If an ubuntu versions is not in this map:
 // - the newer ubuntu versions use the first entry (e.g. v20),
 // - the older ones use ""
-const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
+export const DefaultLinuxVersion: Record<string, Record<number, string>> = {
   llvm: {
     22: "13.0.0-ubuntu-20.04",
     20: "13.0.0-ubuntu-20.04",
@@ -68,52 +67,4 @@ const DefaultUbuntuVersion: Record<string, Record<number, string>> = {
     16: "40",
     14: "40",
   },
-}
-
-/** Get the default version if passed true or undefined, otherwise return the version itself */
-export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
-  if (useDefault(version, name)) {
-    // choose the default linux version based on ubuntu version
-    if (process.platform === "linux" && osVersion !== null && name in DefaultUbuntuVersion) {
-      const osVersionMaj = osVersion[0]
-      const newest = parseInt(Object.keys(DefaultUbuntuVersion[name])[0], 10) // newest version with the default
-      if (osVersionMaj >= newest) {
-        return DefaultUbuntuVersion[name][osVersionMaj]
-      } else {
-        return ""
-      }
-    }
-    // anything else
-    return DefaultVersions[name]
-  } else {
-    return version ?? ""
-  }
-}
-
-function useDefault(version: string | undefined, name: string) {
-  return version === "true" || (version === undefined && name in DefaultVersions)
-}
-
-export function syncVersions(opts: Opts, tools: Inputs[]): boolean {
-  for (let i = 0; i < tools.length; i++) {
-    // tools excluding i_tool
-    const otherTools = tools.slice(0, i).concat(tools.slice(i + 1))
-
-    const tool = tools[i]
-
-    if (!useDefault(opts[tool], tool)) {
-      for (let i_other = 0; i_other < otherTools.length; i_other++) {
-        const otherTool = otherTools[i_other]
-        const useDefaultOtherTool = useDefault(opts[otherTool], otherTools[i_other])
-        if (useDefaultOtherTool) {
-          // use the same version if the other tool was requested with the default
-          opts[otherTool] = opts[tool]
-        } else if (opts[tool] !== opts[otherTools[i_other]]) {
-          // error if different from the other given versions
-          return false
-        }
-      }
-    }
-  }
-  return true
 }

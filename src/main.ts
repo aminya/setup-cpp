@@ -31,7 +31,7 @@ import numerousLocale from "numerous/locales/en.js"
 import { ubuntuVersion } from "./utils/env/ubuntu_version"
 
 import semverValid from "semver/functions/valid"
-import { getVersion, syncVersions } from "./default_versions"
+import { getVersion, syncVersions } from "./versions/versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { error, info, success, warning } from "ci-log"
@@ -148,13 +148,7 @@ export async function main(args: string[]): Promise<number> {
 
   // installing the specified tools
 
-  let osVersion: number[] | null = null
-  try {
-    // get the version if not already done
-    osVersion = await ubuntuVersion()
-  } catch (err) {
-    warning((err as Error).toString())
-  }
+  const osVersion = await ubuntuVersion()
 
   // sync the version for the llvm tools
   if (!syncVersions(opts, ["llvm", "clangtidy", "clangformat"])) {

@@ -1,6 +1,6 @@
 import { setupGcovr } from "../gcovr"
 import { testBin } from "../../utils/tests/test-helpers"
-import { getVersion } from "../../default_versions"
+import { getVersion } from "../../versions/versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 
 jest.setTimeout(300000)

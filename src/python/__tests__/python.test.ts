@@ -1,6 +1,6 @@
 import { setupPython } from "../python"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { getVersion } from "../../default_versions"
+import { getVersion } from "../../versions/versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import ciDetect from "@npmcli/ci-detect"
 import { info } from "ci-log"
