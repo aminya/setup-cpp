@@ -80,35 +80,7 @@ const setups = {
 }
 
 /** The tools that can be installed */
-const tools: Array<keyof typeof setups> = [
-  "nala",
-  "choco",
-  "brew",
-  "python",
-  "powershell",
-  "vcpkg",
-  "bazel",
-  "cmake",
-  "ninja",
-  "conan",
-  "meson",
-  "gcovr",
-  "opencppcoverage",
-  "ccache",
-  "doxygen",
-  "graphviz",
-  "cppcheck",
-  "clangtidy",
-  "clangformat",
-  "llvm",
-  "gcc",
-  "msvc",
-  "vcvarsall",
-  "kcov",
-  "make",
-  "task",
-  "sevenzip",
-]
+const tools = Object.keys(setups) as Array<keyof typeof setups>
 
 /** The possible inputs to the program */
 export type Inputs = keyof typeof setups | "compiler" | "architecture"
@@ -158,13 +130,9 @@ export async function main(args: string[]): Promise<number> {
 
   let hasLLVM = false // used to unset CPPFLAGS of LLVM when other compilers are used as the main compiler
 
-  // install python-pygments to avoid conflicts with cppcheck and gcovr on arch linux
-  if (process.platform === "linux") {
-    if (isArch()) {
-      if (opts.cppcheck && opts.gcovr) {
-        setupPacmanPack("python-pygments")
-      }
-    }
+  if (isArch() && typeof opts.cppcheck === "string" && typeof opts.gcovr === "string") {
+    info("installing python-pygments to avoid conflicts with cppcheck and gcovr on Arch linux")
+    setupPacmanPack("python-pygments")
   }
 
   // loop over the tools and run their setup function
