@@ -19,7 +19,7 @@ import { info, warning } from "ci-log"
 import { existsSync } from "fs"
 import ciDetect from "@npmcli/ci-detect"
 import { setupGcc } from "../gcc/gcc"
-import { getVersion } from "../default_versions"
+import { getVersion } from "../versions/versions"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
 

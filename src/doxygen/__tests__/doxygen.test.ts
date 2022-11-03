@@ -1,7 +1,7 @@
 import { setupDoxygen } from "../doxygen"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { InstallationInfo } from "../../utils/setup/setupBin"
-import { getVersion } from "../../default_versions"
+import { getVersion } from "../../versions/versions"
 import which from "which"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 

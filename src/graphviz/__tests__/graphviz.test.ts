@@ -1,7 +1,7 @@
 import { setupGraphviz } from "../graphviz"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { InstallationInfo } from "../../utils/setup/setupBin"
-import { getVersion } from "../../default_versions"
+import { getVersion } from "../../versions/versions"
 
 jest.setTimeout(300000)
 describe("setup-graphviz", () => {

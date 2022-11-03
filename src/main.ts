@@ -31,7 +31,7 @@ import numerousLocale from "numerous/locales/en.js"
 import { ubuntuVersion } from "./utils/env/ubuntu_version"
 
 import semverValid from "semver/functions/valid"
-import { getVersion, syncVersions } from "./default_versions"
+import { getVersion, syncVersions } from "./versions/versions"
 import { setupGcc } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { error, info, success, warning } from "ci-log"

@@ -1,4 +1,4 @@
-import { syncVersions, getVersion } from "../default_versions"
+import { syncVersions, getVersion } from "../versions/versions"
 import { getCompilerInfo, Inputs, parseArgs } from "../main"
 
 jest.setTimeout(300000)

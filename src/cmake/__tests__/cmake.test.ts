@@ -1,7 +1,7 @@
 import { setupCmake } from "../cmake"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import ciDetect from "@npmcli/ci-detect"
-import { getVersion } from "../../default_versions"
+import { getVersion } from "../../versions/versions"
 
 jest.setTimeout(300000)
 

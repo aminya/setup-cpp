@@ -1,7 +1,7 @@
 import { setupTask } from "../task"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import ciDetect from "@npmcli/ci-detect"
-import { getVersion } from "../../default_versions"
+import { getVersion } from "../../versions/versions"
 
 jest.setTimeout(300000)
 describe("setup-task", () => {

@@ -1,6 +1,6 @@
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { setupGcc } from "../gcc"
-import { getVersion } from "../../default_versions"
+import { getVersion } from "../../versions/versions"
 import { join, addExeExt } from "patha"
 import execa from "execa"
 import { chmodSync } from "fs"

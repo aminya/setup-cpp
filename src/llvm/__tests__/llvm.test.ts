@@ -6,7 +6,7 @@ import ciDetect from "@npmcli/ci-detect"
 import execa from "execa"
 import path, { addExeExt } from "patha"
 import { chmodSync } from "fs"
-import { getVersion } from "../../default_versions"
+import { getVersion } from "../../versions/versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import * as io from "@actions/io"
 
