@@ -148,13 +148,7 @@ export async function main(args: string[]): Promise<number> {
 
   // installing the specified tools
 
-  let osVersion: number[] | null = null
-  try {
-    // get the version if not already done
-    osVersion = await ubuntuVersion()
-  } catch (err) {
-    warning((err as Error).toString())
-  }
+  const osVersion = await ubuntuVersion()
 
   // sync the version for the llvm tools
   if (!syncVersions(opts, ["llvm", "clangtidy", "clangformat"])) {
