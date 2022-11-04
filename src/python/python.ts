@@ -140,7 +140,8 @@ export async function addPythonBaseExecPrefix(python: string) {
 
   // detection using python.sys
   const base_exec_prefix = (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim()
-  dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "bin"))
+  // any of these are possible depending on the operating system!
+  dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "Scripts", "bin"), join(base_exec_prefix, "bin"))
 
   // exclude the non existing ones
   dirs = dirs.filter((dir) => existsSync(dir))
