@@ -14,6 +14,10 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { getExecOutput } from "@actions/exec"
 import { existsSync } from "fs"
+import { isBinUptoDate } from "../utils/setup/version"
+import { getVersion } from "../versions/versions"
+import assert from "assert"
+import execa from "execa"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (ciDetect() !== "github-actions") {
@@ -76,6 +80,52 @@ export async function setupPythonViaSystem(
       throw new Error(`Unsupported platform`)
     }
   }
+}
+
+let setupPythonAndPipTried = false
+
+/// setup python and pip if needed
+export async function setupPythonAndPip(): Promise<string> {
+  let foundPython: string
+
+  // install python
+  if (which.sync("python3", { nothrow: true }) !== null) {
+    foundPython = "python3"
+  } else if (which.sync("python", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
+    foundPython = "python"
+  } else {
+    info("python3 was not found. Installing python")
+    await setupPython(getVersion("python", undefined), "", process.arch)
+    // try again
+    if (setupPythonAndPipTried) {
+      throw new Error("Failed to install python")
+    }
+    setupPythonAndPipTried = true
+    return setupPythonAndPip() // recurse
+  }
+
+  assert(typeof foundPython === "string")
+
+  // install pip
+  if (process.platform === "win32") {
+    // downgrade pip on Windows
+    // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
+    execa.sync(foundPython, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
+  } else if (process.platform === "linux") {
+    // ensure that pip is installed on Linux (happens when python is found but pip not installed)
+    if (isArch()) {
+      setupPacmanPack("python-pip")
+    } else if (hasDnf()) {
+      setupDnfPack("python3-pip")
+    } else if (isUbuntu()) {
+      await setupAptPack("python3-pip")
+    }
+  }
+
+  // install wheel (required for Conan, Meson, etc.)
+  execa.sync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
+
+  return foundPython
 }
 
 export async function addPythonBaseExecPrefix(python: string) {
