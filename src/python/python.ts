@@ -48,7 +48,7 @@ export async function setupPythonViaSystem(
         join(setupDir, "python.exe")
       const pythonSetupDir = dirname(pythonBinPath)
       /** The directory which the tool is installed to */
-      await activateWinPython(pythonSetupDir)
+      await addPath(pythonSetupDir)
       return { installDir: pythonSetupDir, binDir: pythonSetupDir }
     }
     case "darwin": {
@@ -74,9 +74,4 @@ export async function setupPythonViaSystem(
       throw new Error(`Unsupported platform`)
     }
   }
-}
-
-async function activateWinPython(binDir: string) {
-  info(`Add ${binDir} to PATH`)
-  await addPath(binDir)
 }

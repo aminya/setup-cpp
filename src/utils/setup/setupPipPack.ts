@@ -65,27 +65,17 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
   })
 
   if (binDir === undefined) {
-    if (process.platform === "linux") {
-      binDir = "/home/runner/.local/bin/"
-    } else if (process.platform === "darwin") {
-      binDir = "/usr/local/bin/"
-    } else {
-      // windows or others
-      try {
-        binDir = join(
-          (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
-          "Scripts"
-        )
-      } catch {
-        binDir = join(
-          (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
-          "Scripts"
-        )
-      }
-    }
-    info(`${binDir} to PATH`)
-    await addPath(binDir)
+    binDir = await addPythonBaseExecPrefix()
   }
 
   return { binDir }
+}
+
+async function addPythonBaseExecPrefix() {
+  const base_exec_prefix = join(
+    (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
+    "Scripts"
+  )
+  await addPath(base_exec_prefix)
+  return base_exec_prefix
 }
