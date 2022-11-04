@@ -1,12 +1,9 @@
 /* eslint-disable require-atomic-updates */
-import { getExecOutput } from "@actions/exec"
 import execa from "execa"
 import which from "which"
 import { info } from "@actions/core"
-import { addPath } from "../env/addEnv"
-import { setupPython } from "../../python/python"
+import { addPythonBaseExecPrefix, setupPython } from "../../python/python"
 import { isBinUptoDate } from "./version"
-import { join } from "patha"
 import { getVersion } from "../../versions/versions"
 import { InstallationInfo } from "./setupBin"
 import { setupAptPack } from "./setupAptPack"
@@ -65,17 +62,8 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
   })
 
   if (binDir === undefined) {
-    binDir = await addPythonBaseExecPrefix()
+    binDir = await addPythonBaseExecPrefix(python)
   }
 
   return { binDir }
-}
-
-async function addPythonBaseExecPrefix() {
-  const base_exec_prefix = join(
-    (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim(),
-    "Scripts"
-  )
-  await addPath(base_exec_prefix)
-  return base_exec_prefix
 }

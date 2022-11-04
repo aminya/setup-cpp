@@ -12,6 +12,8 @@ import { dirname, join } from "patha"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
+import { getExecOutput } from "@actions/exec"
+import { existsSync } from "fs"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (ciDetect() !== "github-actions") {
@@ -74,4 +76,34 @@ export async function setupPythonViaSystem(
       throw new Error(`Unsupported platform`)
     }
   }
+}
+
+export async function addPythonBaseExecPrefix(python: string) {
+  let dirs: string[] = []
+
+  // detection based on the platform
+  if (process.platform === "linux") {
+    dirs.push("/home/runner/.local/bin/")
+  } else if (process.platform === "darwin") {
+    dirs.push("/usr/local/bin/")
+  }
+
+  // detection using python.sys
+  const base_exec_prefix = (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim()
+  dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "Scripts", "bin"))
+
+  // exclude the non existing ones
+  dirs = dirs.filter((dir) => existsSync(dir))
+
+  // add the directories to the path
+  await Promise.all(dirs.map((dir) => addPath(dir)))
+
+  // the last directory is the bin directory (not empty)
+  const foundBinDir = dirs.pop()
+
+  if (foundBinDir === undefined) {
+    warning("The binary directory for pip dependencies could not be found")
+  }
+
+  return foundBinDir!
 }
