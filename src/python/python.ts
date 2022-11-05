@@ -18,6 +18,7 @@ import { isBinUptoDate } from "../utils/setup/version"
 import { getVersion } from "../versions/versions"
 import assert from "assert"
 import execa from "execa"
+import { unique } from "../utils/std"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (ciDetect() !== "github-actions") {
@@ -129,7 +130,7 @@ export async function setupPythonAndPip(): Promise<string> {
 }
 
 export async function addPythonBaseExecPrefix(python: string) {
-  let dirs: string[] = []
+  const dirs: string[] = []
 
   // detection based on the platform
   if (process.platform === "linux") {
@@ -143,11 +144,6 @@ export async function addPythonBaseExecPrefix(python: string) {
   // any of these are possible depending on the operating system!
   dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "Scripts", "bin"), join(base_exec_prefix, "bin"))
 
-  // exclude the non existing ones
-  dirs = dirs.filter((dir) => existsSync(dir))
-
-  // add the directories to the path
-  await Promise.all(dirs.map((dir) => addPath(dir)))
-
-  return dirs
+  // remove duplicates
+  return unique(dirs)
 }

@@ -4,7 +4,9 @@ import { info } from "@actions/core"
 import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"
 import { InstallationInfo } from "./setupBin"
 import { existsSync } from "fs"
-import { addExeExt, join } from "patha"
+import { addExeExt, dirname, join } from "patha"
+import { addPath } from "../env/addEnv"
+import which from "which"
 
 let python: string | undefined
 let binDirs: string[] | undefined
@@ -25,7 +27,23 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     binDirs = await addPythonBaseExecPrefix(python)
   }
 
-  const binDir = binDirs.find((dir) => existsSync(join(dir, addExeExt(name)))) ?? binDirs.pop()!
+  const binDir = findBinDir(binDirs, name)
+
+  await addPath(binDir)
 
   return { binDir }
+}
+
+function findBinDir(dirs: string[], name: string) {
+  const foundDir = dirs.find((dir) => existsSync(join(dir, addExeExt(name))))
+  if (foundDir !== undefined) {
+    return foundDir
+  }
+
+  const whichDir = which.sync(addExeExt(name), { nothrow: true })
+  if (whichDir !== null) {
+    return dirname(whichDir)
+  }
+
+  return dirs[dirs.length - 1]
 }
