@@ -149,12 +149,5 @@ export async function addPythonBaseExecPrefix(python: string) {
   // add the directories to the path
   await Promise.all(dirs.map((dir) => addPath(dir)))
 
-  // the last directory is the bin directory (not empty)
-  const foundBinDir = dirs.pop()
-
-  if (foundBinDir === undefined) {
-    warning("The binary directory for pip dependencies could not be found")
-  }
-
-  return foundBinDir!
+  return dirs
 }

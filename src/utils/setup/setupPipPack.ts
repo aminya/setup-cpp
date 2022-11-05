@@ -3,9 +3,11 @@ import execa from "execa"
 import { info } from "@actions/core"
 import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"
 import { InstallationInfo } from "./setupBin"
+import { existsSync } from "fs"
+import { addExeExt, join } from "patha"
 
 let python: string | undefined
-let binDir: string | undefined
+let binDirs: string[] | undefined
 
 /** A function that installs a package using pip */
 export async function setupPipPack(name: string, version?: string): Promise<InstallationInfo> {
@@ -19,9 +21,11 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     stdio: "inherit",
   })
 
-  if (binDir === undefined) {
-    binDir = await addPythonBaseExecPrefix(python)
+  if (binDirs === undefined) {
+    binDirs = await addPythonBaseExecPrefix(python)
   }
+
+  const binDir = binDirs.find((dir) => existsSync(join(dir, addExeExt(name)))) ?? binDirs.pop()!
 
   return { binDir }
 }
