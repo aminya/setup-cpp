@@ -12,6 +12,13 @@ import { dirname, join } from "patha"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
+import { getExecOutput } from "@actions/exec"
+import { existsSync } from "fs"
+import { isBinUptoDate } from "../utils/setup/version"
+import { getVersion } from "../versions/versions"
+import assert from "assert"
+import execa from "execa"
+import { unique } from "../utils/std"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (ciDetect() !== "github-actions") {
@@ -48,7 +55,7 @@ export async function setupPythonViaSystem(
         join(setupDir, "python.exe")
       const pythonSetupDir = dirname(pythonBinPath)
       /** The directory which the tool is installed to */
-      await activateWinPython(pythonSetupDir)
+      await addPath(pythonSetupDir)
       return { installDir: pythonSetupDir, binDir: pythonSetupDir }
     }
     case "darwin": {
@@ -76,7 +83,67 @@ export async function setupPythonViaSystem(
   }
 }
 
-async function activateWinPython(binDir: string) {
-  info(`Add ${binDir} to PATH`)
-  await addPath(binDir)
+let setupPythonAndPipTried = false
+
+/// setup python and pip if needed
+export async function setupPythonAndPip(): Promise<string> {
+  let foundPython: string
+
+  // install python
+  if (which.sync("python3", { nothrow: true }) !== null) {
+    foundPython = "python3"
+  } else if (which.sync("python", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
+    foundPython = "python"
+  } else {
+    info("python3 was not found. Installing python")
+    await setupPython(getVersion("python", undefined), "", process.arch)
+    // try again
+    if (setupPythonAndPipTried) {
+      throw new Error("Failed to install python")
+    }
+    setupPythonAndPipTried = true
+    return setupPythonAndPip() // recurse
+  }
+
+  assert(typeof foundPython === "string")
+
+  // install pip
+  if (process.platform === "win32") {
+    // downgrade pip on Windows
+    // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
+    execa.sync(foundPython, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
+  } else if (process.platform === "linux") {
+    // ensure that pip is installed on Linux (happens when python is found but pip not installed)
+    if (isArch()) {
+      setupPacmanPack("python-pip")
+    } else if (hasDnf()) {
+      setupDnfPack("python3-pip")
+    } else if (isUbuntu()) {
+      await setupAptPack("python3-pip")
+    }
+  }
+
+  // install wheel (required for Conan, Meson, etc.)
+  execa.sync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
+
+  return foundPython
+}
+
+export async function addPythonBaseExecPrefix(python: string) {
+  const dirs: string[] = []
+
+  // detection based on the platform
+  if (process.platform === "linux") {
+    dirs.push("/home/runner/.local/bin/")
+  } else if (process.platform === "darwin") {
+    dirs.push("/usr/local/bin/")
+  }
+
+  // detection using python.sys
+  const base_exec_prefix = (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim()
+  // any of these are possible depending on the operating system!
+  dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "Scripts", "bin"), join(base_exec_prefix, "bin"))
+
+  // remove duplicates
+  return unique(dirs)
 }
