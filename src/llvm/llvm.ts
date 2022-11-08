@@ -20,7 +20,6 @@ import { existsSync } from "fs"
 import ciDetect from "@npmcli/ci-detect"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../versions/versions"
-import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
 
 //================================================
@@ -291,29 +290,43 @@ async function getLLVMPackageInfo(version: string, platform: NodeJS.Platform, _a
 }
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
-  const installationInfo = await _setupLLVM(version, setupDir, arch)
+  const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
   await activateLLVM(installationInfo.installDir ?? setupDir, version)
   return installationInfo
 }
 
-let didInit = false
-async function _setupLLVM(version: string, setupDir: string, arch: string) {
-  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
-  if (!didInit) {
-    if (process.platform === "linux") {
-      // install llvm build dependencies
-      await setupGcc(getVersion("gcc", undefined), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
-      if (isArch()) {
-        // setupPacmanPack("ncurses")
-        // TODO: install libtinfo ?
-      } else if (isUbuntu()) {
-        await setupAptPack("libtinfo-dev")
-      }
-    }
+let installedDeps = false
+
+async function setupLLVMWithoutActivation(version: string, setupDir: string, arch: string) {
+  const installationInfoPromise = setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
+
+  let depsPromise: Promise<void>
+  if (!installedDeps) {
+    depsPromise = setupLLVMDeps(arch)
     // eslint-disable-next-line require-atomic-updates
-    didInit = true
+    installedDeps = true
+  } else {
+    depsPromise = Promise.resolve()
   }
+
+  // install LLVM and its dependencies in parallel
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [installationInfo, _] = await Promise.all([installationInfoPromise, depsPromise])
+
   return installationInfo
+}
+
+async function setupLLVMDeps(arch: string) {
+  if (process.platform === "linux") {
+    // install llvm build dependencies
+    await setupGcc(getVersion("gcc", undefined), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
+
+    if (isUbuntu()) {
+      await setupAptPack("libtinfo-dev")
+    }
+    // TODO: install libtinfo on other distros
+    // setupPacmanPack("ncurses")
+  }
 }
 
 export async function activateLLVM(directory: string, versionGiven: string) {
@@ -378,7 +391,7 @@ export function setupClangTools(version: string, setupDir: string, arch: string)
   if (ciDetect() === "github-actions") {
     addLLVMLoggingMatcher()
   }
-  return _setupLLVM(version, setupDir, arch)
+  return setupLLVMWithoutActivation(version, setupDir, arch)
 }
 
 function addLLVMLoggingMatcher() {
