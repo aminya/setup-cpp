@@ -8,7 +8,7 @@ import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
 import { setupCppcheck } from "./cppcheck/cppcheck"
 import { setupDoxygen } from "./doxygen/doxygen"
-import { setupGcovr } from "./gcovr/gcovr"
+import { activateGcovGCC, activateGcovLLVM, setupGcovr } from "./gcovr/gcovr"
 import { setupLLVM, setupClangTools } from "./llvm/llvm"
 import { setupMeson } from "./meson/meson"
 import { setupMSVC } from "./msvc/msvc"
@@ -201,6 +201,9 @@ export async function main(args: string[]): Promise<number> {
             join(setupCppDir, "llvm"),
             arch
           )
+
+          await activateGcovLLVM()
+
           successMessages.push(getSuccessMessage("llvm", installationInfo))
           break
         }
@@ -208,12 +211,15 @@ export async function main(args: string[]): Promise<number> {
         case "mingw":
         case "cygwin":
         case "msys": {
-          const installationInfo = await setupGcc(getVersion("gcc", version, osVersion), join(setupCppDir, "gcc"), arch)
+          const gccVersion = getVersion("gcc", version, osVersion)
+          const installationInfo = await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
 
           if (hasLLVM) {
             // remove the CPPFLAGS of LLVM that include the LLVM headers
             await addEnv("CPPFLAGS", "")
           }
+
+          await activateGcovGCC(gccVersion)
 
           successMessages.push(getSuccessMessage("gcc", installationInfo))
           break
