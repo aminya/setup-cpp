@@ -1,9 +1,8 @@
 import semverLte from "semver/functions/lte"
 import { isUrlOnline } from "is-url-online"
 import { getSpecificVersionAndUrl, getSpecificVersions, getVersions } from "../utils/setup/version"
-import { warning } from "ci-log"
+import { info, warning } from "ci-log"
 import { PackageInfo } from "../utils/setup/setupBin"
-import { setOutput } from "@actions/core"
 import { addExeExt } from "patha"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
 
@@ -260,7 +259,7 @@ export async function getLLVMPackageInfo(
   _arch: string
 ): Promise<PackageInfo> {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, platform, version, getUrl)
-  setOutput("llvm", specificVersion)
+  info(`specific llvm version: ${specificVersion}`)
   return {
     url,
     extractedFolderName: "",
