@@ -1,4 +1,4 @@
-import { setupLLVM, VERSIONS, getUrl, setupClangTools, getLinuxUrl } from "../llvm"
+import { setupLLVM, setupClangTools } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isUrlOnline } from "is-url-online"
 import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
@@ -9,6 +9,7 @@ import { chmodSync } from "fs"
 import { getVersion } from "../../versions/versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import * as io from "@actions/io"
+import { getLinuxUrl, getUrl, VERSIONS } from "../llvm_url"
 
 jest.setTimeout(400000)
 async function testUrl(version: string) {
