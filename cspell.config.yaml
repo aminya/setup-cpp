@@ -8,6 +8,7 @@ ignorePaths:
   - .git/
   - dist/
   - dev/cpp_vcpkg_project
+  - "**/node_modules/"
 words:
   - aarch
   - aminya

@@ -18,6 +18,7 @@ importers:
       '@actions/tool-cache': ^2.0.1
       '@npmcli/ci-detect': github:aminya/ci-detect#37fe40075bebec96794ba0a7c4a6d5c70cbea00d
       '@types/cross-spawn': ^6.0.2
+      '@types/execa': ^2.0.0
       '@types/jest': ^29.2.0
       '@types/mri': ^1.1.1
       '@types/node': ^18.11.7
@@ -85,6 +86,7 @@ importers:
       which: 2.0.2
     devDependencies:
       '@types/cross-spawn': 6.0.2
+      '@types/execa': 2.0.0
       '@types/jest': 29.2.0
       '@types/mri': 1.1.1
       '@types/node': 18.11.7
@@ -2328,6 +2330,13 @@ packages:
     resolution: {integrity: sha512-9AonUzyTjXXhEOa0DnqpzZi6VHlqKMswga9EXjpXnnqxwLtdvPPtlO8evrI5D9S6asFRCQ6v+wpiUKbw+vKqyg==}
     dependencies:
       '@types/ms': 0.7.31
+    dev: true
+
+  /@types/execa/2.0.0:
+    resolution: {integrity: sha512-aBnkJ0r3khaZkHzu9pDZeWXrDg1N/ZtDGRQkK+KIqNVvvTvW+URXMUHQQCQMYdb2GPrcwu9Fq6l9iiT+pirIbg==}
+    deprecated: This is a stub types definition. execa provides its own type definitions, so you do not need this installed.
+    dependencies:
+      execa: 6.1.0
     dev: true
 
   /@types/glob/7.2.0:
