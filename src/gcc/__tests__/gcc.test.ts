@@ -4,6 +4,7 @@ import { getVersion } from "../../versions/versions"
 import { join, addExeExt } from "patha"
 import execa from "execa"
 import { chmodSync } from "fs"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 
 jest.setTimeout(3000000)
 describe("setup-gcc", () => {
@@ -13,7 +14,7 @@ describe("setup-gcc", () => {
   })
 
   it("should setup gcc", async () => {
-    const version = getVersion("gcc", undefined)
+    const version = getVersion("gcc", undefined, await ubuntuVersion())
     const installInfo = await setupGcc(version, directory, process.arch)
 
     let gpp = "g++"
