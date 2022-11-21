@@ -7,6 +7,7 @@ import { execPowershell } from "exec-powershell"
 import { delimiter } from "path"
 import escapeSpace from "escape-path-with-spaces"
 import { giveUserAccess } from "user-access"
+import escapeQuote from "escape-quotes"
 
 /**
  * Add an environment variable.
@@ -14,7 +15,7 @@ import { giveUserAccess } from "user-access"
  * This function is cross-platforms and works in all the local or CI systems.
  */
 export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
-  const val = shouldEscapeSpace ? escapeSpace(valGiven ?? "") : valGiven
+  const val = escapeString(valGiven ?? "", shouldEscapeSpace)
   try {
     if (ciDetect() === "github-actions") {
       try {
@@ -30,6 +31,11 @@ export async function addEnv(name: string, valGiven: string | undefined, shouldE
     error(err as Error)
     setFailed(`Failed to export environment variable ${name}=${val}. You should add it manually.`)
   }
+}
+
+function escapeString(valGiven: string, shouldEscapeSpace: boolean = false) {
+  const spaceEscaped = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven ?? ""
+  return escapeQuote(spaceEscaped, '"', "\\")
 }
 
 /**
