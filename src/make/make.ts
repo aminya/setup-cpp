@@ -15,7 +15,7 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
       return setupChocoPack("make", version)
     }
     case "darwin": {
-      setupBrewPack("make", version)
+      await setupBrewPack("make", version)
       await addPath("/usr/local/opt/make/libexec/gnubin")
       return { binDir: "/usr/local/opt/make/libexec/gnubin" }
     }

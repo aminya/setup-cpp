@@ -46,12 +46,16 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
     },
   })
 
-  if (process.platform === "linux") {
-    binDir = "/home/linuxbrew/.linuxbrew/bin/"
-    await addPath(binDir)
-  } else {
-    binDir = "/usr/local/bin/"
-  }
+  binDir = getBrewPath()
+  await addPath(binDir)
 
   return { binDir }
+}
+
+export function getBrewPath() {
+  if (process.platform === "linux") {
+    return "/home/linuxbrew/.linuxbrew/bin/"
+  } else {
+    return "/usr/local/bin/"
+  }
 }
