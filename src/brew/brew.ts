@@ -5,6 +5,7 @@ import { tmpdir } from "os"
 import path, { join } from "path"
 import { mkdirP } from "@actions/io"
 import { readFileSync } from "fs"
+import { addPath } from "../utils/env/addEnv"
 
 let binDir: string | undefined
 
@@ -44,7 +45,13 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
       NONINTERACTIVE: "1",
     },
   })
-  binDir = "/usr/local/bin/"
+
+  if (process.platform === "linux") {
+    binDir = "/home/linuxbrew/.linuxbrew/bin/"
+    await addPath(binDir)
+  } else {
+    binDir = "/usr/local/bin/"
+  }
 
   return { binDir }
 }
