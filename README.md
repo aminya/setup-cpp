@@ -22,7 +22,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 | cache                 | cppcache                                                     |
 | documentation         | doxygen, graphviz                                            |
 | coverage              | gcovr, opencppcoverage, kcov                                 |
-| other                 | python, sevenzip                                             |
+| other                 | python, powershell, sevenzip                                 |
 
 `setup-cpp` automatically installs the dependencies above tools if needed for the selected tool (e.g., `python` is required for `conan`).
 
