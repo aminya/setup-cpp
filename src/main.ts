@@ -47,6 +47,7 @@ import { setupBazel } from "./bazel/bazel"
 import { setupPowershell } from "./powershell/powershell"
 import { isArch } from "./utils/env/isArch"
 import { setupPacmanPack } from "./utils/setup/setupPacmanPack"
+import { setupSccache } from "./sccache/sccache"
 
 /** The setup functions */
 const setups = {
@@ -66,6 +67,7 @@ const setups = {
   brew: setupBrew,
   powershell: setupPowershell,
   ccache: setupCcache,
+  sccache: setupSccache,
   doxygen: setupDoxygen,
   graphviz: setupGraphviz,
   cppcheck: setupCppcheck,
@@ -366,6 +368,7 @@ All the available tools:
 --make
 --task
 --ccache
+--sccache
 --cppcheck
 --clangformat
 --clangtidy
@@ -373,13 +376,13 @@ All the available tools:
 --gcovr
 --opencppcoverage
 --kcov
-
 --python
 --choco
 --brew
 --nala
 --sevenzip
 --graphviz
+--powershell
       `)
 }
 

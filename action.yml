@@ -51,6 +51,9 @@ inputs:
   ccache:
     description: "The ccache version to install."
     required: false
+  sccache:
+    description: "The sccache version to install."
+    required: false
   doxygen:
     description: "The doxygen version to install."
     required: false
