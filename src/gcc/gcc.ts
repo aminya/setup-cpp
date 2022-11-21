@@ -24,7 +24,9 @@ interface MingwInfo {
 
 // https://github.com/brechtsanders/winlibs_mingw/releases
 const GccToMingwInfo = {
-  "12": { releaseName: "12.1.0-14.0.4-10.0.0-ucrt-r2", fileSuffix: "12.1.0-mingw-w64ucrt-10.0.0-r2" },
+  "12": { releaseName: "12.2.0-14.0.6-10.0.0-ucrt-r2", fileSuffix: "12.2.0-mingw-w64ucrt-10.0.0-r2" },
+  "12.2.0-ucrt": { releaseName: "12.2.0-14.0.6-10.0.0-ucrt-r2", fileSuffix: "12.2.0-mingw-w64ucrt-10.0.0-r2" },
+  "12.2.0-msvcrt": { releaseName: "12.2.0-14.0.6-10.0.0-msvcrt-r2", fileSuffix: "12.2.0-mingw-w64msvcrt-10.0.0-r2" },
   "12.1.0-ucrt": { releaseName: "12.1.0-14.0.4-10.0.0-ucrt-r2", fileSuffix: "12.1.0-mingw-w64ucrt-10.0.0-r2" },
   "12.1.0-msvcrt": {
     releaseName: "12.1.0-14.0.6-10.0.0-msvcrt-r3",
