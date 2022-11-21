@@ -34,7 +34,7 @@ export async function addEnv(name: string, valGiven: string | undefined, shouldE
 }
 
 function escapeString(valGiven: string, shouldEscapeSpace: boolean = false) {
-  const spaceEscaped = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven ?? ""
+  const spaceEscaped = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
   return escapeQuote(spaceEscaped, '"', "\\")
 }
 
