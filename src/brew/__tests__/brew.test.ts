@@ -7,7 +7,7 @@ describe("setup-brew", () => {
     if (process.platform !== "darwin") {
       return
     }
-    const installInfo = setupBrew("", "", process.arch)
+    const installInfo = await setupBrew("", "", process.arch)
     await testBin("brew", ["--version"], installInfo?.binDir)
   })
 })
