@@ -60,7 +60,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
     }
     case "linux": {
       let installationInfo: InstallationInfo
-      if (version === "" || version === undefined || isArch() || hasDnf()) {
+      if (version === "" || isArch() || hasDnf()) {
         if (isArch()) {
           installationInfo = setupPacmanPack("doxygen", version)
         } else if (hasDnf()) {

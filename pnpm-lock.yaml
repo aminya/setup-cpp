@@ -30,6 +30,7 @@ importers:
       cross-spawn: ^7.0.3
       cspell: ^6.14.3
       escape-path-with-spaces: github:aminya/escape-path-with-spaces#d9f81ee649203ddc55783a2f96ada59df06118e3
+      escape-quotes: ^1.0.2
       eslint: ^8.28.0
       eslint-config-atomic: ^1.18.1
       exec-powershell: workspace:1.0.0
@@ -46,6 +47,7 @@ importers:
       patha: ^0.4.1
       prettier: 2.7.1
       prettier-config-atomic: ^3.1.0
+      quote-unquote: ^1.0.0
       readme-md-generator: ^1.0.0
       semver: 7.3.8
       setup-python: github:actions/setup-python#v4.3.0
@@ -69,6 +71,7 @@ importers:
       admina: 0.1.3
       ci-log: link:packages/ci-log
       escape-path-with-spaces: github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3
+      escape-quotes: 1.0.2
       exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
       is-url-online: 1.5.0
@@ -76,6 +79,7 @@ importers:
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
       patha: 0.4.1
+      quote-unquote: 1.0.0
       semver: 7.3.8
       setup-python: github.com/actions/setup-python/13ae5bb136fac2878aff31522b9efb785519f984
       time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
@@ -4202,10 +4206,15 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
+  /escape-quotes/1.0.2:
+    resolution: {integrity: sha512-JpLFzklNReeakCpyj59s78P5F72q0ZUpDnp2BuIk9TtTjj2HMsgiWBChw17BlZT8dRhMtmSb1jE2+pTP1iFYyw==}
+    dependencies:
+      escape-string-regexp: 1.0.5
+    dev: false
+
   /escape-string-regexp/1.0.5:
     resolution: {integrity: sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg==}
     engines: {node: '>=0.8.0'}
-    dev: true
 
   /escape-string-regexp/2.0.0:
     resolution: {integrity: sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==}
@@ -8099,6 +8108,10 @@ packages:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
     dev: true
+
+  /quote-unquote/1.0.0:
+    resolution: {integrity: sha512-twwRO/ilhlG/FIgYeKGFqyHhoEhqgnKVkcmqMKi2r524gz3ZbDTcyFt38E9xjJI2vT+KbRNHVbnJ/e0I25Azwg==}
+    dev: false
 
   /rc-config-loader/4.1.1:
     resolution: {integrity: sha512-S10o85x/szboh7FOxUyU+KuED+gr9V7SEnUBOzSn+vd1K8J2MtkP1RCPWg8Sw5kkuZKr7976bFzacCM6QtAApQ==}

@@ -6,7 +6,7 @@ import ciDetect from "@npmcli/ci-detect"
 jest.setTimeout(300000)
 describe("setup-powershell", () => {
   it("should setup powershell", async () => {
-    if (process.platform === "win32" && ciDetect() == "github-actions") {
+    if (process.platform === "win32" && ciDetect() === "github-actions") {
       // results in errors
       return
     }
