@@ -13,6 +13,7 @@ import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../versions/versions"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { getLLVMPackageInfo } from "./llvm_url"
+import { ubuntuVersion } from "../utils/env/ubuntu_version"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
@@ -44,7 +45,8 @@ async function setupLLVMWithoutActivation(version: string, setupDir: string, arc
 async function setupLLVMDeps(arch: string) {
   if (process.platform === "linux") {
     // install llvm build dependencies
-    await setupGcc(getVersion("gcc", undefined), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
+    const osVersion = await ubuntuVersion()
+    await setupGcc(getVersion("gcc", undefined, osVersion), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
 
     if (isUbuntu()) {
       await setupAptPack("libtinfo-dev")
