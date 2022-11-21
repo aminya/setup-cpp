@@ -28,7 +28,7 @@ async function setupLLVMWithoutActivation(version: string, setupDir: string, arc
 
   let depsPromise: Promise<void>
   if (!installedDeps) {
-    depsPromise = setupLLVMDeps(arch)
+    depsPromise = setupLLVMDeps(arch, version)
     // eslint-disable-next-line require-atomic-updates
     installedDeps = true
   } else {
@@ -42,14 +42,19 @@ async function setupLLVMWithoutActivation(version: string, setupDir: string, arc
   return installationInfo
 }
 
-async function setupLLVMDeps(arch: string) {
+async function setupLLVMDeps(arch: string, version: string) {
   if (process.platform === "linux") {
     // install llvm build dependencies
     const osVersion = await ubuntuVersion()
     await setupGcc(getVersion("gcc", undefined, osVersion), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
 
     if (isUbuntu()) {
-      await setupAptPack("libtinfo-dev")
+      const majorVersion = parseInt(version.split(".")[0], 10)
+      if (majorVersion <= 10) {
+        await setupAptPack("libtinfo5")
+      } else {
+        await setupAptPack("libtinfo-dev")
+      }
     }
     // TODO: install libtinfo on other distros
     // setupPacmanPack("ncurses")
