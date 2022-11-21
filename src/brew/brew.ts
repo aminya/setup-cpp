@@ -1,11 +1,16 @@
-import { execFileSync } from "child_process"
+import execa from "execa"
 import { dirname } from "patha"
 import which from "which"
+import { tmpdir } from "os"
+import path, { join } from "path"
+import { mkdirP } from "@actions/io"
+import { readFileSync } from "fs"
+import { addPath } from "../utils/env/addEnv"
 
 let binDir: string | undefined
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupBrew(_version: string, _setupDir: string, _arch: string) {
+export async function setupBrew(_version: string, _setupDir: string, _arch: string) {
   if (!["darwin", "linux"].includes(process.platform)) {
     return undefined
   }
@@ -20,10 +25,37 @@ export function setupBrew(_version: string, _setupDir: string, _arch: string) {
   }
 
   // brew is not thread-safe
-  execFileSync(`/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"`, {
-    stdio: "inherit",
+  const brewTempDirectory = path.join(tmpdir(), "setup_cpp", "brew")
+  await mkdirP(brewTempDirectory)
+
+  execa.sync("curl", ["-LJO", "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"], {
+    cwd: brewTempDirectory,
   })
-  binDir = "/usr/local/bin/"
+  const installSh = join(brewTempDirectory, "install.sh")
+
+  if (process.platform === "linux") {
+    const installShContent = readFileSync(installSh, "utf-8")
+
+    installShContent.replace("#!/bin/bash", "")
+  }
+
+  execa.sync("/bin/bash", [installSh], {
+    stdio: "inherit",
+    env: {
+      NONINTERACTIVE: "1",
+    },
+  })
+
+  binDir = getBrewPath()
+  await addPath(binDir)
 
   return { binDir }
+}
+
+export function getBrewPath() {
+  if (process.platform === "linux") {
+    return "/home/linuxbrew/.linuxbrew/bin/"
+  } else {
+    return "/usr/local/bin/"
+  }
 }

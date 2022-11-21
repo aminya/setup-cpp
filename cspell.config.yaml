@@ -67,6 +67,7 @@ words:
   - pwsh
   - pygments
   - pypy
+  - Sccache
   - setupcpp
   - setx
   - Syuu

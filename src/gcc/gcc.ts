@@ -83,7 +83,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
       break
     }
     case "darwin": {
-      installationInfo = setupBrewPack("gcc", version)
+      installationInfo = await setupBrewPack("gcc", version)
       break
     }
     case "linux": {

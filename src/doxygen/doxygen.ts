@@ -54,7 +54,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       return installationInfo
     }
     case "darwin": {
-      const installationInfo = setupBrewPack("doxygen", undefined)
+      const installationInfo = await setupBrewPack("doxygen", undefined)
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)
       return installationInfo
     }

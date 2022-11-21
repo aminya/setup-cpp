@@ -6,6 +6,7 @@ import { error, warning } from "ci-log"
 import { execPowershell } from "exec-powershell"
 import { delimiter } from "path"
 import escapeSpace from "escape-path-with-spaces"
+import { giveUserAccess } from "user-access"
 
 /**
  * Add an environment variable.
@@ -124,6 +125,10 @@ export function setupCppInProfile() {
 
   appendFileSync(cpprc_path, `\n${source_cpprc_str}\n`)
   info(`Added ${source_cpprc_str} to ${cpprc_path}`)
+
+  giveUserAccess(cpprc_path)
+
+  // source cpprc in bashrc/profile
 
   const source_cpprc_string = `\n# source .cpprc if SOURCE_CPPRC is not set to 0\nif [[ "$SOURCE_CPPRC" != 0 && -f "${cpprc_path}" ]]; then source "${cpprc_path}"; fi\n`
 

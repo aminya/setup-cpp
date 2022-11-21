@@ -1,25 +1,36 @@
 /* eslint-disable require-atomic-updates */
 import { info } from "@actions/core"
 import execa from "execa"
+import { join } from "patha"
 import which from "which"
-import { setupBrew } from "../../brew/brew"
+import { getBrewPath, setupBrew } from "../../brew/brew"
 import { InstallationInfo } from "./setupBin"
 
 let hasBrew = false
 
 /** A function that installs a package using brew */
-export function setupBrewPack(name: string, version?: string, extraArgs: string[] = []): InstallationInfo {
+export async function setupBrewPack(
+  name: string,
+  version?: string,
+  extraArgs: string[] = []
+): Promise<InstallationInfo> {
   info(`Installing ${name} ${version ?? ""} via brew`)
 
   if (!hasBrew || which.sync("brew", { nothrow: true }) === null) {
-    setupBrew("", "", process.arch)
+    await setupBrew("", "", process.arch)
     hasBrew = true
   }
 
-  // brew is not thread-safe
-  execa.sync("brew", ["install", version !== undefined && version !== "" ? `${name}@${version}` : name, ...extraArgs], {
-    stdio: "inherit",
-  })
+  const binDir = getBrewPath()
 
-  return { binDir: "/usr/local/bin/" }
+  // brew is not thread-safe
+  execa.sync(
+    join(binDir, "brew"),
+    ["install", version !== undefined && version !== "" ? `${name}@${version}` : name, ...extraArgs],
+    {
+      stdio: "inherit",
+    }
+  )
+
+  return { binDir }
 }
