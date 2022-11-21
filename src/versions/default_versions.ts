@@ -22,6 +22,13 @@ export const DefaultVersions: Record<string, string> = {
 // - the newer ubuntu versions use the first entry (e.g. v20),
 // - the older ones use ""
 export const DefaultLinuxVersion: Record<string, Record<number, string>> = {
+  gcc: {
+    22: "12",
+    20: "11",
+    18: "11",
+    16: "11",
+    14: "11",
+  },
   llvm: {
     22: "13.0.0-ubuntu-20.04",
     20: "13.0.0-ubuntu-20.04",
