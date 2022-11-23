@@ -8,7 +8,7 @@ import { delimiter } from "path"
 import escapeSpace from "escape-path-with-spaces"
 import { giveUserAccess } from "user-access"
 import escapeQuote from "escape-quotes"
-import { pathExists } from "path-exists"
+import pathExists from "path-exists"
 
 /**
  * Add an environment variable.

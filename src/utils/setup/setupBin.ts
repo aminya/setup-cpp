@@ -11,7 +11,7 @@ import { isArch } from "../env/isArch"
 import { hasDnf } from "../env/hasDnf"
 import { setupDnfPack } from "./setupDnfPack"
 import { isUbuntu } from "../env/isUbuntu"
-import { pathExists } from "path-exists"
+import pathExists from "path-exists"
 
 /** A type that describes a package */
 export type PackageInfo = {

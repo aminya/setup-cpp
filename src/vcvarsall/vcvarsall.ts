@@ -3,7 +3,7 @@
 import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
 import { addEnv } from "../utils/env/addEnv"
 import { info } from "ci-log"
-import { pathExists } from "path-exists"
+import pathExists from "path-exists"
 
 function getArch(arch: string): string {
   switch (arch) {

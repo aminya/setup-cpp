@@ -5,7 +5,7 @@ import { info } from "@actions/core"
 import ciDetect from "@npmcli/ci-detect"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
 import which from "which"
-import { pathExists } from "path-exists"
+import pathExists from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
 

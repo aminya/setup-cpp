@@ -44,7 +44,7 @@ importers:
       npm-run-all2: ^6.0.4
       numerous: 1.0.3
       parcel: 2.8.0
-      path-exists: ^5.0.0
+      path-exists: ^4.0.0
       patha: ^0.4.1
       prettier: 2.7.1
       prettier-config-atomic: ^3.1.0
@@ -79,7 +79,7 @@ importers:
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
-      path-exists: 5.0.0
+      path-exists: 4.0.0
       patha: 0.4.1
       quote-unquote: 1.0.0
       semver: 7.3.8
@@ -7824,12 +7824,6 @@ packages:
   /path-exists/4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
     engines: {node: '>=8'}
-    dev: true
-
-  /path-exists/5.0.0:
-    resolution: {integrity: sha512-RjhtfwJOxzcFmNOi6ltcbcu4Iu+FL3zEj83dk4kAS+fVpTxXLO1b38RvJgT/0QwvV/L3aY9TAnyv0EOqW4GoMQ==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    dev: false
 
   /path-is-absolute/1.0.1:
     resolution: {integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==}

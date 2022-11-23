@@ -7,7 +7,7 @@ import { InstallationInfo } from "./setupBin"
 import { addExeExt, dirname, join } from "patha"
 import { addPath } from "../env/addEnv"
 import which from "which"
-import { pathExists } from "path-exists"
+import pathExists from "path-exists"
 
 let python: string | undefined
 let binDirs: string[] | undefined

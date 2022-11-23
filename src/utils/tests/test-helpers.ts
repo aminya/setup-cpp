@@ -4,7 +4,7 @@ import * as path from "patha"
 import { addExeExt, join } from "patha"
 import spawn from "cross-spawn"
 
-import { pathExists } from "path-exists"
+import pathExists from "path-exists"
 
 export async function setupTmpDir(testName: string) {
   const tempDirectory = path.join(tmpdir(), "setup cpp temp", testName)
