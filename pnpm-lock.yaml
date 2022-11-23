@@ -31,6 +31,7 @@ importers:
       cspell: ^6.14.3
       escape-path-with-spaces: github:aminya/escape-path-with-spaces#d9f81ee649203ddc55783a2f96ada59df06118e3
       escape-quotes: ^1.0.2
+      escape-string-regexp: ^5.0.0
       eslint: ^8.28.0
       eslint-config-atomic: ^1.18.1
       exec-powershell: workspace:1.0.0
@@ -44,6 +45,7 @@ importers:
       npm-run-all2: ^6.0.4
       numerous: 1.0.3
       parcel: 2.8.0
+      path-exists: ^4.0.0
       patha: ^0.4.1
       prettier: 2.7.1
       prettier-config-atomic: ^3.1.0
@@ -72,12 +74,14 @@ importers:
       ci-log: link:packages/ci-log
       escape-path-with-spaces: github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3
       escape-quotes: 1.0.2
+      escape-string-regexp: 5.0.0
       exec-powershell: link:packages/exec-powershell
       execa: 5.1.1
       is-url-online: 1.5.0
       mri: 1.2.0
       msvc-dev-cmd: github.com/aminya/msvc-dev-cmd/9f672c1
       numerous: 1.0.3
+      path-exists: 4.0.0
       patha: 0.4.1
       quote-unquote: 1.0.0
       semver: 7.3.8
@@ -7822,7 +7826,6 @@ packages:
   /path-exists/4.0.0:
     resolution: {integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==}
     engines: {node: '>=8'}
-    dev: true
 
   /path-is-absolute/1.0.1:
     resolution: {integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==}

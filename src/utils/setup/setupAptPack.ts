@@ -1,25 +1,32 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
-import { execRootSync } from "admina"
+import { execRoot, execRootSync } from "admina"
 import { info } from "@actions/core"
 import ciDetect from "@npmcli/ci-detect"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
-import { appendFileSync, existsSync } from "fs"
 import which from "which"
+import pathExists from "path-exists"
+import { promises as fsPromises } from "fs"
+const { appendFile } = fsPromises
+import execa from "execa"
+import escapeRegex from "escape-string-regexp"
 
 let didUpdate: boolean = false
 let didInit: boolean = false
 
+export type AptPackage = {
+  name: string
+  version?: string
+  repositories?: string[]
+}
+
 /** A function that installs a package using apt */
-export async function setupAptPack(
-  name: string,
-  version?: string,
-  repositories: string[] = [],
-  update = false
-): Promise<InstallationInfo> {
+export async function setupAptPack(packages: AptPackage[], update = false): Promise<InstallationInfo> {
   const apt: string = getApt()
 
-  info(`Installing ${name} ${version ?? ""} via ${apt}`)
+  for (const { name, version } of packages) {
+    info(`Installing ${name} ${version ?? ""} via ${apt}`)
+  }
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
@@ -33,25 +40,38 @@ export async function setupAptPack(
     didInit = true
   }
 
-  if (Array.isArray(repositories) && repositories.length !== 0) {
-    for (const repo of repositories) {
+  const allRepositories = [...new Set(packages.flatMap((pack) => pack.repositories ?? []))]
+
+  if (allRepositories.length !== 0) {
+    for (const repo of allRepositories) {
       // eslint-disable-next-line no-await-in-loop
-      execRootSync("add-apt-repository", ["--update", "-y", repo])
+      execRootSync("add-apt-repository", ["-y", repo])
     }
+
     updateRepos(apt)
   }
 
-  if (version !== undefined && version !== "") {
-    try {
-      execRootSync(apt, ["install", "--fix-broken", "-y", `${name}=${version}`])
-    } catch {
-      execRootSync(apt, ["install", "--fix-broken", "-y", `${name}-${version}`])
-    }
-  } else {
-    execRootSync(apt, ["install", "--fix-broken", "-y", name])
-  }
+  const aptArgs = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
+  execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
 
   return { binDir: "/usr/bin/" }
+}
+
+async function getAptArg(name: string, version: string | undefined) {
+  if (version !== undefined && version !== "") {
+    const { stdout } = await execa("apt-cache", [
+      "search",
+      "--names-only",
+      `^${escapeRegex(name)}\-${escapeRegex(version)}$`,
+    ])
+    if (stdout.trim() !== "") {
+      return `${name}-${version}`
+    } else {
+      return `${name}=${version}`
+    }
+  } else {
+    return name
+  }
 }
 
 function getApt() {
@@ -79,56 +99,61 @@ async function initApt(apt: string) {
     "ca-certificates",
     "gnupg",
   ])
-  addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg")
-  addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg")
+  const promises: Promise<any>[] = [
+    addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg"),
+    addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
+  ]
   if (apt === "nala") {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
-    await addEnv("LANG", "C.UTF-8")
-    await addEnv("LC_ALL", "C.UTF-8")
+    promises.push(addEnv("LANG", "C.UTF-8"), addEnv("LC_ALL", "C.UTF-8"))
   }
+  await Promise.all(promises)
 }
 
 function initGpg() {
   execRootSync("gpg", ["-k"])
 }
 
-export function addAptKeyViaServer(keys: string[], name: string, server = "keyserver.ubuntu.com") {
+export async function addAptKeyViaServer(keys: string[], name: string, server = "keyserver.ubuntu.com") {
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
-  if (!existsSync(fileName)) {
+  if (!(await pathExists(fileName))) {
     initGpg()
-    for (const key of keys) {
-      execRootSync("gpg", [
-        "--no-default-keyring",
-        "--keyring",
-        `gnupg-ring:${fileName}`,
-        "--keyserver",
-        server,
-        "--recv-keys",
-        key,
-      ])
-      execRootSync("chmod", ["644", fileName])
-    }
+
+    await Promise.all(
+      keys.map(async (key) => {
+        await execRoot("gpg", [
+          "--no-default-keyring",
+          "--keyring",
+          `gnupg-ring:${fileName}`,
+          "--keyserver",
+          server,
+          "--recv-keys",
+          key,
+        ])
+        await execRoot("chmod", ["644", fileName])
+      })
+    )
   }
   return fileName
 }
 
 export async function addAptKeyViaDownload(name: string, url: string) {
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
-  if (!existsSync(fileName)) {
+  if (!(await pathExists(fileName))) {
     initGpg()
-    await setupAptPack("curl", undefined)
+    await setupAptPack([{ name: "curl" }], undefined)
     execRootSync("bash", ["-c", `curl -s ${url} | gpg --no-default-keyring --keyring gnupg-ring:${fileName} --import`])
     execRootSync("chmod", ["644", fileName])
   }
   return fileName
 }
 
-export function updateAptAlternatives(name: string, path: string) {
+export async function updateAptAlternatives(name: string, path: string) {
   if (ciDetect() === "github-actions") {
-    return execRootSync("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
+    return execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
   } else {
-    setupCppInProfile()
-    return appendFileSync(
+    await setupCppInProfile()
+    return appendFile(
       cpprc_path,
       `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 40; fi\n`
     )

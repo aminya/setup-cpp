@@ -3,7 +3,8 @@ import { tmpdir } from "os"
 import * as path from "patha"
 import { addExeExt, join } from "patha"
 import spawn from "cross-spawn"
-import { existsSync } from "fs"
+
+import pathExists from "path-exists"
 
 export async function setupTmpDir(testName: string) {
   const tempDirectory = path.join(tmpdir(), "setup cpp temp", testName)
@@ -39,7 +40,7 @@ export async function testBin(
     console.log(`Testing the existence of ${binDir}`)
     expect(binDir).toBeDefined()
     expect(binDir).not.toHaveLength(0)
-    expect(existsSync(binDir)).toBeTruthy()
+    expect(await pathExists(binDir)).toBeTruthy()
     bin = join(binDir, addExeExt(name))
   }
 

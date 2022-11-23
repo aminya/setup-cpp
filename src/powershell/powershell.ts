@@ -33,7 +33,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
         ])
         return setupDnfPack("powershell", version)
       } else if (isUbuntu()) {
-        await setupAptPack("curl")
+        await setupAptPack([{ name: "curl" }])
         const ubuntuVerSplitted = (await ubuntuVersion())!
         const ubuntuVersionString = `${ubuntuVerSplitted[0]}.0${ubuntuVerSplitted[1]}`
 
@@ -53,7 +53,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
         //   `echo "deb [arch=amd64 signed-by=${keyFileName}] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list`,
         // ])
 
-        return setupAptPack("powershell", version, [], true)
+        return setupAptPack([{ name: "powershell", version }], true)
       }
       throw new Error(`Unsupported linux distribution`)
     }

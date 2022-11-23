@@ -8,7 +8,7 @@ export async function ubuntuVersion(): Promise<number[] | null> {
   try {
     if (isUbuntu()) {
       if (which.sync("lsb_release", { nothrow: true }) === null) {
-        await setupAptPack("lsb-release")
+        await setupAptPack([{ name: "lsb-release" }])
       }
       const versionSplitted = await getUbuntuVersion()
 

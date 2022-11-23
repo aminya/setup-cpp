@@ -33,12 +33,12 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
 
   try {
     if (version !== "legacy") {
-      await setupAptPack("nala", undefined, [], true)
+      await setupAptPack([{ name: "nala" }], true)
     } else {
-      await setupAptPack("nala-legacy", undefined, [], true)
+      await setupAptPack([{ name: "nala-legacy" }], true)
     }
   } catch (err) {
-    await setupAptPack("nala-legacy", undefined, [], true)
+    await setupAptPack([{ name: "nala-legacy" }], true)
   }
 
   binDir = "/usr/bin" // eslint-disable-line require-atomic-updates

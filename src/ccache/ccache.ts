@@ -22,7 +22,7 @@ export function setupCcache(version: string, _setupDir: string, _arch: string) {
       } else if (hasDnf()) {
         return setupDnfPack("ccache", version)
       } else if (isUbuntu()) {
-        return setupAptPack("ccache", version)
+        return setupAptPack([{ name: "ccache", version }])
       }
       throw new Error(`Unsupported linux distribution`)
     }

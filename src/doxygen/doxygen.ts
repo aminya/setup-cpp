@@ -9,11 +9,12 @@ import { extractTar, extractZip } from "../utils/setup/extract"
 import { notice } from "ci-log"
 import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../versions/versions"
-import { existsSync } from "fs"
+
 import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
+import pathExists from "path-exists"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -66,7 +67,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         } else if (hasDnf()) {
           return setupDnfPack("doxygen", version)
         } else if (isUbuntu()) {
-          installationInfo = await setupAptPack("doxygen", version)
+          installationInfo = await setupAptPack([{ name: "doxygen", version }])
         } else {
           throw new Error(`Unsupported linux distributions`)
         }
@@ -74,10 +75,10 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         try {
           // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
           installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-          await setupAptPack("libclang-cpp9")
+          await setupAptPack([{ name: "libclang-cpp9" }])
         } catch (err) {
           notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
-          installationInfo = await setupAptPack("doxygen", undefined)
+          installationInfo = await setupAptPack([{ name: "doxygen" }])
         }
       } else {
         throw new Error(`Unsupported linux distributions`)
@@ -99,7 +100,7 @@ async function activateWinDoxygen() {
         "C:/Program Files/doxygen/bin",
         "C:/Program Files (x86)/doxygen",
       ]) {
-        if (existsSync(join(binDir, "doxygen.exe"))) {
+        if (await pathExists(join(binDir, "doxygen.exe"))) {
           // eslint-disable-next-line no-await-in-loop
           await addPath(binDir)
           return binDir

@@ -5,8 +5,9 @@ import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 import { vsversion_to_versionnumber, findVcvarsall } from "msvc-dev-cmd/lib.js"
 import ciDetect from "@npmcli/ci-detect"
 import { join } from "patha"
-import { existsSync } from "fs"
+
 import { error, info, warning } from "ci-log"
+import pathExists from "path-exists"
 
 type MSVCVersion = "2022" | "17.0" | "2019" | "16.0" | "2017" | "15.0" | "2015" | "14.0" | "2013" | "12.0" | string
 
@@ -66,13 +67,13 @@ export async function setupMSVC(
   await setupVCVarsall(version, VCTargetsPath, arch, toolset, sdk, uwp, spectre)
 
   if (ciDetect() === "github-actions") {
-    addMSVCLoggingMatcher()
+    await addMSVCLoggingMatcher()
   }
 }
 
-function addMSVCLoggingMatcher() {
+async function addMSVCLoggingMatcher() {
   const matcherPath = join(__dirname, "msvc_matcher.json")
-  if (!existsSync(matcherPath)) {
+  if (!(await pathExists(matcherPath))) {
     return warning("the msvc_matcher.json file does not exist in the same folder as setup_cpp.js")
   }
   info(`::add-matcher::${matcherPath}`)

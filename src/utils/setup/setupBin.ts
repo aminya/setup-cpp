@@ -2,7 +2,7 @@ import { find, downloadTool, cacheDir } from "@actions/tool-cache"
 import { info } from "@actions/core"
 import { addPath } from "../env/addEnv"
 import { join } from "patha"
-import { existsSync } from "fs"
+
 import { tmpdir } from "os"
 import ciDetect from "@npmcli/ci-detect"
 import { setupAptPack } from "./setupAptPack"
@@ -11,6 +11,7 @@ import { isArch } from "../env/isArch"
 import { hasDnf } from "../env/hasDnf"
 import { setupDnfPack } from "./setupDnfPack"
 import { isUbuntu } from "../env/isUbuntu"
+import pathExists from "path-exists"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -70,7 +71,7 @@ export async function setupBin(
       if (dir) {
         const installDir = join(dir, extractedFolderName)
         const binDir = join(installDir, binRelativeDir)
-        if (existsSync(binDir) && existsSync(join(binDir, binFileName))) {
+        if (await pathExists(join(binDir, binFileName))) {
           info(`${name} ${version} was found in the cache at ${binDir}.`)
           await addPath(binDir)
 
@@ -87,7 +88,7 @@ export async function setupBin(
   const binFile = join(binDir, binFileName)
 
   // download ane extract the package into the installation directory.
-  if (!existsSync(binDir) || !existsSync(binFile)) {
+  if ((await Promise.all([pathExists(binDir), pathExists(binFile)])).includes(false)) {
     info(`Download and extract ${name} ${version}`)
 
     if (!didInit) {
@@ -102,9 +103,7 @@ export async function setupBin(
           setupDnfPack("tar")
           setupDnfPack("xz")
         } else if (isUbuntu()) {
-          await setupAptPack("unzip")
-          await setupAptPack("tar")
-          await setupAptPack("xz-utils")
+          await setupAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
         }
       }
       // eslint-disable-next-line require-atomic-updates

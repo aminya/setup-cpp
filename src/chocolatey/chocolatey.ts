@@ -1,6 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import execa from "execa"
-import { existsSync } from "fs"
+
+import pathExists from "path-exists"
 import { dirname } from "patha"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
@@ -63,7 +64,7 @@ export async function setupChocolatey(
     binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   }
 
-  if (existsSync(binDir)) {
+  if (await pathExists(binDir)) {
     return { binDir }
   }
   return undefined

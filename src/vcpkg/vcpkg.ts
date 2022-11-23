@@ -1,5 +1,5 @@
 import execa from "execa"
-import { existsSync } from "fs"
+
 import { dirname, join, addShExt, addShRelativePrefix } from "patha"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
@@ -12,6 +12,7 @@ import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { giveUserAccess } from "user-access"
+import pathExists from "path-exists"
 
 let hasVCPKG = false
 
@@ -35,16 +36,18 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
         setupDnfPack("git")
         setupDnfPack("pkg-config")
       } else if (isUbuntu()) {
-        await setupAptPack("curl")
-        await setupAptPack("zip")
-        await setupAptPack("unzip")
-        await setupAptPack("tar")
-        await setupAptPack("git")
-        await setupAptPack("pkg-config")
+        await setupAptPack([
+          { name: "curl" },
+          { name: "zip" },
+          { name: "unzip" },
+          { name: "tar" },
+          { name: "git" },
+          { name: "pkg-config" },
+        ])
       }
     }
 
-    if (!existsSync(join(setupDir, addShExt("bootstrap-vcpkg", ".bat")))) {
+    if (!(await pathExists(join(setupDir, addShExt("bootstrap-vcpkg", ".bat"))))) {
       execa.sync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
     } else {
       notice(`Vcpkg folder already exists at ${setupDir}. This might mean that ~/vcpkg is restored from the cache.`)
