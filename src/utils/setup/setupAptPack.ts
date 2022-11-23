@@ -9,6 +9,7 @@ import pathExists from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
 import execa from "execa"
+import escapeRegex from "escape-string-regexp"
 
 let didUpdate: boolean = false
 let didInit: boolean = false
@@ -58,7 +59,12 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
 async function getAptArg(name: string, version: string | undefined) {
   if (version !== undefined && version !== "") {
-    const { stdout } = await execa("apt-cache", ["search", "--names-only", `^${name}-${version}$`])
+    console.log(`^${escapeRegex(`${name}-${version}`)}$`)
+    const { stdout } = await execa("apt-cache", [
+      "search",
+      "--names-only",
+      `^${escapeRegex(name)}\-${escapeRegex(version)}$`,
+    ])
     if (stdout.trim() !== "") {
       return `${name}-${version}`
     } else {
