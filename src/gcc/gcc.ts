@@ -1,5 +1,5 @@
 import { addPath, addEnv } from "../utils/env/addEnv"
-import { existsSync } from "fs"
+
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
@@ -16,6 +16,7 @@ import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { pathExists } from "path-exists"
 
 interface MingwInfo {
   releaseName: string
@@ -133,13 +134,13 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
 async function setupChocoMingw(version: string, arch: string): Promise<InstallationInfo | undefined> {
   await setupChocoPack("mingw", version)
   let binDir: string | undefined
-  if (arch === "x64" && existsSync("C:/tools/mingw64/bin")) {
+  if (arch === "x64" && (await pathExists("C:/tools/mingw64/bin"))) {
     binDir = "C:/tools/mingw64/bin"
     await addPath(binDir)
-  } else if (arch === "ia32" && existsSync("C:/tools/mingw32/bin")) {
+  } else if (arch === "ia32" && (await pathExists("C:/tools/mingw32/bin"))) {
     binDir = "C:/tools/mingw32/bin"
     await addPath(binDir)
-  } else if (existsSync(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
+  } else if (await pathExists(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
     binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   }
   if (binDir !== undefined) {
@@ -171,19 +172,19 @@ async function activateGcc(version: string, binDir: string) {
       promises.push(addEnv("CC", `${binDir}/gcc-${majorVersion}`), addEnv("CXX", `${binDir}/g++-${majorVersion}`))
 
       if (isUbuntu()) {
-        updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
-        updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
-        updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`)
-        updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
+        await updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
+        await updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
+        await updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`)
+        await updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
       }
     } else {
       promises.push(addEnv("CC", `${binDir}/gcc-${version}`), addEnv("CXX", `${binDir}/g++-${version}`))
 
       if (isUbuntu()) {
-        updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
-        updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
-        updateAptAlternatives("gcc", `${binDir}/gcc-${version}`)
-        updateAptAlternatives("g++", `${binDir}/g++-${version}`)
+        await updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
+        await updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
+        await updateAptAlternatives("gcc", `${binDir}/gcc-${version}`)
+        await updateAptAlternatives("g++", `${binDir}/g++-${version}`)
       }
     }
   }
@@ -191,15 +192,15 @@ async function activateGcc(version: string, binDir: string) {
   promises.push(setupMacOSSDK())
 
   if (ciDetect() === "github-actions") {
-    addGccLoggingMatcher()
+    await addGccLoggingMatcher()
   }
 
   await Promise.all(promises)
 }
 
-function addGccLoggingMatcher() {
+async function addGccLoggingMatcher() {
   const matcherPath = join(__dirname, "gcc_matcher.json")
-  if (!existsSync(matcherPath)) {
+  if (!(await pathExists(matcherPath))) {
     return warning("the gcc_matcher.json file does not exist in the same folder as setup_cpp.js")
   }
   info(`::add-matcher::${matcherPath}`)

@@ -270,7 +270,7 @@ export async function main(args: string[]): Promise<number> {
     info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
   }
 
-  finalizeCpprc()
+  await finalizeCpprc()
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
     warning("setup_cpp was called without any arguments. Nothing to do.")

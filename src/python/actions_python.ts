@@ -1,12 +1,13 @@
 import { useCpythonVersion } from "setup-python/src/find-python"
 import { findPyPyVersion } from "setup-python/src/find-pypy"
-import { existsSync } from "fs"
+
 import { info, warning } from "ci-log"
 import { debug } from "@actions/core"
 import { join } from "patha"
 import ciDetect from "@npmcli/ci-detect"
 import { isCacheFeatureAvailable, IS_MAC } from "setup-python/src/utils"
 import { getCacheDistributor } from "setup-python/src/cache-distributions/cache-factory"
+import { pathExists } from "path-exists"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy")
@@ -51,15 +52,15 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
   }
 
   if (ciDetect() === "github-actions") {
-    addPythonLoggingMatcher()
+    await addPythonLoggingMatcher()
   }
 
   return undefined
 }
 
-function addPythonLoggingMatcher() {
+async function addPythonLoggingMatcher() {
   const matcherPath = join(__dirname, "python_matcher.json")
-  if (!existsSync(matcherPath)) {
+  if (!(await pathExists(matcherPath))) {
     return warning("the python_matcher.json file does not exist in the same folder as setup_cpp.js")
   }
   info(`::add-matcher::${matcherPath}`)

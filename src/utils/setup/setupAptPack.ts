@@ -79,8 +79,8 @@ async function initApt(apt: string) {
     "ca-certificates",
     "gnupg",
   ])
-  addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg")
-  addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg")
+  await addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg")
+  await addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg")
   if (apt === "nala") {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
     await addEnv("LANG", "C.UTF-8")
@@ -92,9 +92,9 @@ function initGpg() {
   execRootSync("gpg", ["-k"])
 }
 
-export function addAptKeyViaServer(keys: string[], name: string, server = "keyserver.ubuntu.com") {
+export async function addAptKeyViaServer(keys: string[], name: string, server = "keyserver.ubuntu.com") {
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
-  if (!existsSync(fileName)) {
+  if (!(await pathExists(fileName))) {
     initGpg()
     for (const key of keys) {
       execRootSync("gpg", [
@@ -114,7 +114,7 @@ export function addAptKeyViaServer(keys: string[], name: string, server = "keyse
 
 export async function addAptKeyViaDownload(name: string, url: string) {
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
-  if (!existsSync(fileName)) {
+  if (!(await pathExists(fileName))) {
     initGpg()
     await setupAptPack("curl", undefined)
     execRootSync("bash", ["-c", `curl -s ${url} | gpg --no-default-keyring --keyring gnupg-ring:${fileName} --import`])

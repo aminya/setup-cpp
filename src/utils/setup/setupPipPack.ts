@@ -3,10 +3,11 @@ import execa from "execa"
 import { info } from "@actions/core"
 import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"
 import { InstallationInfo } from "./setupBin"
-import { existsSync } from "fs"
+
 import { addExeExt, dirname, join } from "patha"
 import { addPath } from "../env/addEnv"
 import which from "which"
+import { pathExists } from "path-exists"
 
 let python: string | undefined
 let binDirs: string[] | undefined
@@ -27,15 +28,18 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     binDirs = await addPythonBaseExecPrefix(python)
   }
 
-  const binDir = findBinDir(binDirs, name)
+  const binDir = await findBinDir(binDirs, name)
 
   await addPath(binDir)
 
   return { binDir }
 }
 
-function findBinDir(dirs: string[], name: string) {
-  const foundDir = dirs.find((dir) => existsSync(join(dir, addExeExt(name))))
+async function findBinDir(dirs: string[], name: string) {
+  const exists = await Promise.all(dirs.map((dir) => pathExists(join(dir, addExeExt(name)))))
+  const dirIndex = exists.findIndex((exist) => exist)
+  const foundDir = dirs[dirIndex]
+
   if (foundDir !== undefined) {
     return foundDir
   }

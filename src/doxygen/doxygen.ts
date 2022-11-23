@@ -9,11 +9,12 @@ import { extractTar, extractZip } from "../utils/setup/extract"
 import { notice } from "ci-log"
 import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../versions/versions"
-import { existsSync } from "fs"
+
 import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
+import { pathExists } from "path-exists"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -99,7 +100,7 @@ async function activateWinDoxygen() {
         "C:/Program Files/doxygen/bin",
         "C:/Program Files (x86)/doxygen",
       ]) {
-        if (existsSync(join(binDir, "doxygen.exe"))) {
+        if (await pathExists(join(binDir, "doxygen.exe"))) {
           // eslint-disable-next-line no-await-in-loop
           await addPath(binDir)
           return binDir

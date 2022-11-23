@@ -7,13 +7,14 @@ import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addEnv } from "../utils/env/addEnv"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { info, warning } from "ci-log"
-import { existsSync } from "fs"
+
 import ciDetect from "@npmcli/ci-detect"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../versions/versions"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { getLLVMPackageInfo } from "./llvm_url"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
+import { pathExists } from "path-exists"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
@@ -94,41 +95,41 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   // windows builds fail with llvm's CPATH
   if (process.platform !== "win32") {
     const llvmMajor = semverMajor(version)
-    if (existsSync(`${directory}/lib/clang/${version}/include`)) {
+    if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
       promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
-    } else if (existsSync(`${directory}/lib/clang/${llvmMajor}/include`)) {
+    } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
       promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`))
     }
   }
 
   if (isUbuntu()) {
-    updateAptAlternatives("cc", `${directory}/bin/clang`)
-    updateAptAlternatives("cxx", `${directory}/bin/clang++`)
-    updateAptAlternatives("clang", `${directory}/bin/clang`)
-    updateAptAlternatives("clang++", `${directory}/bin/clang++`)
-    updateAptAlternatives("lld", `${directory}/bin/lld`)
-    updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`)
-    updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
+    await updateAptAlternatives("cc", `${directory}/bin/clang`)
+    await updateAptAlternatives("cxx", `${directory}/bin/clang++`)
+    await updateAptAlternatives("clang", `${directory}/bin/clang`)
+    await updateAptAlternatives("clang++", `${directory}/bin/clang++`)
+    await updateAptAlternatives("lld", `${directory}/bin/lld`)
+    await updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`)
+    await updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
   }
 
   if (ciDetect() === "github-actions") {
-    addLLVMLoggingMatcher()
+    await addLLVMLoggingMatcher()
   }
 
   await Promise.all(promises)
 }
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
-export function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export async function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   if (ciDetect() === "github-actions") {
-    addLLVMLoggingMatcher()
+    await addLLVMLoggingMatcher()
   }
   return setupLLVMWithoutActivation(version, setupDir, arch)
 }
 
-function addLLVMLoggingMatcher() {
+async function addLLVMLoggingMatcher() {
   const matcherPath = join(__dirname, "llvm_matcher.json")
-  if (!existsSync(matcherPath)) {
+  if (!(await pathExists(matcherPath))) {
     return warning("the llvm_matcher.json file does not exist in the same folder as setup_cpp.js")
   }
   info(`::add-matcher::${matcherPath}`)
