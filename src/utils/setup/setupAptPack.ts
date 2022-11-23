@@ -59,7 +59,6 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
 async function getAptArg(name: string, version: string | undefined) {
   if (version !== undefined && version !== "") {
-    console.log(`^${escapeRegex(`${name}-${version}`)}$`)
     const { stdout } = await execa("apt-cache", [
       "search",
       "--names-only",
@@ -100,13 +99,15 @@ async function initApt(apt: string) {
     "ca-certificates",
     "gnupg",
   ])
-  await addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg")
-  await addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg")
+  const promises: Promise<any>[] = [
+    addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg"),
+    addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
+  ]
   if (apt === "nala") {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
-    await addEnv("LANG", "C.UTF-8")
-    await addEnv("LC_ALL", "C.UTF-8")
+    promises.push(addEnv("LANG", "C.UTF-8"), addEnv("LC_ALL", "C.UTF-8"))
   }
+  await Promise.all(promises)
 }
 
 function initGpg() {
@@ -117,18 +118,21 @@ export async function addAptKeyViaServer(keys: string[], name: string, server = 
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
   if (!(await pathExists(fileName))) {
     initGpg()
-    for (const key of keys) {
-      execRootSync("gpg", [
-        "--no-default-keyring",
-        "--keyring",
-        `gnupg-ring:${fileName}`,
-        "--keyserver",
-        server,
-        "--recv-keys",
-        key,
-      ])
-      execRootSync("chmod", ["644", fileName])
-    }
+
+    await Promise.all(
+      keys.map(async (key) => {
+        await execRoot("gpg", [
+          "--no-default-keyring",
+          "--keyring",
+          `gnupg-ring:${fileName}`,
+          "--keyserver",
+          server,
+          "--recv-keys",
+          key,
+        ])
+        await execRoot("chmod", ["644", fileName])
+      })
+    )
   }
   return fileName
 }
