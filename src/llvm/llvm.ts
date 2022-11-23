@@ -70,7 +70,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  const promises = [
+  const promises: Promise<any>[] = [
     // the output of this action
     addEnv("LLVM_PATH", directory),
 
@@ -103,13 +103,15 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   }
 
   if (isUbuntu()) {
-    await updateAptAlternatives("cc", `${directory}/bin/clang`)
-    await updateAptAlternatives("cxx", `${directory}/bin/clang++`)
-    await updateAptAlternatives("clang", `${directory}/bin/clang`)
-    await updateAptAlternatives("clang++", `${directory}/bin/clang++`)
-    await updateAptAlternatives("lld", `${directory}/bin/lld`)
-    await updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`)
-    await updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
+    promises.push(
+      updateAptAlternatives("cc", `${directory}/bin/clang`),
+      updateAptAlternatives("cxx", `${directory}/bin/clang++`),
+      updateAptAlternatives("clang", `${directory}/bin/clang`),
+      updateAptAlternatives("clang++", `${directory}/bin/clang++`),
+      updateAptAlternatives("lld", `${directory}/bin/lld`),
+      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`),
+      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
+    )
   }
 
   if (ciDetect() === "github-actions") {

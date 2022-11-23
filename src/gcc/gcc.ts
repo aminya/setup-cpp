@@ -152,7 +152,7 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
 }
 
 async function activateGcc(version: string, binDir: string) {
-  const promises: Promise<void>[] = []
+  const promises: Promise<any>[] = []
   // Setup gcc as the compiler
 
   // TODO
@@ -174,19 +174,23 @@ async function activateGcc(version: string, binDir: string) {
       promises.push(addEnv("CC", `${binDir}/gcc-${majorVersion}`), addEnv("CXX", `${binDir}/g++-${majorVersion}`))
 
       if (isUbuntu()) {
-        await updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`)
-        await updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`)
-        await updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`)
-        await updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
+        promises.push(
+          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`),
+          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`),
+          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
+        )
       }
     } else {
       promises.push(addEnv("CC", `${binDir}/gcc-${version}`), addEnv("CXX", `${binDir}/g++-${version}`))
 
       if (isUbuntu()) {
-        await updateAptAlternatives("cc", `${binDir}/gcc-${version}`)
-        await updateAptAlternatives("cxx", `${binDir}/g++-${version}`)
-        await updateAptAlternatives("gcc", `${binDir}/gcc-${version}`)
-        await updateAptAlternatives("g++", `${binDir}/g++-${version}`)
+        promises.push(
+          updateAptAlternatives("cc", `${binDir}/gcc-${version}`),
+          updateAptAlternatives("cxx", `${binDir}/g++-${version}`),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`),
+          updateAptAlternatives("g++", `${binDir}/g++-${version}`)
+        )
       }
     }
   }

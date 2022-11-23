@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
-import { execRootSync } from "admina"
+import { execRoot, execRootSync } from "admina"
 import { info } from "@actions/core"
 import ciDetect from "@npmcli/ci-detect"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
@@ -146,7 +146,7 @@ export async function addAptKeyViaDownload(name: string, url: string) {
 
 export async function updateAptAlternatives(name: string, path: string) {
   if (ciDetect() === "github-actions") {
-    return execRootSync("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
+    return execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
   } else {
     await setupCppInProfile()
     return appendFile(
