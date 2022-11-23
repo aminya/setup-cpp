@@ -25,7 +25,7 @@ export async function setupGraphviz(version: string, _setupDir: string, _arch: s
       } else if (hasDnf()) {
         return setupDnfPack("graphviz", version)
       } else if (isUbuntu()) {
-        return setupAptPack("graphviz", version)
+        return setupAptPack([{ name: "graphviz", version }])
       }
       throw new Error(`Unsupported linux distribution`)
     }

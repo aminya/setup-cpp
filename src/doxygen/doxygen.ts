@@ -67,7 +67,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         } else if (hasDnf()) {
           return setupDnfPack("doxygen", version)
         } else if (isUbuntu()) {
-          installationInfo = await setupAptPack("doxygen", version)
+          installationInfo = await setupAptPack([{ name: "doxygen", version }])
         } else {
           throw new Error(`Unsupported linux distributions`)
         }
@@ -75,10 +75,10 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         try {
           // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
           installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-          await setupAptPack("libclang-cpp9")
+          await setupAptPack([{ name: "libclang-cpp9" }])
         } catch (err) {
           notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
-          installationInfo = await setupAptPack("doxygen", undefined)
+          installationInfo = await setupAptPack([{ name: "doxygen" }])
         }
       } else {
         throw new Error(`Unsupported linux distributions`)

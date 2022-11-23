@@ -52,9 +52,9 @@ async function setupLLVMDeps(arch: string, version: string) {
     if (isUbuntu()) {
       const majorVersion = parseInt(version.split(".")[0], 10)
       if (majorVersion <= 10) {
-        await setupAptPack("libtinfo5")
+        await setupAptPack([{ name: "libtinfo5" }])
       } else {
-        await setupAptPack("libtinfo-dev")
+        await setupAptPack([{ name: "libtinfo-dev" }])
       }
     }
     // TODO: install libtinfo on other distros

@@ -25,7 +25,7 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
       } else if (hasDnf()) {
         return setupDnfPack("ccache", version)
       } else if (isUbuntu()) {
-        return setupAptPack("cppcheck", version)
+        return setupAptPack([{ name: "cppcheck", version }])
       }
       throw new Error(`Unsupported linux distribution`)
     }

@@ -96,15 +96,17 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
           setupDnfPack("gcc-c++", version)
           setupDnfPack("libstdc++-devel", undefined)
         } else if (isUbuntu()) {
-          await setupAptPack("gcc", version, ["ppa:ubuntu-toolchain-r/test"])
-          installationInfo = await setupAptPack("g++", version, [])
+          installationInfo = await setupAptPack([
+            { name: "gcc", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
+            { name: "g++", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
+          ])
         }
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         if (isArch()) {
           setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
-          await setupAptPack("gcc-multilib", version, ["ppa:ubuntu-toolchain-r/test"])
+          await setupAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
         }
       }
       break

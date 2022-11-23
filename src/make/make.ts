@@ -25,7 +25,7 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
       } else if (hasDnf()) {
         return setupDnfPack("make", version)
       } else if (isUbuntu()) {
-        return setupAptPack("make", version)
+        return setupAptPack([{ name: "make", version }])
       }
       throw new Error(`Unsupported linux distribution`)
     }

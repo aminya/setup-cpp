@@ -36,7 +36,7 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
           "-c",
           `echo "deb [arch=amd64 signed-by=${keyFileName}] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list`,
         ])
-        return setupAptPack("bazel", version, [], true)
+        return setupAptPack([{ name: "bazel", version }], true)
       }
       throw new Error(`Unsupported linux distribution`)
     }

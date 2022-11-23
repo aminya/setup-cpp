@@ -8,20 +8,24 @@ import which from "which"
 import pathExists from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
+import execa from "execa"
 
 let didUpdate: boolean = false
 let didInit: boolean = false
 
+export type AptPackage = {
+  name: string
+  version?: string
+  repositories?: string[]
+}
+
 /** A function that installs a package using apt */
-export async function setupAptPack(
-  name: string,
-  version?: string,
-  repositories: string[] = [],
-  update = false
-): Promise<InstallationInfo> {
+export async function setupAptPack(packages: AptPackage[], update = false): Promise<InstallationInfo> {
   const apt: string = getApt()
 
-  info(`Installing ${name} ${version ?? ""} via ${apt}`)
+  for (const { name, version } of packages) {
+    info(`Installing ${name} ${version ?? ""} via ${apt}`)
+  }
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
@@ -35,25 +39,34 @@ export async function setupAptPack(
     didInit = true
   }
 
-  if (Array.isArray(repositories) && repositories.length !== 0) {
-    for (const repo of repositories) {
+  const allRepositories = [...new Set(packages.flatMap((pack) => pack.repositories ?? []))]
+
+  if (allRepositories.length !== 0) {
+    for (const repo of allRepositories) {
       // eslint-disable-next-line no-await-in-loop
-      execRootSync("add-apt-repository", ["--update", "-y", repo])
+      execRootSync("add-apt-repository", ["-y", repo])
     }
+
     updateRepos(apt)
   }
 
-  if (version !== undefined && version !== "") {
-    try {
-      execRootSync(apt, ["install", "--fix-broken", "-y", `${name}=${version}`])
-    } catch {
-      execRootSync(apt, ["install", "--fix-broken", "-y", `${name}-${version}`])
-    }
-  } else {
-    execRootSync(apt, ["install", "--fix-broken", "-y", name])
-  }
+  const aptArgs = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
+  execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
 
   return { binDir: "/usr/bin/" }
+}
+
+async function getAptArg(name: string, version: string | undefined) {
+  if (version !== undefined && version !== "") {
+    const { stdout } = await execa("apt-cache", ["search", "--names-only", `^${name}-${version}$`])
+    if (stdout.trim() !== "") {
+      return `${name}-${version}`
+    } else {
+      return `${name}=${version}`
+    }
+  } else {
+    return name
+  }
 }
 
 function getApt() {
@@ -118,7 +131,7 @@ export async function addAptKeyViaDownload(name: string, url: string) {
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
   if (!(await pathExists(fileName))) {
     initGpg()
-    await setupAptPack("curl", undefined)
+    await setupAptPack([{ name: "curl" }], undefined)
     execRootSync("bash", ["-c", `curl -s ${url} | gpg --no-default-keyring --keyring gnupg-ring:${fileName} --import`])
     execRootSync("chmod", ["644", fileName])
   }

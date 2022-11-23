@@ -103,9 +103,7 @@ export async function setupBin(
           setupDnfPack("tar")
           setupDnfPack("xz")
         } else if (isUbuntu()) {
-          await setupAptPack("unzip")
-          await setupAptPack("tar")
-          await setupAptPack("xz-utils")
+          await setupAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
         }
       }
       // eslint-disable-next-line require-atomic-updates

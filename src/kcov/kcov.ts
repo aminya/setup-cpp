@@ -50,8 +50,7 @@ async function buildKcov(file: string, dest: string) {
       setupDnfPack("libdwarf-devel")
       setupDnfPack("libcurl-devel")
     } else if (isUbuntu()) {
-      await setupAptPack("libdw-dev")
-      await setupAptPack("libcurl4-openssl-dev")
+      await setupAptPack([{ name: "libdw-dev" }, { name: "libcurl4-openssl-dev" }])
     }
   }
   const buildDir = join(out, "build")
@@ -102,7 +101,7 @@ export async function setupKcov(versionGiven: string, setupDir: string, arch: st
     } else if (hasDnf()) {
       setupDnfPack("binutils")
     } else if (isUbuntu()) {
-      await setupAptPack("libbinutils")
+      await setupAptPack([{ name: "libbinutils" }])
     }
     return installationInfo
   } else {
