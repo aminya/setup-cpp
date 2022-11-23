@@ -4,8 +4,10 @@ import { execRootSync } from "admina"
 import { info } from "@actions/core"
 import ciDetect from "@npmcli/ci-detect"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
-import { appendFileSync, existsSync } from "fs"
 import which from "which"
+import { pathExists } from "path-exists"
+import { promises as fsPromises } from "fs"
+const { appendFile } = fsPromises
 
 let didUpdate: boolean = false
 let didInit: boolean = false
@@ -123,12 +125,12 @@ export async function addAptKeyViaDownload(name: string, url: string) {
   return fileName
 }
 
-export function updateAptAlternatives(name: string, path: string) {
+export async function updateAptAlternatives(name: string, path: string) {
   if (ciDetect() === "github-actions") {
     return execRootSync("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
   } else {
-    setupCppInProfile()
-    return appendFileSync(
+    await setupCppInProfile()
+    return appendFile(
       cpprc_path,
       `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 40; fi\n`
     )
