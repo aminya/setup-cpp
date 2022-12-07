@@ -1,7 +1,7 @@
 import { find, downloadTool, cacheDir } from "@actions/tool-cache"
-import { info } from "@actions/core"
 import { addPath } from "../env/addEnv"
 import { join } from "patha"
+import { info } from "ci-log"
 
 import { tmpdir } from "os"
 import ciDetect from "@npmcli/ci-detect"
@@ -89,29 +89,30 @@ export async function setupBin(
 
   // download ane extract the package into the installation directory.
   if ((await Promise.all([pathExists(binDir), pathExists(binFile)])).includes(false)) {
-    info(`Download and extract ${name} ${version}`)
-
-    if (!didInit) {
-      if (process.platform === "linux") {
-        // extraction dependencies
-        if (isArch()) {
-          setupPacmanPack("unzip")
-          setupPacmanPack("tar")
-          setupPacmanPack("xz")
-        } else if (hasDnf()) {
-          setupDnfPack("unzip")
-          setupDnfPack("tar")
-          setupDnfPack("xz")
-        } else if (isUbuntu()) {
-          await setupAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
-        }
-      }
-      // eslint-disable-next-line require-atomic-updates
-      didInit = true
-    }
-
     try {
+      info(`Download ${name} ${version}`)
       const downloaded = await downloadTool(url)
+
+      if (!didInit) {
+        info(`Installing extraction dependencies`)
+        if (process.platform === "linux") {
+          if (isArch()) {
+            setupPacmanPack("unzip")
+            setupPacmanPack("tar")
+            setupPacmanPack("xz")
+          } else if (hasDnf()) {
+            setupDnfPack("unzip")
+            setupDnfPack("tar")
+            setupDnfPack("xz")
+          } else if (isUbuntu()) {
+            await setupAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
+          }
+        }
+        // eslint-disable-next-line require-atomic-updates
+        didInit = true
+      }
+
+      info(`Extracting ${downloaded} to ${setupDir}`)
       await extractFunction?.(downloaded, setupDir)
       // if (typeof extractedBinDir === "string") {
       //   binDir = extractedBinDir
