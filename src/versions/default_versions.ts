@@ -3,10 +3,22 @@ import { isArch } from "../utils/env/isArch"
 // passing "" to a tool installed by a package manager (apt, brew, choco) will result in the default version of that package manager.
 // the directly downloaded tools require a given version ("" doesn't work).
 
+function getLLVMDefault() {
+  switch (process.platform) {
+    case "linux":
+      // used for non-ubuntu (Fedora, Arch)
+      return "15.0.6-ubuntu-18.04"
+    case "darwin":
+      return "15.0.3"
+    default:
+      return "15.0.4"
+  }
+}
+
 export const DefaultVersions: Record<string, string> = {
-  llvm: process.platform === "darwin" ? "15.0.3" : "15.0.4", // https://github.com/llvm/llvm-project/releases
-  clangtidy: process.platform === "darwin" ? "15.0.3" : "15.0.4",
-  clangformat: process.platform === "darwin" ? "15.0.3" : "15.0.4",
+  llvm: getLLVMDefault(), // https://github.com/llvm/llvm-project/releases
+  clangtidy: getLLVMDefault(),
+  clangformat: getLLVMDefault(),
   ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
   cmake: "3.25.0", // https://github.com/Kitware/CMake/releases
   gcovr: "5.2", // https://pypi.org/project/gcovr/
