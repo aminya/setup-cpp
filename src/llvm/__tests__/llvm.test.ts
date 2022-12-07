@@ -124,26 +124,6 @@ describe("setup-llvm", () => {
     await testBin("clang-format", ["--version"], binDir)
   })
 
-  it("should setup LLVM 15.0.2", async () => {
-    await io.rmRF(directory)
-    await io.rmRF("/Users/runner/hostedtoolcache/llvm")
-
-    const { binDir } = await setupLLVM("15.0.2", directory, process.arch)
-    await testBin("clang++", ["--version"], binDir)
-
-    expect(process.env.CC?.includes("clang")).toBeTruthy()
-    expect(process.env.CXX?.includes("clang++")).toBeTruthy()
-
-    // test compilation
-    const file = path.join(__dirname, "main.cpp")
-    const main_exe = path.join(__dirname, addExeExt("main"))
-    execa.sync("clang++", [file, "-o", main_exe], { cwd: __dirname })
-    if (process.platform !== "win32") {
-      chmodSync(main_exe, "755")
-    }
-    execa.sync(main_exe, { cwd: __dirname, stdio: "inherit" })
-  })
-
   afterAll(async () => {
     await io.rmRF(directory)
   }, 100000)

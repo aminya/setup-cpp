@@ -4,9 +4,9 @@ import { isArch } from "../utils/env/isArch"
 // the directly downloaded tools require a given version ("" doesn't work).
 
 export const DefaultVersions: Record<string, string> = {
-  llvm: "13.0.0", // https://github.com/llvm/llvm-project/releases
-  clangtidy: "13.0.0",
-  clangformat: "13.0.0",
+  llvm: "15.0.4", // https://github.com/llvm/llvm-project/releases
+  clangtidy: "15.0.4",
+  clangformat: "15.0.4",
   ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
   cmake: "3.25.0", // https://github.com/Kitware/CMake/releases
   gcovr: "5.2", // https://pypi.org/project/gcovr/
@@ -30,24 +30,24 @@ export const DefaultLinuxVersion: Record<string, Record<number, string>> = {
     14: "11",
   },
   llvm: {
-    22: "13.0.0-ubuntu-20.04",
-    20: "13.0.0-ubuntu-20.04",
-    18: "13.0.1-ubuntu-18.04",
-    16: "13.0.0-ubuntu-16.04",
+    22: "15.0.6-ubuntu-18.0.4",
+    20: "15.0.6-ubuntu-18.0.4",
+    18: "15.0.6-ubuntu-18.0.4",
+    16: "15.0.6-ubuntu-18.0.4",
     14: "13.0.0-ubuntu-16.04",
   },
   clangtidy: {
-    22: "13.0.0-ubuntu-20.04",
-    20: "13.0.0-ubuntu-20.04",
-    18: "13.0.1-ubuntu-18.04",
-    16: "13.0.0-ubuntu-16.04",
+    22: "15.0.6-ubuntu-18.0.4",
+    20: "15.0.6-ubuntu-18.0.4",
+    18: "15.0.6-ubuntu-18.0.4",
+    16: "15.0.6-ubuntu-18.0.4",
     14: "13.0.0-ubuntu-16.04",
   },
   clangformat: {
-    22: "13.0.0-ubuntu-20.04",
-    20: "13.0.0-ubuntu-20.04",
-    18: "13.0.1-ubuntu-18.04",
-    16: "13.0.0-ubuntu-16.04",
+    22: "15.0.6-ubuntu-18.0.4",
+    20: "15.0.6-ubuntu-18.0.4",
+    18: "15.0.6-ubuntu-18.0.4",
+    16: "15.0.6-ubuntu-18.0.4",
     14: "13.0.0-ubuntu-16.04",
   },
   gcovr: {
