@@ -59,13 +59,15 @@ export const VERSIONS: Set<string> = getVersions([
   "15.0.2",
   "15.0.3",
   "15.0.4",
-  // missing binaries for Windows
-  // "15.0.5",
-  // "15.0.6",
+  "15.0.5",
+  "15.0.6",
 ])
 
+/** The LLVM versions that were never released for the Windows platform. */
+const WIN32_MISSING: Set<string> = new Set(["10.0.1", "15.0.5", "15.0.6"])
+
 /** The LLVM versions that were never released for the Darwin platform. */
-const DARWIN_MISSING: Set<string> = new Set([
+const DARWIN_MISSING = new Set([
   "3.5.1",
   "3.6.1",
   "3.6.2",
@@ -79,6 +81,9 @@ const DARWIN_MISSING: Set<string> = new Set([
   "11.0.1",
   "11.1.0",
   "12.0.1",
+  "15.0.4",
+  "15.0.5",
+  "15.0.6",
 ])
 
 /**
@@ -216,9 +221,6 @@ export function getLinuxUrl(versionGiven: string): string {
     return getGitHubUrl(version, prefix, suffix)
   }
 }
-
-/** The LLVM versions that were never released for the Windows platform. */
-const WIN32_MISSING: Set<string> = new Set(["10.0.1"])
 
 /** Gets an LLVM download URL for the Windows platform. */
 async function getWin32Url(version: string): Promise<string | null> {

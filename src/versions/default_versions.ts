@@ -4,9 +4,9 @@ import { isArch } from "../utils/env/isArch"
 // the directly downloaded tools require a given version ("" doesn't work).
 
 export const DefaultVersions: Record<string, string> = {
-  llvm: "15.0.4", // https://github.com/llvm/llvm-project/releases
-  clangtidy: "15.0.4",
-  clangformat: "15.0.4",
+  llvm: process.platform === "darwin" ? "15.0.3" : "15.0.4", // https://github.com/llvm/llvm-project/releases
+  clangtidy: process.platform === "darwin" ? "15.0.3" : "15.0.4",
+  clangformat: process.platform === "darwin" ? "15.0.3" : "15.0.4",
   ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
   cmake: "3.25.0", // https://github.com/Kitware/CMake/releases
   gcovr: "5.2", // https://pypi.org/project/gcovr/
