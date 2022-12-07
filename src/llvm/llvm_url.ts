@@ -57,6 +57,11 @@ export const VERSIONS: Set<string> = getVersions([
   "15.0.0",
   "15.0.1",
   "15.0.2",
+  "15.0.3",
+  "15.0.4",
+  // missing binaries for Windows
+  // "15.0.5",
+  // "15.0.6",
 ])
 
 /** The LLVM versions that were never released for the Darwin platform. */
@@ -129,10 +134,12 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
   "14.0.0": "-ubuntu-18.04",
   // "14.0.1": "-ubuntu-18.04",  // only available for powerpc64le
   "15.0.2": "-rhel86",
+  "15.0.5": "-ubuntu-18.04",
+  "15.0.6": "-ubuntu-18.04",
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
-const MAX_UBUNTU: string = "15.0.2"
+const MAX_UBUNTU: string = "15.0.6"
 
 //================================================
 // URL
