@@ -12,6 +12,7 @@ import { hasDnf } from "../env/hasDnf"
 import { setupDnfPack } from "./setupDnfPack"
 import { isUbuntu } from "../env/isUbuntu"
 import pathExists from "path-exists"
+import retry from "retry-as-promised"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -91,7 +92,13 @@ export async function setupBin(
   if ((await Promise.all([pathExists(binDir), pathExists(binFile)])).includes(false)) {
     try {
       info(`Download ${name} ${version}`)
-      const downloaded = await downloadTool(url)
+      // try to download the package 4 times with 2 seconds delay
+      const downloaded = await retry(
+        () => {
+          return downloadTool(url)
+        },
+        { max: 4, backoffBase: 2000, report: (err) => info(err) }
+      )
 
       if (!didInit) {
         info(`Installing extraction dependencies`)

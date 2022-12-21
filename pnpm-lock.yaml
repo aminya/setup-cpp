@@ -32,7 +32,7 @@ importers:
       escape-path-with-spaces: github:aminya/escape-path-with-spaces#d9f81ee649203ddc55783a2f96ada59df06118e3
       escape-quotes: ^1.0.2
       escape-string-regexp: ^5.0.0
-      eslint: ^8.29.0
+      eslint: ^8.28.0
       eslint-config-atomic: ^1.18.1
       exec-powershell: workspace:1.0.0
       execa: ^5.1.1
@@ -51,6 +51,7 @@ importers:
       prettier-config-atomic: ^3.1.0
       quote-unquote: ^1.0.0
       readme-md-generator: ^1.0.0
+      retry-as-promised: ^7.0.3
       semver: 7.3.8
       setup-python: github:actions/setup-python#v4.3.1
       shx: 0.3.4
@@ -84,6 +85,7 @@ importers:
       path-exists: 4.0.0
       patha: 0.4.1
       quote-unquote: 1.0.0
+      retry-as-promised: 7.0.3
       semver: 7.3.8
       setup-python: github.com/actions/setup-python/2c3dd9e7e29afd70cc0950079bde6c979d1f69f9
       time-delta: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
@@ -8478,6 +8480,10 @@ packages:
       onetime: 5.1.2
       signal-exit: 3.0.7
     dev: true
+
+  /retry-as-promised/7.0.3:
+    resolution: {integrity: sha512-SEvMa4khHvpU/o6zgh7sK24qm6rxVgKnrSyzb5POeDvZx5N9Bf0s5sQsQ4Fl+HjRp0X+w2UzACGfUnXtx6cJ9Q==}
+    dev: false
 
   /retry/0.12.0:
     resolution: {integrity: sha512-9LkiTwjUh6rT555DtE9rTX+BKByPfrMzEAtnlEtdEwr3Nkffwiihqe2bWADg+OQRjt9gl6ICdmB/ZFDCGAtSow==}
