@@ -97,7 +97,7 @@ export async function setupBin(
         () => {
           return downloadTool(url)
         },
-        { max: 4, backoffBase: 2000, report: (err) => info(err) }
+        { name: url, max: 4, backoffBase: 2000, report: (err) => info(err) }
       )
 
       if (!didInit) {

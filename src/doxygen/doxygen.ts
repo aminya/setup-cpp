@@ -54,7 +54,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         () => {
           return setupChocoPack("doxygen.install", version)
         },
-        { max: 4, backoffBase: 2000, report: (err) => info(err) }
+        { name: "doxygen.install", max: 4, backoffBase: 2000, report: (err) => info(err) }
       )
       const binDir = await activateWinDoxygen()
       const installationInfo = { binDir }
