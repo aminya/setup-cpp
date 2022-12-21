@@ -69,6 +69,7 @@
     "path-exists": "^4.0.0",
     "patha": "^0.4.1",
     "quote-unquote": "^1.0.0",
+    "retry-as-promised": "^7.0.3",
     "semver": "7.3.8",
     "setup-python": "github:actions/setup-python#v4.3.1",
     "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",

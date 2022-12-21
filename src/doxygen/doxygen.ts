@@ -6,7 +6,7 @@ import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { addExeExt, join } from "patha"
 import { extractTar, extractZip } from "../utils/setup/extract"
-import { notice } from "ci-log"
+import { info, notice } from "ci-log"
 import { setupGraphviz } from "../graphviz/graphviz"
 import { getVersion } from "../versions/versions"
 
@@ -15,6 +15,7 @@ import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import pathExists from "path-exists"
+import retry from "retry-as-promised"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -48,7 +49,13 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
 export async function setupDoxygen(version: string, setupDir: string, arch: string) {
   switch (process.platform) {
     case "win32": {
-      await setupChocoPack("doxygen.install", version)
+      // try to download the package 4 times with 2 seconds delay
+      await retry(
+        () => {
+          return setupChocoPack("doxygen.install", version)
+        },
+        { max: 4, backoffBase: 2000, report: (err) => info(err) }
+      )
       const binDir = await activateWinDoxygen()
       const installationInfo = { binDir }
       await setupGraphviz(getVersion("graphviz", undefined), "", arch)
@@ -100,6 +107,7 @@ async function activateWinDoxygen() {
         "C:/Program Files/doxygen/bin",
         "C:/Program Files (x86)/doxygen",
       ]) {
+        // eslint-disable-next-line no-await-in-loop
         if (await pathExists(join(binDir, "doxygen.exe"))) {
           // eslint-disable-next-line no-await-in-loop
           await addPath(binDir)
