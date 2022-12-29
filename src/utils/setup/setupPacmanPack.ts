@@ -18,7 +18,7 @@ export function setupPacmanPack(name: string, version?: string, aur?: string): I
     didUpdate = true
   }
 
-  if (!didInit) {
+  if (!didInit && aur != "yay") {
     // install base-devel
     execRootSync(pacman, ["-S", "--noconfirm", "base-devel"])
     didInit = true

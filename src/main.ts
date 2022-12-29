@@ -32,7 +32,7 @@ import { ubuntuVersion } from "./utils/env/ubuntu_version"
 
 import semverValid from "semver/functions/valid"
 import { getVersion, syncVersions } from "./versions/versions"
-import { setupGcc } from "./gcc/gcc"
+import { setupGcc, setupMingw } from "./gcc/gcc"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { error, info, success, warning } from "ci-log"
 import { setupVcpkg } from "./vcpkg/vcpkg"
@@ -63,6 +63,7 @@ const setups = {
   opencppcoverage: setupOpencppcoverage,
   llvm: setupLLVM,
   gcc: setupGcc,
+  mingw: setupMingw,
   choco: setupChocolatey,
   brew: setupBrew,
   powershell: setupPowershell,
@@ -210,7 +211,6 @@ export async function main(args: string[]): Promise<number> {
           break
         }
         case "gcc":
-        case "mingw":
         case "cygwin":
         case "msys": {
           const gccVersion = getVersion("gcc", version, osVersion)
@@ -224,6 +224,12 @@ export async function main(args: string[]): Promise<number> {
           await activateGcovGCC(gccVersion)
 
           successMessages.push(getSuccessMessage("gcc", installationInfo))
+          break
+        }
+        case "mingw": {
+          const mingwVersion = getVersion("mingw", version, osVersion)
+          const installationInfo = await setupMingw(mingwVersion, join(setupCppDir, "gcc"), arch)
+          successMessages.push(getSuccessMessage("mingw", installationInfo))
           break
         }
         case "cl":

@@ -133,6 +133,52 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
   return undefined
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function setupMingw(version: string, setupDir: string, arch: string) {
+  let installationInfo: InstallationInfo | undefined
+  switch (process.platform) {
+    case "win32": {
+      if (arch === "arm" || arch === "arm64") {
+        await setupChocoPack("gcc-arm-embedded", version)
+      }
+      try {
+        installationInfo = await setupBin("g++", version, getGccPackageInfo, setupDir, arch)
+      } catch (err) {
+        info(`Failed to download g++ binary. ${err}. Falling back to chocolatey.`)
+        installationInfo = await setupChocoMingw(version, arch)
+      }
+      break
+    }
+    case "linux": {
+      if (arch === "x64" || arch === "x32") {
+        if (isArch()) {
+          return setupPacmanPack("mingw-w64", version, "yay")
+        } else if (hasDnf()) {
+          return setupDnfPack("mingw64-gcc", version)
+        } else if (isUbuntu()) {
+          installationInfo = await setupAptPack([
+            { name: "mingw-w64", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
+          ])
+        }
+      }
+      break
+    }
+    default: {
+      throw new Error(`Unsupported platform for ${arch}`)
+    }
+  }
+  if (installationInfo !== undefined) {
+    // TODO: setup alternatives and update CC/CXX env. ?
+    //Setting up g++-mingw-w64-i686-win32 (10.3.0-14ubuntu1+24.3) ...
+    // update-alternatives: using /usr/bin/i686-w64-mingw32-g++-win32 to provide /usr/bin/i686-w64-mingw32-g++ (i686-w64-mingw32-g++) in auto mode
+    //Setting up g++-mingw-w64-x86-64-win32 (10.3.0-14ubuntu1+24.3) ...
+    // update-alternatives: using /usr/bin/x86_64-w64-mingw32-g++-win32 to provide /usr/bin/x86_64-w64-mingw32-g++ (x86_64-w64-mingw32-g++) in auto mode
+    //await activateGcc(version, installationInfo.binDir)
+    return installationInfo
+  }
+  return undefined
+}
+
 async function setupChocoMingw(version: string, arch: string): Promise<InstallationInfo | undefined> {
   await setupChocoPack("mingw", version)
   let binDir: string | undefined

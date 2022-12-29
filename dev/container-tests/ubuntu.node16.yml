@@ -40,7 +40,7 @@ commandTests:
   - name: node
     command: node
     args: ["-v"]
-    expectedOutput: [".*v12.*"]
+    expectedOutput: [".*v16.*"]
 
 fileExistenceTests:
   - name: "vcpkg"
@@ -48,10 +48,4 @@ fileExistenceTests:
     shouldExist: true
   - name: "llvm"
     path: "/root/llvm"
-    shouldExist: true
-  - name: "ninja"
-    path: "/root/ninja"
-    shouldExist: true
-  - name: "cmake"
-    path: "/root/cmake"
     shouldExist: true

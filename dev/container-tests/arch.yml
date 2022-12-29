@@ -29,10 +29,6 @@ commandTests:
     command: doxygen
     args: ["--version"]
     expectedOutput: [".*1.*"]
-  - name: cppcheck
-    command: cppcheck
-    args: ["--version"]
-    expectedOutput: [".*Cppcheck.*"]
 
 fileExistenceTests:
   - name: "vcpkg"

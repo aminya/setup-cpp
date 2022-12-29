@@ -83,6 +83,9 @@ words:
   - vsversion
   - xcrun
   - Yahyaabadi
+  - VCPKG
+  - DVCPKG
+  - SYSROOT
 ignoreWords: []
 import: []
 dictionaryDefinitions: []
