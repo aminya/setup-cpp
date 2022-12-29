@@ -17,14 +17,6 @@ RUN rm -rf /tmp/*
 CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/bash" ]
 
-## setup vcpkg env. (triplets)
-## https://github.com/microsoft/vcpkg/blob/master/docs/users/mingw.md
-#ENV VCPKG_DEFAULT_HOST_TRIPLET "x64-linux"
-#ENV VCPKG_DEFAULT_TRIPLET "x64-mingw-dynamic"
-#ENV CC "x86_64-w64-mingw32-gcc"
-#ENV CXX "x86_64-w64-mingw32-g++"
-## use project_options cross-compiling to setup triplets ...
-
 #### Building
 FROM base AS builder
 COPY ./dev/cpp_vcpkg_project /home/app

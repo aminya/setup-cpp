@@ -42,20 +42,10 @@ RUN rm -rf /tmp/*
 CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/bash" ]
 
-## setup vcpkg env. (triplets)
-## https://github.com/microsoft/vcpkg/blob/master/docs/users/mingw.md
-ENV VCPKG_DEFAULT_HOST_TRIPLET "x64-linux"
-ENV VCPKG_DEFAULT_TRIPLET "x64-mingw-dynamic"
-ENV CC "x86_64-w64-mingw32-gcc"
-ENV CXX "x86_64-w64-mingw32-g++"
-
-# TODO: better setup for cmake toolchains ?
-COPY ./dev/cmake/x86_64-w64-mingw32.toolchain.cmake /home/cmake/toolchains/x86_64-w64-mingw32.toolchain.cmake
-
 #### Building
 FROM base AS builder
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
-    && task cross_build_mingw'
+    && task build_cross_mingw'
 
