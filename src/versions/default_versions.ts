@@ -20,13 +20,13 @@ export const DefaultVersions: Record<string, string> = {
   clangtidy: getLLVMDefault(),
   clangformat: getLLVMDefault(),
   ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
-  cmake: "3.25.0", // https://github.com/Kitware/CMake/releases
+  cmake: "3.25.1", // https://github.com/Kitware/CMake/releases
   gcovr: "5.2", // https://pypi.org/project/gcovr/
-  conan: "1.54.0", // https://github.com/conan-io/conan/releases
-  meson: "0.64.0", // https://github.com/mesonbuild/meson/releases
+  conan: "1.57.0", // https://github.com/conan-io/conan/releases
+  meson: "1.0.0", // https://github.com/mesonbuild/meson/releases
   kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
-  task: "3.18.0", // https://github.com/go-task/task/releases
-  doxygen: isArch() ? "1.9.5-1" : "1.9.5", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
+  task: "3.20.0", // https://github.com/go-task/task/releases
+  doxygen: isArch() ? "1.9.6-1" : "1.9.6", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: isArch() ? "11" : "12", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 
@@ -68,7 +68,7 @@ export const DefaultLinuxVersion: Record<string, Record<number, string>> = {
     18: "5.0",
   },
   meson: {
-    20: "0.63.3",
+    20: "1.0.0",
     18: "0.61.4",
   },
   nala: {

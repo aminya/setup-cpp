@@ -93,7 +93,7 @@ async function addPathSystem(path: string) {
     case "win32": {
       // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
       await execPowershell(
-        `$USER_PATH=([Environment]::GetEnvironmentVariable("patha", "User")); [Environment]::SetEnvironmentVariable("patha", "${path};$USER_PATH", "User")`
+        `$USER_PATH=([Environment]::GetEnvironmentVariable("PATH", "User")); [Environment]::SetEnvironmentVariable("PATH", "${path};$USER_PATH", "User")`
       )
       info(`"${path}" was added to the PATH.`)
       return
