@@ -30,25 +30,16 @@ export function isDefault(version: string | undefined, name: string) {
 }
 
 export function syncVersions(opts: Opts, tools: Inputs[]): boolean {
-  for (let i = 0; i < tools.length; i++) {
-    // tools excluding i_tool
-    const otherTools = tools.slice(0, i).concat(tools.slice(i + 1))
+  const toolsInUse = tools.filter((tool) => opts[tool] !== undefined)
+  const toolsNonDefaultVersion = toolsInUse.filter((tool) => !isDefault(opts[tool], tool))
 
-    const tool = tools[i]
+  const targetVersion = toolsNonDefaultVersion.length ? opts[toolsNonDefaultVersion[0]] : "true"
 
-    if (!isDefault(opts[tool], tool)) {
-      for (let i_other = 0; i_other < otherTools.length; i_other++) {
-        const otherTool = otherTools[i_other]
-        const useDefaultOtherTool = isDefault(opts[otherTool], otherTools[i_other])
-        if (useDefaultOtherTool) {
-          // use the same version if the other tool was requested with the default
-          opts[otherTool] = opts[tool]
-        } else if (opts[tool] !== opts[otherTools[i_other]]) {
-          // error if different from the other given versions
-          return false
-        }
-      }
-    }
+  // return false if any explicit versions don't match the target version
+  if (toolsNonDefaultVersion.findIndex((tool) => opts[tool] !== targetVersion) !== -1) {
+    return false
   }
+
+  toolsInUse.forEach((tool) => (opts[tool] = targetVersion))
   return true
 }
