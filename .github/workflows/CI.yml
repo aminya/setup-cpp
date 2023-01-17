@@ -112,7 +112,7 @@ jobs:
             ./dist/node16/
 
   Docker:
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip docker]') }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip test]') }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
