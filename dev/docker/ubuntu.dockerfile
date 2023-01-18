@@ -5,7 +5,7 @@ FROM ubuntu:22.04 AS base
 WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends wget
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-linux"
+RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.26.0/setup-cpp-x64-linux"
 RUN chmod +x ./setup-cpp-x64-linux
 
 # install llvm, cmake, ninja, and ccache
