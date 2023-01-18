@@ -273,7 +273,7 @@ export async function main(args: string[]): Promise<number> {
   await finalizeCpprc()
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
-    warning("setup_cpp was called without any arguments. Nothing to do.")
+    warning("setup-cpp was called without any arguments. Nothing to do.")
     return 0
   }
 
@@ -281,7 +281,7 @@ export async function main(args: string[]): Promise<number> {
   successMessages.forEach((tool) => success(tool))
   errorMessages.forEach((tool) => error(tool))
 
-  info("setup_cpp finished")
+  info("setup-cpp finished")
 
   if (ciDetect() !== "github-actions") {
     switch (process.platform) {
@@ -346,8 +346,8 @@ export function getCompilerInfo(maybeCompiler: string) {
 
 function printHelp() {
   info(`
-setup_cpp [options]
-setup_cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+setup-cpp [options]
+setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 Install all the tools required for building and testing C++/C projects.
 

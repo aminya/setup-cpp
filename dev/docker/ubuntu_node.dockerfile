@@ -3,12 +3,12 @@ FROM ubuntu:22.04 AS base
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends nodejs
 
-# add setup_cpp.js
+# add setup-cpp.js
 COPY "./dist/node12" "/"
 WORKDIR "/"
 
 # run installation
-RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
+RUN node ./setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
 
 # clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*

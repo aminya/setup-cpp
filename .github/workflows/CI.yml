@@ -106,8 +106,8 @@ jobs:
             ./exe/setup_cpp_windows.exe
             ./exe/setup_cpp_linux
             ./exe/setup_cpp_mac
-            ./dist/node12/setup_cpp.js
-            ./dist/node12/setup_cpp.js.map
+            ./dist/node12/setup-cpp.js
+            ./dist/node12/setup-cpp.js.map
             ./dist/node12/
             ./dist/node16/
 
@@ -161,4 +161,4 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./dev/docker/${{ matrix.container }} -t setup_cpp .
+          docker build -f ./dev/docker/${{ matrix.container }} -t setup-cpp .

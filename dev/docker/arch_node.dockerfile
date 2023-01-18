@@ -10,12 +10,12 @@ RUN pacman -S --noconfirm --needed nodejs
 # curl for downloading setup-cpp
 RUN pacman -S --noconfirm --needed curl
 
-# add setup_cpp.js
+# add setup-cpp.js
 COPY "./dist/node12" "/"
 WORKDIR "/"
 
 # run installation
-RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true
+RUN node ./setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true
 
 # clean up
 RUN pacman -Scc --noconfirm

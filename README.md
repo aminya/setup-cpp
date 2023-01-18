@@ -74,7 +74,7 @@ NOTE: On Unix systems, you will not need `sudo` if you are already a root user (
 
 #### With Nodejs
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp.js), and run it with the available options.
+Download the `setup-cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp.js), and run it with the available options.
 
 On Windows:
 
@@ -82,8 +82,8 @@ Open the shell as admin, download via `curl`, then install
 
 ```ps1
 # open shell as admin
-curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp.js"
-node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp.js"
+node ./setup-cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
 ```
@@ -91,8 +91,8 @@ RefreshEnv.cmd # activate cpp environment variables
 On Linux or Mac:
 
 ```ps1
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp.js"
-sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp.js"
+sudo node ./setup-cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 source ~/.cpprc # activate cpp environment variables
 ```
@@ -160,13 +160,13 @@ jobs:
 
 ### Inside Docker
 
-Here is an example for using setup_cpp to make a builder image that has the Cpp tools you need.
+Here is an example for using setup-cpp to make a builder image that has the Cpp tools you need.
 
 ```dockerfile
 #### Base Image
 FROM ubuntu:22.04 AS base
 
-# add setup_cpp
+# add setup-cpp
 WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends wget
@@ -202,7 +202,7 @@ If you want to build the ones included, then run:
 ```ps1
 git clone --recurse-submodules https://github.com/aminya/setup-cpp
 cd ./setup-cpp
-docker build -f ./dev/docker/ubuntu.dockerfile -t setup_cpp .
+docker build -f ./dev/docker/ubuntu.dockerfile -t setup-cpp .
 ```
 
 Where you should use the path to the dockerfile after `-f`.
@@ -210,7 +210,7 @@ Where you should use the path to the dockerfile after `-f`.
 After build, run the following to start an interactive shell in your container
 
 ```ps1
-docker run -it setup_cpp
+docker run -it setup-cpp
 ```
 
 ### Inside Docker inside GitHub Actions
@@ -230,7 +230,7 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./dev/docker/debian.dockerfile -t setup_cpp .
+          docker build -f ./dev/docker/debian.dockerfile -t setup-cpp .
 ```
 
 ### Inside GitLab pipelines
@@ -261,7 +261,7 @@ stages:
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
 
-.setup_cpp: &setup_cpp |
+.setup-cpp: &setup-cpp |
   curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_linux"
   chmod +x setup_cpp_linux
   ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
@@ -277,7 +277,7 @@ test_linux_llvm:
     compiler: llvm
   script:
     - *setup_linux
-    - *setup_cpp
+    - *setup-cpp
     - *test
 
 test_linux_gcc:
@@ -286,7 +286,7 @@ test_linux_gcc:
     compiler: gcc
   script:
     - *setup_linux
-    - *setup_cpp
+    - *setup-cpp
     - *test
 ```
 

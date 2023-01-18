@@ -132,7 +132,7 @@ export async function setupClangTools(version: string, setupDir: string, arch: s
 async function addLLVMLoggingMatcher() {
   const matcherPath = join(__dirname, "llvm_matcher.json")
   if (!(await pathExists(matcherPath))) {
-    return warning("the llvm_matcher.json file does not exist in the same folder as setup_cpp.js")
+    return warning("the llvm_matcher.json file does not exist in the same folder as setup-cpp.js")
   }
   info(`::add-matcher::${matcherPath}`)
 }

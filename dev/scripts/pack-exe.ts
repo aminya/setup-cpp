@@ -34,7 +34,7 @@ function main() {
         `./exe/setup_cpp_${getPlatformName()}${exe}`,
         "--",
         `{{caxa}}/node_modules/.bin/node${exe}`,
-        `{{caxa}}/setup_cpp.js`,
+        `{{caxa}}/setup-cpp.js`,
       ])
     )
   )

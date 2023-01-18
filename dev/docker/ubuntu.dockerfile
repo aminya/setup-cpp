@@ -1,7 +1,7 @@
 #### Base Image
 FROM ubuntu:22.04 AS base
 
-# add setup_cpp
+# add setup-cpp
 WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends wget
