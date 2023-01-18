@@ -81,6 +81,9 @@ inputs:
   nala:
     description: 'The nala version to install ("" or "legacy").'
     required: false
+  powershell:
+    description: "The powershell version to install."
+    required: false
 
 runs:
   using: "node16"
