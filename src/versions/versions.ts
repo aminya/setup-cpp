@@ -29,17 +29,25 @@ export function isDefault(version: string | undefined, name: string) {
   return version === "true" || (version === undefined && name in DefaultVersions)
 }
 
+/**
+ * Sync the versions for the given inputs
+ *
+ * If the return is false, it means that versions don't match the target version
+ */
 export function syncVersions(opts: Opts, tools: Inputs[]): boolean {
   const toolsInUse = tools.filter((tool) => opts[tool] !== undefined)
   const toolsNonDefaultVersion = toolsInUse.filter((tool) => !isDefault(opts[tool], tool))
 
-  const targetVersion = toolsNonDefaultVersion.length ? opts[toolsNonDefaultVersion[0]] : "true"
+  const targetVersion = toolsNonDefaultVersion.length >= 1 ? opts[toolsNonDefaultVersion[0]] : "true"
 
-  // return false if any explicit versions don't match the target version
-  if (toolsNonDefaultVersion.findIndex((tool) => opts[tool] !== targetVersion) !== -1) {
+  if (toolsNonDefaultVersion.some((tool) => opts[tool] !== targetVersion)) {
+    // error if any explicit versions don't match the target version
     return false
   }
 
-  toolsInUse.forEach((tool) => (opts[tool] = targetVersion))
+  toolsInUse.forEach((tool) => {
+    opts[tool] = targetVersion
+  })
+
   return true
 }
