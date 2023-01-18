@@ -1,7 +1,8 @@
 FROM ubuntu:22.04 AS base
 
-RUN apt-get update -qq
-RUN apt-get install -y --no-install-recommends nodejs
+RUN apt-get update && apt-get install -y \
+  nodejs \
+  && rm -rf /var/lib/apt/lists/*
 
 # add setup-cpp.js
 COPY "./dist/node12" "/"
