@@ -62,11 +62,7 @@ NOTE: On Unix systems, if you are already a root user (e.g., in a GitLab runner 
 
 #### With executable
 
-You can download a self-contained executable file and run it with the available options.
-
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.26.0), and run it with the available options.
-
-Tip: You can automate downloading using `wget`, `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.26.0), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
