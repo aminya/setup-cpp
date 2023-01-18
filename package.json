@@ -59,7 +59,7 @@
     "test.unit": "jest --runInBand"
   },
   "prettier": "prettier-config-atomic",
-  "dependencies": {
+  "devDependencies": {
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
     "@actions/io": "^1.1.2",
@@ -86,9 +86,8 @@
     "ubuntu-version": "^2.0.0",
     "untildify-user": "workspace:1.0.0",
     "user-access": "workspace:1.0.0",
-    "which": "^3.0.0"
-  },
-  "devDependencies": {
+    "which": "^3.0.0",
+
     "@types/cross-spawn": "^6.0.2",
     "@types/jest": "^29.2.5",
     "@types/mri": "^1.1.1",
