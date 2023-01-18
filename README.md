@@ -41,27 +41,27 @@ Download the executable for your platform from [here](https://github.com/aminya/
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```ps1
-# windows example (open shell as admin)
-curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_windows.exe"
-.\setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+# windows example (open PowerShell as admin)
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-windows.exe"
+./setup-cpp-x64-windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
 ```
 
 ```ps1
 # linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_linux"
-chmod +x setup_cpp_linux
-sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-linux"
+chmod +x ./setup-cpp-x64-linux
+sudo ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 source ~/.cpprc # activate cpp environment variables
 ```
 
 ```ps1
-# mac example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_mac"
-chmod +x setup_cpp_mac
-sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+# macos example
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-macos"
+chmod +x ./setup-cpp-x64-macos
+sudo ./setup-cpp-x64-macos --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 source ~/.cpprc # activate cpp environment variables
 ```
@@ -170,11 +170,11 @@ FROM ubuntu:22.04 AS base
 WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends wget
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_linux"
-RUN chmod +x ./setup_cpp_linux
+RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-linux"
+RUN chmod +x ./setup-cpp-x64-linux
 
 # install llvm, cmake, ninja, and ccache
-RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
+RUN ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
 
 CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/bash" ]
@@ -262,9 +262,9 @@ stages:
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
 
 .setup-cpp: &setup-cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_linux"
-  chmod +x setup_cpp_linux
-  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-linux"
+  chmod +x setup-cpp-x64-linux
+  ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
   source ~/.cpprc
 
 .test: &test |

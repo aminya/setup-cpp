@@ -103,9 +103,9 @@ jobs:
           gzip: folders
           draft: true
           files: >
-            ./exe/setup_cpp_windows.exe
-            ./exe/setup_cpp_linux
-            ./exe/setup_cpp_mac
+            ./exe/setup-cpp-x64-windows.exe
+            ./exe/setup-cpp-x64-linux
+            ./exe/setup-cpp-x64-macos
             ./dist/node12/setup-cpp.js
             ./dist/node12/setup-cpp.js.map
             ./dist/node12/
