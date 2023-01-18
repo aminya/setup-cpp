@@ -7,7 +7,7 @@ function getPlatformName() {
       return "windows"
     }
     case "darwin": {
-      return "mac"
+      return "macos"
     }
     default: {
       return process.platform
@@ -31,10 +31,10 @@ function main() {
         "--input",
         "./dist/node16",
         "--output",
-        `./exe/setup_cpp_${getPlatformName()}${exe}`,
+        `./exe/setup-cpp-${process.arch}-${getPlatformName()}${exe}`,
         "--",
         `{{caxa}}/node_modules/.bin/node${exe}`,
-        `{{caxa}}/setup_cpp.js`,
+        `{{caxa}}/setup-cpp.js`,
       ])
     )
   )

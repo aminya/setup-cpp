@@ -25,7 +25,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
   }
 
   // brew is not thread-safe
-  const brewTempDirectory = path.join(tmpdir(), "setup_cpp", "brew")
+  const brewTempDirectory = path.join(tmpdir(), "setup-cpp", "brew")
   await mkdirP(brewTempDirectory)
 
   execa.sync("curl", ["-LJO", "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"], {

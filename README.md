@@ -30,69 +30,68 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 ### From Terminal
 
-You should download the executable file or the js file (if Nodejs installed), and run it with the available options.
+#### With npm and Nodejs
 
-Tip: You can automate downloading using `wget`, `curl`, or other similar tools.
+Install setup-cpp with npm:
 
-#### Executable
-
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.25.1), and run it with the available options.
-
-An example that installs llvm, cmake, ninja, ccache, and vcpkg:
-
-```ps1
-# windows example (open shell as admin)
-curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_windows.exe"
-.\setup_cpp_windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
-
-RefreshEnv.cmd # activate cpp environment variables
+```shell
+npm install -g setup-cpp
 ```
 
-```ps1
-# linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_linux"
-chmod +x setup_cpp_linux
-sudo ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+Then run `setup-cpp` with the available options.
 
-source ~/.cpprc # activate cpp environment variables
+```shell
+# windows example (open PowerShell as admin)
+setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+RefreshEnv.cmd # activate the environment
 ```
 
-```ps1
-# mac example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_mac"
-chmod +x setup_cpp_mac
-sudo ./setup_cpp_mac --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+```shell
+# linux/macos example
+sudo setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-source ~/.cpprc # activate cpp environment variables
+source ~/.cpprc
 ```
 
 NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`. For the tools, you can pass a specific version instead of `true` that chooses the default version
 
 NOTE: On Unix systems, when `setup-cpp` is used locally or in other CI services like GitLab, the environment variables are added to `~/.cpprc`. You should run `source ~/.cpprc` to immediately activate the environment variables. This file is automatically sourced in the next shell restart from `~/.bashrc` or `~/.profile` if `SOURCE_CPPRC` is not set to `0`. To deactivate `.cpprc` in the next shell restart, rename/remove `~/.cpprc`.
 
-NOTE: On Unix systems, you will not need `sudo` if you are already a root user (e.g., in a GitLab runner or Docker).
+NOTE: On Unix systems, if you are already a root user (e.g., in a GitLab runner or Docker), you will not need to use `sudo`.
 
-#### With Nodejs
+#### With executable
 
-Download the `setup_cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp.js), and run it with the available options.
+You can download a self-contained executable file and run it with the available options.
 
-On Windows:
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.25.1), and run it with the available options.
 
-Open the shell as admin, download via `curl`, then install
+Tip: You can automate downloading using `wget`, `curl`, or other similar tools.
 
-```ps1
-# open shell as admin
-curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp.js"
-node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+An example that installs llvm, cmake, ninja, ccache, and vcpkg:
+
+```shell
+# windows example (open PowerShell as admin)
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-windows.exe"
+./setup-cpp-x64-windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
 ```
 
-On Linux or Mac:
+```shell
+# linux example
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-linux"
+chmod +x ./setup-cpp-x64-linux
+sudo ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
-```ps1
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp.js"
-sudo node ./setup_cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+source ~/.cpprc # activate cpp environment variables
+```
+
+```shell
+# macos example
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-macos"
+chmod +x ./setup-cpp-x64-macos
+sudo ./setup-cpp-x64-macos --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 source ~/.cpprc # activate cpp environment variables
 ```
@@ -160,21 +159,21 @@ jobs:
 
 ### Inside Docker
 
-Here is an example for using setup_cpp to make a builder image that has the Cpp tools you need.
+Here is an example for using setup-cpp to make a builder image that has the Cpp tools you need.
 
 ```dockerfile
 #### Base Image
 FROM ubuntu:22.04 AS base
 
-# add setup_cpp
+# add setup-cpp
 WORKDIR "/"
 RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends wget
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_linux"
-RUN chmod +x ./setup_cpp_linux
+RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-linux"
+RUN chmod +x ./setup-cpp-x64-linux
 
 # install llvm, cmake, ninja, and ccache
-RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
+RUN ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
 
 CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/bash" ]
@@ -199,18 +198,18 @@ See [this folder](https://github.com/aminya/setup-cpp/tree/master/dev/docker), f
 
 If you want to build the ones included, then run:
 
-```ps1
+```shell
 git clone --recurse-submodules https://github.com/aminya/setup-cpp
 cd ./setup-cpp
-docker build -f ./dev/docker/ubuntu.dockerfile -t setup_cpp .
+docker build -f ./dev/docker/ubuntu.dockerfile -t setup-cpp .
 ```
 
 Where you should use the path to the dockerfile after `-f`.
 
 After build, run the following to start an interactive shell in your container
 
-```ps1
-docker run -it setup_cpp
+```shell
+docker run -it setup-cpp
 ```
 
 ### Inside Docker inside GitHub Actions
@@ -230,7 +229,7 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./dev/docker/debian.dockerfile -t setup_cpp .
+          docker build -f ./dev/docker/debian.dockerfile -t setup-cpp .
 ```
 
 ### Inside GitLab pipelines
@@ -261,10 +260,10 @@ stages:
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
 
-.setup_cpp: &setup_cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup_cpp_linux"
-  chmod +x setup_cpp_linux
-  ./setup_cpp_linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
+.setup-cpp: &setup-cpp |
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-linux"
+  chmod +x setup-cpp-x64-linux
+  ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
   source ~/.cpprc
 
 .test: &test |
@@ -277,7 +276,7 @@ test_linux_llvm:
     compiler: llvm
   script:
     - *setup_linux
-    - *setup_cpp
+    - *setup-cpp
     - *test
 
 test_linux_gcc:
@@ -286,7 +285,7 @@ test_linux_gcc:
     compiler: gcc
   script:
     - *setup_linux
-    - *setup_cpp
+    - *setup-cpp
     - *test
 ```
 
