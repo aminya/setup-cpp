@@ -30,17 +30,47 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 ### From Terminal
 
-You should download the executable file or the js file (if Nodejs installed), and run it with the available options.
+#### With npm and Nodejs
 
-Tip: You can automate downloading using `wget`, `curl`, or other similar tools.
+Install setup-cpp with npm:
 
-#### Executable
+```shell
+npm install -g setup-cpp
+```
+
+Then run `setup-cpp` with the available options.
+
+```shell
+# windows example (open PowerShell as admin)
+setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+RefreshEnv.cmd # activate the environment
+```
+
+```shell
+# linux/macos example
+sudo setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+source ~/.cpprc
+```
+
+NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`. For the tools, you can pass a specific version instead of `true` that chooses the default version
+
+NOTE: On Unix systems, when `setup-cpp` is used locally or in other CI services like GitLab, the environment variables are added to `~/.cpprc`. You should run `source ~/.cpprc` to immediately activate the environment variables. This file is automatically sourced in the next shell restart from `~/.bashrc` or `~/.profile` if `SOURCE_CPPRC` is not set to `0`. To deactivate `.cpprc` in the next shell restart, rename/remove `~/.cpprc`.
+
+NOTE: On Unix systems, if you are already a root user (e.g., in a GitLab runner or Docker), you will not need to use `sudo`.
+
+#### With executable
+
+You can download a self-contained executable file and run it with the available options.
 
 Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.25.1), and run it with the available options.
 
+Tip: You can automate downloading using `wget`, `curl`, or other similar tools.
+
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
-```ps1
+```shell
 # windows example (open PowerShell as admin)
 curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-windows.exe"
 ./setup-cpp-x64-windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
@@ -48,7 +78,7 @@ curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-c
 RefreshEnv.cmd # activate cpp environment variables
 ```
 
-```ps1
+```shell
 # linux example
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-linux"
 chmod +x ./setup-cpp-x64-linux
@@ -57,42 +87,11 @@ sudo ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache tr
 source ~/.cpprc # activate cpp environment variables
 ```
 
-```ps1
+```shell
 # macos example
 wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp-x64-macos"
 chmod +x ./setup-cpp-x64-macos
 sudo ./setup-cpp-x64-macos --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
-
-source ~/.cpprc # activate cpp environment variables
-```
-
-NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`. For the tools, you can pass a specific version instead of `true` that chooses the default version
-
-NOTE: On Unix systems, when `setup-cpp` is used locally or in other CI services like GitLab, the environment variables are added to `~/.cpprc`. You should run `source ~/.cpprc` to immediately activate the environment variables. This file is automatically sourced in the next shell restart from `~/.bashrc` or `~/.profile` if `SOURCE_CPPRC` is not set to `0`. To deactivate `.cpprc` in the next shell restart, rename/remove `~/.cpprc`.
-
-NOTE: On Unix systems, you will not need `sudo` if you are already a root user (e.g., in a GitLab runner or Docker).
-
-#### With Nodejs
-
-Download the `setup-cpp.js` file form [here](https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp.js), and run it with the available options.
-
-On Windows:
-
-Open the shell as admin, download via `curl`, then install
-
-```ps1
-# open shell as admin
-curl.exe -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp.js"
-node ./setup-cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
-
-RefreshEnv.cmd # activate cpp environment variables
-```
-
-On Linux or Mac:
-
-```ps1
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.25.1/setup-cpp.js"
-sudo node ./setup-cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 source ~/.cpprc # activate cpp environment variables
 ```
@@ -199,7 +198,7 @@ See [this folder](https://github.com/aminya/setup-cpp/tree/master/dev/docker), f
 
 If you want to build the ones included, then run:
 
-```ps1
+```shell
 git clone --recurse-submodules https://github.com/aminya/setup-cpp
 cd ./setup-cpp
 docker build -f ./dev/docker/ubuntu.dockerfile -t setup-cpp .
@@ -209,7 +208,7 @@ Where you should use the path to the dockerfile after `-f`.
 
 After build, run the following to start an interactive shell in your container
 
-```ps1
+```shell
 docker run -it setup-cpp
 ```
 
