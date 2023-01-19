@@ -1,6 +1,6 @@
 FROM ubuntu:22.04 AS base
 
-RUN apt-get update -qq 
+RUN apt-get update -qq
 RUN apt-get install -y --no-install-recommends nodejs
 
 # add setup-cpp.js
@@ -28,4 +28,4 @@ FROM gcr.io/distroless/cc as runner
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
 WORKDIR /home/app/
-ENTRYPOINT ["./my_exe"]s
+ENTRYPOINT ["./my_exe"]
