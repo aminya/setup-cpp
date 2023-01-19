@@ -162,9 +162,8 @@ Here is an example for using setup-cpp to make a builder image that has the Cpp 
 FROM ubuntu:22.04 AS base
 
 # add setup-cpp
-RUN apt-get update && apt-get install -y \
-  npm \
-  && rm -rf /var/lib/apt/lists/*
+RUN apt-get update -qq
+RUN apt-get install -y --no-install-recommends npm
 RUN npm install -g setup-cpp
 
 # install llvm, cmake, ninja, and ccache
