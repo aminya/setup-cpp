@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+/* eslint-disable node/shebang */
+
 import { getInput, endGroup, startGroup, notice } from "@actions/core"
 import { setupBrew } from "./brew/brew"
 import { setupCcache } from "./ccache/ccache"
