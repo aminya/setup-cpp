@@ -162,14 +162,12 @@ Here is an example for using setup-cpp to make a builder image that has the Cpp 
 FROM ubuntu:22.04 AS base
 
 # add setup-cpp
-WORKDIR "/"
 RUN apt-get update -qq
-RUN apt-get install -y --no-install-recommends wget
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.26.1/setup-cpp-x64-linux"
-RUN chmod +x ./setup-cpp-x64-linux
+RUN apt-get install -y --no-install-recommends npm
+RUN npm install -g setup-cpp
 
 # install llvm, cmake, ninja, and ccache
-RUN ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
+RUN setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
 
 CMD source ~/.cpprc
 ENTRYPOINT [ "/bin/bash" ]
