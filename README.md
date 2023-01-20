@@ -62,13 +62,13 @@ NOTE: On Unix systems, if you are already a root user (e.g., in a GitLab runner 
 
 #### With executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.26.1), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.26.2), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```shell
 # windows example (open PowerShell as admin)
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.26.1/setup-cpp-x64-windows.exe"
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.26.2/setup-cpp-x64-windows.exe"
 ./setup-cpp-x64-windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
@@ -76,7 +76,7 @@ RefreshEnv.cmd # activate cpp environment variables
 
 ```shell
 # linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.26.1/setup-cpp-x64-linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.26.2/setup-cpp-x64-linux"
 chmod +x ./setup-cpp-x64-linux
 sudo ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -85,7 +85,7 @@ source ~/.cpprc # activate cpp environment variables
 
 ```shell
 # macos example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.26.1/setup-cpp-x64-macos"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.26.2/setup-cpp-x64-macos"
 chmod +x ./setup-cpp-x64-macos
 sudo ./setup-cpp-x64-macos --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -255,7 +255,7 @@ stages:
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
 
 .setup-cpp: &setup-cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.26.1/setup-cpp-x64-linux"
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.26.2/setup-cpp-x64-linux"
   chmod +x setup-cpp-x64-linux
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
   source ~/.cpprc
