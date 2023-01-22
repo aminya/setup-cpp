@@ -112,6 +112,8 @@
     "ubuntu-version": "^2.0.0",
     "untildify-user": "workspace:1.0.0",
     "user-access": "workspace:1.0.0",
+    "vite": "^4.0.4",
+    "vite-plugin-node": "^3.0.2",
     "which": "^3.0.0"
   },
   "engines": {
