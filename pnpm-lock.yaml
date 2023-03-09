@@ -16,11 +16,14 @@ importers:
       '@actions/exec': ^1.1.1
       '@actions/io': ^1.1.2
       '@actions/tool-cache': ^2.0.1
-      '@npmcli/ci-detect': github:aminya/ci-detect#37fe40075bebec96794ba0a7c4a6d5c70cbea00d
+      '@npmcli/ci-detect': ^3.0.2
       '@types/cross-spawn': ^6.0.2
+      '@types/eslint': ^8.21.1
       '@types/jest': ^29.4.0
       '@types/mri': ^1.1.1
       '@types/node': ^18.15.0
+      '@types/npmcli__ci-detect': ^2.0.0
+      '@types/prettier': 2.7.1
       '@types/semver': ^7.3.13
       '@types/which': ^2.0.2
       admina: ^0.1.3
@@ -32,7 +35,7 @@ importers:
       escape-path-with-spaces: github:aminya/escape-path-with-spaces#d9f81ee649203ddc55783a2f96ada59df06118e3
       escape-quotes: ^1.0.2
       escape-string-regexp: ^5.0.0
-      eslint: ^8.35.0
+      eslint: ^8.28.0
       eslint-config-atomic: ^1.18.2
       exec-powershell: workspace:1.0.0
       execa: ^5.1.1
@@ -70,11 +73,14 @@ importers:
       '@actions/exec': 1.1.1
       '@actions/io': 1.1.2
       '@actions/tool-cache': 2.0.1
-      '@npmcli/ci-detect': github.com/aminya/ci-detect/37fe40075bebec96794ba0a7c4a6d5c70cbea00d
+      '@npmcli/ci-detect': 3.0.2
       '@types/cross-spawn': 6.0.2
+      '@types/eslint': 8.21.1
       '@types/jest': 29.4.0
       '@types/mri': 1.1.1
       '@types/node': 18.15.0
+      '@types/npmcli__ci-detect': 2.0.0
+      '@types/prettier': 2.7.1
       '@types/semver': 7.3.13
       '@types/which': 2.0.2
       admina: 0.1.3
@@ -1475,6 +1481,11 @@ packages:
       fastq: 1.15.0
     dev: true
 
+  /@npmcli/ci-detect/3.0.2:
+    resolution: {integrity: sha512-P7nZG0skRVa9lH0OQmFG62CrzOySUiuPbKopjVAj3sXP0m1om9XfIvTp46h+NvlpTyd121JekiXFZj+1pnbm9g==}
+    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
+    dev: true
+
   /@npmcli/fs/2.1.2:
     resolution: {integrity: sha512-yOJKRvohFOaLqipNtwYB9WugyZKhC/DZC4VYPmpaCzDBrA8YpK3qHZ8/HGscMnE4GqbkLNuVcCnxkeQEdGt6LQ==}
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
@@ -2388,6 +2399,17 @@ packages:
       '@types/ms': 0.7.31
     dev: true
 
+  /@types/eslint/8.21.1:
+    resolution: {integrity: sha512-rc9K8ZpVjNcLs8Fp0dkozd5Pt2Apk1glO4Vgz8ix1u6yFByxfqo5Yavpy65o+93TAe24jr7v+eSBtFLvOQtCRQ==}
+    dependencies:
+      '@types/estree': 1.0.0
+      '@types/json-schema': 7.0.11
+    dev: true
+
+  /@types/estree/1.0.0:
+    resolution: {integrity: sha512-WulqXMDUTYAXCjZnk6JtIHPigp55cVtDgDrO2gHRwhyJto21+1zbVCtOYB2L1F9w4qCQ0rOGWBnBe0FNTiEJIQ==}
+    dev: true
+
   /@types/glob/7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==}
     dependencies:
@@ -2479,12 +2501,16 @@ packages:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
     dev: true
 
+  /@types/npmcli__ci-detect/2.0.0:
+    resolution: {integrity: sha512-Nzom9KQvlBNk3gLWKThXZ+DhX/uZ6sDOltOgPFNONo30wi9fePwuwd6V+4+ES9vY+/SVMP4S7Z3QQHXhidAYyg==}
+    dev: true
+
   /@types/parse-json/4.0.0:
     resolution: {integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==}
     dev: true
 
-  /@types/prettier/2.7.2:
-    resolution: {integrity: sha512-KufADq8uQqo1pYKVIYzfKbJfBAc0sOeXqGbFaSpv8MRmC/zXgowNZmFcbngndGk922QDmOASEXUZCaY48gs4cg==}
+  /@types/prettier/2.7.1:
+    resolution: {integrity: sha512-ri0UmynRRvZiiUJdiz38MmIblKK+oH30MztdBVR95dv/Ubw6neWSb8u1XpRb72L4qsZOhz+L+z9JD40SJmfWow==}
     dev: true
 
   /@types/replace-ext/2.0.0:
@@ -6564,7 +6590,7 @@ packages:
       '@jest/transform': 29.5.0
       '@jest/types': 29.5.0
       '@types/babel__traverse': 7.18.3
-      '@types/prettier': 2.7.2
+      '@types/prettier': 2.7.1
       babel-preset-current-node-syntax: 1.0.1_@babel+core@7.21.0
       chalk: 4.1.2
       expect: 29.5.0
@@ -10186,6 +10212,7 @@ packages:
     name: '@npmcli/ci-detect'
     version: 2.0.0
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
+    dev: false
 
   github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3:
     resolution: {tarball: https://codeload.github.com/aminya/escape-path-with-spaces/tar.gz/d9f81ee649203ddc55783a2f96ada59df06118e3}
