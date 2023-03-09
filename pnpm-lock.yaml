@@ -32,7 +32,7 @@ importers:
       cross-env: 7.0.3
       cross-spawn: ^7.0.3
       cspell: ^6.28.0
-      escape-path-with-spaces: github:aminya/escape-path-with-spaces#d9f81ee649203ddc55783a2f96ada59df06118e3
+      escape-path-with-spaces: ^1.0.2
       escape-quotes: ^1.0.2
       escape-string-regexp: ^5.0.0
       eslint: ^8.28.0
@@ -89,7 +89,7 @@ importers:
       cross-env: 7.0.3
       cross-spawn: 7.0.3
       cspell: 6.28.0
-      escape-path-with-spaces: github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3
+      escape-path-with-spaces: 1.0.2
       escape-quotes: 1.0.2
       escape-string-regexp: 5.0.0
       eslint: 8.35.0
@@ -131,7 +131,7 @@ importers:
       '@actions/core': ^1.9.1
       '@npmcli/ci-detect': github:aminya/ci-detect#37fe40075bebec96794ba0a7c4a6d5c70cbea00d
     dependencies:
-      '@actions/core': 1.9.1
+      '@actions/core': 1.10.0
       '@npmcli/ci-detect': github.com/aminya/ci-detect/37fe40075bebec96794ba0a7c4a6d5c70cbea00d
 
   packages/exec-powershell:
@@ -143,7 +143,7 @@ importers:
       execa: 5.1.1
       which: 2.0.2
     devDependencies:
-      '@types/which': 2.0.1
+      '@types/which': 2.0.2
 
   packages/untildify-user:
     specifiers:
@@ -183,14 +183,6 @@ packages:
     dependencies:
       '@actions/http-client': 2.1.0
       uuid: 8.3.2
-    dev: true
-
-  /@actions/core/1.9.1:
-    resolution: {integrity: sha512-5ad+U2YGrmmiw6du20AQW5XuWo7UKN2052FjSV7MX+Wfjf8sCqcsZe62NfgHys4QI4/Y+vQvLKYL8jWtA1ZBTA==}
-    dependencies:
-      '@actions/http-client': 2.0.1
-      uuid: 8.3.2
-    dev: false
 
   /@actions/exec/1.1.1:
     resolution: {integrity: sha512-+sCcHHbVdk93a0XT19ECtO/gIXoxvdsgQLzb2fE2/5sIZmWQuluYyjPQtrtTHdU1YzTZ7bAPN4sITq2xi1679w==}
@@ -218,17 +210,10 @@ packages:
       tunnel: 0.0.6
     dev: true
 
-  /@actions/http-client/2.0.1:
-    resolution: {integrity: sha512-PIXiMVtz6VvyaRsGY268qvj57hXQEpsYogYOu2nrQhlf+XCGmZstmuZBbAybUl1nQGnvS1k1eEsQ69ZoD7xlSw==}
-    dependencies:
-      tunnel: 0.0.6
-    dev: false
-
   /@actions/http-client/2.1.0:
     resolution: {integrity: sha512-BonhODnXr3amchh4qkmjPMUO8mFi/zLaaCeCAJZqch8iQqyDnVIkySjB38VHAC8IJ+bnlgfOqlhpyCUZHlQsqw==}
     dependencies:
       tunnel: 0.0.6
-    dev: true
 
   /@actions/io/1.1.2:
     resolution: {integrity: sha512-d+RwPlMp+2qmBfeLYPLXuSRykDIFEwdTA0MMxzS9kh4kvP1ftrc/9fzy6pX6qAjthdXruHQ6/6kjT/DNo5ALuw==}
@@ -2543,10 +2528,6 @@ packages:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
     dev: true
 
-  /@types/which/2.0.1:
-    resolution: {integrity: sha512-Jjakcv8Roqtio6w1gr0D7y6twbhx6gGgFGF5BLwajPpnOIOxFkakFhCq+LmyyeAz7BX6ULrjBOxdKaCDy+4+dQ==}
-    dev: true
-
   /@types/which/2.0.2:
     resolution: {integrity: sha512-113D3mDkZDjo+EeUEHCFy0qniNc1ZpecGiAU7WSo7YDoSzolZIQKpYFHrPpjkB2nuyahcKfrmLXeQlh7gqJYdw==}
     dev: true
@@ -4404,6 +4385,10 @@ packages:
     engines: {node: '>=12'}
     dev: true
 
+  /escape-path-with-spaces/1.0.2:
+    resolution: {integrity: sha512-f8oXq+G3xfU/TsjnVPP+V94GPHyizOoqcgqAWWDPARFOnXdGgL61S2G9Ld/S+AMBlULfDKzz/6bnhlgfZ4vR4A==}
+    dev: true
+
   /escape-quotes/1.0.2:
     resolution: {integrity: sha512-JpLFzklNReeakCpyj59s78P5F72q0ZUpDnp2BuIk9TtTjj2HMsgiWBChw17BlZT8dRhMtmSb1jE2+pTP1iFYyw==}
     dependencies:
@@ -4728,7 +4713,7 @@ packages:
       doctrine: 2.1.0
       eslint: 8.35.0
       has: 1.0.3
-      jsx-ast-utils: 2.4.1
+      jsx-ast-utils: 3.3.3
       minimatch: 3.1.2
       object.entries: 1.1.6
       object.fromentries: 2.0.6
@@ -10213,12 +10198,6 @@ packages:
     version: 2.0.0
     engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
     dev: false
-
-  github.com/aminya/escape-path-with-spaces/d9f81ee649203ddc55783a2f96ada59df06118e3:
-    resolution: {tarball: https://codeload.github.com/aminya/escape-path-with-spaces/tar.gz/d9f81ee649203ddc55783a2f96ada59df06118e3}
-    name: escape-path-with-spaces
-    version: 1.0.0
-    dev: true
 
   github.com/aminya/msvc-dev-cmd/9f672c1:
     resolution: {tarball: https://codeload.github.com/aminya/msvc-dev-cmd/tar.gz/9f672c1}
