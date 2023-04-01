@@ -29,9 +29,22 @@ describe("syncVersion", () => {
     expect(syncVersions(parseArgs(["--llvm", "13.0.0", "--clangtidy", "true"]), llvmTools)).toBe(true)
     expect(syncVersions(parseArgs(["--llvm", "13.0.0", "--clangtidy", "12.0.0"]), llvmTools)).toBe(false)
 
-    const opts = parseArgs(["--llvm", "14.0.0", "--clangtidy", "true"])
-    expect(syncVersions(opts, llvmTools)).toBe(true)
-    expect(opts.llvm).toBe(opts.clangtidy)
+    const opts1 = parseArgs(["--llvm", "14.0.0", "--clangtidy", "true"])
+    expect(syncVersions(opts1, llvmTools)).toBe(true)
+    expect(opts1.llvm).toBe(opts1.clangtidy)
+    expect(opts1.clangformat).toBe(undefined)
+
+    const opts2 = parseArgs(["--clangtidy", "15.0.0", "--clangformat", "true"])
+    expect(syncVersions(opts2, llvmTools)).toBe(true)
+    expect(opts2.llvm).toBe(undefined)
+    expect(opts2.clangtidy).toBe("15.0.0")
+    expect(opts2.clangformat).toBe("15.0.0")
+
+    const opts3 = parseArgs(["--llvm", "true", "--clangformat", "true"])
+    expect(syncVersions(opts3, llvmTools)).toBe(true)
+    expect(opts3.llvm).toBe("true")
+    expect(opts3.clangtidy).toBe(undefined)
+    expect(opts3.clangformat).toBe("true")
   })
 })
 

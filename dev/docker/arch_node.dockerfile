@@ -10,30 +10,28 @@ RUN pacman -S --noconfirm --needed nodejs
 # curl for downloading setup-cpp
 RUN pacman -S --noconfirm --needed curl
 
-# add setup_cpp.js
+# add setup-cpp.js
 COPY "./dist/node12" "/"
 WORKDIR "/"
 
 # run installation
-RUN node ./setup_cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true
+RUN node ./setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true
 
-# clean up
-RUN pacman -Scc --noconfirm
-RUN rm -rf /tmp/*
+CMD ["source", "~/.cpprc"]
+ENTRYPOINT ["/bin/bash"]
 
-CMD source ~/.cpprc
-ENTRYPOINT [ "/bin/bash" ]
 
 #### Building
-FROM base AS builder
+FROM base as builder
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
     && task build'
 
+
 ### Running environment
 # use a distroless image or ubuntu:22.04 if you wish
-FROM gcr.io/distroless/cc
+FROM gcr.io/distroless/cc as runner
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
 WORKDIR /home/app/

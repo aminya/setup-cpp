@@ -1,53 +1,50 @@
-import { getInput, endGroup, startGroup, notice } from "@actions/core"
+#!/usr/bin/env node
+/* eslint-disable node/shebang */
+
+import { endGroup, getInput, notice, startGroup } from "@actions/core"
+import ciDetect from "@npmcli/ci-detect"
+import { error, info, success, warning } from "ci-log"
+import mri from "mri"
+import * as numerous from "numerous"
+import numerousLocale from "numerous/locales/en.js"
+import { join } from "patha"
+import semverValid from "semver/functions/valid"
+import * as timeDelta from "time-delta"
+import timeDeltaLocale from "time-delta/locales/en.js"
+import { untildifyUser } from "untildify-user"
+
+import { setupBazel } from "./bazel/bazel"
 import { setupBrew } from "./brew/brew"
 import { setupCcache } from "./ccache/ccache"
-import { setupMake } from "./make/make"
-import { setupTask } from "./task/task"
 import { setupChocolatey } from "./chocolatey/chocolatey"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
 import { setupCppcheck } from "./cppcheck/cppcheck"
 import { setupDoxygen } from "./doxygen/doxygen"
+import { setupGcc, setupMingw } from "./gcc/gcc"
 import { activateGcovGCC, activateGcovLLVM, setupGcovr } from "./gcovr/gcovr"
-import { setupLLVM, setupClangTools } from "./llvm/llvm"
+import { setupGraphviz } from "./graphviz/graphviz"
+import { setupKcov } from "./kcov/kcov"
+import { setupClangTools, setupLLVM } from "./llvm/llvm"
+import { setupMake } from "./make/make"
 import { setupMeson } from "./meson/meson"
 import { setupMSVC } from "./msvc/msvc"
+import { setupNala } from "./nala/nala"
 import { setupNinja } from "./ninja/ninja"
 import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage"
-import { setupPython } from "./python/python"
-import mri from "mri"
-import { untildifyUser } from "untildify-user"
-import ciDetect from "@npmcli/ci-detect"
-import * as timeDelta from "time-delta"
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import timeDeltaLocale from "time-delta/locales/en.js"
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import * as numerous from "numerous"
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import numerousLocale from "numerous/locales/en.js"
-import { ubuntuVersion } from "./utils/env/ubuntu_version"
-
-import semverValid from "semver/functions/valid"
-import { getVersion, syncVersions } from "./versions/versions"
-import { setupGcc, setupMingw } from "./gcc/gcc"
-import { InstallationInfo } from "./utils/setup/setupBin"
-import { error, info, success, warning } from "ci-log"
-import { setupVcpkg } from "./vcpkg/vcpkg"
-import { join } from "patha"
-import { setupVCVarsall } from "./vcvarsall/vcvarsall"
-import { setupKcov } from "./kcov/kcov"
-import { addEnv, finalizeCpprc } from "./utils/env/addEnv"
-import { setupSevenZip } from "./sevenzip/sevenzip"
-import { setupGraphviz } from "./graphviz/graphviz"
-import { setupNala } from "./nala/nala"
-import { setupBazel } from "./bazel/bazel"
 import { setupPowershell } from "./powershell/powershell"
-import { isArch } from "./utils/env/isArch"
-import { setupPacmanPack } from "./utils/setup/setupPacmanPack"
+import { setupPython } from "./python/python"
 import { setupSccache } from "./sccache/sccache"
+import { setupSevenZip } from "./sevenzip/sevenzip"
+import { setupTask } from "./task/task"
+import { addEnv, finalizeCpprc } from "./utils/env/addEnv"
+import { isArch } from "./utils/env/isArch"
+import { ubuntuVersion } from "./utils/env/ubuntu_version"
+import { InstallationInfo } from "./utils/setup/setupBin"
+import { setupPacmanPack } from "./utils/setup/setupPacmanPack"
+import { setupVcpkg } from "./vcpkg/vcpkg"
+import { setupVCVarsall } from "./vcvarsall/vcvarsall"
+import { getVersion, syncVersions } from "./versions/versions"
 
 /** The setup functions */
 const setups = {
@@ -117,7 +114,7 @@ export async function main(args: string[]): Promise<number> {
 
   const timeFormatter = timeDelta.create({ autoloadLocales: true })
   timeDelta.addLocale(timeDeltaLocale as timeDelta.Locale)
-  numerous.addLocale(numerousLocale)
+  numerous.addLocale(numerousLocale as numerous.Locale)
   let time1: number
   let time2: number
 
@@ -279,7 +276,7 @@ export async function main(args: string[]): Promise<number> {
   await finalizeCpprc()
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
-    warning("setup_cpp was called without any arguments. Nothing to do.")
+    warning("setup-cpp was called without any arguments. Nothing to do.")
     return 0
   }
 
@@ -287,7 +284,7 @@ export async function main(args: string[]): Promise<number> {
   successMessages.forEach((tool) => success(tool))
   errorMessages.forEach((tool) => error(tool))
 
-  info("setup_cpp finished")
+  info("setup-cpp finished")
 
   if (ciDetect() !== "github-actions") {
     switch (process.platform) {
@@ -352,8 +349,8 @@ export function getCompilerInfo(maybeCompiler: string) {
 
 function printHelp() {
   info(`
-setup_cpp [options]
-setup_cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+setup-cpp [options]
+setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 Install all the tools required for building and testing C++/C projects.
 

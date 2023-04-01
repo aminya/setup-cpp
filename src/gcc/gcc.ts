@@ -253,7 +253,7 @@ async function activateGcc(version: string, binDir: string) {
 async function addGccLoggingMatcher() {
   const matcherPath = join(__dirname, "gcc_matcher.json")
   if (!(await pathExists(matcherPath))) {
-    return warning("the gcc_matcher.json file does not exist in the same folder as setup_cpp.js")
+    return warning("the gcc_matcher.json file does not exist in the same folder as setup-cpp.js")
   }
   info(`::add-matcher::${matcherPath}`)
 }
