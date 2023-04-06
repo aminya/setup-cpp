@@ -25,6 +25,7 @@ jobs:
           - macos-12
           - macos-11
         node:
+          - 16
           - 18
         pnpm:
           - 8

@@ -26,7 +26,7 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "shx rm -rf dist/ && shx mkdir -p ./dist/legacy ./dist/node12 ./dist/node16 ./dist/node18 && run-p lint.tsc build.parcel copy.matchers",
+    "build": "shx rm -rf dist/ && shx mkdir -p ./dist/node12 ./dist/node16 ./dist/node18 && run-p lint.tsc build.parcel copy.matchers",
     "build.docker": "pnpm build && docker build -f ./dev/docker/ubuntu_node.dockerfile -t setup-cpp .",
     "build.docker.arch": "pnpm build && docker build -f ./dev/docker/arch_node.dockerfile -t setup-cpp:arch .",
     "build.docker.fedora": "pnpm build && docker build -f ./dev/docker/fedora_node.dockerfile -t setup-cpp:fedora .",
@@ -35,7 +35,7 @@
     "bump": "ncu -u -x execa,numerous,path-exists && pnpm update",
     "clean": "shx rm -rf .parcel-cache dist exe",
     "copy.matchers": "run-p copy.matchers.node12 copy.matchers.node16 copy.matchers.node18",
-    "copy.matchers.node12": "shx cp ./src/gcc/gcc_matcher.json ./dist/legacy/ && shx cp ./src/msvc/msvc_matcher.json ./dist/legacy/ && shx cp ./src/python/python_matcher.json ./dist/legacy/ && shx cp ./src/llvm/llvm_matcher.json ./dist/legacy/ && shx cp ./dist/legacy/* ./dist/node12/",
+    "copy.matchers.node12": "shx cp ./src/gcc/gcc_matcher.json ./dist/node12/ && shx cp ./src/msvc/msvc_matcher.json ./dist/node12/ && shx cp ./src/python/python_matcher.json ./dist/node12/ && shx cp ./src/llvm/llvm_matcher.json ./dist/node12/",
     "copy.matchers.node16": "shx cp ./src/gcc/gcc_matcher.json ./dist/node16/ && shx cp ./src/msvc/msvc_matcher.json ./dist/node16/ && shx cp ./src/python/python_matcher.json ./dist/node16/ && shx cp ./src/llvm/llvm_matcher.json ./dist/node16/",
     "copy.matchers.node18": "shx cp ./src/gcc/gcc_matcher.json ./dist/node18/ && shx cp ./src/msvc/msvc_matcher.json ./dist/node18/ && shx cp ./src/python/python_matcher.json ./dist/node18/ && shx cp ./src/llvm/llvm_matcher.json ./dist/node18/",
     "dev": "cross-env NODE_ENV=development parcel watch",
@@ -143,6 +143,7 @@
     "electron": false,
     "patha": "patha/dist/index.node.mjs"
   },
+  "node12": "./dist/node12/setup-cpp.js",
   "main.actions": "./dist/node18/setup-cpp.js",
   "pnpm": {
     "overrides": {
@@ -165,7 +166,7 @@
     }
   },
   "targets": {
-    "legacy": {
+    "node12": {
       "context": "node",
       "engines": {
         "node": ">=12.x"
