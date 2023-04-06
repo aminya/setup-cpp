@@ -134,7 +134,6 @@ jobs:
           - "ubuntu_node_legacy.dockerfile"
           - "ubuntu_20.04_node_legacy.dockerfile"
           - "ubuntu_20.04_node.dockerfile"
-          - "ubuntu_22.04_node.dockerfile"
           - "arch_node.dockerfile"
           - "fedora_node.dockerfile"
         cache_reset_counter:
