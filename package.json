@@ -10,6 +10,8 @@
     "require": "./dist/node16/setup-cpp.js"
   },
   "main": "./dist/node16/setup-cpp.js",
+  "main.legacy": "./dist/node12/setup-cpp.js",
+  "main.actions": "./dist/node18/setup-cpp.js",
   "source": "./src/main.ts",
   "bin": {
     "setup-cpp": "./dist/node16/setup-cpp.js"
@@ -118,7 +120,7 @@
     "which": "^3.0.0"
   },
   "engines": {
-    "node": ">=16.x"
+    "node": ">=12.x"
   },
   "keywords": [
     "github-actions",
@@ -143,8 +145,6 @@
     "electron": false,
     "patha": "patha/dist/index.node.mjs"
   },
-  "node12": "./dist/node12/setup-cpp.js",
-  "main.actions": "./dist/node18/setup-cpp.js",
   "pnpm": {
     "overrides": {
       "semver": "7.3.8",
@@ -166,7 +166,7 @@
     }
   },
   "targets": {
-    "node12": {
+    "main.legacy": {
       "context": "node",
       "engines": {
         "node": ">=12.x"

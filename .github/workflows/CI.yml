@@ -27,9 +27,12 @@ jobs:
         cache_reset_counter:
           - 0
         node:
+          - 12
           - 16
           - 18
         include:
+          - node: 12
+            pnpm: 6
           - node: 16
             pnpm: 7
           - node: 18

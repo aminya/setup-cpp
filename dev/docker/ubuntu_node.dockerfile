@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 AS base
 
-ADD https://deb.nodesource.com/setup_16.x /
-RUN chmod +x /node_setup_16.x && /node_setup16.x
+RUN apt-get update -qq && apt-get install -y --no-install-recommends curl gnupg
+RUN curl -sL https://deb.nodesource.com/setup_16.x  | bash -
 RUN apt-get update -qq && apt-get install -y --no-install-recommends nodejs
 
 # add setup-cpp.js
