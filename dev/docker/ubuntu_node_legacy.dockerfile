@@ -1,11 +1,10 @@
 FROM ubuntu:22.04 AS base
 
-ADD https://deb.nodesource.com/setup_16.x /
-RUN chmod +x /node_setup_16.x && /node_setup16.x
-RUN apt-get update -qq && apt-get install -y --no-install-recommends nodejs
+RUN apt-get update -qq
+RUN apt-get install -y --no-install-recommends nodejs
 
 # add setup-cpp.js
-COPY "./dist/node16" "/"
+COPY "./dist/node12" "/"
 WORKDIR "/"
 
 # run installation

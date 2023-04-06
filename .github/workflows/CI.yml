@@ -26,9 +26,10 @@ jobs:
           - macos-11
         cache_reset_counter:
           - 0
+        node:
+          - 16
+          - 18
         include:
-          - node: 12
-            pnpm: 6
           - node: 16
             pnpm: 7
           - node: 18
@@ -69,7 +70,7 @@ jobs:
         if: "!contains(github.event.head_commit.message, '[skip test]')"
         run: |
           pnpm run test
-        continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') || contains(matrix.node, '12') }}
+        continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') }}
 
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
@@ -127,6 +128,7 @@ jobs:
           - ubuntu-22.04
         container:
           - "ubuntu_node.dockerfile"
+          - "ubuntu_node_legacy.dockerfile"
           - "ubuntu_20.04_node_legacy.dockerfile"
           - "ubuntu_20.04_node.dockerfile"
           - "ubuntu_22.04_node.dockerfile"
