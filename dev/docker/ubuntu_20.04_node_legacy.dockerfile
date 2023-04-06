@@ -4,10 +4,20 @@ FROM ubuntu:20.04 as base
 ENV TZ=Canada/Pacific
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+# install node with nvm
+RUN apt-get update -qq && apt-get install -y --no-install-recommends git curl wget ca-certificates
 ARG nvm_version="0.39.3"
-RUN touch ~/.bashrc && chmod +x ~/.bashrc
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${nvm_version}/install.sh | bash
-RUN source ~/.nvm/nvm.sh && nvm install 12
+ARG node_version="12.22.12"
+RUN mkdir /usr/local/nvm
+ENV NVM_DIR /usr/local/nvm
+ADD https://raw.githubusercontent.com/nvm-sh/nvm/v${nvm_version}/install.sh /nvm_install.sh
+RUN chmod +x /nvm_install.sh && /nvm_install.sh \
+    && . $NVM_DIR/nvm.sh \
+    && nvm install $node_version \
+    && nvm alias default $node_version \
+    && nvm use default
+ENV NODE_PATH $NVM_DIR/v${node_version}/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v${node_version}/bin:$PATH
 
 # add setup-cpp.js
 COPY "./dist/node12" "/"
