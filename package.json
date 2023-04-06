@@ -6,13 +6,13 @@
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "exports": {
-    "import": "./dist/node12/setup-cpp.mjs",
-    "require": "./dist/node12/setup-cpp.js"
+    "import": "./dist/node16/setup-cpp.mjs",
+    "require": "./dist/node16/setup-cpp.js"
   },
-  "main": "./dist/node12/setup-cpp.js",
+  "main": "./dist/node16/setup-cpp.js",
   "source": "./src/main.ts",
   "bin": {
-    "setup-cpp": "./dist/node12/setup-cpp.js"
+    "setup-cpp": "./dist/node16/setup-cpp.js"
   },
   "files": [
     "dist",
@@ -26,7 +26,7 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "shx rm -rf dist/ && shx mkdir -p ./dist/node12 ./dist/node16 && run-p lint.tsc build.parcel copy.matchers",
+    "build": "shx rm -rf dist/ && shx mkdir -p ./dist/legacy ./dist/node12 ./dist/node16 ./dist/node18 && run-p lint.tsc build.parcel copy.matchers",
     "build.docker": "pnpm build && docker build -f ./dev/docker/ubuntu_node.dockerfile -t setup-cpp .",
     "build.docker.arch": "pnpm build && docker build -f ./dev/docker/arch_node.dockerfile -t setup-cpp:arch .",
     "build.docker.fedora": "pnpm build && docker build -f ./dev/docker/fedora_node.dockerfile -t setup-cpp:fedora .",
@@ -34,7 +34,10 @@
     "build.parcel": "cross-env NODE_ENV=production parcel build",
     "bump": "ncu -u -x execa,numerous,path-exists && pnpm update",
     "clean": "shx rm -rf .parcel-cache dist exe",
-    "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/node12/ && shx cp ./src/msvc/msvc_matcher.json ./dist/node12/ && shx cp ./src/python/python_matcher.json ./dist/node12/ && shx cp ./src/llvm/llvm_matcher.json ./dist/node12/ && shx cp ./dist/node12/*.json ./dist/node16/",
+    "copy.matchers": "run-p copy.matchers.node12 copy.matchers.node16 copy.matchers.node18",
+    "copy.matchers.node12": "shx cp ./src/gcc/gcc_matcher.json ./dist/legacy/ && shx cp ./src/msvc/msvc_matcher.json ./dist/legacy/ && shx cp ./src/python/python_matcher.json ./dist/legacy/ && shx cp ./src/llvm/llvm_matcher.json ./dist/legacy/ && shx cp ./dist/legacy/* ./dist/node12/",
+    "copy.matchers.node16": "shx cp ./src/gcc/gcc_matcher.json ./dist/node16/ && shx cp ./src/msvc/msvc_matcher.json ./dist/node16/ && shx cp ./src/python/python_matcher.json ./dist/node16/ && shx cp ./src/llvm/llvm_matcher.json ./dist/node16/",
+    "copy.matchers.node18": "shx cp ./src/gcc/gcc_matcher.json ./dist/node18/ && shx cp ./src/msvc/msvc_matcher.json ./dist/node18/ && shx cp ./src/python/python_matcher.json ./dist/node18/ && shx cp ./src/llvm/llvm_matcher.json ./dist/node18/",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "docs": "shx rm -rf packages/*/README.md && pnpm -r exec readme --path ../../dev/readme/template.md -y && pnpm -r exec ts-readme",
     "format": "run-s lint.prettier",
@@ -115,7 +118,7 @@
     "which": "^3.0.0"
   },
   "engines": {
-    "node": ">=12.x"
+    "node": ">=16.x"
   },
   "keywords": [
     "github-actions",
@@ -140,7 +143,7 @@
     "electron": false,
     "patha": "patha/dist/index.node.mjs"
   },
-  "main.actions": "./dist/node16/setup-cpp.js",
+  "main.actions": "./dist/node18/setup-cpp.js",
   "pnpm": {
     "overrides": {
       "semver": "7.3.8",
@@ -148,7 +151,12 @@
       "prettier": "2.7.1",
       "lru-cache": "7.8.1",
       "core-js": "*",
-      "babel-eslint": "npm:@babel/eslint-parser"
+      "babel-eslint": "npm:@babel/eslint-parser",
+      "got@<11.8.5": ">=11.8.5",
+      "minimist@<0.2.1": ">=0.2.1",
+      "http-cache-semantics@<4.1.1": ">=4.1.1",
+      "minimist@<0.2.4": ">=0.2.4",
+      "deep-extend@<0.5.1": ">=0.5.1"
     },
     "peerDependencyRules": {
       "allowedVersions": {
@@ -157,7 +165,7 @@
     }
   },
   "targets": {
-    "main": {
+    "legacy": {
       "context": "node",
       "engines": {
         "node": ">=12.x"
@@ -166,10 +174,19 @@
       "optimize": true,
       "outputFormat": "commonjs"
     },
-    "main.actions": {
+    "main": {
       "context": "node",
       "engines": {
         "node": ">=16.x"
+      },
+      "includeNodeModules": true,
+      "optimize": true,
+      "outputFormat": "commonjs"
+    },
+    "main.actions": {
+      "context": "node",
+      "engines": {
+        "node": ">=18.x"
       },
       "includeNodeModules": true,
       "optimize": true,

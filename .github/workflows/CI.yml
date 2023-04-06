@@ -25,9 +25,9 @@ jobs:
           - macos-12
           - macos-11
         node:
-          - 16
+          - 18
         pnpm:
-          - 7
+          - 8
         cache_reset_counter:
           - 0
     steps:
@@ -106,10 +106,13 @@ jobs:
             ./exe/setup-cpp-x64-windows.exe
             ./exe/setup-cpp-x64-linux
             ./exe/setup-cpp-x64-macos
-            ./dist/node12/setup-cpp.js
-            ./dist/node12/setup-cpp.js.map
-            ./dist/node12/
+            #./dist/node12/setup-cpp.js
+            #./dist/node12/setup-cpp.js.map
+            ./dist/node12/                      # TODO: deprecate node12
+            ./dist/node16/setup-cpp.js
+            ./dist/node16/setup-cpp.js.map
             ./dist/node16/
+            ./dist/node18/
 
   Docker:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip test]') }}
@@ -118,16 +121,18 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-20.04
+          - ubuntu-22.04
         container:
           - "ubuntu_node.dockerfile"
+          - "ubuntu_20.04_node_legacy.dockerfile"
           - "ubuntu_20.04_node.dockerfile"
+          - "ubuntu_22.04_node.dockerfile"
           - "arch_node.dockerfile"
           - "fedora_node.dockerfile"
         node:
-          - 14
+          - 18
         pnpm:
-          - 6
+          - 8
         cache_reset_counter:
           - 0
     steps:

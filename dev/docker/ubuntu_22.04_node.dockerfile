@@ -5,13 +5,13 @@ ENV TZ=Canada/Pacific
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 ARG nvm_version="0.39.3"
-ARG node_version="16.20.0"
+ARG node_version="18.15.0"
 RUN touch ~/.bashrc && chmod +x ~/.bashrc
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v${nvm_version}/install.sh | bash
 RUN source ~/.nvm/nvm.sh && nvm install ${node_version}
 
 # add setup-cpp.js
-COPY "./dist/node16" "/"
+COPY "./dist/node18" "/"
 WORKDIR "/"
 
 # run installation
