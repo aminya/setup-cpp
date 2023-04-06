@@ -24,13 +24,15 @@ jobs:
           - ubuntu-18.04
           - macos-12
           - macos-11
-        node:
-          - 16
-          - 18
-        pnpm:
-          - 8
         cache_reset_counter:
           - 0
+        include:
+          - node: 12
+            pnpm: 6
+          - node: 16
+            pnpm: 7
+          - node: 18
+            pnpm: 8
     steps:
       - uses: actions/checkout@v3
         with:
@@ -67,7 +69,7 @@ jobs:
         if: "!contains(github.event.head_commit.message, '[skip test]')"
         run: |
           pnpm run test
-        continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') }}
+        continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') || contains(matrix.node, '12') }}
 
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
@@ -130,10 +132,6 @@ jobs:
           - "ubuntu_22.04_node.dockerfile"
           - "arch_node.dockerfile"
           - "fedora_node.dockerfile"
-        node:
-          - 18
-        pnpm:
-          - 8
         cache_reset_counter:
           - 0
     steps:
@@ -150,19 +148,6 @@ jobs:
           key: "setupcpp-docker-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}-${{ matrix.cache_reset_counter }}"
           restore-keys: |
             "setupcpp-docker-cache-OS:${{ matrix.os }}"
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Setup Pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ matrix.pnpm }}
-
-      - name: Install and build
-        run: |
-          pnpm install
 
       - name: Build
         id: docker_build
