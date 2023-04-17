@@ -71,7 +71,7 @@ jobs:
       #   uses: mxschmitt/action-tmate@v3
 
       - name: Test
-        if: "${{ !contains(github.event.head_commit.message, '[skip test]') && !${{ matrix.skip_test }} }}"
+        if: "${{ !contains(github.event.head_commit.message, '[skip test]') && !matrix.skip_test }}"
         run: |
           pnpm run test
         continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') }}
