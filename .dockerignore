@@ -2,3 +2,4 @@
 node_modules/
 dev/docker/
 dev/container-tests/
+dist/

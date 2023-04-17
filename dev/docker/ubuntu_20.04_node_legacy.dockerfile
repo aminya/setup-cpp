@@ -19,29 +19,40 @@ RUN chmod +x /nvm_install.sh && /nvm_install.sh \
 ENV NODE_PATH $NVM_DIR/v${node_version}/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v${node_version}/bin:$PATH
 
+# install pnpm
+RUN npm install -g pnpm@6.35.1
+
+
+#### Building
+FROM base AS builder
+## https://github.com/ever0de/pnpm-docker-root-bug#how-to-fix
+WORKDIR /workspace
+COPY . .
+RUN pnpm install
+
+
+#### setup-cpp
+FROM base AS setup-cpp
 # add setup-cpp.js
-COPY "./dist/node12" "/"
-WORKDIR "/"
-
+COPY --from=builder /workspace/dist/node12 /
 # run installation
-RUN node ./setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true
-
+RUN . $NVM_DIR/nvm.sh && node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
 CMD ["source", "~/.cpprc"]
 ENTRYPOINT ["/bin/bash"]
 
 
-#### Building
-FROM base as builder
+#### Building (example)
+FROM setup-cpp AS example-builder
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
     && task build'
 
 
-### Running environment
-# use a distroless image or ubuntu:20.04 if you wish
+#### Running environment
+# use a distroless image or ubuntu:22.04 if you wish
 FROM gcr.io/distroless/cc as runner
 # copy the built binaries and their runtime dependencies
-COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
+COPY --from=example-builder /home/app/build/my_exe/Release/ /home/app/
 WORKDIR /home/app/
 ENTRYPOINT ["./my_exe"]

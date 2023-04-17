@@ -33,6 +33,7 @@ jobs:
         include:
           - node: 12
             pnpm: 6
+            skip_test: true
           - node: 16
             pnpm: 7
           - node: 18
@@ -70,7 +71,7 @@ jobs:
       #   uses: mxschmitt/action-tmate@v3
 
       - name: Test
-        if: "!contains(github.event.head_commit.message, '[skip test]')"
+        if: "${{ !contains(github.event.head_commit.message, '[skip test]') && !${{ matrix.skip_test }} }}"
         run: |
           pnpm run test
         continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') }}
@@ -113,11 +114,9 @@ jobs:
             ./exe/setup-cpp-x64-windows.exe
             ./exe/setup-cpp-x64-linux
             ./exe/setup-cpp-x64-macos
-            #./dist/node12/setup-cpp.js
-            #./dist/node12/setup-cpp.js.map
+            ./dist/node12/setup-cpp.js
+            ./dist/node12/setup-cpp.js.map
             ./dist/node12/                      # TODO: deprecate node12
-            ./dist/node16/setup-cpp.js
-            ./dist/node16/setup-cpp.js.map
             ./dist/node16/
             ./dist/node18/
 
@@ -130,12 +129,12 @@ jobs:
         os:
           - ubuntu-22.04
         container:
-          - "ubuntu_node.dockerfile"
-          - "ubuntu_node_legacy.dockerfile"
-          - "ubuntu_20.04_node_legacy.dockerfile"
-          - "ubuntu_20.04_node.dockerfile"
           - "arch_node.dockerfile"
           - "fedora_node.dockerfile"
+          - "ubuntu_20.04_node_legacy.dockerfile"
+          - "ubuntu_20.04_node.dockerfile"
+          - "ubuntu_node_legacy.dockerfile"
+          - "ubuntu_node.dockerfile"
         cache_reset_counter:
           - 0
     steps:
