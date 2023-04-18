@@ -2,7 +2,7 @@
 FROM fedora as base
 
 # nodejs and curl for downloading setup-cpp
-RUN dnf -y install nodejs curl
+RUN dnf -y install nodejs npm curl git
 
 # install pnpm
 RUN npm install -g pnpm
@@ -21,7 +21,7 @@ FROM base AS setup-cpp
 # add setup-cpp.js
 COPY --from=builder /workspace/dist/node18 /
 # run installation
-RUN . $NVM_DIR/nvm.sh && node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
+RUN node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
 CMD ["source", "~/.cpprc"]
 ENTRYPOINT ["/bin/bash"]
 

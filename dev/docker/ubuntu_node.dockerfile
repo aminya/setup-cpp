@@ -16,7 +16,10 @@ ENV NODE_PATH $NVM_DIR/v${node_version}/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v${node_version}/bin:$PATH
 
 # install pnpm
-RUN npm install -g pnpm
+ADD https://get.pnpm.io/install.sh /tmp/pnpm_install.sh
+RUN chmod +x /tmp/pnpm_install.sh && bash /tmp/pnpm_install.sh
+ENV PNPM_HOME "/root/.local/share/pnpm"
+ENV PATH "${PATH}:${PNPM_HOME}"
 
 
 #### Building

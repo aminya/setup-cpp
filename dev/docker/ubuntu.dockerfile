@@ -2,8 +2,7 @@
 FROM ubuntu:22.04 as base
 
 # install setup-cpp
-RUN apt-get update -qq
-RUN apt-get install -y --no-install-recommends npm
+RUN apt-get update -qq && apt-get install -y --no-install-recommends npm git curl
 RUN npm install -g setup-cpp
 
 # install llvm, cmake, ninja, and ccache

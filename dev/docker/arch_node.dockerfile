@@ -5,7 +5,7 @@ RUN pacman -Syuu --noconfirm
 RUN pacman-db-upgrade
 
 # install nodejs
-RUN pacman -S --noconfirm --needed nodejs
+RUN pacman -S --noconfirm --needed nodejs npm git
 
 # install pnpm
 #RUN pacman -S --noconfirm --needed pnpm
@@ -25,7 +25,7 @@ FROM base AS setup-cpp
 # add setup-cpp.js
 COPY --from=builder /workspace/dist/node18 /
 # run installation
-RUN . $NVM_DIR/nvm.sh && node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
+RUN node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
 CMD ["source", "~/.cpprc"]
 ENTRYPOINT ["/bin/bash"]
 

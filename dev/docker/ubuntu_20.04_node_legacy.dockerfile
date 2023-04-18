@@ -20,7 +20,11 @@ ENV NODE_PATH $NVM_DIR/v${node_version}/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v${node_version}/bin:$PATH
 
 # install pnpm
-RUN npm install -g pnpm@6.35.1
+ENV PNPM_VERSION "6.35.1"
+ADD https://get.pnpm.io/install.sh /tmp/pnpm_install.sh
+RUN chmod +x /tmp/pnpm_install.sh && bash /tmp/pnpm_install.sh
+ENV PNPM_HOME "/root/.local/share/pnpm"
+ENV PATH "${PATH}:${PNPM_HOME}"
 
 
 #### Building
@@ -28,7 +32,8 @@ FROM base AS builder
 ## https://github.com/ever0de/pnpm-docker-root-bug#how-to-fix
 WORKDIR /workspace
 COPY . .
-RUN pnpm install
+## WARN  "prepare" script of "setup-cpp" inside "/workspace" is skipped as the working directory seems suspicious. To run this lifecycle script anyway, use "--unsafe-perm".
+RUN pnpm install --unsafe-perm
 
 
 #### setup-cpp
