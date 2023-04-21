@@ -21,7 +21,6 @@ jobs:
           - windows-2019
           - ubuntu-22.04
           - ubuntu-20.04
-          - ubuntu-18.04
           - macos-12
           - macos-11
         cache_reset_counter:
@@ -74,11 +73,10 @@ jobs:
         if: "${{ !contains(github.event.head_commit.message, '[skip test]') && !matrix.skip_test }}"
         run: |
           pnpm run test
-        continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') }}
 
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
-        if: "contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12')"
+        if: "${{ contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}"
         run: |
           pnpm run pack.exe
 
