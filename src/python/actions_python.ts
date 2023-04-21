@@ -36,11 +36,11 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
   if (version) {
     let pythonVersion: string
     if (isPyPyVersion(version)) {
-      const installed = await findPyPyVersion(version, arch, true, checkLatest)
+      const installed = await findPyPyVersion(version, arch, true, checkLatest, false)
       pythonVersion = `${installed.resolvedPyPyVersion}-${installed.resolvedPythonVersion}`
       info(`Successfully set up PyPy ${installed.resolvedPyPyVersion} with Python (${installed.resolvedPythonVersion})`)
     } else {
-      const installed = await useCpythonVersion(version, arch, true, checkLatest)
+      const installed = await useCpythonVersion(version, arch, true, checkLatest, false)
       pythonVersion = installed.version
       info(`Successfully set up ${installed.impl} (${pythonVersion})`)
     }

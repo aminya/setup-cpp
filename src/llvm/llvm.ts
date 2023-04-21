@@ -15,6 +15,7 @@ import { isUbuntu } from "../utils/env/isUbuntu"
 import { getLLVMPackageInfo } from "./llvm_url"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
 import pathExists from "path-exists"
+import { ExecaReturnValue } from "execa"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
@@ -70,7 +71,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  const promises: Promise<any>[] = [
+  const promises: Promise<void | ExecaReturnValue<string>>[] = [
     // the output of this action
     addEnv("LLVM_PATH", directory),
 
