@@ -23,9 +23,6 @@ importers:
       '@actions/tool-cache':
         specifier: ^2.0.1
         version: 2.0.1
-      '@npmcli/ci-detect':
-        specifier: ^3.0.2
-        version: 3.0.2
       '@types/cross-spawn':
         specifier: ^6.0.2
         version: 6.0.2
@@ -59,6 +56,9 @@ importers:
       caxa:
         specifier: ^3.0.1
         version: 3.0.1
+      ci-info:
+        specifier: ^3.8.0
+        version: 3.8.0
       ci-log:
         specifier: workspace:*
         version: link:packages/ci-log
@@ -81,7 +81,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       eslint:
-        specifier: ^8.39.0
+        specifier: ^8.28.0
         version: 8.39.0
       eslint-config-atomic:
         specifier: ^1.18.3
@@ -1546,12 +1546,6 @@ packages:
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
-    dev: true
-
-  /@npmcli/ci-detect@3.0.2:
-    resolution: {integrity: sha512-P7nZG0skRVa9lH0OQmFG62CrzOySUiuPbKopjVAj3sXP0m1om9XfIvTp46h+NvlpTyd121JekiXFZj+1pnbm9g==}
-    engines: {node: ^14.17.0 || ^16.13.0 || >=18.0.0}
-    deprecated: this package has been deprecated, use `ci-info` instead
     dev: true
 
   /@npmcli/fs@2.1.2:

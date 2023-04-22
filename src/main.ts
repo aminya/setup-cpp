@@ -2,7 +2,7 @@
 /* eslint-disable node/shebang */
 
 import { endGroup, getInput, notice, startGroup } from "@actions/core"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { error, info, success, warning } from "ci-log"
 import mri from "mri"
 import * as numerous from "numerous"
@@ -89,7 +89,7 @@ const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 
 /** The main entry function */
 export async function main(args: string[]): Promise<number> {
-  if (ciDetect() !== "github-actions") {
+  if (!GITHUB_ACTIONS) {
     process.env.ACTIONS_ALLOW_UNSECURE_COMMANDS = "true"
   }
 
@@ -280,7 +280,7 @@ export async function main(args: string[]): Promise<number> {
 
   info("setup-cpp finished")
 
-  if (ciDetect() !== "github-actions") {
+  if (!GITHUB_ACTIONS) {
     switch (process.platform) {
       case "win32": {
         warning("Run `RefreshEnv.cmd` or restart your shell to update the environment.")

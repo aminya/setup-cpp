@@ -4,7 +4,7 @@ import { join } from "patha"
 import { info } from "ci-log"
 
 import { tmpdir } from "os"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { setupAptPack } from "./setupAptPack"
 import { setupPacmanPack } from "./setupPacmanPack"
 import { isArch } from "../env/isArch"
@@ -66,7 +66,7 @@ export async function setupBin(
   )
 
   // Restore from cache (if found).
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     try {
       const dir = find(name, version)
       if (dir) {
@@ -136,7 +136,7 @@ export async function setupBin(
   await addPath(binDir)
 
   // check if inside Github Actions. If so, cache the installation
-  if (ciDetect() === "github-actions" && typeof process.env.RUNNER_TOOL_CACHE === "string") {
+  if (GITHUB_ACTIONS && typeof process.env.RUNNER_TOOL_CACHE === "string") {
     await cacheDir(setupDir, name, version)
   }
 
