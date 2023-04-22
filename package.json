@@ -60,7 +60,7 @@
   },
   "prettier": "prettier-config-atomic",
   "dependencies": {
-    "update-notifier": "^6.0.2"
+    "update-notifier": "^5.1.0"
   },
   "devDependencies": {
     "@actions/core": "^1.10.0",

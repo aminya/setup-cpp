@@ -5,10 +5,10 @@ import { join } from "path"
 // auto self update notifier
 export async function checkUpdates() {
   try {
-    const updateNotifier = (await import("update-notifier")).default
+    const { UpdateNotifier } = await import("update-notifier")
     const packageJsonString = await readFile(join(__dirname, "..", "package.json"), "utf8")
     const packageJson = JSON.parse(packageJsonString)
-    updateNotifier({ pkg: packageJson }).notify()
+    new UpdateNotifier({ pkg: packageJson }).notify()
   } catch (err) {
     warning(`Failed to check for updates: ${err}`)
   }
