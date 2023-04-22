@@ -82,7 +82,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       eslint:
-        specifier: ^8.38.0
+        specifier: ^8.28.0
         version: 8.38.0
       eslint-config-atomic:
         specifier: ^1.18.3
