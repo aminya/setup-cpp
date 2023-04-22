@@ -8,7 +8,7 @@ import which from "which"
 import pathExists from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
-import execa from "execa"
+import { execa } from "execa"
 import escapeRegex from "escape-string-regexp"
 
 let didUpdate: boolean = false

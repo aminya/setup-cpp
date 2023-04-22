@@ -1,4 +1,4 @@
-import execa from "execa"
+import * as execa from "execa"
 import which from "which"
 
 /** The cached powershell path */
@@ -19,7 +19,7 @@ export function execPowershell(
   startupFlags: string[] = ["-NoProfile", "-NoLogo", "-NonInteractive"],
   execOptions: execa.Options = { stdio: "inherit" }
 ): execa.ExecaChildProcess<string> {
-  return execa(getPowerShell(), [...startupFlags, "-c", command], execOptions)
+  return execa.execa(getPowerShell(), [...startupFlags, "-c", command], execOptions)
 }
 
 /**
@@ -37,7 +37,7 @@ export function execPowershellSync(
   startupFlags: string[] = ["-NoProfile", "-NoLogo", "-NonInteractive"],
   execOptions: execa.SyncOptions = { stdio: "inherit" }
 ): execa.ExecaSyncReturnValue<string> {
-  return execa.sync(getPowerShell(), [...startupFlags, "-c", command], execOptions)
+  return execa.execaSync(getPowerShell(), [...startupFlags, "-c", command], execOptions)
 }
 
 /**
