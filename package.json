@@ -59,6 +59,9 @@
     "test.unit": "jest --runInBand"
   },
   "prettier": "prettier-config-atomic",
+  "dependencies": {
+    "update-notifier": "^6.0.2"
+  },
   "devDependencies": {
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
@@ -153,7 +156,9 @@
       "engines": {
         "node": ">=12.x"
       },
-      "includeNodeModules": true,
+      "includeNodeModules": {
+        "update-notifier": false
+      },
       "optimize": true,
       "outputFormat": "commonjs"
     },
@@ -162,7 +167,9 @@
       "engines": {
         "node": ">=16.x"
       },
-      "includeNodeModules": true,
+      "includeNodeModules": {
+        "update-notifier": false
+      },
       "optimize": true,
       "outputFormat": "commonjs"
     }

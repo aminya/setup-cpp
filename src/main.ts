@@ -16,6 +16,7 @@ import { untildifyUser } from "untildify-user"
 import { setupBazel } from "./bazel/bazel"
 import { setupBrew } from "./brew/brew"
 import { setupCcache } from "./ccache/ccache"
+import { checkUpdates } from "./check-updates"
 import { setupChocolatey } from "./chocolatey/chocolatey"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
@@ -89,7 +90,9 @@ const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
 
 /** The main entry function */
 export async function main(args: string[]): Promise<number> {
+  let checkUpdatePromise = Promise.resolve()
   if (!GITHUB_ACTIONS) {
+    checkUpdatePromise = checkUpdates()
     process.env.ACTIONS_ALLOW_UNSECURE_COMMANDS = "true"
   }
 
@@ -297,8 +300,11 @@ export async function main(args: string[]): Promise<number> {
     }
   }
 
+  await checkUpdatePromise
+
   return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
 }
+
 // Run main
 main(process.argv)
   .then((ret) => {
