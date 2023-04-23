@@ -1,6 +1,6 @@
 import { execaSync } from "execa"
 import { notice } from "ci-log"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix, dirname, join } from "patha"
 import { giveUserAccess } from "user-access"
 import which from "which"

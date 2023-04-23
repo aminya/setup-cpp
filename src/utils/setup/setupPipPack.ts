@@ -1,7 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import { info } from "@actions/core"
 import { execaSync } from "execa"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
 import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"

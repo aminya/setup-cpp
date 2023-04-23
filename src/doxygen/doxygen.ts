@@ -14,7 +14,7 @@ import { isArch } from "../utils/env/isArch"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
 
 /** Get the platform data for cmake */

@@ -16,7 +16,7 @@ import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 
 interface MingwInfo {
   releaseName: string

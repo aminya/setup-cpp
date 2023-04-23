@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { execaSync } from "execa"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 import { dirname } from "patha"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"

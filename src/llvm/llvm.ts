@@ -14,7 +14,7 @@ import { getVersion } from "../versions/versions"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { getLLVMPackageInfo } from "./llvm_url"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 import { ExecaReturnValue } from "execa"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
