@@ -7,7 +7,7 @@ import { GITHUB_ACTIONS } from "ci-info"
 import { join } from "patha"
 
 import { error, info, warning } from "ci-log"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 
 type MSVCVersion = "2022" | "17.0" | "2019" | "16.0" | "2017" | "15.0" | "2015" | "14.0" | "2013" | "12.0" | string
 

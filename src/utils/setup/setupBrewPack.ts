@@ -1,6 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import { info } from "@actions/core"
-import execa from "execa"
+import { execaSync } from "execa"
 import { join } from "patha"
 import which from "which"
 import { getBrewPath, setupBrew } from "../../brew/brew"
@@ -24,7 +24,7 @@ export async function setupBrewPack(
   const binDir = getBrewPath()
 
   // brew is not thread-safe
-  execa.sync(
+  execaSync(
     join(binDir, "brew"),
     ["install", version !== undefined && version !== "" ? `${name}@${version}` : name, ...extraArgs],
     {

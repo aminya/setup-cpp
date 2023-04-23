@@ -3,7 +3,7 @@ import { addPath } from "../env/addEnv"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"
-import execa from "execa"
+import { execaSync } from "execa"
 import { info } from "@actions/core"
 import { notice } from "ci-log"
 
@@ -27,14 +27,14 @@ export async function setupChocoPack(name: string, version?: string, args: strin
   env.PATH = PATH
 
   if (version !== undefined && version !== "") {
-    execa.sync("choco", ["install", "-y", name, `--version=${version}`, ...args], {
+    execaSync("choco", ["install", "-y", name, `--version=${version}`, ...args], {
       env,
       extendEnv: false,
       stdio: "inherit",
     })
   } else {
     try {
-      execa.sync("choco", ["install", "-y", name, ...args], { env, extendEnv: false, stdio: "inherit" })
+      execaSync("choco", ["install", "-y", name, ...args], { env, extendEnv: false, stdio: "inherit" })
     } catch (err) {
       // if the package requires a reboot, downgrade the error to a notice
       if ((err as Error).message.includes("exit code 3010")) {

@@ -38,7 +38,7 @@ Execute a powershell command.
 
 - command (`string`) - The powershell command to execute
 - startupFlags (`string[]`) - The optional startup flags to be passed to powershell. Defaults to `["-NoProfile", "-NoLogo", "-NonInteractive"]`. This means that the Powershell profile is not sourced first.
-- execOptions (`execa.SyncOptions`) - The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+- execOptions (`execaSyncOptions`) - The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
 
 **returns:** execa.ExecaSyncReturnValue<string>
 

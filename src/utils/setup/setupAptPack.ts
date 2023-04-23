@@ -5,10 +5,10 @@ import { info } from "@actions/core"
 import { GITHUB_ACTIONS } from "ci-info"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
 import which from "which"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
-import execa from "execa"
+import { execa } from "execa"
 import escapeRegex from "escape-string-regexp"
 
 let didUpdate: boolean = false

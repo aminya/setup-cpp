@@ -8,7 +8,7 @@ import { delimiter } from "path"
 import escapeSpace from "escape-path-with-spaces"
 import { giveUserAccess } from "user-access"
 import escapeQuote from "escape-quotes"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 
 /**
  * Add an environment variable.
@@ -69,7 +69,7 @@ async function addEnvSystem(name: string, valGiven: string | undefined) {
   const val = valGiven ?? ""
   switch (process.platform) {
     case "win32": {
-      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit
+      // We do not use `execaSync(`setx PATH "${path};%PATH%"`)` because of its character limit
       await execPowershell(`[Environment]::SetEnvironmentVariable('${name}', '${val}', "User")`)
       info(`${name}='${val}' was set in the environment.`)
       return
@@ -91,7 +91,7 @@ async function addEnvSystem(name: string, valGiven: string | undefined) {
 async function addPathSystem(path: string) {
   switch (process.platform) {
     case "win32": {
-      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
+      // We do not use `execaSync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
       await execPowershell(
         `$USER_PATH=([Environment]::GetEnvironmentVariable("PATH", "User")); [Environment]::SetEnvironmentVariable("PATH", "${path};$USER_PATH", "User")`
       )

@@ -1,5 +1,5 @@
 /* eslint-disable import/no-extraneous-dependencies */
-import { node } from "execa"
+import { execaNode } from "execa"
 
 function getPlatformName() {
   switch (process.platform) {
@@ -27,7 +27,7 @@ function main() {
 
   return Promise.all(
     exes.map((exe) =>
-      node("./node_modules/caxa/build/index.mjs", [
+      execaNode("./node_modules/caxa/build/index.mjs", [
         "--input",
         "./dist/node16",
         "--output",

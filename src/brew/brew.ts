@@ -1,4 +1,4 @@
-import execa from "execa"
+import { execaSync } from "execa"
 import { dirname } from "patha"
 import which from "which"
 import { tmpdir } from "os"
@@ -28,7 +28,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
   const brewTempDirectory = path.join(tmpdir(), "setup-cpp", "brew")
   await mkdirP(brewTempDirectory)
 
-  execa.sync("curl", ["-LJO", "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"], {
+  execaSync("curl", ["-LJO", "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"], {
     cwd: brewTempDirectory,
   })
   const installSh = join(brewTempDirectory, "install.sh")
@@ -39,7 +39,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
     installShContent.replace("#!/bin/bash", "")
   }
 
-  execa.sync("/bin/bash", [installSh], {
+  execaSync("/bin/bash", [installSh], {
     stdio: "inherit",
     env: {
       NONINTERACTIVE: "1",
