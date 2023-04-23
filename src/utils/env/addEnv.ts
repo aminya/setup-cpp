@@ -1,5 +1,5 @@
 import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/core"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { untildifyUser } from "untildify-user"
 import { appendFileSync, readFileSync, writeFileSync } from "fs"
 import { error, warning } from "ci-log"
@@ -8,7 +8,7 @@ import { delimiter } from "path"
 import escapeSpace from "escape-path-with-spaces"
 import { giveUserAccess } from "user-access"
 import escapeQuote from "escape-quotes"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 
 /**
  * Add an environment variable.
@@ -18,7 +18,7 @@ import pathExists from "path-exists"
 export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
   const val = escapeString(valGiven ?? "", shouldEscapeSpace)
   try {
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       try {
         exportVariable(name, val)
       } catch (err) {
@@ -47,7 +47,7 @@ function escapeString(valGiven: string, shouldEscapeSpace: boolean = false) {
 export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       try {
         ghAddPath(path)
       } catch (err) {
@@ -69,7 +69,7 @@ async function addEnvSystem(name: string, valGiven: string | undefined) {
   const val = valGiven ?? ""
   switch (process.platform) {
     case "win32": {
-      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit
+      // We do not use `execaSync(`setx PATH "${path};%PATH%"`)` because of its character limit
       await execPowershell(`[Environment]::SetEnvironmentVariable('${name}', '${val}', "User")`)
       info(`${name}='${val}' was set in the environment.`)
       return
@@ -91,7 +91,7 @@ async function addEnvSystem(name: string, valGiven: string | undefined) {
 async function addPathSystem(path: string) {
   switch (process.platform) {
     case "win32": {
-      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
+      // We do not use `execaSync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
       await execPowershell(
         `$USER_PATH=([Environment]::GetEnvironmentVariable("PATH", "User")); [Environment]::SetEnvironmentVariable("PATH", "${path};$USER_PATH", "User")`
       )

@@ -1,4 +1,4 @@
-import execa from "execa"
+import { execa } from "execa"
 import { join, addExeExt } from "patha"
 import which from "which"
 import { setupCmake } from "../cmake/cmake"

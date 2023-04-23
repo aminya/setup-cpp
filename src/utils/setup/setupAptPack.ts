@@ -2,13 +2,13 @@
 import { InstallationInfo } from "./setupBin"
 import { execRoot, execRootSync } from "admina"
 import { info } from "@actions/core"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
 import which from "which"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
-import execa from "execa"
+import { execa } from "execa"
 import escapeRegex from "escape-string-regexp"
 
 let didUpdate: boolean = false
@@ -149,7 +149,7 @@ export async function addAptKeyViaDownload(name: string, url: string) {
 }
 
 export async function updateAptAlternatives(name: string, path: string) {
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     return execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
   } else {
     await setupCppInProfile()

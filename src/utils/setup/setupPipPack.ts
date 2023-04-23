@@ -1,13 +1,12 @@
 /* eslint-disable require-atomic-updates */
-import execa from "execa"
 import { info } from "@actions/core"
-import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"
-import { InstallationInfo } from "./setupBin"
-
+import { execaSync } from "execa"
+import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
-import { addPath } from "../env/addEnv"
 import which from "which"
-import pathExists from "path-exists"
+import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"
+import { addPath } from "../env/addEnv"
+import { InstallationInfo } from "./setupBin"
 
 let python: string | undefined
 let binDirs: string[] | undefined
@@ -20,7 +19,7 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     python = await setupPythonAndPip()
   }
 
-  execa.sync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
+  execaSync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
     stdio: "inherit",
   })
 

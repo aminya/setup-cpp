@@ -1,6 +1,6 @@
 import { setupCmake } from "../cmake"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { getVersion } from "../../versions/versions"
 
 jest.setTimeout(300000)
@@ -19,7 +19,7 @@ describe("setup-cmake", () => {
   it("should find CMake in the cache", async () => {
     const { binDir } = await setupCmake(getVersion("cmake", "true"), directory, process.arch)
     await testBin("cmake", ["--version"], binDir)
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
     }
   })

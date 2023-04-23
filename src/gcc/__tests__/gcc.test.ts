@@ -2,7 +2,7 @@ import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-help
 import { setupGcc } from "../gcc"
 import { getVersion } from "../../versions/versions"
 import { join, addExeExt } from "patha"
-import execa from "execa"
+import { execaSync } from "execa"
 import { chmodSync } from "fs"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 
@@ -29,11 +29,11 @@ describe("setup-gcc", () => {
     // test compilation
     const file = join(__dirname, "main.cpp")
     const main_exe = join(__dirname, addExeExt("main"))
-    execa.sync("g++", [file, "-o", main_exe], { cwd: __dirname })
+    execaSync("g++", [file, "-o", main_exe], { cwd: __dirname })
     if (process.platform !== "win32") {
       chmodSync(main_exe, "755")
     }
-    execa.sync(main_exe, { cwd: __dirname, stdio: "inherit" })
+    execaSync(main_exe, { cwd: __dirname, stdio: "inherit" })
   })
 
   afterAll(async () => {

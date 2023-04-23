@@ -4,10 +4,10 @@ import { findPyPyVersion } from "setup-python/src/find-pypy"
 import { info, warning } from "ci-log"
 import { debug } from "@actions/core"
 import { join } from "patha"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { isCacheFeatureAvailable, IS_MAC } from "setup-python/src/utils"
 import { getCacheDistributor } from "setup-python/src/cache-distributions/cache-factory"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy")
@@ -51,7 +51,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
     }
   }
 
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     await addPythonLoggingMatcher()
   }
 

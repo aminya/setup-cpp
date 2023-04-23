@@ -3,7 +3,7 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { warning, info } from "ci-log"
 import { isArch } from "../utils/env/isArch"
 import which from "which"
@@ -16,11 +16,11 @@ import { getExecOutput } from "@actions/exec"
 import { isBinUptoDate } from "../utils/setup/version"
 import { getVersion } from "../versions/versions"
 import assert from "assert"
-import execa from "execa"
+import { execaSync } from "execa"
 import { unique } from "../utils/std"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
-  if (ciDetect() !== "github-actions") {
+  if (!GITHUB_ACTIONS) {
     // TODO parse version
     return setupPythonViaSystem(version, setupDir, arch)
   }
@@ -71,12 +71,12 @@ export async function setupPythonViaSystem(
       } else if (isUbuntu()) {
         installInfo = await setupAptPack([{ name: "python3", version }, { name: "python3-pip" }])
       } else {
-        throw new Error(`Unsupported linux distributions`)
+        throw new Error("Unsupported linux distributions")
       }
       return installInfo
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }
@@ -109,7 +109,7 @@ export async function setupPythonAndPip(): Promise<string> {
   if (process.platform === "win32") {
     // downgrade pip on Windows
     // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
-    execa.sync(foundPython, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
+    execaSync(foundPython, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
   } else if (process.platform === "linux") {
     // ensure that pip is installed on Linux (happens when python is found but pip not installed)
     if (isArch()) {
@@ -122,7 +122,7 @@ export async function setupPythonAndPip(): Promise<string> {
   }
 
   // install wheel (required for Conan, Meson, etc.)
-  execa.sync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
+  execaSync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
 
   return foundPython
 }

@@ -9,14 +9,14 @@ import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { join, addExeExt } from "patha"
 import { warning, info } from "ci-log"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 
 interface MingwInfo {
   releaseName: string
@@ -197,7 +197,7 @@ async function activateGcc(version: string, binDir: string) {
 
   promises.push(setupMacOSSDK())
 
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     await addGccLoggingMatcher()
   }
 
