@@ -8,7 +8,7 @@ import { addEnv } from "../utils/env/addEnv"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { info, warning } from "ci-log"
 
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { setupGcc } from "../gcc/gcc"
 import { getVersion } from "../versions/versions"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -115,7 +115,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     )
   }
 
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     await addLLVMLoggingMatcher()
   }
 
@@ -124,7 +124,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
 export async function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     await addLLVMLoggingMatcher()
   }
   return setupLLVMWithoutActivation(version, setupDir, arch)

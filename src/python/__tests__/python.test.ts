@@ -2,7 +2,7 @@ import { setupPython } from "../python"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { info } from "ci-log"
 
 jest.setTimeout(300000)
@@ -13,7 +13,7 @@ describe("setup-python", () => {
   })
 
   it("should setup python in GitHub Actions", async () => {
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       info("Installing python in GitHub Actions")
       const { setupActionsPython } = await import("../actions_python")
       await setupActionsPython(getVersion("python", "true", await ubuntuVersion()), directory, process.arch)

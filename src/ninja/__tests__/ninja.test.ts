@@ -1,6 +1,6 @@
 import { setupNinja } from "../ninja"
 import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { getVersion } from "../../versions/versions"
 
 jest.setTimeout(300000)
@@ -22,7 +22,7 @@ describe("setup-ninja", () => {
 
   it("should find Ninja in the cache", async () => {
     const binDir = await testNinja(directory)
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
     }
   })

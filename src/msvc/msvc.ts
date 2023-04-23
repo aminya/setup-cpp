@@ -3,7 +3,7 @@ import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { vsversion_to_versionnumber, findVcvarsall } from "msvc-dev-cmd/lib.js"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { join } from "patha"
 
 import { error, info, warning } from "ci-log"
@@ -66,7 +66,7 @@ export async function setupMSVC(
   // run vcvarsall.bat environment variables
   await setupVCVarsall(version, VCTargetsPath, arch, toolset, sdk, uwp, spectre)
 
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     await addMSVCLoggingMatcher()
   }
 }

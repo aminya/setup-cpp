@@ -1,12 +1,12 @@
 import { setupPowershell } from "../powershell"
 import { testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 
 jest.setTimeout(300000)
 describe("setup-powershell", () => {
   it("should setup powershell", async () => {
-    if (process.platform === "win32" && ciDetect() === "github-actions") {
+    if (process.platform === "win32" && GITHUB_ACTIONS) {
       // results in errors
       return
     }
