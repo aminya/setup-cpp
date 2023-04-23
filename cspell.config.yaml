@@ -75,6 +75,7 @@ words:
   - tsbuildinfo
   - ucrt
   - untildify
+  - upleveled
   - vbatts
   - vcpkg
   - vcvarsall
