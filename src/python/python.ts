@@ -3,7 +3,7 @@ import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { warning, info } from "ci-log"
 import { isArch } from "../utils/env/isArch"
 import which from "which"
@@ -20,7 +20,7 @@ import { execaSync } from "execa"
 import { unique } from "../utils/std"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
-  if (ciDetect() !== "github-actions") {
+  if (!GITHUB_ACTIONS) {
     // TODO parse version
     return setupPythonViaSystem(version, setupDir, arch)
   }

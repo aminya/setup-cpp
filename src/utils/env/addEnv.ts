@@ -1,5 +1,5 @@
 import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/core"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { untildifyUser } from "untildify-user"
 import { appendFileSync, readFileSync, writeFileSync } from "fs"
 import { error, warning } from "ci-log"
@@ -18,7 +18,7 @@ import pathExists from "path-exists"
 export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
   const val = escapeString(valGiven ?? "", shouldEscapeSpace)
   try {
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       try {
         exportVariable(name, val)
       } catch (err) {
@@ -47,7 +47,7 @@ function escapeString(valGiven: string, shouldEscapeSpace: boolean = false) {
 export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       try {
         ghAddPath(path)
       } catch (err) {

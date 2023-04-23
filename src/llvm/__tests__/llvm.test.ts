@@ -2,7 +2,7 @@ import { setupLLVM, setupClangTools } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isUrlOnline } from "is-url-online"
 import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { execaSync } from "execa"
 import path, { addExeExt } from "patha"
 import { chmodSync } from "fs"
@@ -104,7 +104,7 @@ describe("setup-llvm", () => {
     const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
-    if (ciDetect() === "github-actions" && process.platform !== "linux") {
+    if (GITHUB_ACTIONS && process.platform !== "linux") {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
       // TODO returns the install dir on linux
     }
@@ -112,7 +112,7 @@ describe("setup-llvm", () => {
     expect(process.env.CC?.includes("clang")).toBeTruthy()
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
 
-    if (ciDetect() === "github-actions" && process.platform !== "linux") {
+    if (GITHUB_ACTIONS && process.platform !== "linux") {
       expect(process.env.CC).toMatch("hostedtoolcache")
       expect(process.env.CXX).toMatch("hostedtoolcache")
     }
