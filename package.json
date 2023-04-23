@@ -32,7 +32,7 @@
     "build.docker.fedora": "pnpm build && docker build -f ./dev/docker/fedora_node.dockerfile -t setup-cpp:fedora .",
     "build.docker.ubuntu": "pnpm build && docker build -f ./dev/docker/ubuntu_node.dockerfile -t setup-cpp:ubuntu .",
     "build.parcel": "cross-env NODE_ENV=production parcel build && babel ./dist --out-dir dist --plugins @upleveled/babel-plugin-remove-node-prefix --compact --no-babelrc --source-maps true",
-    "bump": "ncu -u -x execa,numerous,path-exists && pnpm update",
+    "bump": "ncu -u -x numerous,path-exists && pnpm update",
     "clean": "shx rm -rf .parcel-cache dist exe",
     "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/node12/ && shx cp ./src/msvc/msvc_matcher.json ./dist/node12/ && shx cp ./src/python/python_matcher.json ./dist/node12/ && shx cp ./src/llvm/llvm_matcher.json ./dist/node12/ && shx cp ./dist/node12/*.json ./dist/node16/",
     "dev": "cross-env NODE_ENV=development parcel watch",
@@ -69,7 +69,7 @@
     "@types/eslint": "^8.37.0",
     "@types/jest": "^29.5.1",
     "@types/mri": "^1.1.1",
-    "@types/node": "^18.15.13",
+    "@types/node": "^18.16.0",
     "@types/npmcli__ci-detect": "^2.0.0",
     "@types/prettier": "2.7.2",
     "@types/semver": "^7.3.13",
@@ -147,20 +147,6 @@
     "patha": "patha/dist/index.node.mjs"
   },
   "main.actions": "./dist/node16/setup-cpp.js",
-  "pnpm": {
-    "overrides": {
-      "semver": "7.3.8",
-      "eslint": "^8.28.0",
-      "prettier": "2.7.1",
-      "core-js": "*",
-      "babel-eslint": "npm:@babel/eslint-parser"
-    },
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "eslint": "*"
-      }
-    }
-  },
   "targets": {
     "main": {
       "context": "node",
