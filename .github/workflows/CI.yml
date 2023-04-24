@@ -29,14 +29,8 @@ jobs:
           - 12
           - 16
           - 18
-        include:
-          - node: 12
-            pnpm: 6
-            skip_test: true
-          - node: 16
-            pnpm: 7
-          - node: 18
-            pnpm: 8
+        pnpm:
+          - 8
     steps:
       - uses: actions/checkout@v3
         with:
