@@ -64,6 +64,21 @@ jobs:
         run: |
           pnpm run test
 
+      # Create self-contained executable that bundles Nodejs
+      - name: Create Executable
+        if: "${{ contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}"
+        run: |
+          pnpm run pack.exe
+
+      - name: Upload Artifacts
+        if: ${{ (startsWith(github.ref, 'refs/tags/')) && contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}
+        uses: actions/upload-artifact@v3
+        with:
+          path: |
+            ./exe
+            ./dist
+          retention-days: 1
+
       - name: Setup Node 12
         uses: actions/setup-node@v3
         with:
@@ -79,21 +94,6 @@ jobs:
       - name: Smoke Test Node 16
         run: |
           node ./dist/node16/setup-cpp.js --help
-
-      # Create self-contained executable that bundles Nodejs
-      - name: Create Executable
-        if: "${{ contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}"
-        run: |
-          pnpm run pack.exe
-
-      - name: Upload Artifacts
-        if: ${{ (startsWith(github.ref, 'refs/tags/')) && contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}
-        uses: actions/upload-artifact@v3
-        with:
-          path: |
-            ./exe
-            ./dist
-          retention-days: 1
 
   Release:
     needs: Test
