@@ -23,11 +23,7 @@ jobs:
           - ubuntu-20.04
           - macos-12
           - macos-11
-        cache_reset_counter:
-          - 0
         node:
-          - 12
-          - 16
           - 18
         pnpm:
           - 8
@@ -64,9 +60,25 @@ jobs:
       #   uses: mxschmitt/action-tmate@v3
 
       - name: Test
-        if: "${{ !contains(github.event.head_commit.message, '[skip test]') && contains(matrix.node, '18') }}"
+        if: "${{ !contains(github.event.head_commit.message, '[skip test]') }}"
         run: |
           pnpm run test
+
+      - name: Setup Node 12
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+      - name: Smoke Test Node 12
+        run: |
+          node ./dist/node12/setup-cpp.js --help
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Smoke Test Node 16
+        run: |
+          node ./dist/node16/setup-cpp.js --help
 
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
@@ -127,8 +139,6 @@ jobs:
           - "ubuntu_20.04_node.dockerfile"
           - "ubuntu_node_legacy.dockerfile"
           - "ubuntu_node.dockerfile"
-        cache_reset_counter:
-          - 0
     steps:
       - uses: actions/checkout@v3
         with:
@@ -140,7 +150,7 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
-          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}-${{ matrix.cache_reset_counter }}"
+          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-docker-cache-OS:${{ matrix.os }}"
 
