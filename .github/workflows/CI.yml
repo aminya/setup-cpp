@@ -135,9 +135,6 @@ jobs:
         container:
           - "arch_node.dockerfile"
           - "fedora_node.dockerfile"
-          - "ubuntu_20.04_node_legacy.dockerfile"
-          - "ubuntu_20.04_node.dockerfile"
-          - "ubuntu_node_legacy.dockerfile"
           - "ubuntu_node.dockerfile"
     steps:
       - uses: actions/checkout@v3

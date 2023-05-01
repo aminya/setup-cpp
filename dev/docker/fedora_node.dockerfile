@@ -2,10 +2,8 @@
 FROM fedora as base
 
 # nodejs and curl for downloading setup-cpp
-RUN dnf -y install nodejs npm curl git
-
-# install pnpm
-RUN npm install -g pnpm
+RUN dnf -y install nodejs npm curl git && dnf clean all \
+    && npm install -g pnpm
 
 
 #### Building

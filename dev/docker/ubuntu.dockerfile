@@ -2,11 +2,10 @@
 FROM ubuntu:22.04 as base
 
 # install setup-cpp
-RUN apt-get update -qq && apt-get install -y --no-install-recommends npm git curl
-RUN npm install -g setup-cpp
-
+RUN apt-get update -qq && apt-get install -y --no-install-recommends npm git curl && rm -rf /var/lib/apt/lists/* \
+    && npm install -g setup-cpp \
 # install llvm, cmake, ninja, and ccache
-RUN setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
+    && setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
 
 CMD ["source", "~/.cpprc"]
 ENTRYPOINT ["/bin/bash"]

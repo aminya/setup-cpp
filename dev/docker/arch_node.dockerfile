@@ -1,15 +1,9 @@
 ## base image
 FROM archlinux as base
 
-RUN pacman -Syuu --noconfirm
-RUN pacman-db-upgrade
-
-# install nodejs
-RUN pacman -S --noconfirm --needed nodejs npm git
-
-# install pnpm
-#RUN pacman -S --noconfirm --needed pnpm
-RUN npm install -g pnpm
+# install nodejs and pnpm
+RUN pacman -Syuu --noconfirm && pacman-db-upgrade && pacman -S --noconfirm --needed nodejs npm git \
+    && npm install -g pnpm
 
 
 #### Building
