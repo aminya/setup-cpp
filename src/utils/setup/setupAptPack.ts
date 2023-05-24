@@ -68,7 +68,7 @@ async function getAptArg(name: string, version: string | undefined) {
       return `${name}-${version}`
     } else {
       // check if apt-get show can find the version
-      const { stdout: showStdout } = await execa("apt-get", ["show", `${name}=${version}`])
+      const { stdout: showStdout } = await execa("apt-cache", ["show", `${name}=${version}`])
       if (showStdout.trim() === "") {
         return `${name}=${version}`
       }
