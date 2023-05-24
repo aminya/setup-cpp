@@ -95,7 +95,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
     case "linux": {
       if (arch === "x64") {
         if (isArch()) {
-          installationInfo = setupPacmanPack("gcc", version)
+          installationInfo = await setupPacmanPack("gcc", version)
         } else if (hasDnf()) {
           installationInfo = setupDnfPack("gcc", version)
           setupDnfPack("gcc-c++", version)

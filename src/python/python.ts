@@ -63,7 +63,7 @@ export async function setupPythonViaSystem(
     case "linux": {
       let installInfo: InstallationInfo
       if (isArch()) {
-        installInfo = setupPacmanPack("python", version)
+        installInfo = await setupPacmanPack("python", version)
         setupPacmanPack("python-pip")
       } else if (hasDnf()) {
         installInfo = setupDnfPack("python3", version)
