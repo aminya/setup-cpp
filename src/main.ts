@@ -214,7 +214,7 @@ export async function main(args: string[]): Promise<number> {
           const installationInfo = await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
 
           if (hasLLVM) {
-            // remove the CPPFLAGS of LLVM that include the LLVM headers
+            // remove back the added CPPFLAGS of LLVM that include the LLVM headers
             await addEnv("CPPFLAGS", "")
           }
 

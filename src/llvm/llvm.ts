@@ -93,15 +93,16 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     setupMacOSSDK(),
   ]
 
-  // windows builds fail with llvm's CPATH
-  if (process.platform !== "win32") {
-    const llvmMajor = semverMajor(version)
-    if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
-      promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
-    } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
-      promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`))
-    }
-  }
+  // TODO Causes issues with clangd
+  // TODO Windows builds fail with llvm's CPATH
+  // if (process.platform !== "win32") {
+  //   const llvmMajor = semverMajor(version)
+  //   if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
+  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
+  //   } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
+  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`))
+  //   }
+  // }
 
   if (isUbuntu()) {
     promises.push(
