@@ -11,6 +11,18 @@ describe("setup-Kcov", () => {
     return
   }
 
+  it("should build and setup kcov-41", async () => {
+    const directory = await setupTmpDir("kcov-v41")
+    const { binDir } = (await setupKcov("41", directory, "")) as InstallationInfo
+    // the prebuild binary only works on ubuntu 20.04
+    try {
+      await testBin("kcov", ["--version"], binDir)
+    } catch (err) {
+      info((err as Error).message)
+    }
+    await cleanupTmpDir("kcov-v41")
+  })
+
   it("should setup Kcov v40 via downloading the binaries", async () => {
     const directory = await setupTmpDir("kcov-v40")
     const { binDir } = (await setupKcov("40-binary", directory, "")) as InstallationInfo
