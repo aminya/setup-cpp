@@ -64,7 +64,7 @@ export async function setupPythonViaSystem(
       let installInfo: InstallationInfo
       if (isArch()) {
         installInfo = await setupPacmanPack("python", version)
-        setupPacmanPack("python-pip")
+        await setupPacmanPack("python-pip")
       } else if (hasDnf()) {
         installInfo = setupDnfPack("python3", version)
         setupDnfPack("python3-pip")
@@ -113,7 +113,7 @@ export async function setupPythonAndPip(): Promise<string> {
   } else if (process.platform === "linux") {
     // ensure that pip is installed on Linux (happens when python is found but pip not installed)
     if (isArch()) {
-      setupPacmanPack("python-pip")
+      await setupPacmanPack("python-pip")
     } else if (hasDnf()) {
       setupDnfPack("python3-pip")
     } else if (isUbuntu()) {

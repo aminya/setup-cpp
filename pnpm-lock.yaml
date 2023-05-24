@@ -187,9 +187,9 @@ importers:
       '@actions/core':
         specifier: ^1.9.1
         version: 1.9.1
-      '@npmcli/ci-detect':
-        specifier: github:aminya/ci-detect#37fe40075bebec96794ba0a7c4a6d5c70cbea00d
-        version: github.com/aminya/ci-detect/37fe40075bebec96794ba0a7c4a6d5c70cbea00d
+      ci-info:
+        specifier: ^3.8.0
+        version: 3.8.0
 
   packages/exec-powershell:
     dependencies:
@@ -3612,7 +3612,6 @@ packages:
   /ci-info@3.8.0:
     resolution: {integrity: sha512-eXTggHWSooYhq49F2opQhuHWgzucfF2YgODK4e1566GQs5BIfP30B0oenwBJHfWxAs2fyPB1s7Mg949zLf61Yw==}
     engines: {node: '>=8'}
-    dev: true
 
   /cjs-module-lexer@1.2.2:
     resolution: {integrity: sha512-cOU9usZw8/dXIXKtwa8pM0OTJQuJkxMN6w30csNRUerHfeQ5R6U3kkU/FtJeIf3M202OHfY2U8ccInBG7/xogA==}
@@ -10619,13 +10618,6 @@ packages:
     dependencies:
       '@babel/core': 7.21.4
     dev: true
-
-  github.com/aminya/ci-detect/37fe40075bebec96794ba0a7c4a6d5c70cbea00d:
-    resolution: {tarball: https://codeload.github.com/aminya/ci-detect/tar.gz/37fe40075bebec96794ba0a7c4a6d5c70cbea00d}
-    name: '@npmcli/ci-detect'
-    version: 2.0.0
-    engines: {node: ^12.13.0 || ^14.15.0 || >=16.0.0}
-    dev: false
 
   github.com/aminya/msvc-dev-cmd/9f672c1:
     resolution: {tarball: https://codeload.github.com/aminya/msvc-dev-cmd/tar.gz/9f672c1}

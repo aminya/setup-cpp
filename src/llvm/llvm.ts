@@ -1,6 +1,5 @@
 import { join, addExeExt } from "patha"
 import { delimiter } from "path"
-import semverMajor from "semver/functions/major"
 import { InstallationInfo, setupBin } from "../utils/setup/setupBin"
 import { semverCoerceIfInvalid } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
@@ -59,12 +58,12 @@ async function setupLLVMDeps(arch: string, version: string) {
       }
     }
     // TODO: install libtinfo on other distros
-    // setupPacmanPack("ncurses")
+    // await setupPacmanPack("ncurses")
   }
 }
 
 export async function activateLLVM(directory: string, versionGiven: string) {
-  const version = semverCoerceIfInvalid(versionGiven)
+  const _version = semverCoerceIfInvalid(versionGiven)
 
   const lib = join(directory, "lib")
 

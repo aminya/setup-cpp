@@ -104,9 +104,7 @@ export async function setupBin(
         info(`Installing extraction dependencies`)
         if (process.platform === "linux") {
           if (isArch()) {
-            setupPacmanPack("unzip")
-            setupPacmanPack("tar")
-            setupPacmanPack("xz")
+            await Promise.all([setupPacmanPack("unzip"), setupPacmanPack("tar"), setupPacmanPack("xz")])
           } else if (hasDnf()) {
             setupDnfPack("unzip")
             setupDnfPack("tar")

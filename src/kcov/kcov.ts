@@ -44,8 +44,7 @@ async function buildKcov(file: string, dest: string) {
 
   if (process.platform === "linux") {
     if (isArch()) {
-      setupPacmanPack("libdwarf")
-      setupPacmanPack("libcurl-openssl")
+      await Promise.all([setupPacmanPack("libdwarf"), setupPacmanPack("libcurl-openssl")])
     } else if (hasDnf()) {
       setupDnfPack("libdwarf-devel")
       setupDnfPack("libcurl-devel")
@@ -97,7 +96,7 @@ export async function setupKcov(versionGiven: string, setupDir: string, arch: st
   if (installMethod === "binary" && version_number >= 39) {
     installationInfo = await setupBin("kcov", version, getDownloadKcovPackageInfo, setupDir, arch)
     if (isArch()) {
-      setupPacmanPack("binutils")
+      await setupPacmanPack("binutils")
     } else if (hasDnf()) {
       setupDnfPack("binutils")
     } else if (isUbuntu()) {

@@ -111,6 +111,7 @@ async function addPathSystem(path: string) {
   }
 }
 
+/* eslint-disable require-atomic-updates */
 let setupCppInProfile_called = false
 
 /// handles adding conditions to source .cpprc file from .bashrc and .profile

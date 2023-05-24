@@ -1,4 +1,3 @@
-/* eslint-disable require-atomic-updates */
 import { info } from "@actions/core"
 import { execaSync } from "execa"
 import { pathExists } from "path-exists"
@@ -8,6 +7,7 @@ import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"
 import { addPath } from "../env/addEnv"
 import { InstallationInfo } from "./setupBin"
 
+/* eslint-disable require-atomic-updates */
 let python: string | undefined
 let binDirs: string[] | undefined
 
@@ -37,9 +37,8 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
 async function findBinDir(dirs: string[], name: string) {
   const exists = await Promise.all(dirs.map((dir) => pathExists(join(dir, addExeExt(name)))))
   const dirIndex = exists.findIndex((exist) => exist)
-  const foundDir = dirs[dirIndex]
-
-  if (foundDir !== undefined) {
+  if (dirIndex !== -1) {
+    const foundDir = dirs[dirIndex]
     return foundDir
   }
 

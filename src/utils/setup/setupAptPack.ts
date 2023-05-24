@@ -62,7 +62,7 @@ async function getAptArg(name: string, version: string | undefined) {
     const { stdout } = await execa("apt-cache", [
       "search",
       "--names-only",
-      `^${escapeRegex(name)}\-${escapeRegex(version)}$`,
+      `^${escapeRegex(name)}-${escapeRegex(version)}$`,
     ])
     if (stdout.trim() !== "") {
       return `${name}-${version}`
@@ -103,7 +103,7 @@ async function initApt(apt: string) {
     "ca-certificates",
     "gnupg",
   ])
-  const promises: Promise<any>[] = [
+  const promises: Promise<string | void>[] = [
     addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg"),
     addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
   ]
