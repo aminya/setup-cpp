@@ -49,7 +49,11 @@ export async function getSpecificVersionAndUrl(
 
   // if the given set doesn't include the version, throw an error
   if (!versions.has(version)) {
-    throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
+    throw new Error(
+      `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${JSON.stringify(
+        versions
+      )}`
+    )
   }
 
   const offlineUrls: string[] = []
@@ -68,8 +72,8 @@ export async function getSpecificVersionAndUrl(
   }
 
   throw new Error(
-    `Unsupported target! (platform='${platform}', version='${version}'). The offline urls tested:\n${offlineUrls.join(
-      "\n"
+    `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${JSON.stringify(
+      versions
     )}`
   )
 }
