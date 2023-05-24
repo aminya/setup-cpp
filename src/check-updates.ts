@@ -6,11 +6,18 @@ import { join } from "path"
 // auto self update notifier
 export async function checkUpdates() {
   try {
-    const { UpdateNotifier } = await import("update-notifier")
-    const packageJsonString = await readFile(join(__dirname, "..", "package.json"), "utf8")
+    const [un, packageJsonString] = await Promise.all([
+      import("update-notifier"),
+      readFile(join(__dirname, "..", "package.json"), "utf8"),
+    ])
+
     const packageJson = JSON.parse(packageJsonString)
-    new UpdateNotifier({ pkg: packageJson }).notify()
+
+    // the types do not match the actual export
+    const updateNotifier = un as unknown as (typeof un)["default"]
+
+    updateNotifier({ pkg: packageJson }).notify()
   } catch (err) {
-    warning(`Failed to check for updates: ${err}`)
+    warning(`Failed to check for updates: ${err instanceof Error ? err.message + err.stack : err}`)
   }
 }
