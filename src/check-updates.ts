@@ -1,5 +1,6 @@
 import { warning } from "ci-log"
-import { readFile } from "fs/promises"
+import { promises } from "fs"
+const { readFile } = promises
 import { join } from "path"
 
 // auto self update notifier
