@@ -44,6 +44,9 @@ importers:
       '@types/prettier':
         specifier: 2.7.2
         version: 2.7.2
+      '@types/resolve':
+        specifier: ^1.20.2
+        version: 1.20.2
       '@types/semver':
 <<<<<<< HEAD
         specifier: ^7.5.0
@@ -154,6 +157,9 @@ importers:
       readme-md-generator:
         specifier: ^1.0.0
         version: 1.0.0
+      resolve:
+        specifier: ^1.22.2
+        version: 1.22.2
       retry-as-promised:
         specifier: ^7.0.4
         version: 7.0.4
@@ -2667,6 +2673,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@types/resolve@1.20.2:
+    resolution: {integrity: sha512-60BCwRFOZCQhDncwQdxxeOEEkbc5dIMccYLwbxsS4TUNeVECQ/pBJ0j09mrHOl/JJvpRPGwO9SvE4nR2Nb/a4Q==}
+    dev: true
 
   /@types/responselike@1.0.0:
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
