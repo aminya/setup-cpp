@@ -11,6 +11,7 @@ ignorePaths:
   - "**/node_modules/"
 words:
   - aarch
+  - clangd
   - aminya
   - applellvm
   - bazel
