@@ -52,6 +52,19 @@ async function buildKcov(file: string, dest: string) {
       await setupAptPack([{ name: "libdw-dev" }, { name: "libcurl4-openssl-dev" }])
     }
   }
+
+  // apply gcc13.patch
+  try {
+    if (which.sync("patch", { nothrow: true }) !== null) {
+      const patch = join(__dirname, "gcc13.patch")
+      await execa("patch", ["-N", "-p1", "-i", patch], { cwd: out, stdio: "inherit" })
+    } else {
+      info("`patch` not found, skipping gcc13.patch, kcov may not build on gcc 13")
+    }
+  } catch {
+    // ignore
+  }
+
   const buildDir = join(out, "build")
   await execa(cmake, ["-S", out, "-B", buildDir, "-DCMAKE_BUILD_TYPE=Release", "-G", "Ninja"], {
     cwd: out,
