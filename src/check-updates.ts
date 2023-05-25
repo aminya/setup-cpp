@@ -1,6 +1,6 @@
 import { warning } from "ci-log"
 import updateNotifier from "simple-update-notifier"
-import packageJson from "../package-version.json" assert { type: "json" }
+import packageJson from "../package-version.json"
 
 // auto self update notifier
 export async function checkUpdates() {
