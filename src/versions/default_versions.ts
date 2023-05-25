@@ -36,7 +36,7 @@ export const DefaultVersions: Record<string, string> = {
 export const DefaultLinuxVersion: Record<string, Record<number, string>> = {
   gcc: {
     22: "13",
-    20: "13",
+    20: "11",
     18: "11",
     16: "11",
     14: "11",

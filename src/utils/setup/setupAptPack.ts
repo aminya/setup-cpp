@@ -67,10 +67,14 @@ async function getAptArg(name: string, version: string | undefined) {
     if (stdout.trim() !== "") {
       return `${name}-${version}`
     } else {
-      // check if apt-get show can find the version
-      const { stdout: showStdout } = await execa("apt-cache", ["show", `${name}=${version}`])
-      if (showStdout.trim() === "") {
-        return `${name}=${version}`
+      try {
+        // check if apt-get show can find the version
+        const { stdout: showStdout } = await execa("apt-cache", ["show", `${name}=${version}`])
+        if (showStdout.trim() === "") {
+          return `${name}=${version}`
+        }
+      } catch {
+        // ignore
       }
       warning(`Failed to install ${name} ${version} via apt, trying without version`)
     }

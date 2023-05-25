@@ -12,6 +12,8 @@ ignorePaths:
 words:
   - aarch
   - clangd
+  - Trofimovich
+  - cobertura
   - aminya
   - applellvm
   - bazel
