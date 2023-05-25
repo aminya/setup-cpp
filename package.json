@@ -43,7 +43,7 @@
     "lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
     "lint.prettier": "prettier --list-different --write .",
     "lint.tsc": "tsc --noEmit",
-    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && ts-node --esm ./dev/scripts/pack-exe.ts",
+    "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./dev/scripts/pack-exe.mjs",
     "prepare": "pnpm run -r build && pnpm run -w build",
     "start.docker": "docker run -t setup-cpp .",
     "start.docker.arch": "docker run -t setup-cpp:arch .",
