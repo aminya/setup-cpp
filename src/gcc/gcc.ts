@@ -17,6 +17,7 @@ import { isUbuntu } from "../utils/env/isUbuntu"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { pathExists } from "path-exists"
+import { ExecaReturnValue } from "execa"
 
 interface MingwInfo {
   releaseName: string
@@ -95,7 +96,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
     case "linux": {
       if (arch === "x64") {
         if (isArch()) {
-          installationInfo = setupPacmanPack("gcc", version)
+          installationInfo = await setupPacmanPack("gcc", version)
         } else if (hasDnf()) {
           installationInfo = setupDnfPack("gcc", version)
           setupDnfPack("gcc-c++", version)
@@ -109,7 +110,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         if (isArch()) {
-          setupPacmanPack("gcc-multilib", version)
+          await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
           await setupAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
         }
@@ -157,7 +158,7 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
 }
 
 async function activateGcc(version: string, binDir: string) {
-  const promises: Promise<any>[] = []
+  const promises: Promise<void | ExecaReturnValue<string>>[] = []
   // Setup gcc as the compiler
 
   // TODO

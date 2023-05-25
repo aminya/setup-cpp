@@ -12,7 +12,13 @@ import { info } from "ci-log"
 export function getSpecificVersions(versions: Set<string>, semversion: string): string[] {
   return Array.from(versions)
     .filter((v) => /^\d+\.\d+\.\d+$/.test(v) && v.startsWith(semversion))
-    .sort()
+    .sort((a, b) => {
+      try {
+        return semverCompare(a, b)
+      } catch (err) {
+        return a.localeCompare(b)
+      }
+    })
     .reverse()
 }
 
@@ -58,11 +64,12 @@ export async function getSpecificVersionAndUrl(
 
   const offlineUrls: string[] = []
 
+  // TODO use Promise.any
   for (const specificVersion of getSpecificVersions(versions, version)) {
     // eslint-disable-next-line no-await-in-loop
     const url = await getUrl(platform, specificVersion)
-    // eslint-disable-next-line no-await-in-loop
     if (url !== null) {
+      // eslint-disable-next-line no-await-in-loop
       if (await isUrlOnline(url)) {
         return [specificVersion, url]
       } else {

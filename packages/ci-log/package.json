@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@actions/core": "^1.9.1",
-    "@npmcli/ci-detect": "github:aminya/ci-detect#37fe40075bebec96794ba0a7c4a6d5c70cbea00d"
+    "ci-info": "^3.8.0"
   },
   "keywords": [
     "log",

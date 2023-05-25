@@ -70,7 +70,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       let installationInfo: InstallationInfo
       if (version === "" || isArch() || hasDnf()) {
         if (isArch()) {
-          installationInfo = setupPacmanPack("doxygen", version)
+          installationInfo = await setupPacmanPack("doxygen", version)
         } else if (hasDnf()) {
           return setupDnfPack("doxygen", version)
         } else if (isUbuntu()) {

@@ -131,7 +131,7 @@ export async function main(args: string[]): Promise<number> {
 
   if (isArch() && typeof opts.cppcheck === "string" && typeof opts.gcovr === "string") {
     info("installing python-pygments to avoid conflicts with cppcheck and gcovr on Arch linux")
-    setupPacmanPack("python-pygments")
+    await setupPacmanPack("python-pygments")
   }
 
   // loop over the tools and run their setup function
