@@ -9,20 +9,24 @@
     "import": "./dist/node12/setup-cpp.mjs",
     "require": "./dist/node12/setup-cpp.js"
   },
-  "main": "./dist/node12/setup-cpp.js",
+  "main": "dist/node12/setup-cpp.js",
   "source": "./src/main.ts",
   "bin": {
-    "setup-cpp": "./dist/node12/setup-cpp.js"
+    "setup-cpp": "dist/node12/setup-cpp.js"
   },
   "files": [
+    "action.yml",
+    ".dockerignore",
     "dist",
     "src",
     "packages",
-    "dev",
+    "dev/docker",
+    "dev/container-tests",
     "README.md",
     "LICENSE.txt",
     "LICENSE.dependencies.txt",
     "package.json",
+    "package-version.json",
     "tsconfig.json"
   ],
   "scripts": {
@@ -44,7 +48,7 @@
     "lint.prettier": "prettier --list-different --write .",
     "lint.tsc": "tsc --noEmit",
     "pack.exe": "shx rm -rf ./dist/tsconfig.tsbuildinfo && node ./dev/scripts/pack-exe.mjs",
-    "prepare": "pnpm run -r build && pnpm run -w build",
+    "prepare": "pnpm run -r build && pnpm run -w build && rm ./dist/tsconfig.tsbuildinfo",
     "start.docker": "docker run -t setup-cpp .",
     "start.docker.arch": "docker run -t setup-cpp:arch .",
     "start.docker.fedora": "docker run -t setup-cpp:fedora .",
