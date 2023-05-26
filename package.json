@@ -31,7 +31,7 @@
     "build.docker.arch": "pnpm build && docker build -f ./dev/docker/arch_node.dockerfile -t setup-cpp:arch .",
     "build.docker.fedora": "pnpm build && docker build -f ./dev/docker/fedora_node.dockerfile -t setup-cpp:fedora .",
     "build.docker.ubuntu": "pnpm build && docker build -f ./dev/docker/ubuntu_node.dockerfile -t setup-cpp:ubuntu .",
-    "build.parcel": "cross-env NODE_ENV=production parcel build --detailed-report 10 && babel ./dist --out-dir dist --plugins @upleveled/babel-plugin-remove-node-prefix --compact --no-babelrc --source-maps true",
+    "build.parcel": "cross-env NODE_ENV=production parcel build && babel ./dist --out-dir dist --plugins @upleveled/babel-plugin-remove-node-prefix --compact --no-babelrc --source-maps true",
     "bump": "ncu -u -x numerous && pnpm update",
     "clean": "shx rm -rf .parcel-cache dist exe",
     "copy.matchers": "shx cp ./src/gcc/gcc_matcher.json ./dist/node12/ && shx cp ./src/msvc/msvc_matcher.json ./dist/node12/ && shx cp ./src/python/python_matcher.json ./dist/node12/ && shx cp ./src/llvm/llvm_matcher.json ./dist/node12/ && shx cp ./dist/node12/*.json ./dist/node16/",
@@ -59,9 +59,6 @@
     "test.unit": "jest --runInBand"
   },
   "prettier": "prettier-config-atomic",
-  "dependencies": {
-    "update-notifier": "^5.1.0"
-  },
   "devDependencies": {
     "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
