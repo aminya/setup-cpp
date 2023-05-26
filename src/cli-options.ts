@@ -24,37 +24,23 @@ Install all the tools required for building and testing C++/C projects.
 --compiler\t the <compiler> to install.
           \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-13.0.0'
 
---tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
+--$tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
 
 All the available tools:
---llvm
---gcc
---vcvarsall
---cmake
---ninja
---vcpkg
---bazel
---meson
---conan
---make
---task
---ccache
---sccache
---cppcheck
---clangformat
---clangtidy
---doxygen
---gcovr
---opencppcoverage
---kcov
---python
---choco
---brew
---nala
---sevenzip
---graphviz
---powershell
-      `)
+`)
+
+  console.table(
+    {
+      "compiler and analyzer": { tools: `--llvm, --gcc, --msvc, --vcvarsall, --cppcheck, --clangtidy, --clangformat` },
+      "build system": { tools: `--cmake, --ninja, --meson, --make, --task, --bazel` },
+      "package manager": { tools: `--vcpkg, --conan, --choco, --brew, --nala` },
+      cache: { tools: `--cppcache, --sccache` },
+      documentation: { tools: `--doxygen, --graphviz` },
+      coverage: { tools: `--gcovr, --opencppcoverage, --kcov` },
+      other: { tools: `--python, --powershell, --sevenzip` },
+    },
+    ["tools"]
+  )
 }
 /** Get an object from github actions */
 
