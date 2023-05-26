@@ -122,11 +122,6 @@
     "user-access": "workspace:*",
     "which": "^3.0.1"
   },
-  "pnpm": {
-    "overrides": {
-      "node-fetch": "3.3.1"
-    }
-  },
   "engines": {
     "node": ">=12.x"
   },
@@ -154,6 +149,11 @@
     "patha": "patha/dist/index.node.mjs"
   },
   "main.actions": "./dist/node16/setup-cpp.js",
+  "pnpm": {
+    "overrides": {
+      "whatwg-url": "^12"
+    }
+  },
   "targets": {
     "main": {
       "context": "node",
