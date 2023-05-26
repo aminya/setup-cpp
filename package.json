@@ -1,6 +1,6 @@
 {
   "name": "setup-cpp",
-  "version": "0.28.0",
+  "version": "0.28.1",
   "description": "Install all the tools required for building and testing C++/C projects.",
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
@@ -111,7 +111,6 @@
     "setup-python": "github:actions/setup-python#v4.6.1",
     "shx": "0.3.4",
     "simple-update-notifier": "^1.1.0",
-    "terser-config-atomic": "^0.1.1",
     "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",

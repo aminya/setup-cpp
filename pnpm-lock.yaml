@@ -160,9 +160,6 @@ importers:
       simple-update-notifier:
         specifier: ^1.1.0
         version: 1.1.0
-      terser-config-atomic:
-        specifier: ^0.1.1
-        version: 0.1.1
       time-delta:
         specifier: github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e
         version: github.com/aminya/time-delta/69d91a41cef28e569be9a2991129f5f7d1f0d00e
@@ -10055,10 +10052,6 @@ packages:
   /term-size@2.2.1:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
-    dev: true
-
-  /terser-config-atomic@0.1.1:
-    resolution: {integrity: sha512-HRAHqjCFq990eFbLpy54joStSsUMZQoD73XMk2/Akquqm7vI0AOggfO9GMvSFGEucRRNZUfLQdDjotGGsZxCtA==}
     dev: true
 
   /test-exclude@6.0.0:
