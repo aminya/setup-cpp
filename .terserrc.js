@@ -12,6 +12,8 @@ const compress =
       }
     : terserConfig.compress
 
+delete terserConfig.parse
+
 module.exports = {
   ...terserConfig,
   compress,

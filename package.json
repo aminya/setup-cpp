@@ -72,7 +72,7 @@
     "@types/eslint": "^8.40.0",
     "@types/jest": "^29.5.1",
     "@types/mri": "^1.1.1",
-    "@types/node": "^20.2.3",
+    "@types/node": "^20.2.4",
     "@types/npmcli__ci-detect": "^2.0.0",
     "@types/prettier": "2.7.2",
     "@types/semver": "^7.5.0",
@@ -102,7 +102,7 @@
     "npm-check-updates": "^16.10.12",
     "npm-run-all2": "^6.0.5",
     "numerous": "1.0.3",
-    "parcel": "2.8.3",
+    "parcel": "2.9.0",
     "path-exists": "^5.0.0",
     "patha": "^0.4.1",
     "prettier": "2.8.8",
@@ -124,6 +124,11 @@
     "untildify-user": "workspace:*",
     "user-access": "workspace:*",
     "which": "^3.0.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "node-fetch": "3.3.1"
+    }
   },
   "engines": {
     "node": ">=12.x"
