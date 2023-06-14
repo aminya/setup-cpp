@@ -33,7 +33,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
 /// If an ubuntu versions is not in this map:
 // - the newer ubuntu versions use the first entry (e.g. v20),
 // - the older ones use ""
-export const DefaultLinuxVersion: Record<string, Record<number, string>> = {
+export const DefaultLinuxVersion: Record<string, Record<number, string> | undefined> = {
   gcc: {
     22: "13",
     20: "11",
