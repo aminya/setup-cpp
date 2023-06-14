@@ -18,12 +18,14 @@ export function getVersion(name: string, version: string | undefined, osVersion:
 /// choose the default linux version based on ubuntu version
 function getDefaultLinuxVersion(name: string, osVersion: number[]) {
   const osVersionMaj = osVersion[0]
-  const newest = parseInt(Object.keys(DefaultLinuxVersion[name])[0], 10) // newest version with the default
-  if (osVersionMaj >= newest) {
-    return DefaultLinuxVersion[name][osVersionMaj]
-  } else {
-    return ""
-  }
+
+  // find which version block the os version is in
+  const satisfyingVersion = Object.keys(DefaultLinuxVersion[name])
+    .map((v) => parseInt(v, 10))
+    .sort((a, b) => b - a) // sort in descending order
+    .find((v) => osVersionMaj >= v)
+
+  return satisfyingVersion === undefined ? "" : DefaultLinuxVersion[name][satisfyingVersion]
 }
 
 export function isDefault(version: string | undefined, name: string) {
