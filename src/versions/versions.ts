@@ -5,11 +5,11 @@ import { DefaultLinuxVersion, DefaultVersions } from "./default_versions"
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
   if (isDefault(version, name)) {
-    if (process.platform === "linux" && osVersion !== null && name in DefaultLinuxVersion) {
+    if (process.platform === "linux" && osVersion !== null) {
       return getDefaultLinuxVersion(name, osVersion)
     }
     // anything else
-    return DefaultVersions[name]
+    return DefaultVersions[name]! // checked by isDefault
   } else {
     return version ?? ""
   }
@@ -28,8 +28,8 @@ function getDefaultLinuxVersion(name: string, osVersion: number[]) {
   return satisfyingVersion === undefined ? "" : DefaultLinuxVersion[name][satisfyingVersion]
 }
 
-export function isDefault(version: string | undefined, name: string) {
-  return version === "true" || (version === undefined && name in DefaultVersions)
+function isDefault(version: string | undefined, name: string) {
+  return (version === "true" || version === undefined) && name in DefaultLinuxVersion
 }
 
 /**

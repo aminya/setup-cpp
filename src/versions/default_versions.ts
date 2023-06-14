@@ -15,7 +15,7 @@ function getLLVMDefault() {
   }
 }
 
-export const DefaultVersions: Record<string, string> = {
+export const DefaultVersions: Record<string, string | undefined> = {
   llvm: getLLVMDefault(), // https://github.com/llvm/llvm-project/releases
   clangtidy: getLLVMDefault(),
   clangformat: getLLVMDefault(),
