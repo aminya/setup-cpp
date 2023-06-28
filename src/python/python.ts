@@ -1,3 +1,4 @@
+/* eslint-disable require-atomic-updates */
 import { addPath } from "../utils/env/addEnv"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
@@ -41,6 +42,7 @@ export async function setupPythonViaSystem(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _arch: string
 ): Promise<InstallationInfo> {
+  let installInfo: InstallationInfo
   switch (process.platform) {
     case "win32": {
       if (setupDir) {
@@ -56,81 +58,123 @@ export async function setupPythonViaSystem(
       const pythonSetupDir = dirname(pythonBinPath)
       /** The directory which the tool is installed to */
       await addPath(pythonSetupDir)
-      return { installDir: pythonSetupDir, binDir: pythonSetupDir }
+      installInfo = { installDir: pythonSetupDir, binDir: pythonSetupDir }
+      break
     }
     case "darwin": {
-      return setupBrewPack("python3", version)
+      installInfo = await setupBrewPack("python3", version)
+      break
     }
     case "linux": {
-      let installInfo: InstallationInfo
       if (isArch()) {
         installInfo = await setupPacmanPack("python", version)
-        await setupPacmanPack("python-pip")
       } else if (hasDnf()) {
         installInfo = setupDnfPack("python3", version)
-        setupDnfPack("python3-pip")
       } else if (isUbuntu()) {
-        installInfo = await setupAptPack([{ name: "python3", version }, { name: "python3-pip" }])
+        installInfo = await setupAptPack([{ name: "python3", version }])
       } else {
         throw new Error("Unsupported linux distributions")
       }
-      return installInfo
+      break
     }
     default: {
       throw new Error("Unsupported platform")
     }
   }
+  await findOrSetupPip((await findPython())!)
+  return installInfo
 }
 
-let setupPythonAndPipTried = false
-
 /// setup python and pip if needed
-export async function setupPythonAndPip(): Promise<string> {
-  let foundPython: string
-
-  // install python
-  if (which.sync("python3", { nothrow: true }) !== null) {
-    foundPython = "python3"
-  } else if (which.sync("python", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
-    foundPython = "python"
-  } else {
-    info("python3 was not found. Installing python")
-    await setupPython(getVersion("python", undefined), "", process.arch)
-    // try again
-    if (setupPythonAndPipTried) {
-      throw new Error("Failed to install python")
-    }
-    setupPythonAndPipTried = true
-    return setupPythonAndPip() // recurse
+export async function findOrSetupPythonAndPip(): Promise<string> {
+  const foundPython = await findOrSetupPython()
+  const foundPip = await findOrSetupPip(foundPython)
+  if (foundPip === undefined) {
+    throw new Error("pip was not installed correctly")
   }
-
-  assert(typeof foundPython === "string")
-
-  await setupPip(foundPython)
-
-  // install wheel (required for Conan, Meson, etc.)
-  execaSync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
-
+  setupWheel(foundPython)
   return foundPython
 }
 
-async function setupPip(foundPython: string) {
-  const mayBePip = unique(["pip3", "pip"])
+let setupPythonTried = false
 
-  for (const pip of mayBePip) {
-    if (which.sync(pip, { nothrow: true }) !== null) {
-      // eslint-disable-next-line no-await-in-loop
-      if (await isBinUptoDate(pip, DefaultVersions.pip!)) {
-        return pip
-      } else {
-        // upgrade pip
-        execaSync(foundPython, ["-m", "pip", "install", "-U", "--upgrade", "pip"], { stdio: "inherit" })
-        return setupPip(foundPython) // recurse to check if pip is on PATH and up-to-date
-      }
-    }
+async function findPython() {
+  if (which.sync("python3", { nothrow: true }) !== null) {
+    return "python3"
+  } else if (which.sync("python", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
+    return "python"
+  }
+  return undefined
+}
+
+async function findOrSetupPython() {
+  const maybeFoundPython = await findPython()
+  if (maybeFoundPython !== undefined) {
+    return maybeFoundPython
   }
 
-  // install pip if not installed
+  if (setupPythonTried) {
+    throw new Error("Failed to install python")
+  }
+  setupPythonTried = true
+
+  // install python
+  info("python3 was not found. Installing python")
+  await setupPython(getVersion("python", undefined), "", process.arch)
+  return findOrSetupPython() // recurse
+}
+
+async function findOrSetupPip(foundPython: string) {
+  const maybePip = await findPip()
+
+  if (maybePip === undefined) {
+    // install pip if not installed
+    info("pip was not found. Installing pip")
+    await setupPip(foundPython)
+    return findPip() // recurse to check if pip is on PATH and up-to-date
+  }
+
+  return maybePip
+}
+
+async function findPip() {
+  for (const pip of ["pip3", "pip"]) {
+    if (
+      which.sync(pip, { nothrow: true }) !== null &&
+      // eslint-disable-next-line no-await-in-loop
+      (await isBinUptoDate(pip, DefaultVersions.pip!))
+    ) {
+      return pip
+    }
+  }
+  return undefined
+}
+
+async function setupPip(foundPython: string) {
+  const upgraded = ensurePipUpgrade(foundPython)
+  if (!upgraded) {
+    await setupPipSystem()
+  }
+}
+
+function ensurePipUpgrade(foundPython: string) {
+  try {
+    execaSync(foundPython, ["-m", "ensurepip", "-U", "--upgrade"], { stdio: "inherit" })
+    return true
+  } catch {
+    try {
+      // ensure pip is disabled on Ubuntu
+      execaSync(foundPython, ["-m", "pip", "install", "--upgrade", "pip"], { stdio: "inherit" })
+      return true
+    } catch {
+      // pip module not found
+    }
+  }
+  // all methods failed
+  return false
+}
+
+async function setupPipSystem() {
   if (process.platform === "linux") {
     // ensure that pip is installed on Linux (happens when python is found but pip not installed)
     if (isArch()) {
@@ -140,11 +184,13 @@ async function setupPip(foundPython: string) {
     } else if (isUbuntu()) {
       await setupAptPack([{ name: "python3-pip" }])
     }
-  } else {
-    throw new Error(`Could not find pip on ${process.platform}`)
   }
+  throw new Error(`Could not install pip on ${process.platform}`)
+}
 
-  return setupPip(foundPython) // recurse to check if pip is on PATH and up-to-date
+/** Install wheel (required for Conan, Meson, etc.) */
+function setupWheel(foundPython: string) {
+  execaSync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
 }
 
 export async function addPythonBaseExecPrefix(python: string) {

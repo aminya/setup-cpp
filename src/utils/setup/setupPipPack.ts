@@ -3,7 +3,7 @@ import { execaSync } from "execa"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
-import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"
+import { addPythonBaseExecPrefix, findOrSetupPythonAndPip } from "../../python/python"
 import { addPath } from "../env/addEnv"
 import { InstallationInfo } from "./setupBin"
 
@@ -16,7 +16,7 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
   info(`Installing ${name} ${version ?? ""} via pip`)
 
   if (python === undefined) {
-    python = await setupPythonAndPip()
+    python = await findOrSetupPythonAndPip()
   }
 
   execaSync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
