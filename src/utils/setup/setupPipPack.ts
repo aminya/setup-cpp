@@ -7,6 +7,7 @@ import { addPythonBaseExecPrefix, setupPython } from "../../python/python"
 import { addPath } from "../env/addEnv"
 import { InstallationInfo } from "./setupBin"
 import { getVersion } from "../../versions/versions"
+import { ubuntuVersion } from "../env/ubuntu_version"
 
 /* eslint-disable require-atomic-updates */
 let python: string | undefined
@@ -16,7 +17,7 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
   info(`Installing ${name} ${version ?? ""} via pip`)
 
   if (python === undefined) {
-    python = (await setupPython(getVersion("python", undefined), "", process.arch)).bin!
+    python = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin!
   }
 
   execaSync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {

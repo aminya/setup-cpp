@@ -4,8 +4,9 @@ import which from "which"
 import { setupAptPack } from "../setup/setupAptPack"
 import { isUbuntu } from "./isUbuntu"
 import os from "os"
+import memoize from "micro-memoize"
 
-export async function ubuntuVersion(): Promise<number[] | null> {
+async function ubuntuVersion_raw(): Promise<number[] | null> {
   try {
     if (isUbuntu()) {
       try {
@@ -31,6 +32,10 @@ export async function ubuntuVersion(): Promise<number[] | null> {
     return null
   }
 }
+
+/** Detect Ubuntu version */
+export const ubuntuVersion = memoize(ubuntuVersion_raw)
+
 /** Detect Ubuntu version using os.version() for Ubuntu based distros */
 function detectUsingOsVersion() {
   // #46~22.04.1-Ubuntu SMP ...

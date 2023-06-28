@@ -46,8 +46,7 @@ async function setupLLVMWithoutActivation(version: string, setupDir: string, arc
 async function setupLLVMDeps(arch: string, version: string) {
   if (process.platform === "linux") {
     // install llvm build dependencies
-    const osVersion = await ubuntuVersion()
-    await setupGcc(getVersion("gcc", undefined, osVersion), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
+    await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
 
     if (isUbuntu()) {
       const majorVersion = parseInt(version.split(".")[0], 10)

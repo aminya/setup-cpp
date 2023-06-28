@@ -15,6 +15,7 @@ import { addVPrefix, removeVPrefix } from "../utils/setup/version"
 import { info } from "ci-log"
 import { untildifyUser } from "untildify-user"
 import { setupNinja } from "../ninja/ninja"
+import { ubuntuVersion } from "../utils/env/ubuntu_version"
 
 function getDownloadKcovPackageInfo(version: string): PackageInfo {
   return {
@@ -79,12 +80,16 @@ async function buildKcov(file: string, dest: string) {
 async function getCmake() {
   let cmake = which.sync("cmake", { nothrow: true })
   if (cmake === null) {
-    const { binDir } = await setupCmake(getVersion("cmake", undefined), join(untildifyUser(""), "cmake"), "")
+    const { binDir } = await setupCmake(
+      getVersion("cmake", undefined, await ubuntuVersion()),
+      join(untildifyUser(""), "cmake"),
+      ""
+    )
     cmake = join(binDir, "cmake")
   }
   const ninja = which.sync("ninja", { nothrow: true })
   if (ninja === null) {
-    await setupNinja(getVersion("ninja", undefined), join(untildifyUser(""), "ninja"), "")
+    await setupNinja(getVersion("ninja", undefined, await ubuntuVersion()), join(untildifyUser(""), "ninja"), "")
   }
   return cmake
 }
