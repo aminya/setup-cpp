@@ -124,20 +124,33 @@ async function setupPythonSystem(setupDir: string, version: string) {
 }
 
 async function findPython(binDir?: string) {
-  if (binDir !== undefined) {
-    for (const pythonBinPath of ["python3", "python"]) {
-      // eslint-disable-next-line no-await-in-loop
-      if (await pathExists(join(binDir, addExeExt(pythonBinPath)))) {
-        return pythonBinPath
-      }
-    }
-  }
-  if (which.sync("python3", { nothrow: true }) !== null) {
-    return "python3"
-  } else if (which.sync("python", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
-    return "python"
-  }
-  return undefined
+  const foundBins = (
+    await Promise.all(
+      ["python3", "python"].map(async (pythonBin) => {
+        try {
+          if (binDir !== undefined) {
+            if (
+              (await pathExists(join(binDir, addExeExt(pythonBin)))) &&
+              (await isBinUptoDate(pythonBin, DefaultVersions.python!))
+            ) {
+              return pythonBin
+            }
+          }
+          if (
+            (await which(pythonBin, { nothrow: true })) !== null &&
+            (await isBinUptoDate(pythonBin, DefaultVersions.python!))
+          ) {
+            return pythonBin
+          }
+        } catch {
+          // ignore
+        }
+        return undefined
+      })
+    )
+  ).filter((bin) => bin !== undefined)
+
+  return foundBins?.[0]
 }
 
 async function findOrSetupPip(foundPython: string) {
@@ -154,16 +167,22 @@ async function findOrSetupPip(foundPython: string) {
 }
 
 async function findPip() {
-  for (const pip of ["pip3", "pip"]) {
-    if (
-      which.sync(pip, { nothrow: true }) !== null &&
-      // eslint-disable-next-line no-await-in-loop
-      (await isBinUptoDate(pip, DefaultVersions.pip!))
-    ) {
-      return pip
-    }
-  }
-  return undefined
+  const foundBins = (
+    await Promise.all(
+      ["pip3", "pip"].map(async (pip) => {
+        try {
+          if ((await which(pip, { nothrow: true })) !== null && (await isBinUptoDate(pip, DefaultVersions.pip!))) {
+            return pip
+          }
+        } catch {
+          // ignore
+        }
+        return undefined
+      })
+    )
+  ).filter((bin) => bin !== undefined)
+
+  return foundBins?.[0]
 }
 
 async function setupPip(foundPython: string) {

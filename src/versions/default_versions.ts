@@ -29,6 +29,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
   doxygen: isArch() ? "1.9.6-1" : "1.9.7", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: isArch() ? "13.1.1-1" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
   pip: "22.3.1",
+  python: "3.8.0", // min version
 }
 
 /// If an ubuntu versions is not in this map:
