@@ -5,7 +5,7 @@ import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import { execaSync } from "execa"
 import memoize from "micro-memoize"
-import { dirname, join } from "patha"
+import { addExeExt, dirname, join } from "patha"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
 import { hasDnf } from "../utils/env/hasDnf"
@@ -20,6 +20,7 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { isBinUptoDate } from "../utils/setup/version"
 import { unique } from "../utils/std"
 import { DefaultVersions } from "../versions/default_versions"
+import { pathExists } from "path-exists"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -47,7 +48,7 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 
 async function findOrSetupPython(version: string, setupDir: string, arch: string) {
   let installInfo: InstallationInfo | undefined
-  let foundPython = await findPython()
+  let foundPython = await findPython(setupDir)
 
   if (foundPython !== undefined) {
     const binDir = dirname(foundPython)
@@ -61,7 +62,7 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
         const { setupActionsPython } = await import("./actions_python")
         await setupActionsPython(version, setupDir, arch)
 
-        foundPython = (await findPython())!
+        foundPython = (await findPython(setupDir))!
         const binDir = dirname(foundPython)
         installInfo = { bin: foundPython, installDir: binDir, binDir }
       } catch (err) {
@@ -74,8 +75,8 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
     }
   }
 
-  if (foundPython === undefined) {
-    foundPython = (await findPython())!
+  if (foundPython === undefined || installInfo.bin === undefined) {
+    foundPython = (await findPython(setupDir))!
     installInfo.bin = foundPython
   }
 
@@ -92,14 +93,11 @@ async function setupPythonSystem(setupDir: string, version: string) {
         await setupChocoPack("python3", version)
       }
       // Adding the bin dir to the path
-      const pythonBinPath =
-        which.sync("python3.exe", { nothrow: true }) ??
-        which.sync("python.exe", { nothrow: true }) ??
-        join(setupDir, "python.exe")
-      const pythonSetupDir = dirname(pythonBinPath)
+      const bin = (await findPython(setupDir))!
+      const binDir = dirname(bin)
       /** The directory which the tool is installed to */
-      await addPath(pythonSetupDir)
-      installInfo = { installDir: pythonSetupDir, binDir: pythonSetupDir }
+      await addPath(binDir)
+      installInfo = { installDir: binDir, binDir, bin }
       break
     }
     case "darwin": {
@@ -125,7 +123,15 @@ async function setupPythonSystem(setupDir: string, version: string) {
   return installInfo
 }
 
-async function findPython() {
+async function findPython(binDir?: string) {
+  if (binDir !== undefined) {
+    for (const pythonBinPath of ["python3", "python"]) {
+      // eslint-disable-next-line no-await-in-loop
+      if (await pathExists(join(binDir, addExeExt(pythonBinPath)))) {
+        return pythonBinPath
+      }
+    }
+  }
   if (which.sync("python3", { nothrow: true }) !== null) {
     return "python3"
   } else if (which.sync("python", { nothrow: true }) !== null && (await isBinUptoDate("python", "3.0.0"))) {
