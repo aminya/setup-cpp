@@ -40,9 +40,6 @@ export async function setupPython(version: string, setupDir: string, arch: strin
     warning(`Failed to install wheels: ${(err as Error).toString()}. Ignoring...`)
   }
 
-  // add python bin paths to PATH
-  const _execPaths = await addPythonBaseExecPrefix(foundPython)
-
   return installInfo
 }
 
