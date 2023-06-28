@@ -192,15 +192,15 @@ function ensurePipUpgrade(foundPython: string) {
   return false
 }
 
-async function setupPipSystem() {
+function setupPipSystem() {
   if (process.platform === "linux") {
     // ensure that pip is installed on Linux (happens when python is found but pip not installed)
     if (isArch()) {
-      await setupPacmanPack("python-pip")
+      return setupPacmanPack("python-pip")
     } else if (hasDnf()) {
-      setupDnfPack("python3-pip")
+      return setupDnfPack("python3-pip")
     } else if (isUbuntu()) {
-      await setupAptPack([{ name: "python3-pip" }])
+      return setupAptPack([{ name: "python3-pip" }])
     }
   }
   throw new Error(`Could not install pip on ${process.platform}`)
