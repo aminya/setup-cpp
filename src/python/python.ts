@@ -1,24 +1,25 @@
 /* eslint-disable require-atomic-updates */
+import { getExecOutput } from "@actions/exec"
+import assert from "assert"
+import { GITHUB_ACTIONS } from "ci-info"
+import { info, warning } from "ci-log"
+import { execaSync } from "execa"
+import memoize from "micro-memoize"
+import { dirname, join } from "patha"
+import which from "which"
 import { addPath } from "../utils/env/addEnv"
+import { hasDnf } from "../utils/env/hasDnf"
+import { isArch } from "../utils/env/isArch"
+import { isUbuntu } from "../utils/env/isUbuntu"
 import { setupAptPack } from "../utils/setup/setupAptPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
+import { InstallationInfo } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { GITHUB_ACTIONS } from "ci-info"
-import { warning, info } from "ci-log"
-import { isArch } from "../utils/env/isArch"
-import which from "which"
-import { InstallationInfo } from "../utils/setup/setupBin"
-import { dirname, join } from "patha"
-import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { getExecOutput } from "@actions/exec"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { isBinUptoDate } from "../utils/setup/version"
-import { execaSync } from "execa"
 import { unique } from "../utils/std"
 import { DefaultVersions } from "../versions/default_versions"
-import assert from "assert"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -204,7 +205,7 @@ function setupWheel(foundPython: string) {
   execaSync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
 }
 
-export async function addPythonBaseExecPrefix(python: string) {
+async function addPythonBaseExecPrefix_raw(python: string) {
   const dirs: string[] = []
 
   // detection based on the platform
@@ -222,3 +223,10 @@ export async function addPythonBaseExecPrefix(python: string) {
   // remove duplicates
   return unique(dirs)
 }
+
+/**
+ * Add the base exec prefix to the PATH. This is required for Conan, Meson, etc. to work properly.
+ *
+ * The answer is cached for subsequent calls
+ */
+export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_raw)
