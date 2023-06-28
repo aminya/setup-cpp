@@ -15,34 +15,62 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { getExecOutput } from "@actions/exec"
 import { isBinUptoDate } from "../utils/setup/version"
-import { getVersion } from "../versions/versions"
-import assert from "assert"
 import { execaSync } from "execa"
 import { unique } from "../utils/std"
 import { DefaultVersions } from "../versions/default_versions"
 
-export async function setupPython(version: string, setupDir: string, arch: string) {
-  if (!GITHUB_ACTIONS) {
-    // TODO parse version
-    return setupPythonViaSystem(version, setupDir, arch)
+export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  let installInfo: InstallationInfo | undefined
+  let foundPython = await findPython()
+
+  if (foundPython !== undefined) {
+    const binDir = dirname(foundPython)
+    installInfo = { bin: foundPython, installDir: binDir, binDir }
+  } else {
+    // if python is not found, try to install it
+    if (GITHUB_ACTIONS) {
+      // install python in GitHub Actions
+      try {
+        info("Installing python in GitHub Actions")
+        const { setupActionsPython } = await import("./actions_python")
+        await setupActionsPython(version, setupDir, arch)
+
+        foundPython = (await findPython())!
+        const binDir = dirname(foundPython)
+        installInfo = { bin: foundPython, installDir: binDir, binDir }
+      } catch (err) {
+        warning((err as Error).toString())
+      }
+    }
+    if (installInfo === undefined) {
+      // install python via system package manager
+      installInfo = await setupPythonSystem(setupDir, version)
+    }
   }
+
+  if (foundPython === undefined) {
+    foundPython = (await findPython())!
+    installInfo.bin = foundPython
+  }
+
+  // setup pip
+  const foundPip = await findOrSetupPip(foundPython)
+  if (foundPip === undefined) {
+    throw new Error("pip was not installed correctly")
+  }
+
+  // setup wheel
   try {
-    info("Installing python in GitHub Actions")
-    const { setupActionsPython } = await import("./actions_python")
-    return setupActionsPython(version, setupDir, arch)
+    setupWheel(foundPython)
   } catch (err) {
-    warning((err as Error).toString())
-    return setupPythonViaSystem(version, setupDir, arch)
+    warning(`Failed to install wheels: ${(err as Error).toString()}. Ignoring...`)
   }
+
+  return installInfo
 }
 
-export async function setupPythonViaSystem(
-  version: string,
-  setupDir: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _arch: string
-): Promise<InstallationInfo> {
-  let installInfo: InstallationInfo
+async function setupPythonSystem(setupDir: string, version: string) {
+  let installInfo: InstallationInfo | undefined
   switch (process.platform) {
     case "win32": {
       if (setupDir) {
@@ -81,22 +109,8 @@ export async function setupPythonViaSystem(
       throw new Error("Unsupported platform")
     }
   }
-  await findOrSetupPip((await findPython())!)
   return installInfo
 }
-
-/// setup python and pip if needed
-export async function findOrSetupPythonAndPip(): Promise<string> {
-  const foundPython = await findOrSetupPython()
-  const foundPip = await findOrSetupPip(foundPython)
-  if (foundPip === undefined) {
-    throw new Error("pip was not installed correctly")
-  }
-  setupWheel(foundPython)
-  return foundPython
-}
-
-let setupPythonTried = false
 
 async function findPython() {
   if (which.sync("python3", { nothrow: true }) !== null) {
@@ -105,23 +119,6 @@ async function findPython() {
     return "python"
   }
   return undefined
-}
-
-async function findOrSetupPython() {
-  const maybeFoundPython = await findPython()
-  if (maybeFoundPython !== undefined) {
-    return maybeFoundPython
-  }
-
-  if (setupPythonTried) {
-    throw new Error("Failed to install python")
-  }
-  setupPythonTried = true
-
-  // install python
-  info("python3 was not found. Installing python")
-  await setupPython(getVersion("python", undefined), "", process.arch)
-  return findOrSetupPython() // recurse
 }
 
 async function findOrSetupPip(foundPython: string) {
@@ -161,12 +158,14 @@ function ensurePipUpgrade(foundPython: string) {
   try {
     execaSync(foundPython, ["-m", "ensurepip", "-U", "--upgrade"], { stdio: "inherit" })
     return true
-  } catch {
+  } catch (err1) {
+    info((err1 as Error)?.toString?.())
     try {
       // ensure pip is disabled on Ubuntu
       execaSync(foundPython, ["-m", "pip", "install", "--upgrade", "pip"], { stdio: "inherit" })
       return true
-    } catch {
+    } catch (err2) {
+      info((err2 as Error)?.toString?.())
       // pip module not found
     }
   }

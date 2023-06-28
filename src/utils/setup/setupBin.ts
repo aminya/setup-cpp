@@ -34,6 +34,7 @@ export type InstallationInfo = {
   /** The top install dir */
   installDir?: string
   binDir: string
+  bin?: string
 }
 
 let didInit: boolean = false
