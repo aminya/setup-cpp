@@ -186,6 +186,8 @@ async function setupPip(foundPython: string) {
   const upgraded = ensurePipUpgrade(foundPython)
   if (!upgraded) {
     await setupPipSystem()
+    // upgrade pip
+    ensurePipUpgrade(foundPython)
   }
 }
 
