@@ -18,6 +18,7 @@ import { getVersion } from "../versions/versions"
 import assert from "assert"
 import { execaSync } from "execa"
 import { unique } from "../utils/std"
+import { DefaultVersions } from "../versions/default_versions"
 
 export async function setupPython(version: string, setupDir: string, arch: string) {
   if (!GITHUB_ACTIONS) {
@@ -105,12 +106,32 @@ export async function setupPythonAndPip(): Promise<string> {
 
   assert(typeof foundPython === "string")
 
-  // install pip
-  if (process.platform === "win32") {
-    // downgrade pip on Windows
-    // https://github.com/pypa/pip/issues/10875#issuecomment-1030293005
-    execaSync(foundPython, ["-m", "pip", "install", "-U", "pip==21.3.1"], { stdio: "inherit" })
-  } else if (process.platform === "linux") {
+  await setupPip(foundPython)
+
+  // install wheel (required for Conan, Meson, etc.)
+  execaSync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
+
+  return foundPython
+}
+
+async function setupPip(foundPython: string) {
+  const mayBePip = unique(["pip3", "pip"])
+
+  for (const pip of mayBePip) {
+    if (which.sync(pip, { nothrow: true }) !== null) {
+      // eslint-disable-next-line no-await-in-loop
+      if (await isBinUptoDate(pip, DefaultVersions.pip!)) {
+        return pip
+      } else {
+        // upgrade pip
+        execaSync(foundPython, ["-m", "pip", "install", "-U", "--upgrade", "pip"], { stdio: "inherit" })
+        return setupPip(foundPython) // recurse to check if pip is on PATH and up-to-date
+      }
+    }
+  }
+
+  // install pip if not installed
+  if (process.platform === "linux") {
     // ensure that pip is installed on Linux (happens when python is found but pip not installed)
     if (isArch()) {
       await setupPacmanPack("python-pip")
@@ -119,12 +140,11 @@ export async function setupPythonAndPip(): Promise<string> {
     } else if (isUbuntu()) {
       await setupAptPack([{ name: "python3-pip" }])
     }
+  } else {
+    throw new Error(`Could not find pip on ${process.platform}`)
   }
 
-  // install wheel (required for Conan, Meson, etc.)
-  execaSync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
-
-  return foundPython
+  return setupPip(foundPython) // recurse to check if pip is on PATH and up-to-date
 }
 
 export async function addPythonBaseExecPrefix(python: string) {
