@@ -123,26 +123,31 @@ function initGpg() {
 }
 
 export async function addAptKeyViaServer(keys: string[], name: string, server = "keyserver.ubuntu.com") {
-  const fileName = `/etc/apt/trusted.gpg.d/${name}`
-  if (!(await pathExists(fileName))) {
-    initGpg()
+  try {
+    const fileName = `/etc/apt/trusted.gpg.d/${name}`
+    if (!(await pathExists(fileName))) {
+      initGpg()
 
-    await Promise.all(
-      keys.map(async (key) => {
-        await execRoot("gpg", [
-          "--no-default-keyring",
-          "--keyring",
-          `gnupg-ring:${fileName}`,
-          "--keyserver",
-          server,
-          "--recv-keys",
-          key,
-        ])
-        await execRoot("chmod", ["644", fileName])
-      })
-    )
+      await Promise.all(
+        keys.map(async (key) => {
+          await execRoot("gpg", [
+            "--no-default-keyring",
+            "--keyring",
+            `gnupg-ring:${fileName}`,
+            "--keyserver",
+            server,
+            "--recv-keys",
+            key,
+          ])
+          await execRoot("chmod", ["644", fileName])
+        })
+      )
+    }
+    return fileName
+  } catch (err) {
+    warning(`Failed to add apt key via server ${server}: ${err}`)
+    return undefined
   }
-  return fileName
 }
 
 export async function addAptKeyViaDownload(name: string, url: string) {
