@@ -18,8 +18,33 @@ import { isBinUptoDate } from "../utils/setup/version"
 import { execaSync } from "execa"
 import { unique } from "../utils/std"
 import { DefaultVersions } from "../versions/default_versions"
+import assert from "assert"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  const installInfo = await findOrSetupPython(version, setupDir, arch)
+  assert(installInfo.bin !== undefined)
+  const foundPython = installInfo.bin
+
+  // setup pip
+  const foundPip = await findOrSetupPip(foundPython)
+  if (foundPip === undefined) {
+    throw new Error("pip was not installed correctly")
+  }
+
+  // setup wheel
+  try {
+    setupWheel(foundPython)
+  } catch (err) {
+    warning(`Failed to install wheels: ${(err as Error).toString()}. Ignoring...`)
+  }
+
+  // add python bin paths to PATH
+  const _execPaths = await addPythonBaseExecPrefix(foundPython)
+
+  return installInfo
+}
+
+async function findOrSetupPython(version: string, setupDir: string, arch: string) {
   let installInfo: InstallationInfo | undefined
   let foundPython = await findPython()
 
@@ -51,19 +76,6 @@ export async function setupPython(version: string, setupDir: string, arch: strin
   if (foundPython === undefined) {
     foundPython = (await findPython())!
     installInfo.bin = foundPython
-  }
-
-  // setup pip
-  const foundPip = await findOrSetupPip(foundPython)
-  if (foundPip === undefined) {
-    throw new Error("pip was not installed correctly")
-  }
-
-  // setup wheel
-  try {
-    setupWheel(foundPython)
-  } catch (err) {
-    warning(`Failed to install wheels: ${(err as Error).toString()}. Ignoring...`)
   }
 
   return installInfo

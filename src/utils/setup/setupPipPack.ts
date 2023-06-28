@@ -10,7 +10,7 @@ import { getVersion } from "../../versions/versions"
 
 /* eslint-disable require-atomic-updates */
 let python: string | undefined
-let binDirs: string[] | undefined
+let execPaths: string[] | undefined
 
 /** A function that installs a package using pip */
 export async function setupPipPack(name: string, version?: string): Promise<InstallationInfo> {
@@ -24,11 +24,11 @@ export async function setupPipPack(name: string, version?: string): Promise<Inst
     stdio: "inherit",
   })
 
-  if (binDirs === undefined) {
-    binDirs = await addPythonBaseExecPrefix(python)
+  if (execPaths === undefined) {
+    execPaths = await addPythonBaseExecPrefix(python)
   }
 
-  const binDir = await findBinDir(binDirs, name)
+  const binDir = await findBinDir(execPaths, name)
 
   await addPath(binDir)
 
