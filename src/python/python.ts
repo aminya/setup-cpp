@@ -122,32 +122,34 @@ async function setupPythonSystem(setupDir: string, version: string) {
 
 async function findPython(binDir?: string) {
   const foundBins = (
-    await Promise.all(
-      ["python3", "python"].map(async (pythonBin) => {
-        try {
-          if (binDir !== undefined) {
-            if (
-              (await pathExists(join(binDir, addExeExt(pythonBin)))) &&
-              (await isBinUptoDate(pythonBin, MinVersions.python!))
-            ) {
-              return pythonBin
-            }
-          }
-          if (
-            (await which(pythonBin, { nothrow: true })) !== null &&
-            (await isBinUptoDate(pythonBin, MinVersions.python!))
-          ) {
-            return pythonBin
-          }
-        } catch {
-          // ignore
-        }
-        return undefined
-      })
-    )
-  ).filter((bin) => bin !== undefined)
+    await Promise.all(["python3", "python"].map((pythonBin) => isPythonUpToDate(pythonBin, binDir)))
+  ).filter((bin) => bin !== undefined) as string[]
 
-  return foundBins?.[0]
+  if (foundBins.length === 0) {
+    return undefined
+  }
+
+  return foundBins[0]
+}
+
+async function isPythonUpToDate(candidate: string, binDir?: string) {
+  try {
+    if (binDir !== undefined) {
+      const pythonBinPath = join(binDir, addExeExt(candidate))
+      if (await pathExists(pythonBinPath)) {
+        if (await isBinUptoDate(pythonBinPath, MinVersions.python!)) {
+          return pythonBinPath
+        }
+      }
+    }
+    const pythonBinPath: string | null = await which(candidate, { nothrow: true })
+    if (pythonBinPath !== null && (await isBinUptoDate(pythonBinPath, MinVersions.python!))) {
+      return pythonBinPath
+    }
+  } catch {
+    // fall through
+  }
+  return undefined
 }
 
 async function findOrSetupPip(foundPython: string) {
@@ -164,22 +166,27 @@ async function findOrSetupPip(foundPython: string) {
 }
 
 async function findPip() {
-  const foundBins = (
-    await Promise.all(
-      ["pip3", "pip"].map(async (pip) => {
-        try {
-          if ((await which(pip, { nothrow: true })) !== null && (await isBinUptoDate(pip, MinVersions.pip!))) {
-            return pip
-          }
-        } catch {
-          // ignore
-        }
-        return undefined
-      })
-    )
-  ).filter((bin) => bin !== undefined)
+  const foundBins = (await Promise.all(["pip3", "pip"].map(isPipUptoDate))).filter(
+    (bin) => bin !== undefined
+  ) as string[]
 
-  return foundBins?.[0]
+  if (foundBins.length === 0) {
+    return undefined
+  }
+
+  return foundBins[0]
+}
+
+async function isPipUptoDate(pip: string) {
+  try {
+    const pipPath: string | null = await which(pip, { nothrow: true })
+    if (pipPath !== null && (await isBinUptoDate(pipPath, MinVersions.pip!))) {
+      return pipPath
+    }
+  } catch {
+    // fall through
+  }
+  return undefined
 }
 
 async function setupPip(foundPython: string) {
