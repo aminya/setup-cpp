@@ -30,6 +30,11 @@ export const DefaultVersions: Record<string, string | undefined> = {
   gcc: isArch() ? "13.1.1-1" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
 }
 
+export const MinVersions: Record<string, string | undefined> = {
+  pip: "22.3.1",
+  python: "3.7.9",
+}
+
 /// If an ubuntu versions is not in this map:
 // - the newer ubuntu versions use the first entry (e.g. v20),
 // - the older ones use ""

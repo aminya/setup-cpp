@@ -3,31 +3,29 @@ import { execaSync } from "execa"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
-import { addPythonBaseExecPrefix, setupPythonAndPip } from "../../python/python"
+import { addPythonBaseExecPrefix, setupPython } from "../../python/python"
 import { addPath } from "../env/addEnv"
 import { InstallationInfo } from "./setupBin"
+import { getVersion } from "../../versions/versions"
+import { ubuntuVersion } from "../env/ubuntu_version"
 
 /* eslint-disable require-atomic-updates */
 let python: string | undefined
-let binDirs: string[] | undefined
 
 /** A function that installs a package using pip */
 export async function setupPipPack(name: string, version?: string): Promise<InstallationInfo> {
   info(`Installing ${name} ${version ?? ""} via pip`)
 
   if (python === undefined) {
-    python = await setupPythonAndPip()
+    python = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin!
   }
 
   execaSync(python, ["-m", "pip", "install", version !== undefined && version !== "" ? `${name}==${version}` : name], {
     stdio: "inherit",
   })
 
-  if (binDirs === undefined) {
-    binDirs = await addPythonBaseExecPrefix(python)
-  }
-
-  const binDir = await findBinDir(binDirs, name)
+  const execPaths = await addPythonBaseExecPrefix(python)
+  const binDir = await findBinDir(execPaths, name)
 
   await addPath(binDir)
 
