@@ -32,7 +32,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
 
 export const MinVersions: Record<string, string | undefined> = {
   pip: "22.3.1",
-  python: "3.8.0",
+  python: "3.7.9",
 }
 
 /// If an ubuntu versions is not in this map:

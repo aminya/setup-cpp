@@ -24,6 +24,7 @@ describe("setup-python", () => {
 
   it("should setup python via system", async () => {
     process.env.CI = "false"
+    process.env.GITHUB_ACTIONS = "false"
 
     const installInfo = await setupPython(getVersion("python", "true", await ubuntuVersion()), directory, process.arch)
 
