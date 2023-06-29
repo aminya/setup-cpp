@@ -121,15 +121,14 @@ async function setupPythonSystem(setupDir: string, version: string) {
 }
 
 async function findPython(binDir?: string) {
-  const foundBins = (
-    await Promise.all(["python3", "python"].map((pythonBin) => isPythonUpToDate(pythonBin, binDir)))
-  ).filter((bin) => bin !== undefined) as string[]
-
-  if (foundBins.length === 0) {
-    return undefined
+  for (const pythonBin of ["python3", "python"]) {
+    // eslint-disable-next-line no-await-in-loop
+    const foundPython = await isPythonUpToDate(pythonBin, binDir)
+    if (foundPython !== undefined) {
+      return foundPython
+    }
   }
-
-  return foundBins[0]
+  return undefined
 }
 
 async function isPythonUpToDate(candidate: string, binDir?: string) {
@@ -142,9 +141,12 @@ async function isPythonUpToDate(candidate: string, binDir?: string) {
         }
       }
     }
-    const pythonBinPath: string | null = await which(candidate, { nothrow: true })
-    if (pythonBinPath !== null && (await isBinUptoDate(pythonBinPath, MinVersions.python!))) {
-      return pythonBinPath
+    const pythonBinPaths = (await which(candidate, { nothrow: true, all: true })) ?? []
+    for (const pythonBinPath of pythonBinPaths) {
+      // eslint-disable-next-line no-await-in-loop
+      if (await isBinUptoDate(pythonBinPath, MinVersions.python!)) {
+        return pythonBinPath
+      }
     }
   } catch {
     // fall through
@@ -166,22 +168,24 @@ async function findOrSetupPip(foundPython: string) {
 }
 
 async function findPip() {
-  const foundBins = (await Promise.all(["pip3", "pip"].map(isPipUptoDate))).filter(
-    (bin) => bin !== undefined
-  ) as string[]
-
-  if (foundBins.length === 0) {
-    return undefined
+  for (const pipCandidate of ["pip3", "pip"]) {
+    // eslint-disable-next-line no-await-in-loop
+    const maybePip = await isPipUptoDate(pipCandidate)
+    if (maybePip !== undefined) {
+      return maybePip
+    }
   }
-
-  return foundBins[0]
+  return undefined
 }
 
 async function isPipUptoDate(pip: string) {
   try {
-    const pipPath: string | null = await which(pip, { nothrow: true })
-    if (pipPath !== null && (await isBinUptoDate(pipPath, MinVersions.pip!))) {
-      return pipPath
+    const pipPaths = (await which(pip, { nothrow: true, all: true })) ?? []
+    for (const pipPath of pipPaths) {
+      // eslint-disable-next-line no-await-in-loop
+      if (pipPath !== null && (await isBinUptoDate(pipPath, MinVersions.pip!))) {
+        return pipPath
+      }
     }
   } catch {
     // fall through
