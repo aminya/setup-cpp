@@ -28,8 +28,11 @@ export const DefaultVersions: Record<string, string | undefined> = {
   task: "3.25.0", // https://github.com/go-task/task/releases
   doxygen: isArch() ? "1.9.6-1" : "1.9.7", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: isArch() ? "13.1.1-1" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
+}
+
+export const MinVersions: Record<string, string | undefined> = {
   pip: "22.3.1",
-  python: "3.8.0", // min version
+  python: "3.8.0",
 }
 
 /// If an ubuntu versions is not in this map:

@@ -19,7 +19,7 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { isBinUptoDate } from "../utils/setup/version"
 import { unique } from "../utils/std"
-import { DefaultVersions } from "../versions/default_versions"
+import { MinVersions } from "../versions/default_versions"
 import { pathExists } from "path-exists"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
@@ -128,14 +128,14 @@ async function findPython(binDir?: string) {
           if (binDir !== undefined) {
             if (
               (await pathExists(join(binDir, addExeExt(pythonBin)))) &&
-              (await isBinUptoDate(pythonBin, DefaultVersions.python!))
+              (await isBinUptoDate(pythonBin, MinVersions.python!))
             ) {
               return pythonBin
             }
           }
           if (
             (await which(pythonBin, { nothrow: true })) !== null &&
-            (await isBinUptoDate(pythonBin, DefaultVersions.python!))
+            (await isBinUptoDate(pythonBin, MinVersions.python!))
           ) {
             return pythonBin
           }
@@ -168,7 +168,7 @@ async function findPip() {
     await Promise.all(
       ["pip3", "pip"].map(async (pip) => {
         try {
-          if ((await which(pip, { nothrow: true })) !== null && (await isBinUptoDate(pip, DefaultVersions.pip!))) {
+          if ((await which(pip, { nothrow: true })) !== null && (await isBinUptoDate(pip, MinVersions.pip!))) {
             return pip
           }
         } catch {
