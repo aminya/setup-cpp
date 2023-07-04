@@ -101,6 +101,11 @@ async function setupPythonSystem(setupDir: string, version: string) {
     }
     case "darwin": {
       installInfo = await setupBrewPack("python3", version)
+      // add the python and pip binaries to the path
+      const brewPythonPrefix = await execa("brew", ["--prefix", "python"], { stdio: "pipe" })
+      const brewPythonBin = join(brewPythonPrefix.stdout, "libexec", "bin")
+      await addPath(brewPythonBin)
+
       break
     }
     case "linux": {
@@ -109,7 +114,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       } else if (hasDnf()) {
         installInfo = setupDnfPack("python3", version)
       } else if (isUbuntu()) {
-        installInfo = await setupAptPack([{ name: "python3", version }])
+        installInfo = await setupAptPack([{ name: "python3", version }, { name: "python-is-python3" }])
       } else {
         throw new Error("Unsupported linux distributions")
       }
