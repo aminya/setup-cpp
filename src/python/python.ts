@@ -3,7 +3,7 @@ import { getExecOutput } from "@actions/exec"
 import assert from "assert"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
-import { execaSync } from "execa"
+import { execa } from "execa"
 import memoize from "micro-memoize"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
@@ -21,6 +21,7 @@ import { isBinUptoDate } from "../utils/setup/version"
 import { unique } from "../utils/std"
 import { MinVersions } from "../versions/default_versions"
 import { pathExists } from "path-exists"
+import { setupPipPackWithPython } from "../utils/setup/setupPipPack"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -33,11 +34,12 @@ export async function setupPython(version: string, setupDir: string, arch: strin
     throw new Error("pip was not installed correctly")
   }
 
-  // setup wheel
+  // setup wheel and setuptools
   try {
-    setupWheel(foundPython)
+    await setupPipPackWithPython(foundPython, "setuptools", undefined, true)
+    await setupPipPackWithPython(foundPython, "wheel", undefined, true)
   } catch (err) {
-    warning(`Failed to install wheels: ${(err as Error).toString()}. Ignoring...`)
+    warning(`Failed to install setuptools or wheel: ${(err as Error).toString()}. Ignoring...`)
   }
 
   return installInfo
@@ -194,23 +196,23 @@ async function isPipUptoDate(pip: string) {
 }
 
 async function setupPip(foundPython: string) {
-  const upgraded = ensurePipUpgrade(foundPython)
+  const upgraded = await ensurePipUpgrade(foundPython)
   if (!upgraded) {
     await setupPipSystem()
     // upgrade pip
-    ensurePipUpgrade(foundPython)
+    await ensurePipUpgrade(foundPython)
   }
 }
 
-function ensurePipUpgrade(foundPython: string) {
+async function ensurePipUpgrade(foundPython: string) {
   try {
-    execaSync(foundPython, ["-m", "ensurepip", "-U", "--upgrade"], { stdio: "inherit" })
+    await execa(foundPython, ["-m", "ensurepip", "-U", "--upgrade"], { stdio: "inherit" })
     return true
   } catch (err1) {
     info((err1 as Error)?.toString?.())
     try {
       // ensure pip is disabled on Ubuntu
-      execaSync(foundPython, ["-m", "pip", "install", "--upgrade", "pip"], { stdio: "inherit" })
+      await execa(foundPython, ["-m", "pip", "install", "--upgrade", "pip"], { stdio: "inherit" })
       return true
     } catch (err2) {
       info((err2 as Error)?.toString?.())
@@ -233,11 +235,6 @@ function setupPipSystem() {
     }
   }
   throw new Error(`Could not install pip on ${process.platform}`)
-}
-
-/** Install wheel (required for Conan, Meson, etc.) */
-function setupWheel(foundPython: string) {
-  execaSync(foundPython, ["-m", "pip", "install", "-U", "wheel"], { stdio: "inherit" })
 }
 
 async function addPythonBaseExecPrefix_raw(python: string) {
