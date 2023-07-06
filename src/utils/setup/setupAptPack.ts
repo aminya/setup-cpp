@@ -113,7 +113,10 @@ async function initApt(apt: string) {
   ]
   if (apt === "nala") {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
-    promises.push(addEnv("LANG", "C.UTF-8"), addEnv("LC_ALL", "C.UTF-8"))
+    promises.push(
+      addEnv("LANG", "C.UTF-8", { shouldAddOnlyIfNotDefined: true }),
+      addEnv("LC_ALL", "C.UTF-8", { shouldAddOnlyIfNotDefined: true })
+    )
   }
   await Promise.all(promises)
 }
