@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "@actions/core": "^1.9.1",
+    "@actions/core": "^1.10.0",
     "ci-info": "^3.8.0"
   },
   "keywords": [

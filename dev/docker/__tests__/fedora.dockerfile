@@ -6,7 +6,7 @@ RUN dnf -y install nodejs npm && \
     npm install -g setup-cpp
 
 # add setup-cpp.js (built outside of this dockerfile)
-COPY "./dist/node18" "/"
+COPY "./dist/legacy" "/"
 
 # run installation
 RUN node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true

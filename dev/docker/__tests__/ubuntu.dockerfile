@@ -6,7 +6,7 @@ RUN apt-get update -qq && \
     apt-get install -y --no-install-recommends nodejs
 
 # add setup-cpp.js (built outside of this dockerfile)
-COPY "./dist/node18" "/"
+COPY "./dist/legacy" "/"
 
 # install setup-cpp
 RUN node /setup-cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
