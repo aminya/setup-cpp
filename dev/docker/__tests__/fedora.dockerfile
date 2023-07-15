@@ -14,7 +14,7 @@ RUN node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true
 ENTRYPOINT ["/bin/bash"]
 
 #### Building (example)
-FROM setup-cpp AS example-builder
+FROM base AS example-builder
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \

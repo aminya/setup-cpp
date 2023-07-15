@@ -5,10 +5,6 @@
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
-  "exports": {
-    "import": "./dist/modern/setup-cpp.mjs",
-    "require": "./dist/legacy/setup-cpp.js"
-  },
   "main": "dist/legacy/setup-cpp.js",
   "actions": "./dist/actions/setup-cpp.js",
   "modern": "./dist/modern/setup-cpp.js",

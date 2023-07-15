@@ -38,6 +38,7 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
+            ./node_modules
           key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-cache-OS:${{ matrix.os }}-"
@@ -151,6 +152,7 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
+            ./node_modules
           key: "setupcpp-docker-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-docker-cache-OS:${{ matrix.os }}"
