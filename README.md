@@ -153,29 +153,29 @@ Here is an example for using setup-cpp to make a builder image that has the Cpp 
 
 ```dockerfile
 #### Base Image
-FROM ubuntu:22.04 AS base
+FROM ubuntu:22.04 as base
 
-# add setup-cpp
-RUN apt-get update -qq
-RUN apt-get install -y --no-install-recommends npm
-RUN npm install -g setup-cpp
+# install nodejs and setup-cpp
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends nodejs npm && \
+    npm install -g setup-cpp
 
 # install llvm, cmake, ninja, and ccache
-RUN setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --make true
+RUN setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
 
-CMD source ~/.cpprc
-ENTRYPOINT [ "/bin/bash" ]
+ENTRYPOINT ["/bin/bash"]
 
-#### Building
-FROM base AS builder
-ADD ./dev/cpp_vcpkg_project /home/app
+#### Building (example)
+FROM base as builder
+COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
-    && make build'
+    && task build'
+
 
 ### Running environment
 # use a distroless image or ubuntu:22.04 if you wish
-FROM gcr.io/distroless/cc
+FROM gcr.io/distroless/cc as runner
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
 WORKDIR /home/app/
@@ -217,7 +217,7 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./dev/docker/debian.dockerfile -t setup-cpp .
+          docker build -f ./dev/docker/ubuntu.dockerfile -t setup-cpp .
 ```
 
 ### Inside GitLab pipelines

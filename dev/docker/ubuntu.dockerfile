@@ -1,19 +1,17 @@
 #### Base Image
 FROM ubuntu:22.04 as base
 
-# install setup-cpp
-RUN apt-get update -qq
-RUN apt-get install -y --no-install-recommends npm
-RUN npm install -g setup-cpp
+# install nodejs and setup-cpp
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends nodejs npm && \
+    npm install -g setup-cpp
 
 # install llvm, cmake, ninja, and ccache
 RUN setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
 
-CMD ["source", "~/.cpprc"]
 ENTRYPOINT ["/bin/bash"]
 
-
-#### Building
+#### Building (example)
 FROM base as builder
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app

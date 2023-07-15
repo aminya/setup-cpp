@@ -15,7 +15,7 @@
     "which": "^2.0.2"
   },
   "devDependencies": {
-    "@types/which": "^2.0.1"
+    "@types/which": "^2.0.2"
   },
   "keywords": [
     "powershell",

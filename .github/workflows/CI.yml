@@ -24,11 +24,9 @@ jobs:
           - macos-12
           - macos-11
         node:
-          - 16
+          - 20
         pnpm:
-          - 7
-        cache_reset_counter:
-          - 0
+          - 8
     steps:
       - uses: actions/checkout@v3
         with:
@@ -40,6 +38,7 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
+            ./node_modules
           key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-cache-OS:${{ matrix.os }}-"
@@ -81,6 +80,22 @@ jobs:
             ./dist
           retention-days: 1
 
+      - name: Setup Node 12
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+      - name: Smoke Test Node 12
+        run: |
+          node ./dist/legacy/setup-cpp.js --help
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Smoke Test Node 16
+        run: |
+          node ./dist/node16/setup-cpp.js --help
+
   Release:
     needs: Test
     if: startsWith(github.ref, 'refs/tags/')
@@ -104,10 +119,11 @@ jobs:
             ./exe/setup-cpp-x64-windows.exe
             ./exe/setup-cpp-x64-linux
             ./exe/setup-cpp-x64-macos
-            ./dist/node12/setup-cpp.js
-            ./dist/node12/setup-cpp.js.map
-            ./dist/node12/
+            ./dist/legacy/setup-cpp.js
+            ./dist/legacy/setup-cpp.js.map
+            ./dist/legacy/
             ./dist/node16/
+            ./dist/node20/
 
   Docker:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip test]') }}
@@ -116,18 +132,15 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-20.04
-        container:
-          - "ubuntu_node.dockerfile"
-          - "ubuntu_20.04_node.dockerfile"
-          - "arch_node.dockerfile"
-          - "fedora_node.dockerfile"
+          - ubuntu-22.04
         node:
-          - 14
+          - 20
         pnpm:
-          - 6
-        cache_reset_counter:
-          - 0
+          - 8
+        container:
+          - "./dev/docker/__tests__/arch.dockerfile"
+          - "./dev/docker/__tests__/fedora.dockerfile"
+          - "./dev/docker/__tests__/ubuntu.dockerfile"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -139,9 +152,11 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
-          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}-${{ matrix.cache_reset_counter }}"
+            ./node_modules
+          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-docker-cache-OS:${{ matrix.os }}"
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -159,4 +174,4 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./dev/docker/${{ matrix.container }} -t setup-cpp .
+          docker build -f ${{ matrix.container }} -t setup-cpp .

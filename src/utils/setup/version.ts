@@ -93,7 +93,7 @@ export async function getBinVersion(file: string, versionRegex: RegExp = default
     const execout = await getExecOutput(file, ["--version"])
     const version_output = execout.stdout || execout.stderr || ""
     const version = version_output.trim().match(versionRegex)?.[1]
-    return semverCoerce(version) ?? undefined
+    return version
   } catch (e) {
     console.error(e)
     return undefined
@@ -107,7 +107,12 @@ export async function isBinUptoDate(
   versionRegex: RegExp = defaultVersionRegex
 ) {
   const givenVersion = await getBinVersion(givenFile, versionRegex)
-  if (givenVersion !== undefined && targetVersion !== "") {
+  if (
+    typeof givenVersion === "string" &&
+    typeof targetVersion === "string" &&
+    givenVersion !== "" &&
+    targetVersion !== ""
+  ) {
     return semverCompare(givenVersion, targetVersion) !== -1
   } else {
     // assume given version is old

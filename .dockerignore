@@ -1,4 +1,20 @@
-.parcel-cache/
-node_modules/
-dev/docker/
-dev/container-tests/
+.git/
+# OS metadata
+**/.DS_Store
+**/Thumbs.db
+
+# Node
+**/node_modules
+**/package-lock.json
+**/temp-*
+
+# TypeScript
+**/*.tsbuildinfo
+
+# Build directories
+**/packages/*/dist/
+**/.parcel-cache
+**/exe/
+**/*.log
+**/*.exe
+**/.cache/
