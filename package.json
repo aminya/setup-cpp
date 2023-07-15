@@ -6,15 +6,14 @@
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "exports": {
-    "import": "./dist/node16/setup-cpp.mjs",
-    "require": "./dist/node16/setup-cpp.js"
+    "import": "./dist/node18/setup-cpp.mjs",
+    "require": "./dist/node12/setup-cpp.js"
   },
-  "main": "dist/node16/setup-cpp.js",
-  "main.legacy": "./dist/node12/setup-cpp.js",
-  "main.actions": "./dist/node18/setup-cpp.js",
+  "main": "dist/node12/setup-cpp.js",
+  "main.actions": "./dist/node16/setup-cpp.js",
   "source": "./src/main.ts",
   "bin": {
-    "setup-cpp": "dist/node16/setup-cpp.js"
+    "setup-cpp": "dist/node12/setup-cpp.js"
   },
   "files": [
     "action.yml",
