@@ -31,7 +31,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
 }
 
 export const MinVersions: Record<string, string | undefined> = {
-  pip: "22.3.1",
+  pip: "22.2.0",
   python: "3.7.9",
 }
 
