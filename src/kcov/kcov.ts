@@ -15,6 +15,7 @@ import { addVPrefix, removeVPrefix } from "../utils/setup/version"
 import { info } from "ci-log"
 import { untildifyUser } from "untildify-user"
 import { setupNinja } from "../ninja/ninja"
+import { ubuntuVersion } from "../utils/env/ubuntu_version"
 
 function getDownloadKcovPackageInfo(version: string): PackageInfo {
   return {
@@ -44,8 +45,7 @@ async function buildKcov(file: string, dest: string) {
 
   if (process.platform === "linux") {
     if (isArch()) {
-      setupPacmanPack("libdwarf")
-      setupPacmanPack("libcurl-openssl")
+      await Promise.all([setupPacmanPack("libdwarf"), setupPacmanPack("libcurl-openssl")])
     } else if (hasDnf()) {
       setupDnfPack("libdwarf-devel")
       setupDnfPack("libcurl-devel")
@@ -53,6 +53,19 @@ async function buildKcov(file: string, dest: string) {
       await setupAptPack([{ name: "libdw-dev" }, { name: "libcurl4-openssl-dev" }])
     }
   }
+
+  // apply gcc13.patch
+  try {
+    if (which.sync("patch", { nothrow: true }) !== null) {
+      const patch = join(__dirname, "gcc13.patch")
+      await execa("patch", ["-N", "-p1", "-i", patch], { cwd: out, stdio: "inherit" })
+    } else {
+      info("`patch` not found, skipping gcc13.patch, kcov may not build on gcc 13")
+    }
+  } catch {
+    // ignore
+  }
+
   const buildDir = join(out, "build")
   await execa(cmake, ["-S", out, "-B", buildDir, "-DCMAKE_BUILD_TYPE=Release", "-G", "Ninja"], {
     cwd: out,
@@ -67,12 +80,16 @@ async function buildKcov(file: string, dest: string) {
 async function getCmake() {
   let cmake = which.sync("cmake", { nothrow: true })
   if (cmake === null) {
-    const { binDir } = await setupCmake(getVersion("cmake", undefined), join(untildifyUser(""), "cmake"), "")
+    const { binDir } = await setupCmake(
+      getVersion("cmake", undefined, await ubuntuVersion()),
+      join(untildifyUser(""), "cmake"),
+      ""
+    )
     cmake = join(binDir, "cmake")
   }
   const ninja = which.sync("ninja", { nothrow: true })
   if (ninja === null) {
-    await setupNinja(getVersion("ninja", undefined), join(untildifyUser(""), "ninja"), "")
+    await setupNinja(getVersion("ninja", undefined, await ubuntuVersion()), join(untildifyUser(""), "ninja"), "")
   }
   return cmake
 }
@@ -97,7 +114,7 @@ export async function setupKcov(versionGiven: string, setupDir: string, arch: st
   if (installMethod === "binary" && version_number >= 39) {
     installationInfo = await setupBin("kcov", version, getDownloadKcovPackageInfo, setupDir, arch)
     if (isArch()) {
-      setupPacmanPack("binutils")
+      await setupPacmanPack("binutils")
     } else if (hasDnf()) {
       setupDnfPack("binutils")
     } else if (isUbuntu()) {

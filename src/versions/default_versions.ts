@@ -15,27 +15,32 @@ function getLLVMDefault() {
   }
 }
 
-export const DefaultVersions: Record<string, string> = {
+export const DefaultVersions: Record<string, string | undefined> = {
   llvm: getLLVMDefault(), // https://github.com/llvm/llvm-project/releases
   clangtidy: getLLVMDefault(),
   clangformat: getLLVMDefault(),
   ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
-  cmake: "3.25.1", // https://github.com/Kitware/CMake/releases
+  cmake: "3.26.4", // https://github.com/Kitware/CMake/releases
   gcovr: "5.2", // https://pypi.org/project/gcovr/
-  conan: "1.57.0", // https://github.com/conan-io/conan/releases
-  meson: "1.0.0", // https://github.com/mesonbuild/meson/releases
-  kcov: "40", // https://github.com/SimonKagstrom/kcov/releases
-  task: "3.20.0", // https://github.com/go-task/task/releases
-  doxygen: isArch() ? "1.9.6-1" : "1.9.6", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
-  gcc: isArch() ? "12.2.1-2" : "12", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
+  conan: "1.60.0", // https://github.com/conan-io/conan/releases
+  meson: "1.0.2", // https://github.com/mesonbuild/meson/releases
+  kcov: "41", // https://github.com/SimonKagstrom/kcov/releases
+  task: "3.25.0", // https://github.com/go-task/task/releases
+  doxygen: isArch() ? "1.9.6-1" : "1.9.7", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
+  gcc: isArch() ? "13.1.1-1" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
+}
+
+export const MinVersions: Record<string, string | undefined> = {
+  pip: "22.3.1",
+  python: "3.7.9",
 }
 
 /// If an ubuntu versions is not in this map:
 // - the newer ubuntu versions use the first entry (e.g. v20),
 // - the older ones use ""
-export const DefaultLinuxVersion: Record<string, Record<number, string>> = {
+export const DefaultLinuxVersion: Record<string, Record<number, string> | undefined> = {
   gcc: {
-    22: "12",
+    22: "13",
     20: "11",
     18: "11",
     16: "11",

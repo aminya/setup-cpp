@@ -1,6 +1,5 @@
 import { join, addExeExt } from "patha"
 import { delimiter } from "path"
-import semverMajor from "semver/functions/major"
 import { InstallationInfo, setupBin } from "../utils/setup/setupBin"
 import { semverCoerceIfInvalid } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
@@ -47,8 +46,7 @@ async function setupLLVMWithoutActivation(version: string, setupDir: string, arc
 async function setupLLVMDeps(arch: string, version: string) {
   if (process.platform === "linux") {
     // install llvm build dependencies
-    const osVersion = await ubuntuVersion()
-    await setupGcc(getVersion("gcc", undefined, osVersion), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
+    await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
 
     if (isUbuntu()) {
       const majorVersion = parseInt(version.split(".")[0], 10)
@@ -59,12 +57,12 @@ async function setupLLVMDeps(arch: string, version: string) {
       }
     }
     // TODO: install libtinfo on other distros
-    // setupPacmanPack("ncurses")
+    // await setupPacmanPack("ncurses")
   }
 }
 
 export async function activateLLVM(directory: string, versionGiven: string) {
-  const version = semverCoerceIfInvalid(versionGiven)
+  const _version = semverCoerceIfInvalid(versionGiven)
 
   const lib = join(directory, "lib")
 
@@ -93,15 +91,16 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     setupMacOSSDK(),
   ]
 
-  // windows builds fail with llvm's CPATH
-  if (process.platform !== "win32") {
-    const llvmMajor = semverMajor(version)
-    if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
-      promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
-    } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
-      promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`))
-    }
-  }
+  // TODO Causes issues with clangd
+  // TODO Windows builds fail with llvm's CPATH
+  // if (process.platform !== "win32") {
+  //   const llvmMajor = semverMajor(version)
+  //   if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
+  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
+  //   } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
+  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`))
+  //   }
+  // }
 
   if (isUbuntu()) {
     promises.push(

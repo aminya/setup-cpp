@@ -17,6 +17,7 @@ import { isUbuntu } from "../utils/env/isUbuntu"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { pathExists } from "path-exists"
+import { ExecaReturnValue } from "execa"
 
 interface MingwInfo {
   releaseName: string
@@ -25,7 +26,12 @@ interface MingwInfo {
 
 // https://github.com/brechtsanders/winlibs_mingw/releases
 const GccToMingwInfo = {
-  "12": { releaseName: "12.2.0-14.0.6-10.0.0-ucrt-r2", fileSuffix: "12.2.0-mingw-w64ucrt-10.0.0-r2" },
+  "13": { releaseName: "13.1.0posix-16.0.3-11.0.0-ucrt-r1", fileSuffix: "13.1.0-mingw-w64ucrt-11.0.0-r1" },
+  "13.1-ucrt": { releaseName: "13.1.0posix-16.0.3-11.0.0-ucrt-r1", fileSuffix: "13.1.0-mingw-w64ucrt-11.0.0-r1" },
+  "13.1-msvcrt": { releaseName: "13.1.0posix-16.0.3-11.0.0-msvcrt-r1", fileSuffix: "13.1.0-mingw-w64msvcrt-11.0.0-r1" },
+  "12": { releaseName: "12.3.0-16.0.4-11.0.0-ucrt-r1", fileSuffix: "12.3.0-mingw-w64ucrt-11.0.0-r1" },
+  "12.3.0-ucrt": { releaseName: "12.3.0-16.0.4-11.0.0-ucrt-r1", fileSuffix: "12.3.0-mingw-w64ucrt-11.0.0-r1" },
+  "12.3.0-msvcrt": { releaseName: "12.3.0-16.0.4-11.0.0-msvcrt-r1", fileSuffix: "12.3.0-mingw-w64msvcrt-11.0.0-r1" },
   "12.2.0-ucrt": { releaseName: "12.2.0-14.0.6-10.0.0-ucrt-r2", fileSuffix: "12.2.0-mingw-w64ucrt-10.0.0-r2" },
   "12.2.0-msvcrt": { releaseName: "12.2.0-14.0.6-10.0.0-msvcrt-r2", fileSuffix: "12.2.0-mingw-w64msvcrt-10.0.0-r2" },
   "12.1.0-ucrt": { releaseName: "12.1.0-14.0.4-10.0.0-ucrt-r2", fileSuffix: "12.1.0-mingw-w64ucrt-10.0.0-r2" },
@@ -90,7 +96,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
     case "linux": {
       if (arch === "x64") {
         if (isArch()) {
-          installationInfo = setupPacmanPack("gcc", version)
+          installationInfo = await setupPacmanPack("gcc", version)
         } else if (hasDnf()) {
           installationInfo = setupDnfPack("gcc", version)
           setupDnfPack("gcc-c++", version)
@@ -104,7 +110,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         if (isArch()) {
-          setupPacmanPack("gcc-multilib", version)
+          await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
           await setupAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
         }
@@ -152,7 +158,7 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
 }
 
 async function activateGcc(version: string, binDir: string) {
-  const promises: Promise<any>[] = []
+  const promises: Promise<void | ExecaReturnValue<string>>[] = []
   // Setup gcc as the compiler
 
   // TODO

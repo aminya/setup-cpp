@@ -21,12 +21,14 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
     if (process.platform === "linux") {
       // vcpkg download and extraction dependencies
       if (isArch()) {
-        setupPacmanPack("curl")
-        setupPacmanPack("zip")
-        setupPacmanPack("unzip")
-        setupPacmanPack("tar")
-        setupPacmanPack("git")
-        setupPacmanPack("pkg-config")
+        await Promise.all([
+          setupPacmanPack("curl"),
+          setupPacmanPack("zip"),
+          setupPacmanPack("unzip"),
+          setupPacmanPack("tar"),
+          setupPacmanPack("git"),
+          setupPacmanPack("pkg-config"),
+        ])
       } else if (hasDnf()) {
         setupDnfPack("curl")
         setupDnfPack("zip")

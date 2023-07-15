@@ -16,6 +16,7 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
+import { ubuntuVersion } from "../utils/env/ubuntu_version"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -70,7 +71,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       let installationInfo: InstallationInfo
       if (version === "" || isArch() || hasDnf()) {
         if (isArch()) {
-          installationInfo = setupPacmanPack("doxygen", version)
+          installationInfo = await setupPacmanPack("doxygen", version)
         } else if (hasDnf()) {
           return setupDnfPack("doxygen", version)
         } else if (isUbuntu()) {
@@ -90,7 +91,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       } else {
         throw new Error(`Unsupported linux distributions`)
       }
-      await setupGraphviz(getVersion("graphviz", undefined), "", arch)
+      await setupGraphviz(getVersion("graphviz", undefined, await ubuntuVersion()), "", arch)
       return installationInfo
     }
     default: {

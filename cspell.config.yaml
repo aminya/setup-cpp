@@ -11,6 +11,10 @@ ignorePaths:
   - "**/node_modules/"
 words:
   - aarch
+  - clangd
+  - Trofimovich
+  - cobertura
+  - whatwg
   - aminya
   - applellvm
   - bazel

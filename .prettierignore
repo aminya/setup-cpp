@@ -7,4 +7,3 @@ stats.html
 src/python/setup-python/
 src/msvc/msvc-dev-cmd/
 dev/cpp_vcpkg_project
-package.json

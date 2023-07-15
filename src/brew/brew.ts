@@ -7,6 +7,7 @@ import { mkdirP } from "@actions/io"
 import { readFileSync } from "fs"
 import { addPath } from "../utils/env/addEnv"
 
+/* eslint-disable require-atomic-updates */
 let binDir: string | undefined
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

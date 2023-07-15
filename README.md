@@ -24,7 +24,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 | coverage              | gcovr, opencppcoverage, kcov                                 |
 | other                 | python, powershell, sevenzip                                 |
 
-`setup-cpp` automatically installs the dependencies above tools if needed for the selected tool (e.g., `python` is required for `conan`).
+`setup-cpp` automatically handles the dependencies of the selected tool (e.g., `python` is required for `conan`).
 
 ## Usage
 
@@ -32,24 +32,18 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 #### With npm and Nodejs
 
-Install setup-cpp with npm:
+Run `setup-cpp` with the available options.
 
 ```shell
-npm install -g setup-cpp
-```
-
-Then run `setup-cpp` with the available options.
-
-```shell
-# windows example (open PowerShell as admin)
-setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+# Windows example (open PowerShell as admin)
+npx setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate the environment
 ```
 
 ```shell
-# linux/macos example
-sudo setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+# Linux/Macos example
+sudo npx setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 source ~/.cpprc
 ```
@@ -62,13 +56,13 @@ NOTE: On Unix systems, if you are already a root user (e.g., in a GitLab runner 
 
 #### With executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.26.2), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.30.1), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```shell
 # windows example (open PowerShell as admin)
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.26.2/setup-cpp-x64-windows.exe"
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.30.1/setup-cpp-x64-windows.exe"
 ./setup-cpp-x64-windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
@@ -76,7 +70,7 @@ RefreshEnv.cmd # activate cpp environment variables
 
 ```shell
 # linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.26.2/setup-cpp-x64-linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.30.1/setup-cpp-x64-linux"
 chmod +x ./setup-cpp-x64-linux
 sudo ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -85,7 +79,7 @@ source ~/.cpprc # activate cpp environment variables
 
 ```shell
 # macos example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.26.2/setup-cpp-x64-macos"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.30.1/setup-cpp-x64-macos"
 chmod +x ./setup-cpp-x64-macos
 sudo ./setup-cpp-x64-macos --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -255,7 +249,7 @@ stages:
   apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
 
 .setup-cpp: &setup-cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.26.2/setup-cpp-x64-linux"
+  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.30.1/setup-cpp-x64-linux"
   chmod +x setup-cpp-x64-linux
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
   source ~/.cpprc
