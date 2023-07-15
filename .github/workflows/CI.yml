@@ -132,10 +132,14 @@ jobs:
       matrix:
         os:
           - ubuntu-22.04
+        node:
+          - 18
+        pnpm:
+          - 8
         container:
-          - "arch_node.dockerfile"
-          - "fedora_node.dockerfile"
-          - "ubuntu_node.dockerfile"
+          - "./dev/docker/__tests__/arch.dockerfile"
+          - "./dev/docker/__tests__/fedora.dockerfile"
+          - "./dev/docker/__tests__/ubuntu.dockerfile"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -151,7 +155,21 @@ jobs:
           restore-keys: |
             "setupcpp-docker-cache-OS:${{ matrix.os }}"
 
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+
+      - name: Install and build
+        run: |
+          pnpm install
+
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./dev/docker/${{ matrix.container }} -t setup-cpp .
+          docker build -f ${{ matrix.container }} -t setup-cpp .

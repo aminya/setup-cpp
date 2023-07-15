@@ -3,15 +3,17 @@ FROM ubuntu:22.04 as base
 
 # install nodejs and setup-cpp
 RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends nodejs npm && \
-    npm install -g setup-cpp
+    apt-get install -y --no-install-recommends nodejs
 
-# install llvm, cmake, ninja, and ccache
-RUN setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
+# add setup-cpp.js (built outside of this dockerfile)
+COPY "./dist/node18" "/"
+
+# install setup-cpp
+RUN node /setup-cpp.js --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
 
 ENTRYPOINT ["/bin/bash"]
 
-#### Building (example)
+#### Building
 FROM base as builder
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
