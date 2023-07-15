@@ -94,7 +94,7 @@ jobs:
           node-version: 16
       - name: Smoke Test Node 16
         run: |
-          node ./dist/node16/setup-cpp.js --help
+          node ./dist/actions/setup-cpp.js --help
 
   Release:
     needs: Test
@@ -122,8 +122,8 @@ jobs:
             ./dist/legacy/setup-cpp.js
             ./dist/legacy/setup-cpp.js.map
             ./dist/legacy/
-            ./dist/node16/
-            ./dist/node20/
+            ./dist/actions/
+            ./dist/modern/
 
   Docker:
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip test]') }}
