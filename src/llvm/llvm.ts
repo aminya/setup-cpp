@@ -4,7 +4,7 @@ import { InstallationInfo, setupBin } from "../utils/setup/setupBin"
 import { semverCoerceIfInvalid } from "../utils/setup/version"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addEnv } from "../utils/env/addEnv"
-import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
+import { hasNala, setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { info, warning } from "ci-log"
 
 import { GITHUB_ACTIONS } from "ci-info"
@@ -14,7 +14,9 @@ import { isUbuntu } from "../utils/env/isUbuntu"
 import { getLLVMPackageInfo } from "./llvm_url"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
 import { pathExists } from "path-exists"
-import { ExecaReturnValue } from "execa"
+import { ExecaReturnValue, execa } from "execa"
+import { readFileSync, writeFileSync } from "fs"
+import { execRootSync } from "admina"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
@@ -24,16 +26,58 @@ export async function setupLLVM(version: string, setupDir: string, arch: string)
 
 let installedDeps = false
 
-async function setupLLVMWithoutActivation(version: string, setupDir: string, arch: string) {
-  const installationInfoPromise = setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
+async function setupLLVMOnly(version: string, setupDir: string, arch: string) {
+  try {
+    if (isUbuntu()) {
+      const coeredVersion = semverCoerceIfInvalid(version)
+      const majorVersion = parseInt(coeredVersion.split(".")[0], 10)
+      const installationFolder = `/usr/lib/llvm-${majorVersion}` // TODO for older versions, this also includes the minor version
 
-  let depsPromise: Promise<void>
+      await setupAptPack([{ name: "curl" }])
+      await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
+
+      let script = readFileSync("/tmp/llvm.sh", "utf-8")
+      // make the scirpt non-interactive and fix broken packages
+      script = script
+        .replace(
+          /add-apt-repository "\${REPO_NAME}"/g,
+          // eslint-disable-next-line no-template-curly-in-string
+          'add-apt-repository -y "${REPO_NAME}"'
+        )
+        .replace(/apt-get install -y/g, "apt-get install -y --fix-broken")
+      // use nala if it is available
+      if (hasNala()) {
+        script = script.replace(/apt-get/g, "nala")
+      }
+      writeFileSync("/tmp/llvm-setup-cpp.sh", script)
+
+      execRootSync("chmod", ["+x", "/tmp/llvm-setup-cpp.sh"])
+      execRootSync("bash", ["/tmp/setup-cpp-llvm.sh"], {
+        stdio: "inherit",
+        shell: true,
+      })
+
+      return {
+        installDir: `/usr/lib/${installationFolder}`,
+        binDir: `/usr/bin`,
+        version,
+      } as InstallationInfo
+    }
+  } catch (err) {
+    info(`Failed to install llvm via system package manager ${err}`)
+  }
+
+  return setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
+}
+
+async function setupLLVMWithoutActivation(version: string, setupDir: string, arch: string) {
+  const installationInfoPromise = setupLLVMOnly(version, setupDir, arch)
+
+  let depsPromise: Promise<void> = Promise.resolve()
   if (!installedDeps) {
     depsPromise = setupLLVMDeps(arch, version)
     // eslint-disable-next-line require-atomic-updates
     installedDeps = true
-  } else {
-    depsPromise = Promise.resolve()
   }
 
   // install LLVM and its dependencies in parallel

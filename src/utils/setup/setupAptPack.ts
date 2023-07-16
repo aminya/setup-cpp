@@ -2,13 +2,13 @@ import { InstallationInfo } from "./setupBin"
 import { execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
-import which from "which"
 import { pathExists } from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
 import { execa } from "execa"
 import escapeRegex from "escape-string-regexp"
 import { warning, info } from "ci-log"
+import which from "which"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
@@ -82,9 +82,13 @@ async function getAptArg(name: string, version: string | undefined) {
   return name
 }
 
+export function hasNala() {
+  return which.sync("nala", { nothrow: true }) !== null
+}
+
 function getApt() {
   let apt: string
-  if (which.sync("nala", { nothrow: true }) !== null) {
+  if (hasNala()) {
     apt = "nala"
   } else {
     apt = "apt-get"
