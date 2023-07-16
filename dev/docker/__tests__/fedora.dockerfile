@@ -1,29 +1,44 @@
 ## base image
-FROM fedora as base
+FROM fedora:38 as setup-cpp-fedora
 
-# install nodejs and setup-cpp
-RUN dnf -y install nodejs npm && \
-    npm install -g setup-cpp
+COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
-# add setup-cpp.js (built outside of this dockerfile)
-COPY "./dist/legacy" "/"
-
-# run installation
-RUN node /setup-cpp.js --compiler llvm --cmake true --ninja true --cppcheck true --ccache true --vcpkg true --doxygen true --gcovr true --task true --powershell true
+# install nodejs
+RUN dnf -y install nodejs-20 npm-9 && \
+    # install setup-cpp
+    npm install -g setup-cpp@v0.30.1 && \
+    # install the compiler and tools
+    node /usr/lib/setup-cpp/setup-cpp.js \
+        --compiler llvm \
+        --cmake true \
+        --ninja true \
+        --task true \
+        --vcpkg true \
+        --python true \
+        --make true \
+        --cppcheck true \
+        --gcovr true \
+        --doxygen true \
+        --ccache true && \
+    # cleanup
+    dnf clean all && \
+    rm -rf /tmp/*
 
 ENTRYPOINT ["/bin/bash"]
 
 #### Building (example)
-FROM base AS example-builder
+FROM setup-cpp-fedora AS builder
+
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
     && task build'
 
 #### Running environment
-# use a distroless image or ubuntu:22.04 if you wish
-FROM gcr.io/distroless/cc as runner
+# use a fresh image as the runner
+FROM fedora:38 as runner
+
 # copy the built binaries and their runtime dependencies
-COPY --from=example-builder /home/app/build/my_exe/Release/ /home/app/
+COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
 WORKDIR /home/app/
 ENTRYPOINT ["./my_exe"]

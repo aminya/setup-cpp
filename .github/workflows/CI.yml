@@ -172,6 +172,7 @@ jobs:
       - name: Install and build
         run: |
           pnpm install
+          pnpm build.docker_tests
 
       - name: Build
         id: docker_build
