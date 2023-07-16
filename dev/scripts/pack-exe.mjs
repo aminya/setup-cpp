@@ -29,7 +29,7 @@ function main() {
     exes.map((exe) =>
       execaNode("./node_modules/caxa/build/index.mjs", [
         "--input",
-        "./dist/node16",
+        "./dist/modern",
         "--output",
         `./exe/setup-cpp-${process.arch}-${getPlatformName()}${exe}`,
         "--",

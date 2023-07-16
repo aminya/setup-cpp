@@ -11,6 +11,7 @@ on:
 
 jobs:
   Test:
+    name: ${{ matrix.os }}
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -126,6 +127,7 @@ jobs:
             ./dist/modern/
 
   Docker:
+    name: ${{ matrix.container }}
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip test]') }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -138,9 +140,9 @@ jobs:
         pnpm:
           - 8
         container:
-          - "./dev/docker/__tests__/arch.dockerfile"
-          - "./dev/docker/__tests__/fedora.dockerfile"
-          - "./dev/docker/__tests__/ubuntu.dockerfile"
+          - "arch.dockerfile"
+          - "fedora.dockerfile"
+          - "ubuntu.dockerfile"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -174,4 +176,4 @@ jobs:
       - name: Build
         id: docker_build
         run: |
-          docker build -f ${{ matrix.container }} -t setup-cpp .
+          docker build -f ./dev/docker/__tests__/${{ matrix.container }} -t setup-cpp .
