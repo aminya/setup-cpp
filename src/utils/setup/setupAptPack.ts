@@ -158,7 +158,8 @@ export async function addAptKeyViaDownload(name: string, url: string) {
   if (!(await pathExists(fileName))) {
     initGpg()
     await setupAptPack([{ name: "curl" }, { name: "ca-certificates" }], undefined)
-    execRootSync("bash", ["-c", `curl -s ${url} | gpg --no-default-keyring --keyring gnupg-ring:${fileName} --import`])
+    await execa("curl", ["-s", url, "-o", `/tmp/${name}`])
+    execRootSync("gpg", ["--no-default-keyring", "--keyring", `gnupg-ring:${fileName}`, "--import", `/tmp/${name}`])
     execRootSync("chmod", ["644", fileName])
   }
   return fileName
