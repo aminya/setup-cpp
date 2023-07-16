@@ -4,7 +4,7 @@ FROM fedora:38 as setup-cpp-fedora
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
 # install nodejs
-RUN dnf -y install nodejs-20 npm-9 && \
+RUN dnf -y install nodejs npm && \
     # install setup-cpp
     npm install -g setup-cpp@v0.30.1 && \
     # install the compiler and tools
