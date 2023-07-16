@@ -1,119 +1,123 @@
-import { join, addExeExt } from "patha"
+import { execRoot } from "admina"
+import { GITHUB_ACTIONS } from "ci-info"
+import { info, warning } from "ci-log"
+import { ExecaReturnValue, execa } from "execa"
+import { promises } from "fs"
+const { readFile, writeFile, chmod } = promises
+import memoize from "micro-memoize"
 import { delimiter } from "path"
-import { InstallationInfo, setupBin } from "../utils/setup/setupBin"
-import { semverCoerceIfInvalid } from "../utils/setup/version"
+import { pathExists } from "path-exists"
+import { addExeExt, join } from "patha"
+import { setupGcc } from "../gcc/gcc"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { addEnv } from "../utils/env/addEnv"
-import { hasNala, setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
-import { info, warning } from "ci-log"
-
-import { GITHUB_ACTIONS } from "ci-info"
-import { setupGcc } from "../gcc/gcc"
-import { getVersion } from "../versions/versions"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { getLLVMPackageInfo } from "./llvm_url"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
-import { pathExists } from "path-exists"
-import { ExecaReturnValue, execa } from "execa"
-import { readFileSync, writeFileSync } from "fs"
-import { execRootSync } from "admina"
+import { hasNala, setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
+import { InstallationInfo, setupBin } from "../utils/setup/setupBin"
+import { semverCoerceIfInvalid } from "../utils/setup/version"
+import { getVersion } from "../versions/versions"
+import { getLLVMPackageInfo } from "./llvm_url"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
-  await activateLLVM(installationInfo.installDir ?? setupDir, version)
+  await activateLLVM(installationInfo.installDir ?? setupDir)
   return installationInfo
 }
 
-let installedDeps = false
+/** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
+export const setupClangTools = setupLLVMWithoutActivation
+
+async function setupLLVMWithoutActivation(version: string, setupDir: string, arch: string) {
+  // install LLVM and its dependencies in parallel
+  const [installationInfo, _1, _2] = await Promise.all([
+    setupLLVMOnly(version, setupDir, arch),
+    setupLLVMDeps(arch),
+    addLLVMLoggingMatcher(),
+  ])
+
+  return installationInfo
+}
 
 async function setupLLVMOnly(version: string, setupDir: string, arch: string) {
+  const coeredVersion = semverCoerceIfInvalid(version)
+  const majorVersion = parseInt(coeredVersion.split(".")[0], 10)
   try {
     if (isUbuntu()) {
-      const coeredVersion = semverCoerceIfInvalid(version)
-      const majorVersion = parseInt(coeredVersion.split(".")[0], 10)
-      const installationFolder = `/usr/lib/llvm-${majorVersion}` // TODO for older versions, this also includes the minor version
-
-      await setupAptPack([{ name: "curl" }])
-      await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
-
-      let script = readFileSync("/tmp/llvm.sh", "utf-8")
-      // make the scirpt non-interactive and fix broken packages
-      script = script
-        .replace(
-          /add-apt-repository "\${REPO_NAME}"/g,
-          // eslint-disable-next-line no-template-curly-in-string
-          'add-apt-repository -y "${REPO_NAME}"'
-        )
-        .replace(/apt-get install -y/g, "apt-get install -y --fix-broken")
-      // use nala if it is available
-      if (hasNala()) {
-        script = script.replace(/apt-get/g, "nala")
-      }
-      writeFileSync("/tmp/llvm-setup-cpp.sh", script)
-
-      execRootSync("chmod", ["+x", "/tmp/llvm-setup-cpp.sh"])
-      execRootSync("bash", ["/tmp/setup-cpp-llvm.sh"], {
-        stdio: "inherit",
-        shell: true,
-      })
-
-      return {
-        installDir: `/usr/lib/${installationFolder}`,
-        binDir: `/usr/bin`,
-        version,
-      } as InstallationInfo
+      return setupLLVMApt(majorVersion)
     }
   } catch (err) {
     info(`Failed to install llvm via system package manager ${err}`)
   }
 
-  return setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
-}
-
-async function setupLLVMWithoutActivation(version: string, setupDir: string, arch: string) {
-  const installationInfoPromise = setupLLVMOnly(version, setupDir, arch)
-
-  let depsPromise: Promise<void> = Promise.resolve()
-  if (!installedDeps) {
-    depsPromise = setupLLVMDeps(arch, version)
-    // eslint-disable-next-line require-atomic-updates
-    installedDeps = true
-  }
-
-  // install LLVM and its dependencies in parallel
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [installationInfo, _] = await Promise.all([installationInfoPromise, depsPromise])
-
+  const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
+  await llvmBinaryDeps(majorVersion)
   return installationInfo
 }
 
-async function setupLLVMDeps(arch: string, version: string) {
-  if (process.platform === "linux") {
-    // install llvm build dependencies
-    await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch) // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
+async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
+  // TODO for older versions, this also includes the minor version
+  const installationFolder = `/usr/lib/llvm-${majorVersion}`
 
-    if (isUbuntu()) {
-      const majorVersion = parseInt(version.split(".")[0], 10)
-      if (majorVersion <= 10) {
-        await setupAptPack([{ name: "libtinfo5" }])
-      } else {
-        await setupAptPack([{ name: "libtinfo-dev" }])
-      }
-    }
-    // TODO: install libtinfo on other distros
-    // await setupPacmanPack("ncurses")
+  await setupAptPack([{ name: "curl" }])
+  await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
+  await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh")
+  await chmod("/tmp/llvm-setup-cpp.sh", "755")
+  await execRoot("bash", ["/tmp/setup-cpp-llvm.sh"], {
+    stdio: "inherit",
+    shell: true,
+  })
+
+  return {
+    installDir: `${installationFolder}`,
+    binDir: `${installationFolder}/bin`,
+    bin: `${installationFolder}/bin/clang++`,
   }
 }
 
-export async function activateLLVM(directory: string, versionGiven: string) {
-  const _version = semverCoerceIfInvalid(versionGiven)
+async function patchAptLLVMScript(path: string, target_path: string) {
+  let script = await readFile(path, "utf-8")
+  // make the scirpt non-interactive and fix broken packages
+  script = script
+    .replace(
+      /add-apt-repository "\${REPO_NAME}"/g,
+      // eslint-disable-next-line no-template-curly-in-string
+      'add-apt-repository -y "${REPO_NAME}"'
+    )
+    .replace(/apt-get install -y/g, "apt-get install -y --fix-broken")
+  // use nala if it is available
+  if (hasNala()) {
+    script = script.replace(/apt-get/g, "nala")
+  }
+  await writeFile(target_path, script)
+}
 
+async function llvmBinaryDeps_raw(majorVersion: number) {
+  if (isUbuntu()) {
+    if (majorVersion <= 10) {
+      await setupAptPack([{ name: "libtinfo5" }])
+    } else {
+      await setupAptPack([{ name: "libtinfo-dev" }])
+    }
+  }
+}
+const llvmBinaryDeps = memoize(llvmBinaryDeps_raw, { isPromise: true })
+
+async function setupLLVMDeps_raw(arch: string) {
+  if (process.platform === "linux") {
+    // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
+    await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch)
+  }
+}
+const setupLLVMDeps = memoize(setupLLVMDeps_raw, { isPromise: true })
+
+export async function activateLLVM(directory: string) {
   const lib = join(directory, "lib")
 
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  const promises: Promise<void | ExecaReturnValue<string>>[] = [
+  const actPromises: Promise<void | ExecaReturnValue<string>>[] = [
     // the output of this action
     addEnv("LLVM_PATH", directory),
 
@@ -138,7 +142,6 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   // TODO Causes issues with clangd
   // TODO Windows builds fail with llvm's CPATH
   // if (process.platform !== "win32") {
-  //   const llvmMajor = semverMajor(version)
   //   if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
   //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
   //   } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
@@ -147,7 +150,7 @@ export async function activateLLVM(directory: string, versionGiven: string) {
   // }
 
   if (isUbuntu()) {
-    promises.push(
+    actPromises.push(
       updateAptAlternatives("cc", `${directory}/bin/clang`),
       updateAptAlternatives("cxx", `${directory}/bin/clang++`),
       updateAptAlternatives("clang", `${directory}/bin/clang`),
@@ -158,25 +161,15 @@ export async function activateLLVM(directory: string, versionGiven: string) {
     )
   }
 
-  if (GITHUB_ACTIONS) {
-    await addLLVMLoggingMatcher()
-  }
-
-  await Promise.all(promises)
-}
-
-/** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
-export async function setupClangTools(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
-  if (GITHUB_ACTIONS) {
-    await addLLVMLoggingMatcher()
-  }
-  return setupLLVMWithoutActivation(version, setupDir, arch)
+  await Promise.all(actPromises)
 }
 
 async function addLLVMLoggingMatcher() {
-  const matcherPath = join(__dirname, "llvm_matcher.json")
-  if (!(await pathExists(matcherPath))) {
-    return warning("the llvm_matcher.json file does not exist in the same folder as setup-cpp.js")
+  if (GITHUB_ACTIONS) {
+    const matcherPath = join(__dirname, "llvm_matcher.json")
+    if (!(await pathExists(matcherPath))) {
+      return warning("the llvm_matcher.json file does not exist in the same folder as setup-cpp.js")
+    }
+    info(`::add-matcher::${matcherPath}`)
   }
-  info(`::add-matcher::${matcherPath}`)
 }
