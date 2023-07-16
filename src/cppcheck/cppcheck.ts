@@ -23,7 +23,7 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
       if (isArch()) {
         return setupPacmanPack("cppcheck", version)
       } else if (hasDnf()) {
-        return setupDnfPack("ccache", version)
+        return setupDnfPack([{ name: "ccache", version }])
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "cppcheck", version }])
       }

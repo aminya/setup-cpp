@@ -26,12 +26,12 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
       if (isArch()) {
         return setupPacmanPack("powershell-bin", version, "yay")
       } else if (hasDnf()) {
-        setupDnfPack("curl")
+        setupDnfPack([{ name: "curl" }])
         execRootSync("/bin/bash", [
           "-c",
           `curl https://packages.microsoft.com/config/rhel/8/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo`,
         ])
-        return setupDnfPack("powershell", version)
+        return setupDnfPack([{ name: "powershell", version }])
       } else if (isUbuntu()) {
         await setupAptPack([{ name: "curl" }])
         const ubuntuVerSplitted = (await ubuntuVersion())!

@@ -23,7 +23,7 @@ export async function setupGraphviz(version: string, _setupDir: string, _arch: s
       if (isArch()) {
         return setupPacmanPack("graphviz", version)
       } else if (hasDnf()) {
-        return setupDnfPack("graphviz", version)
+        return setupDnfPack([{ name: "graphviz", version }])
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "graphviz", version }])
       }

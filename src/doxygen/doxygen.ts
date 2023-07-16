@@ -73,7 +73,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         if (isArch()) {
           installationInfo = await setupPacmanPack("doxygen", version)
         } else if (hasDnf()) {
-          return setupDnfPack("doxygen", version)
+          return setupDnfPack([{ name: "doxygen", version }])
         } else if (isUbuntu()) {
           installationInfo = await setupAptPack([{ name: "doxygen", version }])
         } else {

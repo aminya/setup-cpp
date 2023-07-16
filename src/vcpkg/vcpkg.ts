@@ -30,12 +30,14 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
           setupPacmanPack("pkg-config"),
         ])
       } else if (hasDnf()) {
-        setupDnfPack("curl")
-        setupDnfPack("zip")
-        setupDnfPack("unzip")
-        setupDnfPack("tar")
-        setupDnfPack("git")
-        setupDnfPack("pkg-config")
+        await setupDnfPack([
+          { name: "curl" },
+          { name: "zip" },
+          { name: "unzip" },
+          { name: "tar" },
+          { name: "git" },
+          { name: "pkg-config" },
+        ])
       } else if (isUbuntu()) {
         await setupAptPack([
           { name: "curl" },

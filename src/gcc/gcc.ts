@@ -98,9 +98,11 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
         if (isArch()) {
           installationInfo = await setupPacmanPack("gcc", version)
         } else if (hasDnf()) {
-          installationInfo = setupDnfPack("gcc", version)
-          setupDnfPack("gcc-c++", version)
-          setupDnfPack("libstdc++-devel", undefined)
+          installationInfo = await setupDnfPack([
+            { name: "gcc", version },
+            { name: "gcc-c++", version },
+            { name: "libstdc++-devel" },
+          ])
         } else if (isUbuntu()) {
           installationInfo = await setupAptPack([
             { name: "gcc", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },

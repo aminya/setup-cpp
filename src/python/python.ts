@@ -112,7 +112,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       if (isArch()) {
         installInfo = await setupPacmanPack("python", version)
       } else if (hasDnf()) {
-        installInfo = setupDnfPack("python3", version)
+        installInfo = await setupDnfPack([{ name: "python3", version }])
       } else if (isUbuntu()) {
         installInfo = await setupAptPack([{ name: "python3", version }, { name: "python-is-python3" }])
       } else {
@@ -234,7 +234,7 @@ function setupPipSystem() {
     if (isArch()) {
       return setupPacmanPack("python-pip")
     } else if (hasDnf()) {
-      return setupDnfPack("python3-pip")
+      return setupDnfPack([{ name: "python3-pip" }])
     } else if (isUbuntu()) {
       return setupAptPack([{ name: "python3-pip" }])
     }

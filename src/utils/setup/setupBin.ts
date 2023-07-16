@@ -107,9 +107,7 @@ export async function setupBin(
           if (isArch()) {
             await Promise.all([setupPacmanPack("unzip"), setupPacmanPack("tar"), setupPacmanPack("xz")])
           } else if (hasDnf()) {
-            setupDnfPack("unzip")
-            setupDnfPack("tar")
-            setupDnfPack("xz")
+            await setupDnfPack([{ name: "unzip" }, { name: "tar" }, { name: "xz" }])
           } else if (isUbuntu()) {
             await setupAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
           }

@@ -1,31 +1,35 @@
-/* eslint-disable require-atomic-updates */
 import { InstallationInfo } from "./setupBin"
 import { execRootSync } from "admina"
 import { info, warning } from "ci-log"
+import { execa } from "execa"
 
-// let didUpdate: boolean = false
+export type DnfPackage = {
+  name: string
+  version?: string
+}
 
 /** A function that installs a package using dnf */
-export function setupDnfPack(name: string, version?: string): InstallationInfo {
-  info(`Installing ${name} ${version ?? ""} via dnf`)
-
-  const dnf = "dnf"
-
-  // if (!didUpdate) {
-  //   execRootSync(dnf, ["-y", "check-update"])
-  //   didUpdate = true
-  // }
-
-  if (version !== undefined && version !== "") {
-    try {
-      execRootSync(dnf, ["-y", "install", `${name}-${version}`])
-    } catch (err) {
-      warning(`${(err as Error).toString()}\nInstalling the default version available via dnf`)
-      execRootSync(dnf, ["-y", "install", name])
-    }
-  } else {
-    execRootSync(dnf, ["-y", "install", name])
+export async function setupDnfPack(packages: DnfPackage[]): Promise<InstallationInfo> {
+  for (const { name, version } of packages) {
+    info(`Installing ${name} ${version ?? ""} via dnf`)
   }
 
+  const dnfArgs = await Promise.all(packages.map((pack) => getDnfArg(pack.name, pack.version)))
+  execRootSync("dnf", ["-y", "install", ...dnfArgs])
+
   return { binDir: "/usr/bin/" }
+}
+
+async function getDnfArg(name: string, version: string | undefined) {
+  if (version !== undefined && version !== "") {
+    // check if name-version is available
+    const { stdout } = await execa("dnf", ["search", `${name}-${version}`, "--exact", "--quiet"])
+
+    if (stdout.trim() !== "") {
+      return `${name}-${version}`
+    } else {
+      warning(`Failed to install ${name} ${version} via dnf, trying without version`)
+    }
+  }
+  return name
 }
