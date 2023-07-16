@@ -153,29 +153,49 @@ Here is an example for using setup-cpp to make a builder image that has the Cpp 
 
 ```dockerfile
 #### Base Image
-FROM ubuntu:22.04 as base
+FROM ubuntu:22.04 as setup-cpp-ubuntu
 
-# install nodejs and setup-cpp
 RUN apt-get update -qq && \
+    # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
-    npm install -g setup-cpp
-
-# install llvm, cmake, ninja, and ccache
-RUN setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
+    # install setup-cpp
+    npm install -g setup-cpp@v0.30.1 && \
+    # install the compiler and tools
+    setup-cpp \
+        --nala true \
+        --compiler llvm \
+        --cmake true \
+        --ninja true \
+        --task true \
+        --vcpkg true \
+        --python true \
+        --make true \
+        --cppcheck true \
+        --gcovr true \
+        --doxygen true \
+        --ccache true && \
+    # cleanup
+    nala autoremove -y && \
+    nala autopurge -y && \
+    apt-get clean && \
+    nala clean --lists && \
+    rm -rf /var/lib/apt/lists/* && \
+    rm -rf /tmp/*
 
 ENTRYPOINT ["/bin/bash"]
 
 #### Building (example)
-FROM base as builder
+FROM setup-cpp-ubuntu AS builder
+
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
     && task build'
 
+#### Running environment
+# use a fresh image as the runner
+FROM ubuntu:22.04 as runner
 
-### Running environment
-# use a distroless image or ubuntu:22.04 if you wish
-FROM gcr.io/distroless/cc as runner
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
 WORKDIR /home/app/
@@ -189,7 +209,7 @@ If you want to build the ones included, then run:
 ```shell
 git clone --recurse-submodules https://github.com/aminya/setup-cpp
 cd ./setup-cpp
-docker build -f ./dev/docker/ubuntu.dockerfile -t setup-cpp .
+docker build -f ./dev/docker/setup-cpp-ubuntu.dockerfile -t setup-cpp .
 ```
 
 Where you should use the path to the dockerfile after `-f`.
