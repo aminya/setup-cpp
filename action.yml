@@ -87,7 +87,7 @@ inputs:
 
 runs:
   using: "node16"
-  main: "dist/node16/setup-cpp.js"
+  main: "dist/actions/setup-cpp.js"
 
 branding:
   icon: "award"

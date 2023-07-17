@@ -8,7 +8,7 @@ RUN pacman -Syuu --noconfirm && \
     # install nodejs
     pacman -S --noconfirm --needed nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.31.0 && \
+    npm install -g setup-cpp@v0.31.1 && \
     # install the compiler and tools
     node /usr/lib/setup-cpp/setup-cpp.js \
         --compiler llvm \
