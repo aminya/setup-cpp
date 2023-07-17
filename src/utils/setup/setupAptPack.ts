@@ -5,7 +5,7 @@ import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
 import { pathExists } from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
-import { execa } from "execa"
+import { execa, ExecaError } from "execa"
 import escapeRegex from "escape-string-regexp"
 import { warning, info } from "ci-log"
 import which from "which"
@@ -52,7 +52,19 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
   }
 
   const aptArgs = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
-  execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+  try {
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+  } catch (err) {
+    if ("stderr" in (err as ExecaError)) {
+      const stderr = (err as ExecaError).stderr
+      if (stderr.includes("E: Could not get lock") || stderr.includes("dpkg: error processing archive")) {
+        warning(`Failed to install packages ${aptArgs}. Retrying...`)
+        execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+      }
+    } else {
+      throw err
+    }
+  }
 
   return { binDir: "/usr/bin/" }
 }

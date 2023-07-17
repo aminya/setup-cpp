@@ -87,7 +87,8 @@ async function patchAptLLVMScript(path: string, target_path: string) {
       // eslint-disable-next-line no-template-curly-in-string
       'add-apt-repository -y "${REPO_NAME}"'
     )
-    .replace(/apt-get install -y/g, "apt-get install -y --fix-broken")
+    // fix conflicts between libclang-rt and libclang
+    .replace(/apt-get install -y/g, 'apt-get install -o Dpkg::Options::="--force-overwrite" -y --fix-broken')
   // use nala if it is available
   if (hasNala()) {
     script = script.replace(/apt-get/g, "nala")
