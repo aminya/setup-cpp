@@ -44,7 +44,7 @@ async function setupLLVMOnly(version: string, setupDir: string, arch: string) {
   const majorVersion = parseInt(coeredVersion.split(".")[0], 10)
   try {
     if (isUbuntu()) {
-      return setupLLVMApt(majorVersion)
+      return await setupLLVMApt(majorVersion)
     }
   } catch (err) {
     info(`Failed to install llvm via system package manager ${err}`)
