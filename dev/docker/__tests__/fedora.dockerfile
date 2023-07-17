@@ -5,8 +5,7 @@ COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
 # install nodejs
 RUN dnf -y install nodejs npm && \
-    # install setup-cpp
-    npm install -g setup-cpp@v0.31.1 && \
+    
     # install the compiler and tools
     node /usr/lib/setup-cpp/setup-cpp.js \
         --compiler llvm \

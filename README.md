@@ -209,7 +209,7 @@ If you want to build the ones included, then run:
 ```shell
 git clone --recurse-submodules https://github.com/aminya/setup-cpp
 cd ./setup-cpp
-docker build -f ./dev/docker/setup-cpp-ubuntu.dockerfile -t setup-cpp .
+docker build -f ./dev/docker/setup-cpp-ubuntu.dockerfile -t setup-cpp-ubuntu .
 ```
 
 Where you should use the path to the dockerfile after `-f`.

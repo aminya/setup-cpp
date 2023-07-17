@@ -6,8 +6,7 @@ COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 RUN apt-get update -qq && \
     # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
-    # install setup-cpp
-    npm install -g setup-cpp@v0.31.1 && \
+    
     # install the compiler and tools
     node /usr/lib/setup-cpp/setup-cpp.js \
         --nala true \
