@@ -57,7 +57,14 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
   return { binDir: "/usr/bin/" }
 }
 
-async function getAptArg(name: string, version: string | undefined) {
+export enum AptPackageType {
+  NameDashVersion,
+  NameEqualsVersion,
+  Name,
+  None,
+}
+
+export async function aptPackageType(name: string, version: string | undefined): Promise<AptPackageType> {
   if (version !== undefined && version !== "") {
     const { stdout } = await execa("apt-cache", [
       "search",
@@ -65,21 +72,46 @@ async function getAptArg(name: string, version: string | undefined) {
       `^${escapeRegex(name)}-${escapeRegex(version)}$`,
     ])
     if (stdout.trim() !== "") {
-      return `${name}-${version}`
-    } else {
-      try {
-        // check if apt-get show can find the version
-        const { stdout: showStdout } = await execa("apt-cache", ["show", `${name}=${version}`])
-        if (showStdout.trim() === "") {
-          return `${name}=${version}`
-        }
-      } catch {
-        // ignore
+      return AptPackageType.NameDashVersion
+    }
+
+    try {
+      // check if apt-get show can find the version
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`])
+      if (stdout.trim() === "") {
+        return AptPackageType.NameEqualsVersion
       }
-      warning(`Failed to install ${name} ${version} via apt, trying without version`)
+    } catch {
+      // ignore
     }
   }
-  return name
+
+  try {
+    const { stdout: showStdout } = await execa("apt-cache", ["show", name])
+    if (showStdout.trim() !== "") {
+      return AptPackageType.Name
+    }
+  } catch {
+    // ignore
+  }
+
+  return AptPackageType.None
+}
+
+async function getAptArg(name: string, version: string | undefined) {
+  const package_type = await aptPackageType(name, version)
+  switch (package_type) {
+    case AptPackageType.NameDashVersion:
+      return `${name}-${version}`
+    case AptPackageType.NameEqualsVersion:
+      return `${name}=${version}`
+    case AptPackageType.Name:
+      return name
+    case AptPackageType.None:
+    default:
+      throw new Error(`Could not find package ${name} ${version ?? ""}`)
+  }
 }
 
 export function hasNala() {

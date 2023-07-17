@@ -61,7 +61,8 @@ async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
 
   await setupAptPack([{ name: "curl" }])
   await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
-  await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh")
+  const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh")
+  await setupAptPack(neededPackages)
   await chmod("/tmp/llvm-setup-cpp.sh", "755")
   await execRoot("bash", ["/tmp/llvm-setup-cpp.sh"], {
     stdio: "inherit",
@@ -90,6 +91,9 @@ async function patchAptLLVMScript(path: string, target_path: string) {
     script = script.replace(/apt-get/g, "nala")
   }
   await writeFile(target_path, script)
+
+  // the packages needed by the script
+  return [{ name: "lsb-release" }, { name: "wget" }, { name: "software-properties-common" }, { name: "gnupg" }]
 }
 
 async function llvmBinaryDeps_raw(majorVersion: number) {
