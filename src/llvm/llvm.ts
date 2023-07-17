@@ -1,7 +1,7 @@
 import { execRoot } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
-import { ExecaReturnValue, execa } from "execa"
+import { execa } from "execa"
 import { promises } from "fs"
 const { readFile, writeFile, chmod } = promises
 import memoize from "micro-memoize"
@@ -10,7 +10,7 @@ import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import { setupGcc } from "../gcc/gcc"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { addEnv } from "../utils/env/addEnv"
+import { addEnv, addPath } from "../utils/env/addEnv"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
 import { hasNala, setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
@@ -69,6 +69,8 @@ async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
     shell: true,
   })
 
+  await addPath(`${installationFolder}/bin`)
+
   return {
     installDir: `${installationFolder}`,
     binDir: `${installationFolder}/bin`,
@@ -116,18 +118,16 @@ async function setupLLVMDeps_raw(arch: string) {
 const setupLLVMDeps = memoize(setupLLVMDeps_raw, { isPromise: true })
 
 export async function activateLLVM(directory: string) {
-  const lib = join(directory, "lib")
-
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  const actPromises: Promise<void | ExecaReturnValue<string>>[] = [
+  const actPromises: Promise<any>[] = [
     // the output of this action
     addEnv("LLVM_PATH", directory),
 
     // Setup LLVM as the compiler
-    addEnv("LD_LIBRARY_PATH", `${lib}${delimiter}${ld}`),
-    addEnv("DYLD_LIBRARY_PATH", `${lib}${delimiter}${dyld}`),
+    addEnv("LD_LIBRARY_PATH", `${directory}/lib${delimiter}${ld}`),
+    addEnv("DYLD_LIBRARY_PATH", `${directory}/lib${delimiter}${dyld}`),
 
     // compiler flags
     addEnv("LDFLAGS", `-L"${directory}/lib"`),
