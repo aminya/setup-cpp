@@ -63,7 +63,7 @@ async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
   await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
   await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh")
   await chmod("/tmp/llvm-setup-cpp.sh", "755")
-  await execRoot("bash", ["/tmp/setup-cpp-llvm.sh"], {
+  await execRoot("bash", ["/tmp/llvm-setup-cpp.sh"], {
     stdio: "inherit",
     shell: true,
   })
