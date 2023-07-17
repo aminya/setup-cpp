@@ -64,7 +64,7 @@ async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
   const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh")
   await setupAptPack(neededPackages)
   await chmod("/tmp/llvm-setup-cpp.sh", "755")
-  await execRoot("bash", ["/tmp/llvm-setup-cpp.sh"], {
+  await execRoot("bash", ["/tmp/llvm-setup-cpp.sh", majorVersion.toString()], {
     stdio: "inherit",
     shell: true,
   })
