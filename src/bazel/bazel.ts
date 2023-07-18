@@ -23,9 +23,9 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
         throw new Error("installing bazel on Arch linux is not supported yet")
       } else if (hasDnf()) {
         // https://bazel.build/install/redhat
-        setupDnfPack("dnf-plugins-core", undefined)
+        await setupDnfPack([{ name: "dnf-plugins-core" }])
         execRootSync("dnf", ["copr", "enable", "vbatts/bazel"])
-        return setupDnfPack("bazel4", undefined)
+        return setupDnfPack([{ name: "bazel4" }])
       } else if (isUbuntu()) {
         // https://bazel.build/install/ubuntu
         const keyFileName = await addAptKeyViaDownload(

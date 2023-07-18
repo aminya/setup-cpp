@@ -2,13 +2,13 @@ import { InstallationInfo } from "./setupBin"
 import { execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
-import which from "which"
 import { pathExists } from "path-exists"
 import { promises as fsPromises } from "fs"
 const { appendFile } = fsPromises
-import { execa } from "execa"
+import { execa, ExecaError } from "execa"
 import escapeRegex from "escape-string-regexp"
 import { warning, info } from "ci-log"
+import which from "which"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
@@ -52,12 +52,31 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
   }
 
   const aptArgs = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
-  execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+  try {
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+  } catch (err) {
+    if ("stderr" in (err as ExecaError)) {
+      const stderr = (err as ExecaError).stderr
+      if (stderr.includes("E: Could not get lock") || stderr.includes("dpkg: error processing archive")) {
+        warning(`Failed to install packages ${aptArgs}. Retrying...`)
+        execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+      }
+    } else {
+      throw err
+    }
+  }
 
   return { binDir: "/usr/bin/" }
 }
 
-async function getAptArg(name: string, version: string | undefined) {
+export enum AptPackageType {
+  NameDashVersion,
+  NameEqualsVersion,
+  Name,
+  None,
+}
+
+export async function aptPackageType(name: string, version: string | undefined): Promise<AptPackageType> {
   if (version !== undefined && version !== "") {
     const { stdout } = await execa("apt-cache", [
       "search",
@@ -65,26 +84,55 @@ async function getAptArg(name: string, version: string | undefined) {
       `^${escapeRegex(name)}-${escapeRegex(version)}$`,
     ])
     if (stdout.trim() !== "") {
-      return `${name}-${version}`
-    } else {
-      try {
-        // check if apt-get show can find the version
-        const { stdout: showStdout } = await execa("apt-cache", ["show", `${name}=${version}`])
-        if (showStdout.trim() === "") {
-          return `${name}=${version}`
-        }
-      } catch {
-        // ignore
+      return AptPackageType.NameDashVersion
+    }
+
+    try {
+      // check if apt-get show can find the version
+      // eslint-disable-next-line @typescript-eslint/no-shadow
+      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`])
+      if (stdout.trim() === "") {
+        return AptPackageType.NameEqualsVersion
       }
-      warning(`Failed to install ${name} ${version} via apt, trying without version`)
+    } catch {
+      // ignore
     }
   }
-  return name
+
+  try {
+    const { stdout: showStdout } = await execa("apt-cache", ["show", name])
+    if (showStdout.trim() !== "") {
+      return AptPackageType.Name
+    }
+  } catch {
+    // ignore
+  }
+
+  return AptPackageType.None
+}
+
+async function getAptArg(name: string, version: string | undefined) {
+  const package_type = await aptPackageType(name, version)
+  switch (package_type) {
+    case AptPackageType.NameDashVersion:
+      return `${name}-${version}`
+    case AptPackageType.NameEqualsVersion:
+      return `${name}=${version}`
+    case AptPackageType.Name:
+      return name
+    case AptPackageType.None:
+    default:
+      throw new Error(`Could not find package ${name} ${version ?? ""}`)
+  }
+}
+
+export function hasNala() {
+  return which.sync("nala", { nothrow: true }) !== null
 }
 
 function getApt() {
   let apt: string
-  if (which.sync("nala", { nothrow: true }) !== null) {
+  if (hasNala()) {
     apt = "nala"
   } else {
     apt = "apt-get"

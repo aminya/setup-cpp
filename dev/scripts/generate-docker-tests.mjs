@@ -7,10 +7,12 @@ async function main() {
       const dockerFileContent = await readFile(`./dev/docker/setup-cpp-${dockerFile}.dockerfile`, "utf-8")
       const builderExample = await readFile(`./dev/docker/${dockerFile}.dockerfile`, "utf-8")
 
-      // after the first FROM, add COPY "./dist/legacy" "/"
       const modifiedDockerFile = dockerFileContent
+        // load the externally built setup-cpp
         .replace(/FROM (.*)/g, `FROM $1\n\nCOPY "./dist/legacy" "/usr/lib/setup-cpp/"`)
         .replace("setup-cpp ", "node /usr/lib/setup-cpp/setup-cpp.js ")
+        // remove the npm install line
+        .replace(/# install setup-cpp\n\s*npm install -g setup-cpp.*/, "")
 
       // concat the two files
       const newDockerFileContent = `${modifiedDockerFile}\n${builderExample}`

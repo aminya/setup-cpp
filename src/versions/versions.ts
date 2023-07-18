@@ -4,7 +4,6 @@ import { DefaultLinuxVersion, DefaultVersions } from "./default_versions"
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
-  console.log("isDefault", version, name, isVersionDefault(version))
   if (isVersionDefault(version) && process.platform === "linux" && osVersion !== null && name in DefaultLinuxVersion) {
     return getDefaultLinuxVersion(osVersion, DefaultLinuxVersion[name]!)
   } else if (isVersionDefault(version) && name in DefaultVersions) {

@@ -20,7 +20,7 @@ export function setupCcache(version: string, _setupDir: string, _arch: string) {
       if (isArch()) {
         return setupPacmanPack("ccache", version)
       } else if (hasDnf()) {
-        return setupDnfPack("ccache", version)
+        return setupDnfPack([{ name: "ccache", version }])
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "ccache", version }])
       }

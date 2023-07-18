@@ -151,7 +151,8 @@
   ],
   "alias": {
     "electron": false,
-    "patha": "patha/dist/index.node.mjs"
+    "patha": "patha/dist/index.node.mjs",
+    "admina": "admina/dist/index.mjs"
   },
   "pnpm": {
     "overrides": {

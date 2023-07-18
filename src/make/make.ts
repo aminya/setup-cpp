@@ -23,7 +23,7 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
       if (isArch()) {
         return setupPacmanPack("make", version)
       } else if (hasDnf()) {
-        return setupDnfPack("make", version)
+        return setupDnfPack([{ name: "make", version }])
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "make", version }])
       }
