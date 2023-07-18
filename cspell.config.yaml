@@ -12,10 +12,6 @@ ignorePaths:
   - .vscode/extensions.json
 words:
   - aarch
-  - clangd
-  - Trofimovich
-  - cobertura
-  - whatwg
   - aminya
   - applellvm
   - bazel
@@ -24,7 +20,9 @@ words:
   - caxa
   - ccache
   - choco
+  - clangd
   - cmake
+  - cobertura
   - copr
   - CPATH
   - Cppcheck
@@ -50,6 +48,7 @@ words:
   - LDFLAGS
   - lefticus
   - libbinutils
+  - libc
   - libdw
   - libstdc
   - libtinfo
@@ -77,6 +76,7 @@ words:
   - setx
   - Syuu
   - terserrc
+  - Trofimovich
   - tsbuildinfo
   - ucrt
   - untildify
@@ -87,6 +87,7 @@ words:
   - visualc
   - visualcpp
   - vsversion
+  - whatwg
   - xcrun
   - Yahyaabadi
 ignoreWords: []
