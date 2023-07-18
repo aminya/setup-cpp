@@ -20,6 +20,12 @@ export type AptPackage = {
   repositories?: string[]
 }
 
+const retryErrors = [
+  "E: Could not get lock",
+  "dpkg: error processing archive",
+  "dpkg: error: dpkg status database is locked by another process",
+]
+
 /** A function that installs a package using apt */
 export async function setupAptPack(packages: AptPackage[], update = false): Promise<InstallationInfo> {
   const apt: string = getApt()
@@ -57,7 +63,7 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
   } catch (err) {
     if ("stderr" in (err as ExecaError)) {
       const stderr = (err as ExecaError).stderr
-      if (stderr.includes("E: Could not get lock") || stderr.includes("dpkg: error processing archive")) {
+      if (retryErrors.some((error) => stderr.includes(error))) {
         warning(`Failed to install packages ${aptArgs}. Retrying...`)
         execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
       }
@@ -222,5 +228,17 @@ export async function updateAptAlternatives(name: string, path: string) {
       cpprc_path,
       `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 40; fi\n`
     )
+  }
+}
+
+export async function isPackageInstalled(regexp: string) {
+  try {
+    // check if a package matching the regexp is installed
+    const { stdout } = await execa("dpkg", ["-l", regexp])
+    const lines = stdout.split("\n")
+    // check if the output contains any lines that start with "ii"
+    return lines.some((line) => line.startsWith("ii"))
+  } catch {
+    return false
   }
 }

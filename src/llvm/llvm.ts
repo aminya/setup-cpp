@@ -1,22 +1,19 @@
-import { execRoot } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
-import { execa } from "execa"
-import { promises } from "fs"
-const { readFile, writeFile, chmod } = promises
 import memoize from "micro-memoize"
 import { delimiter } from "path"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import { setupGcc } from "../gcc/gcc"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { addEnv, addPath } from "../utils/env/addEnv"
+import { addEnv } from "../utils/env/addEnv"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
-import { hasNala, setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
+import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
 import { InstallationInfo, setupBin } from "../utils/setup/setupBin"
 import { semverCoerceIfInvalid } from "../utils/setup/version"
 import { getVersion } from "../versions/versions"
+import { setupLLVMApt } from "./llvm_installer"
 import { getLLVMPackageInfo } from "./llvm_url"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
@@ -53,50 +50,6 @@ async function setupLLVMOnly(version: string, setupDir: string, arch: string) {
   const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
   await llvmBinaryDeps(majorVersion)
   return installationInfo
-}
-
-async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
-  // TODO for older versions, this also includes the minor version
-  const installationFolder = `/usr/lib/llvm-${majorVersion}`
-
-  await setupAptPack([{ name: "curl" }])
-  await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
-  const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh")
-  await setupAptPack(neededPackages)
-  await chmod("/tmp/llvm-setup-cpp.sh", "755")
-  await execRoot("bash", ["/tmp/llvm-setup-cpp.sh", `${majorVersion}`, "all"], {
-    stdio: "inherit",
-    shell: true,
-  })
-
-  await addPath(`${installationFolder}/bin`)
-
-  return {
-    installDir: `${installationFolder}`,
-    binDir: `${installationFolder}/bin`,
-    bin: `${installationFolder}/bin/clang++`,
-  }
-}
-
-async function patchAptLLVMScript(path: string, target_path: string) {
-  let script = await readFile(path, "utf-8")
-  // make the scirpt non-interactive and fix broken packages
-  script = script
-    .replace(
-      /add-apt-repository "\${REPO_NAME}"/g,
-      // eslint-disable-next-line no-template-curly-in-string
-      'add-apt-repository -y "${REPO_NAME}"'
-    )
-    // fix conflicts between libclang-rt and libclang
-    .replace(/apt-get install -y/g, 'apt-get install -o Dpkg::Options::="--force-overwrite" -y --fix-broken')
-  // use nala if it is available
-  if (hasNala()) {
-    script = script.replace(/apt-get/g, "nala")
-  }
-  await writeFile(target_path, script)
-
-  // the packages needed by the script
-  return [{ name: "lsb-release" }, { name: "wget" }, { name: "software-properties-common" }, { name: "gnupg" }]
 }
 
 async function llvmBinaryDeps_raw(majorVersion: number) {
