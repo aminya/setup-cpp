@@ -11,6 +11,7 @@ on:
 
 jobs:
   Test:
+    name: ${{ matrix.os }}
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ${{ matrix.os }}
     strategy:
@@ -21,15 +22,12 @@ jobs:
           - windows-2019
           - ubuntu-22.04
           - ubuntu-20.04
-          - ubuntu-18.04
           - macos-12
           - macos-11
         node:
-          - 16
+          - 20
         pnpm:
-          - 7
-        cache_reset_counter:
-          - 0
+          - 8
     steps:
       - uses: actions/checkout@v3
         with:
@@ -41,6 +39,7 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
+            ./node_modules
           key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-cache-OS:${{ matrix.os }}-"
@@ -63,14 +62,13 @@ jobs:
       #   uses: mxschmitt/action-tmate@v3
 
       - name: Test
-        if: "!contains(github.event.head_commit.message, '[skip test]')"
+        if: "${{ !contains(github.event.head_commit.message, '[skip test]') }}"
         run: |
           pnpm run test
-        continue-on-error: ${{ contains(matrix.os, 'ubuntu-18.04') }}
 
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
-        if: "contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12')"
+        if: "${{ contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}"
         run: |
           pnpm run pack.exe
 
@@ -82,6 +80,22 @@ jobs:
             ./exe
             ./dist
           retention-days: 1
+
+      - name: Setup Node 12
+        uses: actions/setup-node@v3
+        with:
+          node-version: 12
+      - name: Smoke Test Node 12
+        run: |
+          node ./dist/legacy/setup-cpp.js --help
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Smoke Test Node 16
+        run: |
+          node ./dist/actions/setup-cpp.js --help
 
   Release:
     needs: Test
@@ -103,38 +117,32 @@ jobs:
           gzip: folders
           draft: true
           files: >
-            ./exe/setup_cpp_windows.exe
-            ./exe/setup_cpp_linux
-            ./exe/setup_cpp_mac
-            ./dist/node12/setup_cpp.js
-            ./dist/node12/setup_cpp.js.map
-            ./dist/node12/
-            ./dist/node16/
+            ./exe/setup-cpp-x64-windows.exe
+            ./exe/setup-cpp-x64-linux
+            ./exe/setup-cpp-x64-macos
+            ./dist/legacy/setup-cpp.js
+            ./dist/legacy/setup-cpp.js.map
+            ./dist/legacy/
+            ./dist/actions/
+            ./dist/modern/
 
   Docker:
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip docker]') }}
+    name: ${{ matrix.container }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip test]') }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-20.04
-        container:
-          - "ubuntu_node.dockerfile"
-          - "ubuntu_node_16.dockerfile"
-          - "ubuntu_node.mingw.dockerfile"
-          - "ubuntu_22.04_node.dockerfile"
-          - "ubuntu_20.04_node.dockerfile"
-          - "arch_node.dockerfile"
-          - "arch_node.mingw.dockerfile"
-          - "fedora_node.dockerfile"
-          - "fedora_node.mingw.dockerfile"
+          - ubuntu-22.04
         node:
-          - 14
+          - 20
         pnpm:
-          - 6
-        cache_reset_counter:
-          - 0
+          - 8
+        container:
+          - "arch.dockerfile"
+          - "fedora.dockerfile"
+          - "ubuntu.dockerfile"
     steps:
       - uses: actions/checkout@v3
         with:
@@ -146,9 +154,11 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
-          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}-${{ matrix.cache_reset_counter }}"
+            ./node_modules
+          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-docker-cache-OS:${{ matrix.os }}"
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
@@ -162,8 +172,9 @@ jobs:
       - name: Install and build
         run: |
           pnpm install
+          pnpm build.docker_tests
 
       - name: Build
         id: docker_build
         run: |
-          docker build -f ./dev/docker/${{ matrix.container }} -t setup_cpp .
+          docker build -f ./dev/docker/__tests__/${{ matrix.container }} -t setup-cpp .

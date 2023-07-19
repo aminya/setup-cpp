@@ -4,14 +4,14 @@ import { join } from "patha"
 import { info } from "ci-log"
 
 import { tmpdir } from "os"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { setupAptPack } from "./setupAptPack"
 import { setupPacmanPack } from "./setupPacmanPack"
 import { isArch } from "../env/isArch"
 import { hasDnf } from "../env/hasDnf"
 import { setupDnfPack } from "./setupDnfPack"
 import { isUbuntu } from "../env/isUbuntu"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
 
 /** A type that describes a package */
@@ -34,6 +34,7 @@ export type InstallationInfo = {
   /** The top install dir */
   installDir?: string
   binDir: string
+  bin?: string
 }
 
 let didInit: boolean = false
@@ -66,7 +67,7 @@ export async function setupBin(
   )
 
   // Restore from cache (if found).
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     try {
       const dir = find(name, version)
       if (dir) {
@@ -104,13 +105,9 @@ export async function setupBin(
         info(`Installing extraction dependencies`)
         if (process.platform === "linux") {
           if (isArch()) {
-            setupPacmanPack("unzip")
-            setupPacmanPack("tar")
-            setupPacmanPack("xz")
+            await Promise.all([setupPacmanPack("unzip"), setupPacmanPack("tar"), setupPacmanPack("xz")])
           } else if (hasDnf()) {
-            setupDnfPack("unzip")
-            setupDnfPack("tar")
-            setupDnfPack("xz")
+            await setupDnfPack([{ name: "unzip" }, { name: "tar" }, { name: "xz" }])
           } else if (isUbuntu()) {
             await setupAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
           }
@@ -136,7 +133,7 @@ export async function setupBin(
   await addPath(binDir)
 
   // check if inside Github Actions. If so, cache the installation
-  if (ciDetect() === "github-actions" && typeof process.env.RUNNER_TOOL_CACHE === "string") {
+  if (GITHUB_ACTIONS && typeof process.env.RUNNER_TOOL_CACHE === "string") {
     await cacheDir(setupDir, name, version)
   }
 

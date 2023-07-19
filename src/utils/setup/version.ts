@@ -12,7 +12,13 @@ import { info } from "ci-log"
 export function getSpecificVersions(versions: Set<string>, semversion: string): string[] {
   return Array.from(versions)
     .filter((v) => /^\d+\.\d+\.\d+$/.test(v) && v.startsWith(semversion))
-    .sort()
+    .sort((a, b) => {
+      try {
+        return semverCompare(a, b)
+      } catch (err) {
+        return a.localeCompare(b)
+      }
+    })
     .reverse()
 }
 
@@ -49,16 +55,21 @@ export async function getSpecificVersionAndUrl(
 
   // if the given set doesn't include the version, throw an error
   if (!versions.has(version)) {
-    throw new Error(`Unsupported target! (platform='${platform}', version='${version}')`)
+    throw new Error(
+      `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${JSON.stringify(
+        versions
+      )}`
+    )
   }
 
   const offlineUrls: string[] = []
 
+  // TODO use Promise.any
   for (const specificVersion of getSpecificVersions(versions, version)) {
     // eslint-disable-next-line no-await-in-loop
     const url = await getUrl(platform, specificVersion)
-    // eslint-disable-next-line no-await-in-loop
     if (url !== null) {
+      // eslint-disable-next-line no-await-in-loop
       if (await isUrlOnline(url)) {
         return [specificVersion, url]
       } else {
@@ -68,8 +79,8 @@ export async function getSpecificVersionAndUrl(
   }
 
   throw new Error(
-    `Unsupported target! (platform='${platform}', version='${version}'). The offline urls tested:\n${offlineUrls.join(
-      "\n"
+    `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${JSON.stringify(
+      versions
     )}`
   )
 }
@@ -82,7 +93,7 @@ export async function getBinVersion(file: string, versionRegex: RegExp = default
     const execout = await getExecOutput(file, ["--version"])
     const version_output = execout.stdout || execout.stderr || ""
     const version = version_output.trim().match(versionRegex)?.[1]
-    return version
+    return semverCoerce(version) ?? undefined
   } catch (e) {
     console.error(e)
     return undefined
@@ -96,12 +107,7 @@ export async function isBinUptoDate(
   versionRegex: RegExp = defaultVersionRegex
 ) {
   const givenVersion = await getBinVersion(givenFile, versionRegex)
-  if (
-    typeof givenVersion === "string" &&
-    typeof targetVersion === "string" &&
-    givenVersion !== "" &&
-    targetVersion !== ""
-  ) {
+  if (givenVersion !== undefined && targetVersion !== "") {
     return semverCompare(givenVersion, targetVersion) !== -1
   } else {
     // assume given version is old

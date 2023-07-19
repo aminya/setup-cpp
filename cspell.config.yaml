@@ -9,6 +9,7 @@ ignorePaths:
   - dist/
   - dev/cpp_vcpkg_project
   - "**/node_modules/"
+  - .vscode/extensions.json
 words:
   - aarch
   - aminya
@@ -19,7 +20,9 @@ words:
   - caxa
   - ccache
   - choco
+  - clangd
   - cmake
+  - cobertura
   - copr
   - CPATH
   - Cppcheck
@@ -45,6 +48,7 @@ words:
   - LDFLAGS
   - lefticus
   - libbinutils
+  - libc
   - libdw
   - libstdc
   - libtinfo
@@ -72,15 +76,18 @@ words:
   - setx
   - Syuu
   - terserrc
+  - Trofimovich
   - tsbuildinfo
   - ucrt
   - untildify
+  - upleveled
   - vbatts
   - vcpkg
   - vcvarsall
   - visualc
   - visualcpp
   - vsversion
+  - whatwg
   - xcrun
   - Yahyaabadi
   - VCPKG

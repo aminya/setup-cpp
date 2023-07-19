@@ -4,10 +4,10 @@ import { findPyPyVersion } from "setup-python/src/find-pypy"
 import { info, warning } from "ci-log"
 import { debug } from "@actions/core"
 import { join } from "patha"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { isCacheFeatureAvailable, IS_MAC } from "setup-python/src/utils"
 import { getCacheDistributor } from "setup-python/src/cache-distributions/cache-factory"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy")
@@ -36,11 +36,11 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
   if (version) {
     let pythonVersion: string
     if (isPyPyVersion(version)) {
-      const installed = await findPyPyVersion(version, arch, true, checkLatest)
+      const installed = await findPyPyVersion(version, arch, true, checkLatest, false)
       pythonVersion = `${installed.resolvedPyPyVersion}-${installed.resolvedPythonVersion}`
       info(`Successfully set up PyPy ${installed.resolvedPyPyVersion} with Python (${installed.resolvedPythonVersion})`)
     } else {
-      const installed = await useCpythonVersion(version, arch, true, checkLatest)
+      const installed = await useCpythonVersion(version, arch, true, checkLatest, false)
       pythonVersion = installed.version
       info(`Successfully set up ${installed.impl} (${pythonVersion})`)
     }
@@ -51,7 +51,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
     }
   }
 
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     await addPythonLoggingMatcher()
   }
 
@@ -61,7 +61,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
 async function addPythonLoggingMatcher() {
   const matcherPath = join(__dirname, "python_matcher.json")
   if (!(await pathExists(matcherPath))) {
-    return warning("the python_matcher.json file does not exist in the same folder as setup_cpp.js")
+    return warning("the python_matcher.json file does not exist in the same folder as setup-cpp.js")
   }
   info(`::add-matcher::${matcherPath}`)
 }

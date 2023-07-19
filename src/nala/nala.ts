@@ -2,7 +2,7 @@ import { dirname } from "patha"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { execRootSync } from "admina"
-import { addAptKeyViaDownload, setupAptPack } from "../utils/setup/setupAptPack"
+import { addAptKeyViaDownload, hasNala, setupAptPack } from "../utils/setup/setupAptPack"
 
 let binDir: string | undefined
 
@@ -44,4 +44,11 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
   binDir = "/usr/bin" // eslint-disable-line require-atomic-updates
 
   return { binDir }
+}
+
+export function bashWithNala(script: string) {
+  if (hasNala()) {
+    return `apt-get() { nala $@; }; export -f apt-get; ${script}; unset -f apt-get`
+  }
+  return script
 }

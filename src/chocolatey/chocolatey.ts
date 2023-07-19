@@ -1,7 +1,6 @@
 /* eslint-disable require-atomic-updates */
-import execa from "execa"
-
-import pathExists from "path-exists"
+import { execaSync } from "execa"
+import { pathExists } from "path-exists"
 import { dirname } from "patha"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
@@ -40,7 +39,7 @@ export async function setupChocolatey(
   }
 
   // https://docs.chocolatey.org/en-us/choco/setup#install-with-cmd.exe
-  execa.sync(
+  execaSync(
     powershell,
     [
       "-NoProfile",

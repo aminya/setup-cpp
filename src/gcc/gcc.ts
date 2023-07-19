@@ -9,14 +9,15 @@ import semverCoerce from "semver/functions/coerce"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { join, addExeExt } from "patha"
 import { warning, info } from "ci-log"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { extract7Zip } from "../utils/setup/extract"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
+import { ExecaReturnValue } from "execa"
 
 interface MingwInfo {
   releaseName: string
@@ -25,7 +26,12 @@ interface MingwInfo {
 
 // https://github.com/brechtsanders/winlibs_mingw/releases
 const GccToMingwInfo = {
-  "12": { releaseName: "12.2.0-14.0.6-10.0.0-ucrt-r2", fileSuffix: "12.2.0-mingw-w64ucrt-10.0.0-r2" },
+  "13": { releaseName: "13.1.0posix-16.0.3-11.0.0-ucrt-r1", fileSuffix: "13.1.0-mingw-w64ucrt-11.0.0-r1" },
+  "13.1-ucrt": { releaseName: "13.1.0posix-16.0.3-11.0.0-ucrt-r1", fileSuffix: "13.1.0-mingw-w64ucrt-11.0.0-r1" },
+  "13.1-msvcrt": { releaseName: "13.1.0posix-16.0.3-11.0.0-msvcrt-r1", fileSuffix: "13.1.0-mingw-w64msvcrt-11.0.0-r1" },
+  "12": { releaseName: "12.3.0-16.0.4-11.0.0-ucrt-r1", fileSuffix: "12.3.0-mingw-w64ucrt-11.0.0-r1" },
+  "12.3.0-ucrt": { releaseName: "12.3.0-16.0.4-11.0.0-ucrt-r1", fileSuffix: "12.3.0-mingw-w64ucrt-11.0.0-r1" },
+  "12.3.0-msvcrt": { releaseName: "12.3.0-16.0.4-11.0.0-msvcrt-r1", fileSuffix: "12.3.0-mingw-w64msvcrt-11.0.0-r1" },
   "12.2.0-ucrt": { releaseName: "12.2.0-14.0.6-10.0.0-ucrt-r2", fileSuffix: "12.2.0-mingw-w64ucrt-10.0.0-r2" },
   "12.2.0-msvcrt": { releaseName: "12.2.0-14.0.6-10.0.0-msvcrt-r2", fileSuffix: "12.2.0-mingw-w64msvcrt-10.0.0-r2" },
   "12.1.0-ucrt": { releaseName: "12.1.0-14.0.4-10.0.0-ucrt-r2", fileSuffix: "12.1.0-mingw-w64ucrt-10.0.0-r2" },
@@ -90,11 +96,13 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
     case "linux": {
       if (arch === "x64") {
         if (isArch()) {
-          installationInfo = setupPacmanPack("gcc", version)
+          installationInfo = await setupPacmanPack("gcc", version)
         } else if (hasDnf()) {
-          installationInfo = setupDnfPack("gcc", version)
-          setupDnfPack("gcc-c++", version)
-          setupDnfPack("libstdc++-devel", undefined)
+          installationInfo = await setupDnfPack([
+            { name: "gcc", version },
+            { name: "gcc-c++", version },
+            { name: "libstdc++-devel" },
+          ])
         } else if (isUbuntu()) {
           installationInfo = await setupAptPack([
             { name: "gcc", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
@@ -104,7 +112,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         if (isArch()) {
-          setupPacmanPack("gcc-multilib", version)
+          await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
           await setupAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
         }
@@ -137,29 +145,21 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
 export async function setupMingw(version: string, setupDir: string, arch: string) {
   let installationInfo: InstallationInfo | undefined
   switch (process.platform) {
-    case "win32": {
-      if (arch === "arm" || arch === "arm64") {
-        await setupChocoPack("gcc-arm-embedded", version)
-      }
-      try {
-        installationInfo = await setupBin("g++", version, getGccPackageInfo, setupDir, arch)
-      } catch (err) {
-        info(`Failed to download g++ binary. ${err}. Falling back to chocolatey.`)
-        installationInfo = await setupChocoMingw(version, arch)
-      }
-      break
+    case "win32":
+    case "darwin": {
+      return setupGcc(version, setupDir, arch)
     }
     case "linux": {
-      if (arch === "x64" || arch === "x32") {
-        if (isArch()) {
-          return setupPacmanPack("mingw-w64", version, "yay")
-        } else if (hasDnf()) {
-          return setupDnfPack("mingw64-gcc", version)
-        } else if (isUbuntu()) {
-          installationInfo = await setupAptPack([
-            { name: "mingw-w64", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
-          ])
-        }
+      if (isArch()) {
+        installationInfo = await setupPacmanPack("mingw-w64", version, "yay")
+      } else if (hasDnf()) {
+        installationInfo = await setupDnfPack([
+          { name: "mingw64-gcc", version },
+        ])
+      } else if (isUbuntu()) {
+        installationInfo = await setupAptPack([
+          { name: "mingw-w64", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
+        ])
       }
       break
     }
@@ -198,7 +198,7 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
 }
 
 async function activateGcc(version: string, binDir: string) {
-  const promises: Promise<any>[] = []
+  const promises: Promise<void | ExecaReturnValue<string>>[] = []
   // Setup gcc as the compiler
 
   // TODO
@@ -243,7 +243,7 @@ async function activateGcc(version: string, binDir: string) {
 
   promises.push(setupMacOSSDK())
 
-  if (ciDetect() === "github-actions") {
+  if (GITHUB_ACTIONS) {
     await addGccLoggingMatcher()
   }
 
@@ -253,7 +253,7 @@ async function activateGcc(version: string, binDir: string) {
 async function addGccLoggingMatcher() {
   const matcherPath = join(__dirname, "gcc_matcher.json")
   if (!(await pathExists(matcherPath))) {
-    return warning("the gcc_matcher.json file does not exist in the same folder as setup_cpp.js")
+    return warning("the gcc_matcher.json file does not exist in the same folder as setup-cpp.js")
   }
   info(`::add-matcher::${matcherPath}`)
 }

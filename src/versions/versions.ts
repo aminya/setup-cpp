@@ -1,54 +1,55 @@
-import { Inputs, Opts } from "../main"
+import { Opts } from "../cli-options"
+import { Inputs } from "../tool"
 import { DefaultLinuxVersion, DefaultVersions } from "./default_versions"
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
-  if (isDefault(version, name)) {
-    if (process.platform === "linux" && osVersion !== null && name in DefaultLinuxVersion) {
-      return getDefaultLinuxVersion(name, osVersion)
-    }
-    // anything else
-    return DefaultVersions[name]
-  } else {
-    return version ?? ""
+  if (isVersionDefault(version) && process.platform === "linux" && osVersion !== null && name in DefaultLinuxVersion) {
+    return getDefaultLinuxVersion(osVersion, DefaultLinuxVersion[name]!)
+  } else if (isVersionDefault(version) && name in DefaultVersions) {
+    return DefaultVersions[name]!
+  } else if (version === "true") {
+    return ""
   }
+  return version ?? ""
+}
+
+function isVersionDefault(version: string | undefined) {
+  return version === "true" || version === undefined
 }
 
 /// choose the default linux version based on ubuntu version
-function getDefaultLinuxVersion(name: string, osVersion: number[]) {
+function getDefaultLinuxVersion(osVersion: number[], toolLinuxVersions: Record<number, string>) {
   const osVersionMaj = osVersion[0]
-  const newest = parseInt(Object.keys(DefaultLinuxVersion[name])[0], 10) // newest version with the default
-  if (osVersionMaj >= newest) {
-    return DefaultLinuxVersion[name][osVersionMaj]
-  } else {
-    return ""
-  }
+
+  // find which version block the os version is in
+  const satisfyingVersion = Object.keys(toolLinuxVersions)
+    .map((v) => parseInt(v, 10))
+    .sort((a, b) => b - a) // sort in descending order
+    .find((v) => osVersionMaj >= v)
+
+  return satisfyingVersion === undefined ? "" : toolLinuxVersions[satisfyingVersion]
 }
 
-export function isDefault(version: string | undefined, name: string) {
-  return version === "true" || (version === undefined && name in DefaultVersions)
-}
-
+/**
+ * Sync the versions for the given inputs
+ *
+ * If the return is false, it means that versions don't match the target version
+ */
 export function syncVersions(opts: Opts, tools: Inputs[]): boolean {
-  for (let i = 0; i < tools.length; i++) {
-    // tools excluding i_tool
-    const otherTools = tools.slice(0, i).concat(tools.slice(i + 1))
+  const toolsInUse = tools.filter((tool) => opts[tool] !== undefined)
+  const toolsNonDefaultVersion = toolsInUse.filter((tool) => !isVersionDefault(opts[tool]))
 
-    const tool = tools[i]
+  const targetVersion = toolsNonDefaultVersion.length >= 1 ? opts[toolsNonDefaultVersion[0]] : "true"
 
-    if (!isDefault(opts[tool], tool)) {
-      for (let i_other = 0; i_other < otherTools.length; i_other++) {
-        const otherTool = otherTools[i_other]
-        const useDefaultOtherTool = isDefault(opts[otherTool], otherTools[i_other])
-        if (useDefaultOtherTool) {
-          // use the same version if the other tool was requested with the default
-          opts[otherTool] = opts[tool]
-        } else if (opts[tool] !== opts[otherTools[i_other]]) {
-          // error if different from the other given versions
-          return false
-        }
-      }
-    }
+  if (toolsNonDefaultVersion.some((tool) => opts[tool] !== targetVersion)) {
+    // error if any explicit versions don't match the target version
+    return false
   }
+
+  toolsInUse.forEach((tool) => {
+    opts[tool] = targetVersion
+  })
+
   return true
 }

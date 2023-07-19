@@ -1,5 +1,5 @@
 import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/core"
-import ciDetect from "@npmcli/ci-detect"
+import { GITHUB_ACTIONS } from "ci-info"
 import { untildifyUser } from "untildify-user"
 import { appendFileSync, readFileSync, writeFileSync } from "fs"
 import { error, warning } from "ci-log"
@@ -8,25 +8,47 @@ import { delimiter } from "path"
 import escapeSpace from "escape-path-with-spaces"
 import { giveUserAccess } from "user-access"
 import escapeQuote from "escape-quotes"
-import pathExists from "path-exists"
+import { pathExists } from "path-exists"
+
+type AddEnvOptions = {
+  /** If true, the value will be escaped with quotes and spaces will be escaped with backslash */
+  shouldEscapeSpace?: boolean
+  /** If true, the variable will be only added if it is not defined */
+  shouldAddOnlyIfNotDefined?: boolean
+}
+
+const defaultAddEnvOptions: AddEnvOptions = {
+  shouldEscapeSpace: false,
+  shouldAddOnlyIfNotDefined: false,
+}
 
 /**
  * Add an environment variable.
  *
  * This function is cross-platforms and works in all the local or CI systems.
  */
-export async function addEnv(name: string, valGiven: string | undefined, shouldEscapeSpace: boolean = false) {
-  const val = escapeString(valGiven ?? "", shouldEscapeSpace)
+export async function addEnv(
+  name: string,
+  valGiven: string | undefined,
+  options: AddEnvOptions = defaultAddEnvOptions
+) {
+  const val = escapeString(valGiven ?? "", options.shouldEscapeSpace)
   try {
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       try {
+        if (options.shouldAddOnlyIfNotDefined) {
+          if (process.env[name] !== undefined) {
+            info(`Environment variable ${name} is already defined. Skipping.`)
+            return
+          }
+        }
         exportVariable(name, val)
       } catch (err) {
         error(err as Error)
-        await addEnvSystem(name, val)
+        await addEnvSystem(name, val, options)
       }
     } else {
-      await addEnvSystem(name, val)
+      await addEnvSystem(name, val, options)
     }
   } catch (err) {
     error(err as Error)
@@ -47,7 +69,7 @@ function escapeString(valGiven: string, shouldEscapeSpace: boolean = false) {
 export async function addPath(path: string) {
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
-    if (ciDetect() === "github-actions") {
+    if (GITHUB_ACTIONS) {
       try {
         ghAddPath(path)
       } catch (err) {
@@ -65,11 +87,17 @@ export async function addPath(path: string) {
 
 export const cpprc_path = untildifyUser(".cpprc")
 
-async function addEnvSystem(name: string, valGiven: string | undefined) {
+async function addEnvSystem(name: string, valGiven: string | undefined, options: AddEnvOptions) {
   const val = valGiven ?? ""
   switch (process.platform) {
     case "win32": {
-      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit
+      if (options.shouldAddOnlyIfNotDefined) {
+        if (process.env[name] !== undefined) {
+          info(`Environment variable ${name} is already defined. Skipping.`)
+          return
+        }
+      }
+      // We do not use `execaSync(`setx PATH "${path};%PATH%"`)` because of its character limit
       await execPowershell(`[Environment]::SetEnvironmentVariable('${name}', '${val}', "User")`)
       info(`${name}='${val}' was set in the environment.`)
       return
@@ -77,8 +105,13 @@ async function addEnvSystem(name: string, valGiven: string | undefined) {
     case "linux":
     case "darwin": {
       await setupCppInProfile()
-      appendFileSync(cpprc_path, `\nexport ${name}="${val}"\n`)
-      info(`${name}="${val}" was added to "${cpprc_path}`)
+      if (options.shouldAddOnlyIfNotDefined) {
+        appendFileSync(cpprc_path, `\nif [ -z "\${${name}}" ]; then export ${name}="${val}"; fi\n`)
+        info(`if not defined ${name} then ${name}="${val}" was added to "${cpprc_path}`)
+      } else {
+        appendFileSync(cpprc_path, `\nexport ${name}="${val}"\n`)
+        info(`${name}="${val}" was added to "${cpprc_path}`)
+      }
       return
     }
     default: {
@@ -91,9 +124,9 @@ async function addEnvSystem(name: string, valGiven: string | undefined) {
 async function addPathSystem(path: string) {
   switch (process.platform) {
     case "win32": {
-      // We do not use `execa.sync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
+      // We do not use `execaSync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
       await execPowershell(
-        `$USER_PATH=([Environment]::GetEnvironmentVariable("patha", "User")); [Environment]::SetEnvironmentVariable("patha", "${path};$USER_PATH", "User")`
+        `$USER_PATH=([Environment]::GetEnvironmentVariable("PATH", "User")); [Environment]::SetEnvironmentVariable("PATH", "${path};$USER_PATH", "User")`
       )
       info(`"${path}" was added to the PATH.`)
       return
@@ -111,6 +144,7 @@ async function addPathSystem(path: string) {
   }
 }
 
+/* eslint-disable require-atomic-updates */
 let setupCppInProfile_called = false
 
 /// handles adding conditions to source .cpprc file from .bashrc and .profile

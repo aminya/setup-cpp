@@ -1,30 +1,24 @@
-#### Base Image
-FROM ubuntu:22.04 AS base
+#### Building (example)
+FROM setup-cpp-ubuntu AS builder
 
-# add setup_cpp
-WORKDIR "/"
-RUN apt-get update -qq
-RUN apt-get install -y --no-install-recommends wget
-RUN wget --no-verbose "https://github.com/aminya/setup-cpp/releases/download/v0.24.1/setup_cpp_linux"
-RUN chmod +x ./setup_cpp_linux
-
-# install llvm, cmake, ninja, and ccache
-RUN ./setup_cpp_linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true --task true
-
-CMD source ~/.cpprc
-ENTRYPOINT [ "/bin/bash" ]
-
-#### Building
-FROM base AS builder
-ADD ./dev/cpp_vcpkg_project /home/app
+COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
     && task build'
 
-### Running environment
-# use a distroless image or ubuntu:22.04 if you wish
-FROM gcr.io/distroless/cc
+#### Running environment
+# use a fresh image as the runner
+FROM ubuntu:22.04 as runner
+
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
 WORKDIR /home/app/
 ENTRYPOINT ["./my_exe"]
+
+#### Cross Building (example)
+FROM setup-cpp-ubuntu-mingw AS builder-mingw
+
+COPY ./dev/cpp_vcpkg_project /home/app
+WORKDIR /home/app
+RUN bash -c 'source ~/.cpprc \
+    && task build_cross_mingw'
