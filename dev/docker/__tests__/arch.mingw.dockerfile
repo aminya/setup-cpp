@@ -29,8 +29,8 @@ RUN pacman -Syuu --noconfirm && \
 
 ENTRYPOINT ["/bin/bash"]
 
-#### Building (example)
-FROM setup-cpp-arch AS builder
+#### Cross Building (example)
+FROM setup-cpp-arch-mingw AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app

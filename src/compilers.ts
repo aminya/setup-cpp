@@ -60,7 +60,7 @@ export async function installCompiler(
       case "mingw":
       case "cygwin":
       case "msys": {
-        const gccVersion = getVersion("gcc", version, osVersion)
+        const gccVersion = (compiler === "mingw")? getVersion("mingw", version, osVersion) : getVersion("gcc", version, osVersion)
         const installationInfo = (compiler === "mingw")? await setupMingw(gccVersion, join(setupCppDir, "gcc"), arch) : await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
 
         if (hasLLVM) {

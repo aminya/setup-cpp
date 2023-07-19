@@ -28,6 +28,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
   task: "3.25.0", // https://github.com/go-task/task/releases
   doxygen: isArch() ? "1.9.6-1" : "1.9.7", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: isArch() ? "13.1.1-1" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
+  //mingw: isArch() ? "12.2.0-1" : "8", // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=mingw-w64 // https://archlinux.org/packages/extra/x86_64/mingw-w64-gcc/
 }
 
 export const MinVersions: Record<string, string | undefined> = {
@@ -45,6 +46,10 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     18: "11",
     16: "11",
     14: "11",
+  },
+  mingw: {
+    22: "8.0.0-1",
+    20: "7.0.0-2",
   },
   llvm: {
     22: "15.0.6-ubuntu-18.04",

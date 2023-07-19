@@ -32,8 +32,8 @@ RUN apt-get update -qq && \
 
 ENTRYPOINT ["/bin/bash"]
 
-#### Building (example)
-FROM setup-cpp-ubuntu AS builder
+#### Cross Building (example)
+FROM setup-cpp-ubuntu-mingw AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app

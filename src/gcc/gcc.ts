@@ -151,7 +151,7 @@ export async function setupMingw(version: string, setupDir: string, arch: string
     }
     case "linux": {
       if (isArch()) {
-        installationInfo = await setupPacmanPack("mingw-w64", version, "yay")
+        installationInfo = await setupPacmanPack("mingw-w64-gcc", version)
       } else if (hasDnf()) {
         installationInfo = await setupDnfPack([
           { name: "mingw64-gcc", version },
