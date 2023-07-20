@@ -153,9 +153,7 @@ export async function setupMingw(version: string, setupDir: string, arch: string
       if (isArch()) {
         installationInfo = await setupPacmanPack("mingw-w64-gcc", version)
       } else if (hasDnf()) {
-        installationInfo = await setupDnfPack([
-          { name: "mingw64-gcc", version },
-        ])
+        installationInfo = await setupDnfPack([{ name: "mingw64-gcc", version }])
       } else if (isUbuntu()) {
         installationInfo = await setupAptPack([
           { name: "mingw-w64", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
