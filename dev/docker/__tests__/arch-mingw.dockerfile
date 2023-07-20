@@ -20,8 +20,7 @@ RUN pacman -Syuu --noconfirm && \
         --cppcheck true \
         --gcovr true \
         --doxygen true \
-        --ccache true \
-        --powershell true && \
+        --ccache true && \
     # arch cleanup
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \
