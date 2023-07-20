@@ -60,8 +60,12 @@ export async function installCompiler(
       case "mingw":
       case "cygwin":
       case "msys": {
-        const gccVersion = (compiler === "mingw")? getVersion("mingw", version, osVersion) : getVersion("gcc", version, osVersion)
-        const installationInfo = (compiler === "mingw")? await setupMingw(gccVersion, join(setupCppDir, "gcc"), arch) : await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
+        const gccVersion =
+          compiler === "mingw" ? getVersion("mingw", version, osVersion) : getVersion("gcc", version, osVersion)
+        const installationInfo =
+          compiler === "mingw"
+            ? await setupMingw(gccVersion, join(setupCppDir, "gcc"), arch)
+            : await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
 
         if (hasLLVM) {
           // remove back the added CPPFLAGS of LLVM that include the LLVM headers

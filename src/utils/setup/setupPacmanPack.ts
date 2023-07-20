@@ -2,6 +2,7 @@ import { InstallationInfo } from "./setupBin"
 import { execRootSync } from "admina"
 import { info, warning } from "ci-log"
 import { execa, execaSync } from "execa"
+import which from "which"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
@@ -12,6 +13,11 @@ export async function setupPacmanPack(name: string, version?: string, aur?: stri
   info(`Installing ${name} ${version ?? ""} via pacman`)
 
   const pacman = "pacman"
+
+  if (aur === "yay" && which.sync("yay", { nothrow: true }) === null) {
+    // TODO: install yay automatically
+    throw new Error(`yay is needed for ${name}, but it is not installed, please install it manually first`)
+  }
 
   // yay can't run as root, so skip update
   if (!didUpdate && aur !== "yay") {

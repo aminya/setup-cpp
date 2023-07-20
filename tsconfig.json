@@ -28,5 +28,10 @@
     "outDir": "./dist"
   },
   "compileOnSave": false,
-  "include": ["./src", "dev/scripts", "packages/untildify-user/untildify.ts"]
+  "include": [
+    "./src",
+    "dev/scripts",
+    "packages/untildify-user/untildify.ts",
+    "dev/docker/__tests__/generate-docker-tests.mjs"
+  ]
 }
