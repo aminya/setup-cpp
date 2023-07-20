@@ -1,7 +1,7 @@
 import { readFile, writeFile } from "fs/promises"
 
 async function main() {
-  const dockerFiles = ["ubuntu", "arch", "fedora"]
+  const dockerFiles = ["ubuntu", "arch", "fedora", "ubuntu-mingw", "arch-mingw", "fedora-mingw"]
   await Promise.all(
     dockerFiles.map(async (dockerFile) => {
       const dockerFileContent = await readFile(`./dev/docker/setup-cpp-${dockerFile}.dockerfile`, "utf-8")

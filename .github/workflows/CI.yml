@@ -143,6 +143,9 @@ jobs:
           - "arch.dockerfile"
           - "fedora.dockerfile"
           - "ubuntu.dockerfile"
+          - "arch-mingw.dockerfile"
+          - "fedora-mingw.dockerfile"
+          - "ubuntu-mingw.dockerfile"
     steps:
       - uses: actions/checkout@v3
         with:

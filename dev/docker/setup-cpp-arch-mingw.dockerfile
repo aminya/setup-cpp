@@ -1,15 +1,14 @@
 ## base image
 FROM archlinux:base as setup-cpp-arch-mingw
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
-
 RUN pacman -Syuu --noconfirm && \
     pacman-db-upgrade && \
     # install nodejs
     pacman -S --noconfirm --needed nodejs npm && \
-    
+    # install setup-cpp
+    npm install -g setup-cpp@v0.32.1 && \
     # install the compiler and tools
-    node /usr/lib/setup-cpp/setup-cpp.js \
+    setup-cpp \
         --compiler mingw \
         --cmake true \
         --ninja true \
@@ -21,19 +20,10 @@ RUN pacman -Syuu --noconfirm && \
         --gcovr true \
         --doxygen true \
         --ccache true \
-        --powerchell true && \
+        --powershell true && \
     # arch cleanup
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /tmp/*
 
 ENTRYPOINT ["/bin/bash"]
-
-#### Cross Building (example)
-FROM setup-cpp-arch-mingw AS builder
-
-COPY ./dev/cpp_vcpkg_project /home/app
-WORKDIR /home/app
-RUN bash -c 'source ~/.cpprc \
-    && task build_cross_mingw'
-

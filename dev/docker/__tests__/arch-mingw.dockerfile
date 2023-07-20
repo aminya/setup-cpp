@@ -1,15 +1,15 @@
-#### Base Image
-FROM ubuntu:22.04 as setup-cpp-ubuntu-mingw
+## base image
+FROM archlinux:base as setup-cpp-arch-mingw
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
-RUN apt-get update -qq && \
+RUN pacman -Syuu --noconfirm && \
+    pacman-db-upgrade && \
     # install nodejs
-    apt-get install -y --no-install-recommends nodejs npm && \
+    pacman -S --noconfirm --needed nodejs npm && \
     
     # install the compiler and tools
     node /usr/lib/setup-cpp/setup-cpp.js \
-        --nala true \
         --compiler mingw \
         --cmake true \
         --ninja true \
@@ -21,22 +21,18 @@ RUN apt-get update -qq && \
         --gcovr true \
         --doxygen true \
         --ccache true \
-        --powerchell true && \
-    # cleanup
-    nala autoremove -y && \
-    nala autopurge -y && \
-    apt-get clean && \
-    nala clean --lists && \
-    rm -rf /var/lib/apt/lists/* && \
+        --powershell true && \
+    # arch cleanup
+    pacman -Scc --noconfirm && \
+    rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /tmp/*
 
 ENTRYPOINT ["/bin/bash"]
 
 #### Cross Building (example)
-FROM setup-cpp-ubuntu-mingw AS builder
+FROM setup-cpp-arch-mingw AS builder-mingw
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
 RUN bash -c 'source ~/.cpprc \
     && task build_cross_mingw'
-

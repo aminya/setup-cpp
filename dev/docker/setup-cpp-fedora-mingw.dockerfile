@@ -1,13 +1,12 @@
 ## base image
 FROM fedora:38 as setup-cpp-fedora-mingw
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
-
 # install nodejs
 RUN dnf -y install nodejs npm && \
-    
+    # install setup-cpp
+    npm install -g setup-cpp@v0.32.1 && \
     # install the compiler and tools
-    node /usr/lib/setup-cpp/setup-cpp.js \
+    setup-cpp \
         --compiler mingw \
         --cmake true \
         --ninja true \
@@ -19,17 +18,9 @@ RUN dnf -y install nodejs npm && \
         --gcovr true \
         --doxygen true \
         --ccache true \
-        --powerchell true && \
+        --powershell true && \
     # cleanup
     dnf clean all && \
     rm -rf /tmp/*
 
 ENTRYPOINT ["/bin/bash"]
-
-#### Building (example)
-FROM setup-cpp-fedora AS builder
-
-COPY ./dev/cpp_vcpkg_project /home/app
-WORKDIR /home/app
-RUN bash -c 'source ~/.cpprc \
-    && task build_cross_mingw'
