@@ -1,7 +1,7 @@
 import { InstallationInfo } from "./setupBin"
 import { execRootSync } from "admina"
 import { info, warning } from "ci-log"
-import { execa } from "execa"
+import { execa, execaSync } from "execa"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
@@ -26,6 +26,10 @@ export async function setupPacmanPack(name: string, version?: string, aur?: stri
   }
 
   const runInstall = (arg: string) => {
+    if (aur === "yay") {
+      // run yay as non-root, ERROR: Running makepkg as root is not allowed as it can cause permanent, catastrophic damage to your system.
+      return execaSync(aur, ["-S", "--noconfirm", arg])
+    }
     return execRootSync(aur ?? pacman, ["-S", "--noconfirm", arg])
   }
 

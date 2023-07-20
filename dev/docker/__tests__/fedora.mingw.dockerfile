@@ -19,7 +19,7 @@ RUN dnf -y install nodejs npm && \
         --gcovr true \
         --doxygen true \
         --ccache true \
-        --powerchell true && \
+        --powershell true && \
     # cleanup
     dnf clean all && \
     rm -rf /tmp/*
@@ -27,7 +27,7 @@ RUN dnf -y install nodejs npm && \
 ENTRYPOINT ["/bin/bash"]
 
 #### Building (example)
-FROM setup-cpp-fedora AS builder
+FROM setup-cpp-fedora-mingw AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app

@@ -21,7 +21,7 @@ RUN apt-get update -qq && \
         --gcovr true \
         --doxygen true \
         --ccache true \
-        --powerchell true && \
+        --powershell true && \
     # cleanup
     nala autoremove -y && \
     nala autopurge -y && \
