@@ -1,23 +1,15 @@
-import type { JestConfigWithTsJest } from "ts-jest"
+import type { Config } from "jest"
 
-const jestConfig: JestConfigWithTsJest = {
+const jestConfig: Config = {
   testMatch: ["**/*.test.ts"],
   testEnvironment: "node",
-  // transform configurations
-  preset: "ts-jest/presets/js-with-ts-esm",
-  extensionsToTreatAsEsm: [".ts"],
+  extensionsToTreatAsEsm: [".ts", ".tsx", ".js", ".jsx"],
   transformIgnorePatterns: [], // transform node_modules
   transform: {
-    "^.+\\.tsx?$": [
-      "ts-jest",
-      {
-        importHelpers: true,
-        useESM: true,
-      },
-    ],
+    "^.+\\.(t|j)sx?$": "@swc/jest",
   },
   // coverage
-  collectCoverageFrom: ["src/**/*.{ts,tsx}"],
+  collectCoverageFrom: ["src/**/*.{ts,tsx,js,jsx}"],
   coveragePathIgnorePatterns: ["assets", ".css.d.ts"],
   verbose: true,
   detectOpenHandles: true,
