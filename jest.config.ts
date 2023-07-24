@@ -1,16 +1,15 @@
-/** @typedef {import("jest")} jestConfig */
-const jestConfig = {
+import type { JestConfigWithTsJest } from "ts-jest"
+
+const jestConfig: JestConfigWithTsJest = {
+  testMatch: ["**/*.test.ts"],
+  testEnvironment: "node",
+  // transform configurations
   preset: "ts-jest/presets/js-with-ts-esm",
   extensionsToTreatAsEsm: [".ts"],
-  transformIgnorePatterns: [], // transform everything
-  testEnvironment: "node",
-  testMatch: ["**/*.test.ts"],
-  testPathIgnorePatterns: ["<rootDir>/src/python/setup-python/"],
-  // tsconfig
+  transformIgnorePatterns: [], // transform node_modules
   transform: {
     "^.+\\.tsx?$": [
       "ts-jest",
-      /** @type {import("ts-jest")} */
       {
         importHelpers: true,
         useESM: true,
