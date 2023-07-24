@@ -30,7 +30,7 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
         // https://bazel.build/install/ubuntu
         const keyFileName = await addAptKeyViaDownload(
           "bazel-archive-keyring.gpg",
-          "https://bazel.build/bazel-release.pub.gpg"
+          "https://bazel.build/bazel-release.pub.gpg",
         )
         execRootSync("bash", [
           "-c",

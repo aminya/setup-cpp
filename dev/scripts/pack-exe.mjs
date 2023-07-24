@@ -35,8 +35,8 @@ function main() {
         "--",
         `{{caxa}}/node_modules/.bin/node${exe}`,
         `{{caxa}}/setup-cpp.js`,
-      ])
-    )
+      ]),
+    ),
   )
 }
 

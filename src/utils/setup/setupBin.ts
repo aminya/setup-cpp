@@ -53,7 +53,7 @@ export async function setupBin(
   version: string,
   getPackageInfo: (version: string, platform: NodeJS.Platform, arch: string) => PackageInfo | Promise<PackageInfo>,
   setupDir: string,
-  arch: string
+  arch: string,
 ): Promise<InstallationInfo> {
   info(`Installing ${name} ${version} ${arch} via direct downloading`)
 
@@ -63,7 +63,7 @@ export async function setupBin(
   const { url, binRelativeDir, binFileName, extractedFolderName, extractFunction } = await getPackageInfo(
     version,
     process.platform,
-    arch
+    arch,
   )
 
   // Restore from cache (if found).
@@ -98,7 +98,7 @@ export async function setupBin(
         () => {
           return downloadTool(url)
         },
-        { name: url, max: 4, backoffBase: 2000, report: (err) => info(err) }
+        { name: url, max: 4, backoffBase: 2000, report: (err) => info(err) },
       )
 
       if (!didInit) {

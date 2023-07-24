@@ -17,7 +17,7 @@ export async function setupMSVC(
   arch: string,
   sdk?: string,
   uwp?: boolean,
-  spectre?: boolean
+  spectre?: boolean,
 ) {
   if (process.platform !== "win32") {
     return

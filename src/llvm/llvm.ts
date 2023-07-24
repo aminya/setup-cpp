@@ -115,7 +115,7 @@ export async function activateLLVM(directory: string) {
       updateAptAlternatives("clang++", `${directory}/bin/clang++`),
       updateAptAlternatives("lld", `${directory}/bin/lld`),
       updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`),
-      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`)
+      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`),
     )
   }
 

@@ -82,7 +82,7 @@ async function getCmake() {
     const { binDir } = await setupCmake(
       getVersion("cmake", undefined, await ubuntuVersion()),
       join(untildifyUser(""), "cmake"),
-      ""
+      "",
     )
     cmake = join(binDir, "cmake")
   }

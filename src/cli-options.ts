@@ -39,7 +39,7 @@ All the available tools:
       coverage: { tools: `--gcovr, --opencppcoverage, --kcov` },
       other: { tools: `--python, --powershell, --sevenzip` },
     },
-    ["tools"]
+    ["tools"],
   )
 }
 /** Get an object from github actions */

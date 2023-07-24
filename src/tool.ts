@@ -38,7 +38,7 @@ export async function installTool(
   arch: string,
   setupCppDir: string,
   successMessages: string[],
-  errorMessages: string[]
+  errorMessages: string[],
 ) {
   startGroup(`Installing ${tool} ${version}`)
   let hasLLVM = false

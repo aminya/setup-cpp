@@ -12,7 +12,7 @@ let hasBrew = false
 export async function setupBrewPack(
   name: string,
   version?: string,
-  extraArgs: string[] = []
+  extraArgs: string[] = [],
 ): Promise<InstallationInfo> {
   info(`Installing ${name} ${version ?? ""} via brew`)
 
@@ -29,7 +29,7 @@ export async function setupBrewPack(
     ["install", version !== undefined && version !== "" ? `${name}@${version}` : name, ...extraArgs],
     {
       stdio: "inherit",
-    }
+    },
   )
 
   return { binDir }

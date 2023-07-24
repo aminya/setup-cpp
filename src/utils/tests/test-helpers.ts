@@ -33,7 +33,7 @@ export async function cleanupTmpDir(testName: string) {
 export async function testBin(
   name: string,
   args: string[] | null = ["--version"],
-  binDir: string | undefined = undefined
+  binDir: string | undefined = undefined,
 ) {
   try {
     let bin = name

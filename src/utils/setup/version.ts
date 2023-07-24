@@ -42,7 +42,7 @@ export async function getSpecificVersionAndUrl(
   versions: Set<string>,
   platform: string,
   version: string,
-  getUrl: (platform: string, version: string) => string | null | Promise<string | null>
+  getUrl: (platform: string, version: string) => string | null | Promise<string | null>,
 ): Promise<[string, string]> {
   // specific ubuntu version
   if (platform === "linux" && version.includes("ubuntu")) {
@@ -57,8 +57,8 @@ export async function getSpecificVersionAndUrl(
   if (!versions.has(version)) {
     throw new Error(
       `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${JSON.stringify(
-        versions
-      )}`
+        versions,
+      )}`,
     )
   }
 
@@ -80,8 +80,8 @@ export async function getSpecificVersionAndUrl(
 
   throw new Error(
     `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${JSON.stringify(
-      versions
-    )}`
+      versions,
+    )}`,
   )
 }
 
@@ -104,7 +104,7 @@ export async function getBinVersion(file: string, versionRegex: RegExp = default
 export async function isBinUptoDate(
   givenFile: string,
   targetVersion: string,
-  versionRegex: RegExp = defaultVersionRegex
+  versionRegex: RegExp = defaultVersionRegex,
 ) {
   const givenVersion = await getBinVersion(givenFile, versionRegex)
   if (givenVersion !== undefined && targetVersion !== "") {

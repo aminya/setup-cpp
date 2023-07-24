@@ -47,7 +47,7 @@ function nonInteractiveScript(givenScript: string) {
   return givenScript.replace(
     /add-apt-repository "\${REPO_NAME}"/g,
     // eslint-disable-next-line no-template-curly-in-string
-    'add-apt-repository -y "${REPO_NAME}"'
+    'add-apt-repository -y "${REPO_NAME}"',
   )
 }
 
@@ -55,7 +55,7 @@ async function removeConflictingPAckages(givenScript: string) {
   // fix conflicts between libclang-rt and libclang
   let script = givenScript.replace(
     /apt-get install -y/g,
-    'apt-get install -o Dpkg::Options::="--force-overwrite" -y --fix-broken'
+    'apt-get install -o Dpkg::Options::="--force-overwrite" -y --fix-broken',
   )
 
   // check if these are installed and if so, remove them from the script as they conflict
@@ -67,7 +67,7 @@ async function removeConflictingPAckages(givenScript: string) {
         info(`Removing conflicting package ${installingPack}`)
         script = script.replace(pack, "")
       }
-    })
+    }),
   )
   return script
 }

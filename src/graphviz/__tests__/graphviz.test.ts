@@ -15,7 +15,7 @@ describe("setup-graphviz", () => {
     const installInfo = await setupGraphviz(
       getVersion("graphviz", undefined, await ubuntuVersion()),
       directory,
-      process.arch
+      process.arch,
     )
 
     await testBin("dot", ["-V"], (installInfo as InstallationInfo | undefined)?.binDir)

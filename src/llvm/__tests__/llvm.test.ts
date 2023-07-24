@@ -29,24 +29,24 @@ describe("setup-llvm", () => {
   it("Finds URL for ubuntu version", async () => {
     expect(
       await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-16.04", (_plantform, version) =>
-        getLinuxUrl(version)
-      )
+        getLinuxUrl(version),
+      ),
     ).toStrictEqual([
       "13.0.0-ubuntu-16.04",
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
     ])
     expect(
       await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.1-ubuntu-18.04", (_plantform, version) =>
-        getLinuxUrl(version)
-      )
+        getLinuxUrl(version),
+      ),
     ).toStrictEqual([
       "13.0.1-ubuntu-18.04",
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
     ])
     expect(
       await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-20.04", (_plantform, version) =>
-        getLinuxUrl(version)
-      )
+        getLinuxUrl(version),
+      ),
     ).toStrictEqual([
       "13.0.0-ubuntu-20.04",
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz",
@@ -77,7 +77,7 @@ describe("setup-llvm", () => {
         "5",
         "5.0.0",
         "4",
-      ].map((version) => testUrl(version))
+      ].map((version) => testUrl(version)),
     )
   })
 
