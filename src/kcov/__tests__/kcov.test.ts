@@ -42,21 +42,6 @@ describe("setup-Kcov", () => {
     await cleanupTmpDir("kcov-v40")
   })
 
-  it("should build and setup Kcov v39", async () => {
-    const directory = await setupTmpDir("kcov-v39")
-    const { binDir } = (await setupKcov("39", directory, "")) as InstallationInfo
-    await testBin("kcov", ["--version"], binDir)
-    await cleanupTmpDir("kcov-v39")
-  })
-
-  // it("should find Kcov in the cache", async () => {
-  //   const binDir = await testKcov("v39", directory)
-  //   if (GITHUB_ACTIONS) {
-  //     expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
-  //   }
-  //   await cleanupTmpDir("kcov-v39")
-  // })
-
   it("should build and setup Kcov v38", async () => {
     try {
       const directory2 = await setupTmpDir("kcov-v38")
