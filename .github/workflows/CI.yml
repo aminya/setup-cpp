@@ -57,6 +57,10 @@ jobs:
           pnpm build
           pnpm build.docker_tests
 
+      - name: Lint
+        run: |
+          pnpm run test.lint
+
       - name: Upload Dist
         uses: actions/upload-artifact@v3
         with:
@@ -186,7 +190,7 @@ jobs:
       # - name: Setup SSH debugging session
       #   uses: mxschmitt/action-tmate@v3
 
-      - name: Test
+      - name: Tests
         run: |
           pnpm run test
 
@@ -241,7 +245,6 @@ jobs:
         id: docker_build
         run: |
           docker build -f ./dev/docker/__tests__/${{ matrix.container }} -t setup-cpp .
-
 
   Release:
     if: startsWith(github.ref, 'refs/tags/')
