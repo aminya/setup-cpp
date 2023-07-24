@@ -22,10 +22,7 @@ export async function setupLLVM(version: string, setupDir: string, arch: string)
   return installationInfo
 }
 
-/** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
-export const setupClangTools = setupLLVMWithoutActivation
-
-async function setupLLVMWithoutActivation(version: string, setupDir: string, arch: string) {
+async function setupLLVMWithoutActivation_raw(version: string, setupDir: string, arch: string) {
   // install LLVM and its dependencies in parallel
   const [installationInfo, _1, _2] = await Promise.all([
     setupLLVMOnly(version, setupDir, arch),
@@ -35,6 +32,10 @@ async function setupLLVMWithoutActivation(version: string, setupDir: string, arc
 
   return installationInfo
 }
+const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_raw, { isPromise: true })
+
+/** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
+export const setupClangTools = setupLLVMWithoutActivation
 
 async function setupLLVMOnly(version: string, setupDir: string, arch: string) {
   const coeredVersion = semverCoerceIfInvalid(version)
