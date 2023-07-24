@@ -63,6 +63,7 @@ jobs:
           name: dist
           path: |
             ./dist
+            ./packages/*/dist
             ./dev/docker/__tests__/
           retention-days: 1
 
@@ -253,8 +254,8 @@ jobs:
       - name: Place Artifacts
         shell: bash
         run: |
-          mv -v artifact/dist/* ./
-          mv -v artifact/exe/* ./
+          mv -v ./dist/* ./
+          mv -v ./exe/* ./
           chmod +x -R ./exe/
 
       - name: Draft the release
