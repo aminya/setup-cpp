@@ -1,0 +1,23 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: mingw c compiler
+    command: x86_64-w64-mingw32-gcc
+    args: ["--version"]
+    expectedOutput: [".*x86_64-w64-mingw32-gcc.*"]
+  - name: mingw c++ compiler
+    command: x86_64-w64-mingw32-cpp
+    args: ["--version"]
+    expectedOutput: [".*x86_64-w64-mingw32-cpp.*"]
+  - name: powershell
+    command: pwsh
+    args: ["-Version"]
+    expectedOutput: [".*PowerShell.*"]
+
+fileExistenceTests:
+  - name: "vcpkg"
+    path: "/root/vcpkg"
+    shouldExist: true
+  - name: "cross root"
+    path: "/usr/x86_64-w64-mingw32"
+    shouldExist: true

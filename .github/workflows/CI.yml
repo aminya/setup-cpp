@@ -140,9 +140,12 @@ jobs:
         pnpm:
           - 8
         container:
-          - "arch.dockerfile"
-          - "fedora.dockerfile"
           - "ubuntu.dockerfile"
+          - "fedora.dockerfile"
+          - "arch.dockerfile"
+          - "ubuntu-mingw.dockerfile"
+          # - "fedora-mingw.dockerfile"
+          # - "arch-mingw.dockerfile"
     steps:
       - uses: actions/checkout@v3
         with:

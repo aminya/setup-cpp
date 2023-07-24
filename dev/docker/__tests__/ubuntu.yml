@@ -1,40 +1,28 @@
 schemaVersion: 2.0.0
 
 commandTests:
-  - name: gcc compiler
-    command: gcc
-    args: ["--version"]
-    expectedOutput: [".*gcc.*"]
-  - name: g++ compiler
-    command: g++
-    args: ["--version"]
-    expectedOutput: [".*g\\+\\+.*"]
-  - name: make
-    command: make
-    args: ["--version"]
-    expectedOutput: [".*GNU Make.*"]
   - name: ninja
     command: /root/ninja/ninja
     args: ["--version"]
     expectedOutput: [".*1.*"]
   - name: gcovr
-    command: gcovr
+    command: /usr/local/bin/gcovr
     args: ["--version"]
     expectedOutput: [".*gcovr.*"]
   - name: ccache
-    command: ccache
+    command: /usr/bin/ccache
     args: ["--version"]
     expectedOutput: [".*ccache.*"]
   - name: doxygen
-    command: doxygen
+    command: /usr/bin/doxygen
     args: ["--version"]
     expectedOutput: [".*1.*"]
   - name: cppcheck
-    command: cppcheck
+    command: /usr/bin/cppcheck
     args: ["--version"]
     expectedOutput: [".*Cppcheck.*"]
   - name: clang
-    command: /root/llvm/bin/clang
+    command: /usr/lib/llvm-15/bin/clang
     args: ["--version"]
     expectedOutput: [".*clang.*"]
 
@@ -44,4 +32,10 @@ fileExistenceTests:
     shouldExist: true
   - name: "llvm"
     path: "/root/llvm"
+    shouldExist: true
+  - name: "ninja"
+    path: "/root/ninja"
+    shouldExist: true
+  - name: "cmake"
+    path: "/root/cmake"
     shouldExist: true

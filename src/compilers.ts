@@ -3,7 +3,7 @@ import { error, info } from "ci-log"
 import { join } from "path"
 import semverValid from "semver/functions/valid"
 import { getSuccessMessage } from "./cli-options"
-import { setupGcc } from "./gcc/gcc"
+import { setupGcc, setupMingw } from "./gcc/gcc"
 import { activateGcovGCC, activateGcovLLVM } from "./gcovr/gcovr"
 import { setupLLVM } from "./llvm/llvm"
 import { setupMSVC } from "./msvc/msvc"
@@ -60,8 +60,12 @@ export async function installCompiler(
       case "mingw":
       case "cygwin":
       case "msys": {
-        const gccVersion = getVersion("gcc", version, osVersion)
-        const installationInfo = await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
+        const gccVersion =
+          compiler === "mingw" ? getVersion("mingw", version, osVersion) : getVersion("gcc", version, osVersion)
+        const installationInfo =
+          compiler === "mingw"
+            ? await setupMingw(gccVersion, join(setupCppDir, "gcc"), arch)
+            : await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
 
         if (hasLLVM) {
           // remove back the added CPPFLAGS of LLVM that include the LLVM headers

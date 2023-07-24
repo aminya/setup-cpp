@@ -90,6 +90,9 @@ words:
   - whatwg
   - xcrun
   - Yahyaabadi
+  - VCPKG
+  - DVCPKG
+  - SYSROOT
 ignoreWords: []
 import: []
 dictionaryDefinitions: []
