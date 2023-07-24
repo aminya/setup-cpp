@@ -48,9 +48,13 @@ jobs:
         with:
           version: ${{ matrix.pnpm }}
 
-      - name: Install and build
+      - name: Install
         run: |
           pnpm install
+
+      - name: Build
+        run: |
+          pnpm build
           pnpm build.docker_tests
 
       - name: Upload Dist
@@ -62,8 +66,8 @@ jobs:
             ./dev/docker/__tests__/
           retention-days: 1
 
-  Build_Executable:
-    name: Build_Executable-${{ matrix.os }}
+  BuildExecutable:
+    name: Build-Executable-${{ matrix.os }}
     needs: [Build]
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ${{ matrix.os }}
@@ -85,10 +89,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist
-      - name: Place Artifacts
-        shell: bash
-        run: |
-          mv -v artifact/* ./
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -99,6 +99,21 @@ jobs:
         uses: pnpm/action-setup@v2
         with:
           version: ${{ matrix.pnpm }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            D:\.pnpm-store
+            ./node_modules
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          restore-keys: |
+            "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
+
+      - name: Install
+        run: |
+          pnpm install
 
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
@@ -114,7 +129,7 @@ jobs:
           retention-days: 1
 
   Test:
-    name: ${{ matrix.os }}
+    name: Test-${{ matrix.os }}
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') || !contains(github.event.head_commit.message, '[skip test]') }}
     needs: [Build]
     runs-on: ${{ matrix.os }}
@@ -141,10 +156,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist
-      - name: Place Dist
-        shell: bash
-        run: |
-          mv -v artifact/* ./
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -156,12 +167,23 @@ jobs:
         with:
           version: ${{ matrix.pnpm }}
 
-      # - name: Setup SSH debugging session
-      #   uses: mxschmitt/action-tmate@v3
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            D:\.pnpm-store
+            ./node_modules
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          restore-keys: |
+            "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 
       - name: Install
         run: |
           pnpm install
+
+      # - name: Setup SSH debugging session
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Test
         run: |
@@ -184,7 +206,7 @@ jobs:
           node ./dist/actions/setup-cpp.js --help
 
   Docker:
-    name: ${{ matrix.container }}
+    name: Test-${{ matrix.container }}
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip test]') }}
     needs: [Build]
     runs-on: ${{ matrix.os }}
@@ -213,10 +235,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist
-      - name: Place Dist
-        shell: bash
-        run: |
-          mv -v artifact/* ./
 
       - name: Build
         id: docker_build
@@ -226,7 +244,7 @@ jobs:
 
   Release:
     if: startsWith(github.ref, 'refs/tags/')
-    needs: [Build, Build_Executable, Test, Docker]
+    needs: [Build, BuildExecutable, Test, Docker]
     runs-on: ubuntu-22.04
     steps:
       - name: Download All Artifacts

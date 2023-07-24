@@ -3,7 +3,7 @@ import type { Config } from "jest"
 const jestConfig: Config = {
   testMatch: ["**/*.test.ts"],
   testEnvironment: "node",
-  extensionsToTreatAsEsm: [".ts", ".tsx", ".js", ".jsx"],
+  extensionsToTreatAsEsm: [".ts", ".tsx", ".jsx"],
   transformIgnorePatterns: [], // transform node_modules
   transform: {
     "^.+\\.(t|j)sx?$": "@swc/jest",

@@ -56,7 +56,7 @@
     "test.lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/",
     "test.lint.prettier": "prettier . --check",
     "test.unit": "jest --runInBand",
-    "build.docker_tests": "pnpm build && node ./dev/docker/__tests__/generate-docker-tests.mjs",
+    "build.docker_tests": "node ./dev/docker/__tests__/generate-docker-tests.mjs",
     "build.docker.arch": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/arch.dockerfile -t setup-cpp:arch .",
     "build.docker.fedora": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/fedora.dockerfile -t setup-cpp:fedora .",
     "build.docker.ubuntu": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/ubuntu.dockerfile -t setup-cpp:ubuntu .",
