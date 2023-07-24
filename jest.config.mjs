@@ -21,6 +21,7 @@ const jestConfig = {
   collectCoverageFrom: ["src/**/*.{ts,tsx}"],
   coveragePathIgnorePatterns: ["assets", ".css.d.ts"],
   verbose: true,
+  detectOpenHandles: true,
 }
 
 export default jestConfig
