@@ -169,7 +169,7 @@ async function initApt(apt: string) {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
     promises.push(
       addEnv("LANG", "C.UTF-8", { shouldAddOnlyIfNotDefined: true }),
-      addEnv("LC_ALL", "C.UTF-8", { shouldAddOnlyIfNotDefined: true })
+      addEnv("LC_ALL", "C.UTF-8", { shouldAddOnlyIfNotDefined: true }),
     )
   }
   await Promise.all(promises)
@@ -197,7 +197,7 @@ export async function addAptKeyViaServer(keys: string[], name: string, server = 
             key,
           ])
           await execRoot("chmod", ["644", fileName])
-        })
+        }),
       )
     }
     return fileName
@@ -226,7 +226,7 @@ export async function updateAptAlternatives(name: string, path: string) {
     await setupCppInProfile()
     return appendFile(
       cpprc_path,
-      `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 40; fi\n`
+      `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 40; fi\n`,
     )
   }
 }

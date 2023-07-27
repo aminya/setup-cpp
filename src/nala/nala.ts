@@ -24,7 +24,7 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
   // https://github.com/volitank/nala#-installation
   const keyFileName = await addAptKeyViaDownload(
     "volian-archive-scar-unstable.gpg",
-    "https://deb.volian.org/volian/scar.key"
+    "https://deb.volian.org/volian/scar.key",
   )
   execRootSync("/bin/bash", [
     "-c",

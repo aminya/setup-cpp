@@ -34,7 +34,7 @@ export async function installCompiler(
   arch: string,
   successMessages: string[],
   hasLLVM: boolean,
-  errorMessages: string[]
+  errorMessages: string[],
 ) {
   try {
     const { compiler, version } = getCompilerInfo(compilerAndVersion)
@@ -48,7 +48,7 @@ export async function installCompiler(
         const installationInfo = await setupLLVM(
           getVersion("llvm", version, osVersion),
           join(setupCppDir, "llvm"),
-          arch
+          arch,
         )
 
         await activateGcovLLVM()
@@ -87,7 +87,7 @@ export async function installCompiler(
         const installationInfo = await setupMSVC(
           getVersion("msvc", version, osVersion),
           join(setupCppDir, "msvc"),
-          arch
+          arch,
         )
 
         if (hasLLVM) {

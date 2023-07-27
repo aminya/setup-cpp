@@ -286,7 +286,7 @@ export async function getLLVMPackageInfo(
   version: string,
   platform: NodeJS.Platform,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _arch: string
+  _arch: string,
 ): Promise<PackageInfo> {
   const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, platform, version, getUrl)
   info(`specific llvm version: ${specificVersion}`)

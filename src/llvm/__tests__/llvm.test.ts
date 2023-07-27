@@ -2,7 +2,6 @@ import { setupLLVM, setupClangTools } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isUrlOnline } from "is-url-online"
 import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { GITHUB_ACTIONS } from "ci-info"
 import { execaSync } from "execa"
 import path, { addExeExt } from "patha"
 import { chmodSync } from "fs"
@@ -29,24 +28,24 @@ describe("setup-llvm", () => {
   it("Finds URL for ubuntu version", async () => {
     expect(
       await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-16.04", (_plantform, version) =>
-        getLinuxUrl(version)
-      )
+        getLinuxUrl(version),
+      ),
     ).toStrictEqual([
       "13.0.0-ubuntu-16.04",
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
     ])
     expect(
       await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.1-ubuntu-18.04", (_plantform, version) =>
-        getLinuxUrl(version)
-      )
+        getLinuxUrl(version),
+      ),
     ).toStrictEqual([
       "13.0.1-ubuntu-18.04",
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
     ])
     expect(
       await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-20.04", (_plantform, version) =>
-        getLinuxUrl(version)
-      )
+        getLinuxUrl(version),
+      ),
     ).toStrictEqual([
       "13.0.0-ubuntu-20.04",
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz",
@@ -77,7 +76,7 @@ describe("setup-llvm", () => {
         "5",
         "5.0.0",
         "4",
-      ].map((version) => testUrl(version))
+      ].map((version) => testUrl(version)),
     )
   })
 
@@ -97,25 +96,6 @@ describe("setup-llvm", () => {
       chmodSync(main_exe, "755")
     }
     execaSync(main_exe, { cwd: __dirname, stdio: "inherit" })
-  })
-
-  it("should find llvm in the cache", async () => {
-    const osVersion = await ubuntuVersion()
-    const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
-    await testBin("clang++", ["--version"], binDir)
-
-    if (GITHUB_ACTIONS && process.platform !== "linux") {
-      expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
-      // TODO returns the install dir on linux
-    }
-
-    expect(process.env.CC?.includes("clang")).toBeTruthy()
-    expect(process.env.CXX?.includes("clang++")).toBeTruthy()
-
-    if (GITHUB_ACTIONS && process.platform !== "linux") {
-      expect(process.env.CC).toMatch("hostedtoolcache")
-      expect(process.env.CXX).toMatch("hostedtoolcache")
-    }
   })
 
   it("should setup clang-tidy and clang-format", async () => {

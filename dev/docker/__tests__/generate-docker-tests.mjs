@@ -19,7 +19,7 @@ async function main() {
 
       // write the new file in dev/docker/__tests__
       await writeFile(`./dev/docker/__tests__/${dockerFile}.dockerfile`, newDockerFileContent)
-    })
+    }),
   )
 }
 

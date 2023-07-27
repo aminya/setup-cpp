@@ -19,7 +19,7 @@ export async function setupPipPackWithPython(
   givenPython: string,
   name: string,
   version?: string,
-  upgrade = false
+  upgrade = false,
 ): Promise<InstallationInfo> {
   info(`Installing ${name} ${version ?? ""} via pip`)
 

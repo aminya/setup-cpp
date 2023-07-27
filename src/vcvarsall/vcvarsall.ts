@@ -28,7 +28,7 @@ export async function setupVCVarsall(
   toolset: string | undefined,
   sdk?: string,
   uwp?: boolean,
-  spectre?: boolean
+  spectre?: boolean,
 ) {
   if (VCTargetsPath !== undefined && (await pathExists(VCTargetsPath))) {
     info(`Adding ${VCTargetsPath} to PATH`)

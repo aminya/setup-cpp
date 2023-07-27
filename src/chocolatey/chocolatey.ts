@@ -14,7 +14,7 @@ export async function setupChocolatey(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   _setupDir: string,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _arch: string
+  _arch: string,
 ): Promise<InstallationInfo | undefined> {
   if (process.platform !== "win32") {
     return undefined
@@ -50,7 +50,7 @@ export async function setupChocolatey(
       "-Command",
       "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))",
     ],
-    { stdio: "inherit" }
+    { stdio: "inherit" },
   )
 
   const chocoPath = `${process.env.ALLUSERSPROFILE}\\chocolatey\\bin`

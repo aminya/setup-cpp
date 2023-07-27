@@ -10,9 +10,133 @@ on:
       - "*"
 
 jobs:
-  Test:
-    name: ${{ matrix.os }}
+  Build:
+    runs-on: ubuntu-22.04
+    name: Build
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-22.04
+        node:
+          - 20
+        pnpm:
+          - 8
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            D:\.pnpm-store
+            ./node_modules
+            ./.parcel-cache
+          key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          restore-keys: |
+            "setupcpp-cache-OS:${{ matrix.os }}-"
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+
+      - name: Install
+        run: |
+          pnpm install
+
+      - name: Build
+        run: |
+          pnpm build
+          pnpm build.docker_tests
+
+      - name: Lint
+        run: |
+          pnpm run test.lint
+
+      - name: Upload Dist
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: |
+            ./dist
+            ./packages/*/dist
+            ./dev/docker/__tests__/
+          retention-days: 1
+
+  BuildExecutable:
+    name: Build-Executable-${{ matrix.os }}
+    needs: [Build]
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-2022
+          - ubuntu-22.04
+          - macos-12
+        node:
+          - 20
+        pnpm:
+          - 8
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm }}
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            D:\.pnpm-store
+            ./node_modules
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          restore-keys: |
+            "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
+
+      - name: Install
+        run: |
+          pnpm install
+
+      # Create self-contained executable that bundles Nodejs
+      - name: Create Executable
+        run: |
+          pnpm run pack.exe
+
+      - name: Upload Executables
+        uses: actions/upload-artifact@v3
+        with:
+          name: exe
+          path: |
+            ./exe
+          retention-days: 1
+
+  Test:
+    name: Test-${{ matrix.os }}
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') || !contains(github.event.head_commit.message, '[skip test]') }}
+    needs: [Build]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -33,16 +157,10 @@ jobs:
         with:
           submodules: true
 
-      - name: Cache
-        uses: actions/cache@v3
+      - name: Download Dist
+        uses: actions/download-artifact@v3
         with:
-          path: |
-            ~/.pnpm-store
-            D:\.pnpm-store
-            ./node_modules
-          key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
-          restore-keys: |
-            "setupcpp-cache-OS:${{ matrix.os }}-"
+          name: dist
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -54,32 +172,27 @@ jobs:
         with:
           version: ${{ matrix.pnpm }}
 
-      - name: Install and build
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pnpm-store
+            D:\.pnpm-store
+            ./node_modules
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          restore-keys: |
+            "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
+
+      - name: Install
         run: |
           pnpm install
 
       # - name: Setup SSH debugging session
       #   uses: mxschmitt/action-tmate@v3
 
-      - name: Test
-        if: "${{ !contains(github.event.head_commit.message, '[skip test]') }}"
+      - name: Tests
         run: |
           pnpm run test
-
-      # Create self-contained executable that bundles Nodejs
-      - name: Create Executable
-        if: "${{ contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}"
-        run: |
-          pnpm run pack.exe
-
-      - name: Upload Artifacts
-        if: ${{ (startsWith(github.ref, 'refs/tags/')) && contains(matrix.os, 'windows-2022') || contains(matrix.os, 'ubuntu-22.04') || contains(matrix.os, 'macos-12') }}
-        uses: actions/upload-artifact@v3
-        with:
-          path: |
-            ./exe
-            ./dist
-          retention-days: 1
 
       - name: Setup Node 12
         uses: actions/setup-node@v3
@@ -97,38 +210,10 @@ jobs:
         run: |
           node ./dist/actions/setup-cpp.js --help
 
-  Release:
-    needs: Test
-    if: startsWith(github.ref, 'refs/tags/')
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v3
-
-      - name: Place Artifacts
-        run: |
-          mv -v artifact/* ./
-          chmod +x -R ./exe/
-
-      - name: Draft the release
-        uses: meeDamian/github-release@2.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          gzip: folders
-          draft: true
-          files: >
-            ./exe/setup-cpp-x64-windows.exe
-            ./exe/setup-cpp-x64-linux
-            ./exe/setup-cpp-x64-macos
-            ./dist/legacy/setup-cpp.js
-            ./dist/legacy/setup-cpp.js.map
-            ./dist/legacy/
-            ./dist/actions/
-            ./dist/modern/
-
   Docker:
-    name: ${{ matrix.container }}
+    name: Test-${{ matrix.container }}
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') && !contains(github.event.head_commit.message, '[skip test]') }}
+    needs: [Build]
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -151,33 +236,43 @@ jobs:
         with:
           submodules: true
 
-      - name: Cache
-        uses: actions/cache@v3
+      - name: Download Dist
+        uses: actions/download-artifact@v3
         with:
-          path: |
-            ~/.pnpm-store
-            D:\.pnpm-store
-            ./node_modules
-          key: "setupcpp-docker-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
-          restore-keys: |
-            "setupcpp-docker-cache-OS:${{ matrix.os }}"
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node }}
-
-      - name: Setup Pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ matrix.pnpm }}
-
-      - name: Install and build
-        run: |
-          pnpm install
-          pnpm build.docker_tests
+          name: dist
 
       - name: Build
         id: docker_build
         run: |
           docker build -f ./dev/docker/__tests__/${{ matrix.container }} -t setup-cpp .
+
+  Release:
+    if: startsWith(github.ref, 'refs/tags/')
+    needs: [Build, BuildExecutable, Test, Docker]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Place Artifacts
+        shell: bash
+        run: |
+          mv -v ./dist/* ./
+          mv -v ./exe/* ./
+          chmod +x -R ./exe/
+
+      - name: Draft the release
+        uses: meeDamian/github-release@2.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          gzip: folders
+          draft: true
+          files: >
+            ./exe/setup-cpp-x64-windows.exe
+            ./exe/setup-cpp-x64-linux
+            ./exe/setup-cpp-x64-macos
+            ./dist/legacy/setup-cpp.js
+            ./dist/legacy/setup-cpp.js.map
+            ./dist/legacy/
+            ./dist/actions/
+            ./dist/modern/

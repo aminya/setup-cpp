@@ -222,7 +222,7 @@ async function activateGcc(version: string, binDir: string) {
           updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`),
           updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`),
           updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`),
-          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`)
+          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`),
         )
       }
     } else {
@@ -233,7 +233,7 @@ async function activateGcc(version: string, binDir: string) {
           updateAptAlternatives("cc", `${binDir}/gcc-${version}`),
           updateAptAlternatives("cxx", `${binDir}/g++-${version}`),
           updateAptAlternatives("gcc", `${binDir}/gcc-${version}`),
-          updateAptAlternatives("g++", `${binDir}/g++-${version}`)
+          updateAptAlternatives("g++", `${binDir}/g++-${version}`),
         )
       }
     }
