@@ -86,7 +86,7 @@ inputs:
     required: false
   timeout:
     description: "The timeout for installation of one tool (in minutes)."
-    default: "10"
+    default: "20"
     required: false
 
 runs:

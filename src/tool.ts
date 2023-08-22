@@ -69,6 +69,8 @@ export type ToolName = keyof typeof setups
 /** The tools that can be installed */
 export const tools = Object.keys(setups) as Array<ToolName>
 
+export const DEFAULT_TIMEOUT = 20 * 60 * 1000 // 20 minutes
+
 export async function installTool(
   tool: ToolName,
   version: string,
@@ -77,7 +79,7 @@ export async function installTool(
   setupCppDir: string,
   successMessages: string[],
   errorMessages: string[],
-  timeout: number = 0.1,
+  timeout: number = DEFAULT_TIMEOUT,
 ) {
   startGroup(`Installing ${tool} ${version}`)
   let hasLLVM = false

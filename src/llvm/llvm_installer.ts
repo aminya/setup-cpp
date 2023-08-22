@@ -5,6 +5,7 @@ import { hasNala, isPackageInstalled, setupAptPack } from "../utils/setup/setupA
 import { InstallationInfo } from "../utils/setup/setupBin"
 import { promises } from "fs"
 import { info } from "console"
+import { DEFAULT_TIMEOUT } from "../tool"
 const { readFile, writeFile, chmod } = promises
 
 export async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
@@ -19,6 +20,7 @@ export async function setupLLVMApt(majorVersion: number): Promise<InstallationIn
   await execRoot("bash", ["/tmp/llvm-setup-cpp.sh", `${majorVersion}`, "all"], {
     stdio: "inherit",
     shell: true,
+    timeout: DEFAULT_TIMEOUT,
   })
 
   await addPath(`${installationFolder}/bin`)

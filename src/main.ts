@@ -96,7 +96,7 @@ async function main(args: string[]): Promise<number> {
         setupCppDir,
         successMessages,
         errorMessages,
-        parseFloat(opts.timeout ?? "10"),
+        parseFloat(opts.timeout ?? "20") * 60 * 1000,
       )
       time2 = Date.now()
       info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
