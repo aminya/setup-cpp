@@ -2,13 +2,7 @@ import { getInput } from "@actions/core"
 import { info } from "ci-log"
 import mri from "mri"
 import { InstallationInfo } from "./utils/setup/setupBin"
-import { setups, tools } from "./tool"
-
-/** The possible inputs to the program */
-export type Inputs = keyof typeof setups | "compiler" | "architecture" | "timeout"
-
-/** ‌ an array of possible inputs */
-export const inputs: Array<Inputs> = ["compiler", "architecture", "timeout", ...tools]
+import { Inputs, inputs } from "./tool"
 
 export function parseArgs(args: string[]): Opts {
   return mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {

@@ -5,7 +5,7 @@ import { hasNala, isPackageInstalled, setupAptPack } from "../utils/setup/setupA
 import { InstallationInfo } from "../utils/setup/setupBin"
 import { promises } from "fs"
 import { info } from "console"
-import { DEFAULT_TIMEOUT } from "../tool"
+import { DEFAULT_TIMEOUT } from "../installTool"
 const { readFile, writeFile, chmod } = promises
 
 export async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {

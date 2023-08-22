@@ -35,7 +35,9 @@ async function setupLLVMWithoutActivation_raw(version: string, setupDir: string,
 const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_raw, { isPromise: true })
 
 /** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
-export const setupClangTools = setupLLVMWithoutActivation
+export function setupClangTools(version: string, setupDir: string, arch: string) {
+  return setupLLVMOnly(version, setupDir, arch)
+}
 
 async function setupLLVMOnly(version: string, setupDir: string, arch: string) {
   const coeredVersion = semverCoerceIfInvalid(version)
