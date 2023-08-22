@@ -78,7 +78,16 @@ async function main(args: string[]): Promise<number> {
       // running the setup function for this tool
       time1 = Date.now()
       // eslint-disable-next-line no-await-in-loop
-      hasLLVM = await installTool(tool, version, osVersion, arch, setupCppDir, successMessages, errorMessages)
+      hasLLVM = await installTool(
+        tool,
+        version,
+        osVersion,
+        arch,
+        setupCppDir,
+        successMessages,
+        errorMessages,
+        parseFloat(opts.timeout ?? "0.1"),
+      )
       time2 = Date.now()
       info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
     }

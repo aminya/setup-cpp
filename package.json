@@ -112,6 +112,7 @@
     "npm-check-updates": "^16.10.17",
     "npm-run-all2": "^6.0.6",
     "numerous": "1.0.3",
+    "p-timeout": "^6.1.2",
     "parcel": "2.9.3",
     "path-exists": "^5.0.0",
     "patha": "^0.4.1",

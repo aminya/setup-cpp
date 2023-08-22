@@ -2,11 +2,17 @@ import { getInput } from "@actions/core"
 import { info } from "ci-log"
 import mri from "mri"
 import { InstallationInfo } from "./utils/setup/setupBin"
-import { Inputs, inputs } from "./tool"
+import { setups, tools } from "./tool"
+
+/** The possible inputs to the program */
+export type Inputs = keyof typeof setups | "compiler" | "architecture" | "timeout"
+
+/** ‌ an array of possible inputs */
+export const inputs: Array<Inputs> = ["compiler", "architecture", "timeout", ...tools]
 
 export function parseArgs(args: string[]): Opts {
   return mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
-    string: inputs,
+    string: [...inputs, "timeout"],
     default: Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)])),
     alias: { h: "help" },
     boolean: "help",
@@ -21,9 +27,9 @@ setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 Install all the tools required for building and testing C++/C projects.
 
 --architecture\t the cpu architecture to install the tools for. By default it uses the current CPU architecture.
+--timeout\t the timeout for the installation of each tool in minutes. By default it is 10 minutes.
 --compiler\t the <compiler> to install.
           \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-13.0.0'
-
 --$tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
 
 All the available tools:
@@ -54,6 +60,7 @@ export function maybeGetInput(key: string) {
 export type Opts = mri.Argv<
   Record<Inputs, string | undefined> & {
     help: boolean
+    timeout?: string
   }
 >
 

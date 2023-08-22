@@ -1,5 +1,4 @@
-import { Opts } from "../cli-options"
-import { Inputs } from "../tool"
+import { Opts, Inputs } from "../cli-options"
 import { DefaultLinuxVersion, DefaultVersions } from "./default_versions"
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
