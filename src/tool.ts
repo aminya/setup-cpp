@@ -1,11 +1,7 @@
-import { endGroup, startGroup } from "@actions/core"
-import { error } from "ci-log"
-import { join } from "patha"
 import { setupBazel } from "./bazel/bazel"
 import { setupBrew } from "./brew/brew"
 import { setupCcache } from "./ccache/ccache"
 import { setupChocolatey } from "./chocolatey/chocolatey"
-import { getSuccessMessage } from "./cli-options"
 import { setupCmake } from "./cmake/cmake"
 import { setupConan } from "./conan/conan"
 import { setupCppcheck } from "./cppcheck/cppcheck"
@@ -26,50 +22,10 @@ import { setupPython } from "./python/python"
 import { setupSccache } from "./sccache/sccache"
 import { setupSevenZip } from "./sevenzip/sevenzip"
 import { setupTask } from "./task/task"
-import { InstallationInfo } from "./utils/setup/setupBin"
 import { setupVcpkg } from "./vcpkg/vcpkg"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
-import { getVersion } from "./versions/versions"
 
-export async function installTool(
-  tool: ToolName,
-  version: string,
-  osVersion: number[] | null,
-  arch: string,
-  setupCppDir: string,
-  successMessages: string[],
-  errorMessages: string[],
-) {
-  startGroup(`Installing ${tool} ${version}`)
-  let hasLLVM = false
-  try {
-    let installationInfo: InstallationInfo | undefined | void
-    if (tool === "vcvarsall") {
-      // eslint-disable-next-line no-await-in-loop
-      await setupVCVarsall(getVersion(tool, version, osVersion), undefined, arch, undefined, undefined, false, false)
-    } else {
-      // get the setup function
-      const setupFunction = setups[tool]
-
-      hasLLVM = ["llvm", "clangformat", "clangtidy"].includes(tool)
-
-      // the tool installation directory (for the functions that ue it)
-      const setupDir = join(setupCppDir, hasLLVM ? "llvm" : tool)
-
-      // eslint-disable-next-line no-await-in-loop
-      installationInfo = await setupFunction(getVersion(tool, version, osVersion), setupDir, arch)
-    }
-    // preparing a report string
-    successMessages.push(getSuccessMessage(tool, installationInfo))
-  } catch (e) {
-    // push error message to the logger
-    error(e as string | Error)
-    errorMessages.push(`${tool} failed to install`)
-  }
-  endGroup()
-  return hasLLVM
-} /** The setup functions */
-
+/** The setup functions */
 export const setups = {
   nala: setupNala,
   cmake: setupCmake,
@@ -102,12 +58,12 @@ export const setups = {
 }
 
 export type ToolName = keyof typeof setups
+
 /** The tools that can be installed */
-
 export const tools = Object.keys(setups) as Array<ToolName>
+
 /** The possible inputs to the program */
+export type Inputs = keyof typeof setups | "compiler" | "architecture" | "timeout"
 
-export type Inputs = keyof typeof setups | "compiler" | "architecture"
 /** ‌ an array of possible inputs */
-
-export const inputs: Array<Inputs> = ["compiler", "architecture", ...tools]
+export const inputs: Array<Inputs> = ["compiler", "architecture", "timeout", ...tools]

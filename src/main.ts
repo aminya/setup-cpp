@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /* eslint-disable node/shebang */
 
-import { GITHUB_ACTIONS } from "ci-info"
+import { GITHUB_ACTIONS, isCI } from "ci-info"
 import { error, info, success, warning } from "ci-log"
 import * as numerous from "numerous"
 import numerousLocale from "numerous/locales/en.js"
@@ -11,12 +11,13 @@ import { untildifyUser } from "untildify-user"
 import { checkUpdates } from "./check-updates"
 import { parseArgs, printHelp } from "./cli-options"
 import { installCompiler } from "./compilers"
-import { installTool, tools } from "./tool"
 import { finalizeCpprc } from "./utils/env/addEnv"
 import { isArch } from "./utils/env/isArch"
 import { ubuntuVersion } from "./utils/env/ubuntu_version"
 import { setupPacmanPack } from "./utils/setup/setupPacmanPack"
 import { syncVersions } from "./versions/versions"
+import { installTool } from "./installTool"
+import { tools } from "./tool"
 
 /** The main entry function */
 async function main(args: string[]): Promise<number> {
@@ -69,7 +70,17 @@ async function main(args: string[]): Promise<number> {
   let hasLLVM = false
 
   // loop over the tools and run their setup function
+
+  let failedFast = false
   for (const tool of tools) {
+    // fail fast inside CI when any tool fails
+    if (isCI) {
+      if (errorMessages.length !== 0) {
+        failedFast = true
+        break
+      }
+    }
+
     // get the version or "true" or undefined for this tool from the options
     const version = opts[tool]
 
@@ -78,19 +89,30 @@ async function main(args: string[]): Promise<number> {
       // running the setup function for this tool
       time1 = Date.now()
       // eslint-disable-next-line no-await-in-loop
-      hasLLVM = await installTool(tool, version, osVersion, arch, setupCppDir, successMessages, errorMessages)
+      hasLLVM = await installTool(
+        tool,
+        version,
+        osVersion,
+        arch,
+        setupCppDir,
+        successMessages,
+        errorMessages,
+        parseFloat(opts.timeout ?? "20") * 60 * 1000,
+      )
       time2 = Date.now()
       info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
     }
   }
 
-  // installing the specified compiler
-  const maybeCompiler = opts.compiler
-  if (maybeCompiler !== undefined) {
-    const time1Compiler = Date.now()
-    await installCompiler(maybeCompiler, osVersion, setupCppDir, arch, successMessages, hasLLVM, errorMessages)
-    const time2Compiler = Date.now()
-    info(`took ${timeFormatter.format(time1Compiler, time2Compiler) || "0 seconds"}`)
+  if (!failedFast) {
+    // installing the specified compiler
+    const maybeCompiler = opts.compiler
+    if (maybeCompiler !== undefined) {
+      const time1Compiler = Date.now()
+      await installCompiler(maybeCompiler, osVersion, setupCppDir, arch, successMessages, hasLLVM, errorMessages)
+      const time2Compiler = Date.now()
+      info(`took ${timeFormatter.format(time1Compiler, time2Compiler) || "0 seconds"}`)
+    }
   }
 
   await finalizeCpprc()

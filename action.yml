@@ -84,6 +84,10 @@ inputs:
   powershell:
     description: "The powershell version to install."
     required: false
+  timeout:
+    description: "The timeout for installation of one tool (in minutes)."
+    default: "20"
+    required: false
 
 runs:
   using: "node16"

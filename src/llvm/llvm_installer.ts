@@ -5,6 +5,7 @@ import { hasNala, isPackageInstalled, setupAptPack } from "../utils/setup/setupA
 import { InstallationInfo } from "../utils/setup/setupBin"
 import { promises } from "fs"
 import { info } from "console"
+import { DEFAULT_TIMEOUT } from "../installTool"
 const { readFile, writeFile, chmod } = promises
 
 export async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
@@ -19,6 +20,7 @@ export async function setupLLVMApt(majorVersion: number): Promise<InstallationIn
   await execRoot("bash", ["/tmp/llvm-setup-cpp.sh", `${majorVersion}`, "all"], {
     stdio: "inherit",
     shell: true,
+    timeout: DEFAULT_TIMEOUT,
   })
 
   await addPath(`${installationFolder}/bin`)
@@ -33,6 +35,7 @@ export async function setupLLVMApt(majorVersion: number): Promise<InstallationIn
 async function patchAptLLVMScript(path: string, target_path: string) {
   let script = await readFile(path, "utf-8")
 
+  script = debugScript(script)
   script = nonInteractiveScript(script)
   script = await removeConflictingPAckages(script)
   script = useNalaScript(script)
@@ -42,9 +45,17 @@ async function patchAptLLVMScript(path: string, target_path: string) {
   // the packages needed by the script
   return [{ name: "lsb-release" }, { name: "wget" }, { name: "software-properties-common" }, { name: "gnupg" }]
 }
-function nonInteractiveScript(givenScript: string) {
+
+function debugScript(script: string) {
+  if (!process.env.NODE_DEBUG) {
+    return script.replace(/set -eux/g, "set -eu")
+  }
+  return script
+}
+
+function nonInteractiveScript(script: string) {
   // make the scirpt non-interactive and fix broken packages
-  return givenScript.replace(
+  return script.replace(
     /add-apt-repository "\${REPO_NAME}"/g,
     // eslint-disable-next-line no-template-curly-in-string
     'add-apt-repository -y "${REPO_NAME}"',
