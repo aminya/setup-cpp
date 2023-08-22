@@ -24,7 +24,8 @@ export async function installTool(
   let hasLLVM = false
   try {
     hasLLVM = await pTimeout(installToolImpl(tool, version, osVersion, arch, hasLLVM, setupCppDir, successMessages), {
-      milliseconds: timeout * 60 * 1000,
+      milliseconds: timeout,
+      message: `Timeout while installing ${tool} ${version}. You can increase the timeout from options`,
     })
   } catch (e) {
     // push error message to the logger
