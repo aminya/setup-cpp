@@ -34,15 +34,42 @@ export async function setupPython(version: string, setupDir: string, arch: strin
     throw new Error("pip was not installed correctly")
   }
 
-  // setup wheel and setuptools
+  await setupPipx(foundPython)
+
+  await setupWheel(foundPython)
+
+  return installInfo
+}
+
+async function setupPipx(foundPython: string) {
+  try {
+    try {
+      await setupPipPackWithPython(foundPython, "pipx", undefined, true)
+    } catch (err) {
+      if (isUbuntu()) {
+        await setupAptPack([{ name: "python3-pipx" }])
+      } else if (isArch()) {
+        await setupPacmanPack("python-pipx")
+      } else if (hasDnf()) {
+        await setupDnfPack([{ name: "python3-pipx" }])
+      } else {
+        throw err
+      }
+    }
+    await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
+  } catch (err) {
+    warning(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
+  }
+}
+
+/** Setup wheel and setuptools */
+async function setupWheel(foundPython: string) {
   try {
     await setupPipPackWithPython(foundPython, "setuptools", undefined, true)
     await setupPipPackWithPython(foundPython, "wheel", undefined, true)
   } catch (err) {
     warning(`Failed to install setuptools or wheel: ${(err as Error).toString()}. Ignoring...`)
   }
-
-  return installInfo
 }
 
 async function findOrSetupPython(version: string, setupDir: string, arch: string) {
