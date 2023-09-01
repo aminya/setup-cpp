@@ -20,13 +20,15 @@ export async function setupPipPackWithPython(
   name: string,
   version?: string,
   upgrade = false,
+  user = true,
 ): Promise<InstallationInfo> {
   info(`Installing ${name} ${version ?? ""} via pip`)
 
   const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
   const upgradeFlag = upgrade === true ? ["--upgrade"] : []
+  const userFlag = user === true ? ["--user"] : []
 
-  execaSync(givenPython, ["-m", "pip", "install", ...upgradeFlag, nameAndVersion], {
+  execaSync(givenPython, ["-m", "pip", "install", ...upgradeFlag, ...userFlag, nameAndVersion], {
     stdio: "inherit",
   })
 
