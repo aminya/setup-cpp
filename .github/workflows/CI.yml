@@ -193,6 +193,8 @@ jobs:
       - name: Tests
         run: |
           pnpm run test
+        env:
+          RUNNER_OS_NAME: ${{ matrix.os }}
 
       - name: Setup Node 12
         uses: actions/setup-node@v3

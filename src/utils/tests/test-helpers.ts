@@ -56,3 +56,15 @@ export async function testBin(
     throw new Error(`Failed to test bin ${name}: ${err}`)
   }
 }
+
+export function runnerWindowsVersion() {
+  if (process.platform !== "win32") {
+    return undefined
+  }
+  const maybeVersionString = process.env.RUNNER_OS_NAME?.split("-")[1]
+  if (maybeVersionString === undefined) {
+    return undefined
+  }
+
+  return parseInt(maybeVersionString, 10)
+}

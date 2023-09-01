@@ -1,70 +1,39 @@
 import which from "which"
 import { setupMSVC } from "../msvc"
+import { runnerWindowsVersion } from "../../utils/tests/test-helpers"
+import { warning } from "ci-log"
 
 jest.setTimeout(300000)
 describe("setup-msvc", () => {
+  const isWindows = process.platform === "win32"
+
   it("should setup the pre-installed msvc", async () => {
     try {
-      if (process.platform !== "win32") {
+      if (!isWindows) {
         return
       }
       await setupMSVC("", "", process.arch)
       console.log(which.sync("cl"))
-    } catch (e) {
-      // TODO
-      console.error(e)
+    } catch (err) {
+      if ("toString" in (err as any)) {
+        warning((err as any).toString())
+      }
     }
   })
 
-  it("should setup msvc 2022", async () => {
-    try {
-      if (process.platform !== "win32") {
+  for (const version of [2022, 2019, 2017, 2015]) {
+    it(`should setup msvc ${version}`, async () => {
+      if (!isWindows || (runnerWindowsVersion() !== undefined && runnerWindowsVersion()! > version)) {
         return
       }
-      await setupMSVC("2022", "", process.arch)
-      console.log(which.sync("cl"))
-    } catch (e) {
-      // TODO
-      console.error(e)
-    }
-  })
-
-  it("should setup msvc 2019", async () => {
-    try {
-      if (process.platform !== "win32") {
-        return
+      try {
+        await setupMSVC(`${version}`, "", process.arch)
+        console.log(which.sync("cl"))
+      } catch (err) {
+        if ("toString" in (err as any)) {
+          warning((err as any).toString())
+        }
       }
-      await setupMSVC("2019", "", process.arch)
-      console.log(which.sync("cl"))
-    } catch (e) {
-      // TODO
-      console.error(e)
-    }
-  })
-
-  it("should setup msvc 2017", async () => {
-    try {
-      if (process.platform !== "win32") {
-        return
-      }
-      await setupMSVC("2017", "", process.arch)
-      console.log(which.sync("cl"))
-    } catch (e) {
-      // TODO
-      console.error(e)
-    }
-  })
-
-  it("should setup msvc 2015", async () => {
-    try {
-      if (process.platform !== "win32") {
-        return
-      }
-      await setupMSVC("2015", "", process.arch)
-      console.log(which.sync("cl"))
-    } catch (e) {
-      // TODO
-      console.error(e)
-    }
-  })
+    })
+  }
 })
