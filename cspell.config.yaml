@@ -32,6 +32,7 @@ words:
   - DCMAKE
   - deps
   - devel
+  - DVCPKG
   - dyld
   - eabi
   - esmodule
@@ -67,6 +68,7 @@ words:
   - OSSDK
   - papm
   - patha
+  - pipx
   - pnpm
   - pwsh
   - pygments
@@ -74,6 +76,7 @@ words:
   - Sccache
   - setupcpp
   - setx
+  - SYSROOT
   - Syuu
   - terserrc
   - Trofimovich
@@ -83,16 +86,15 @@ words:
   - upleveled
   - vbatts
   - vcpkg
+  - VCPKG
   - vcvarsall
+  - venv
   - visualc
   - visualcpp
   - vsversion
   - whatwg
   - xcrun
   - Yahyaabadi
-  - VCPKG
-  - DVCPKG
-  - SYSROOT
 ignoreWords: []
 import: []
 dictionaryDefinitions: []

@@ -21,7 +21,7 @@ import { isBinUptoDate } from "../utils/setup/version"
 import { unique } from "../utils/std"
 import { MinVersions } from "../versions/default_versions"
 import { pathExists } from "path-exists"
-import { setupPipPackWithPython } from "../utils/setup/setupPipPack"
+import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -34,15 +34,37 @@ export async function setupPython(version: string, setupDir: string, arch: strin
     throw new Error("pip was not installed correctly")
   }
 
-  // setup wheel and setuptools
+  await setupPipx(foundPython)
+
+  await setupWheel(foundPython)
+
+  return installInfo
+}
+
+async function setupPipx(foundPython: string) {
   try {
-    await setupPipPackWithPython(foundPython, "setuptools", undefined, true)
-    await setupPipPackWithPython(foundPython, "wheel", undefined, true)
+    if (!(await hasPipx(foundPython))) {
+      await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
+    }
+    await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
+    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
+  } catch (err) {
+    warning(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
+  }
+}
+
+/** Setup wheel and setuptools */
+async function setupWheel(foundPython: string) {
+  try {
+    await setupPipPackWithPython(foundPython, "setuptools", undefined, {
+      upgrade: true,
+      isLibrary: true,
+      usePipx: false,
+    })
+    await setupPipPackWithPython(foundPython, "wheel", undefined, { upgrade: true, isLibrary: true, usePipx: false })
   } catch (err) {
     warning(`Failed to install setuptools or wheel: ${(err as Error).toString()}. Ignoring...`)
   }
-
-  return installInfo
 }
 
 async function findOrSetupPython(version: string, setupDir: string, arch: string) {
@@ -203,7 +225,9 @@ async function isPipUptoDate(pip: string) {
 async function setupPip(foundPython: string) {
   const upgraded = await ensurePipUpgrade(foundPython)
   if (!upgraded) {
-    await setupPipSystem()
+    // ensure that pip is installed on Linux (happens when python is found but pip not installed)
+    await setupPipPackSystem("pip")
+
     // upgrade pip
     await ensurePipUpgrade(foundPython)
   }
@@ -226,20 +250,6 @@ async function ensurePipUpgrade(foundPython: string) {
   }
   // all methods failed
   return false
-}
-
-function setupPipSystem() {
-  if (process.platform === "linux") {
-    // ensure that pip is installed on Linux (happens when python is found but pip not installed)
-    if (isArch()) {
-      return setupPacmanPack("python-pip")
-    } else if (hasDnf()) {
-      return setupDnfPack([{ name: "python3-pip" }])
-    } else if (isUbuntu()) {
-      return setupAptPack([{ name: "python3-pip" }])
-    }
-  }
-  throw new Error(`Could not install pip on ${process.platform}`)
 }
 
 async function addPythonBaseExecPrefix_raw(python: string) {

@@ -1,5 +1,5 @@
 import { info } from "@actions/core"
-import { execaSync } from "execa"
+import { execa, execaSync } from "execa"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
@@ -9,26 +9,59 @@ import { InstallationInfo } from "./setupBin"
 import { getVersion } from "../../versions/versions"
 import { ubuntuVersion } from "../env/ubuntu_version"
 import memoize from "micro-memoize"
+import { isArch } from "../env/isArch"
+import { setupPacmanPack } from "./setupPacmanPack"
+import { hasDnf } from "../env/hasDnf"
+import { setupDnfPack } from "./setupDnfPack"
+import { isUbuntu } from "../env/isUbuntu"
+import { setupAptPack } from "./setupAptPack"
+
+export type SetupPipPackOptions = {
+  /** Whether to use pipx instead of pip */
+  usePipx?: boolean
+  /** Whether to install the package as a user */
+  user?: boolean
+  /** Whether to upgrade the package */
+  upgrade?: boolean
+  /** Whether the package is a library */
+  isLibrary?: boolean
+}
 
 /** A function that installs a package using pip */
-export async function setupPipPack(name: string, version?: string, upgrade = false): Promise<InstallationInfo> {
-  return setupPipPackWithPython(await getPython(), name, version, upgrade)
+export async function setupPipPack(
+  name: string,
+  version?: string,
+  options: SetupPipPackOptions = {},
+): Promise<InstallationInfo> {
+  return setupPipPackWithPython(await getPython(), name, version, options)
 }
 
 export async function setupPipPackWithPython(
   givenPython: string,
   name: string,
   version?: string,
-  upgrade = false,
+  options: SetupPipPackOptions = {},
 ): Promise<InstallationInfo> {
-  info(`Installing ${name} ${version ?? ""} via pip`)
+  const { usePipx = true, user = true, upgrade = false, isLibrary = false } = options
 
-  const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
-  const upgradeFlag = upgrade === true ? ["--upgrade"] : []
+  const isPipx = usePipx && !isLibrary && (await hasPipx(givenPython))
+  const pip = isPipx ? "pipx" : "pip"
 
-  execaSync(givenPython, ["-m", "pip", "install", ...upgradeFlag, nameAndVersion], {
-    stdio: "inherit",
-  })
+  info(`Installing ${name} ${version ?? ""} via ${pip}`)
+
+  try {
+    const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
+    const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
+    const userFlag = !isPipx && user ? ["--user"] : []
+
+    execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
+      stdio: "inherit",
+    })
+  } catch (err) {
+    if ((await setupPipPackSystem(name)) === null) {
+      throw new Error(`Failed to install ${name} via ${pip} ${err}`)
+    }
+  }
 
   const execPaths = await addPythonBaseExecPrefix(givenPython)
   const binDir = await findBinDir(execPaths, name)
@@ -36,6 +69,10 @@ export async function setupPipPackWithPython(
   await addPath(binDir)
 
   return { binDir }
+}
+
+export async function hasPipx(givenPython: string) {
+  return (await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })).exitCode === 0
 }
 
 async function getPython_raw(): Promise<string> {
@@ -61,4 +98,17 @@ async function findBinDir(dirs: string[], name: string) {
   }
 
   return dirs[dirs.length - 1]
+}
+
+export function setupPipPackSystem(name: string) {
+  if (process.platform === "linux") {
+    if (isArch()) {
+      return setupPacmanPack(`python-${name}`)
+    } else if (hasDnf()) {
+      return setupDnfPack([{ name: `python3-${name}` }])
+    } else if (isUbuntu()) {
+      return setupAptPack([{ name: `python3-${name}` }])
+    }
+  }
+  return null
 }
