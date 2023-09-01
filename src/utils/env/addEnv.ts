@@ -61,12 +61,27 @@ function escapeString(valGiven: string, shouldEscapeSpace: boolean = false) {
   return escapeQuote(spaceEscaped, '"', "\\")
 }
 
+const ignoredPaths = [/\/usr\/bin\/?/, /\/usr\/local\/bin\/?/]
+
+/** Skip adding /usr/bin to PATH if it is already there */
+function isIgnoredPath(path: string) {
+  if (ignoredPaths.some((checkedPath) => checkedPath.test(path))) {
+    const paths = process.env.PATH?.split(delimiter) ?? []
+    return paths.includes(path)
+  }
+  return false
+}
+
 /**
  * Add a path to the PATH environment variable.
  *
  * This function is cross-platforms and works in all the local or CI systems.
  */
 export async function addPath(path: string) {
+  if (isIgnoredPath(path)) {
+    return
+  }
+
   process.env.PATH = `${path}${delimiter}${process.env.PATH}`
   try {
     if (GITHUB_ACTIONS) {
