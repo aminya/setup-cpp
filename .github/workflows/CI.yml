@@ -260,8 +260,12 @@ jobs:
       - name: Place Artifacts
         shell: bash
         run: |
-          mv -v ./dist/* ./
-          mv -v ./exe/* ./
+          mv -v ./dist/ ./dist-artifacts
+          mv -v ./dist-artifacts/* ./
+
+          mv -v ./exe/ ./exe-artifacts
+          mv -v ./exe-artifacts/* ./
+
           chmod +x -R ./exe/
 
       - name: Draft the release
