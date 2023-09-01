@@ -4,7 +4,7 @@ FROM fedora:38 as setup-cpp-fedora-mingw
 # install nodejs
 RUN dnf -y install nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.33.0 && \
+    npm install -g setup-cpp@v0.35.0 && \
     # install the compiler and tools
     setup-cpp \
         --compiler mingw \
