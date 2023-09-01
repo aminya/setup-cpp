@@ -263,7 +263,6 @@ jobs:
           mv -v ./dist/ ./dist-artifacts
           mv -v ./dist-artifacts/* ./
 
-          mv -v ./exe/* ./
           chmod +x -R ./exe/
 
       - name: Draft the release
