@@ -9,6 +9,12 @@ import { InstallationInfo } from "./setupBin"
 import { getVersion } from "../../versions/versions"
 import { ubuntuVersion } from "../env/ubuntu_version"
 import memoize from "micro-memoize"
+import { isArch } from "../env/isArch"
+import { setupPacmanPack } from "./setupPacmanPack"
+import { hasDnf } from "../env/hasDnf"
+import { setupDnfPack } from "./setupDnfPack"
+import { isUbuntu } from "../env/isUbuntu"
+import { setupAptPack } from "./setupAptPack"
 
 export type SetupPipPackOptions = {
   /** Whether to use pipx instead of pip */
@@ -43,13 +49,19 @@ export async function setupPipPackWithPython(
 
   info(`Installing ${name} ${version ?? ""} via ${pip}`)
 
-  const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
-  const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
-  const userFlag = !isPipx && user ? ["--user"] : []
+  try {
+    const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
+    const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
+    const userFlag = !isPipx && user ? ["--user"] : []
 
-  execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
-    stdio: "inherit",
-  })
+    execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
+      stdio: "inherit",
+    })
+  } catch (err) {
+    if ((await setupPipPackSystem(name)) === null) {
+      throw new Error(`Failed to install ${name} via ${pip} ${err}`)
+    }
+  }
 
   const execPaths = await addPythonBaseExecPrefix(givenPython)
   const binDir = await findBinDir(execPaths, name)
@@ -86,4 +98,17 @@ async function findBinDir(dirs: string[], name: string) {
   }
 
   return dirs[dirs.length - 1]
+}
+
+export function setupPipPackSystem(name: string) {
+  if (process.platform === "linux") {
+    if (isArch()) {
+      return setupPacmanPack(`python-${name}`)
+    } else if (hasDnf()) {
+      return setupDnfPack([{ name: `python3-${name}` }])
+    } else if (isUbuntu()) {
+      return setupAptPack([{ name: `python3-${name}` }])
+    }
+  }
+  return null
 }

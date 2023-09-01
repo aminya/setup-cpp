@@ -21,7 +21,7 @@ import { isBinUptoDate } from "../utils/setup/version"
 import { unique } from "../utils/std"
 import { MinVersions } from "../versions/default_versions"
 import { pathExists } from "path-exists"
-import { hasPipx, setupPipPackWithPython } from "../utils/setup/setupPipPack"
+import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -44,19 +44,7 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 async function setupPipx(foundPython: string) {
   try {
     if (!(await hasPipx(foundPython))) {
-      try {
-        await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
-      } catch (err) {
-        if (isUbuntu()) {
-          await setupAptPack([{ name: "python3-pipx" }])
-        } else if (isArch()) {
-          await setupPacmanPack("python-pipx")
-        } else if (hasDnf()) {
-          await setupDnfPack([{ name: "python3-pipx" }])
-        } else {
-          throw err
-        }
-      }
+      await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
   } catch (err) {
@@ -236,7 +224,9 @@ async function isPipUptoDate(pip: string) {
 async function setupPip(foundPython: string) {
   const upgraded = await ensurePipUpgrade(foundPython)
   if (!upgraded) {
-    await setupPipSystem()
+    // ensure that pip is installed on Linux (happens when python is found but pip not installed)
+    await setupPipPackSystem("pip")
+
     // upgrade pip
     await ensurePipUpgrade(foundPython)
   }
@@ -259,20 +249,6 @@ async function ensurePipUpgrade(foundPython: string) {
   }
   // all methods failed
   return false
-}
-
-function setupPipSystem() {
-  if (process.platform === "linux") {
-    // ensure that pip is installed on Linux (happens when python is found but pip not installed)
-    if (isArch()) {
-      return setupPacmanPack("python-pip")
-    } else if (hasDnf()) {
-      return setupDnfPack([{ name: "python3-pip" }])
-    } else if (isUbuntu()) {
-      return setupAptPack([{ name: "python3-pip" }])
-    }
-  }
-  throw new Error(`Could not install pip on ${process.platform}`)
 }
 
 async function addPythonBaseExecPrefix_raw(python: string) {
