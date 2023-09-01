@@ -21,7 +21,7 @@ import { isBinUptoDate } from "../utils/setup/version"
 import { unique } from "../utils/std"
 import { MinVersions } from "../versions/default_versions"
 import { pathExists } from "path-exists"
-import { setupPipPackWithPython } from "../utils/setup/setupPipPack"
+import { hasPipx, setupPipPackWithPython } from "../utils/setup/setupPipPack"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -43,17 +43,19 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 
 async function setupPipx(foundPython: string) {
   try {
-    try {
-      await setupPipPackWithPython(foundPython, "pipx", undefined, true)
-    } catch (err) {
-      if (isUbuntu()) {
-        await setupAptPack([{ name: "python3-pipx" }])
-      } else if (isArch()) {
-        await setupPacmanPack("python-pipx")
-      } else if (hasDnf()) {
-        await setupDnfPack([{ name: "python3-pipx" }])
-      } else {
-        throw err
+    if (!(await hasPipx())) {
+      try {
+        await setupPipPackWithPython(foundPython, "pipx", undefined, true)
+      } catch (err) {
+        if (isUbuntu()) {
+          await setupAptPack([{ name: "python3-pipx" }])
+        } else if (isArch()) {
+          await setupPacmanPack("python-pipx")
+        } else if (hasDnf()) {
+          await setupDnfPack([{ name: "python3-pipx" }])
+        } else {
+          throw err
+        }
       }
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })

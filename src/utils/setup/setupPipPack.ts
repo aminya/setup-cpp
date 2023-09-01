@@ -22,15 +22,16 @@ export async function setupPipPackWithPython(
   upgrade = false,
   user = true,
 ): Promise<InstallationInfo> {
-  const pip = (await which("pipx", { nothrow: true })) !== null ? "pipx" : "pip"
+  const isPipx = await hasPipx()
+  const pip = isPipx ? "pipx" : "pip"
 
   info(`Installing ${name} ${version ?? ""} via ${pip}`)
 
   const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
-  const upgradeFlag = upgrade === true ? ["--upgrade"] : []
-  const userFlag = user === true ? ["--user"] : []
+  const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
+  const userFlag = !isPipx && user ? ["--user"] : []
 
-  execaSync(givenPython, ["-m", pip, "install", ...upgradeFlag, ...userFlag, nameAndVersion], {
+  execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
     stdio: "inherit",
   })
 
@@ -40,6 +41,10 @@ export async function setupPipPackWithPython(
   await addPath(binDir)
 
   return { binDir }
+}
+
+export async function hasPipx() {
+  return (await which("pipx", { nothrow: true })) !== null
 }
 
 async function getPython_raw(): Promise<string> {
