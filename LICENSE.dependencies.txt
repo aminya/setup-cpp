@@ -10,13 +10,13 @@ setup-cpp reused some code from the following projects:
 This package also uses the dependencies listed in package.json. You can get the list of their licenses using the following command:
 ```
 npm install -g license-checker
-license-checker --summary --production --excludePackages "setup-python@2.2.2"
+license-checker --summary --excludePackages "setup-python@v4.0.0"
 ```
 
 ```
-├─ MIT: 9
-├─ ISC: 2
-└─ Apache-2.0: 1
+├─ MIT: 21
+├─ Apache-2.0: 8
+└─ ISC: 2
 ```
 
-setup-python@2.2.2 is MIT license.
+Note: setup-python is MIT licensed.
