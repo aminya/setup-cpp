@@ -1,5 +1,5 @@
 import { info } from "@actions/core"
-import { execaSync } from "execa"
+import { execa, execaSync } from "execa"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
@@ -22,7 +22,7 @@ export async function setupPipPackWithPython(
   upgrade = false,
   user = true,
 ): Promise<InstallationInfo> {
-  const isPipx = await hasPipx()
+  const isPipx = await hasPipx(givenPython)
   const pip = isPipx ? "pipx" : "pip"
 
   info(`Installing ${name} ${version ?? ""} via ${pip}`)
@@ -43,8 +43,8 @@ export async function setupPipPackWithPython(
   return { binDir }
 }
 
-export async function hasPipx() {
-  return (await which("pipx", { nothrow: true })) !== null
+export async function hasPipx(givenPython: string) {
+  return (await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })).exitCode === 0
 }
 
 async function getPython_raw(): Promise<string> {

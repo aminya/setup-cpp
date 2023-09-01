@@ -43,7 +43,7 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 
 async function setupPipx(foundPython: string) {
   try {
-    if (!(await hasPipx())) {
+    if (!(await hasPipx(foundPython))) {
       try {
         await setupPipPackWithPython(foundPython, "pipx", undefined, true)
       } catch (err) {
