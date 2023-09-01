@@ -10,19 +10,35 @@ import { getVersion } from "../../versions/versions"
 import { ubuntuVersion } from "../env/ubuntu_version"
 import memoize from "micro-memoize"
 
+export type SetupPipPackOptions = {
+  /** Whether to use pipx instead of pip */
+  usePipx?: boolean
+  /** Whether to install the package as a user */
+  user?: boolean
+  /** Whether to upgrade the package */
+  upgrade?: boolean
+  /** Whether the package is a library */
+  isLibrary?: boolean
+}
+
 /** A function that installs a package using pip */
-export async function setupPipPack(name: string, version?: string, upgrade = false): Promise<InstallationInfo> {
-  return setupPipPackWithPython(await getPython(), name, version, upgrade)
+export async function setupPipPack(
+  name: string,
+  version?: string,
+  options: SetupPipPackOptions = {},
+): Promise<InstallationInfo> {
+  return setupPipPackWithPython(await getPython(), name, version, options)
 }
 
 export async function setupPipPackWithPython(
   givenPython: string,
   name: string,
   version?: string,
-  upgrade = false,
-  user = true,
+  options: SetupPipPackOptions = {},
 ): Promise<InstallationInfo> {
-  const isPipx = await hasPipx(givenPython)
+  const { usePipx = true, user = true, upgrade = false, isLibrary = false } = options
+
+  const isPipx = usePipx && !isLibrary && (await hasPipx(givenPython))
   const pip = isPipx ? "pipx" : "pip"
 
   info(`Installing ${name} ${version ?? ""} via ${pip}`)

@@ -45,7 +45,7 @@ async function setupPipx(foundPython: string) {
   try {
     if (!(await hasPipx(foundPython))) {
       try {
-        await setupPipPackWithPython(foundPython, "pipx", undefined, true)
+        await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
       } catch (err) {
         if (isUbuntu()) {
           await setupAptPack([{ name: "python3-pipx" }])
@@ -67,8 +67,12 @@ async function setupPipx(foundPython: string) {
 /** Setup wheel and setuptools */
 async function setupWheel(foundPython: string) {
   try {
-    await setupPipPackWithPython(foundPython, "setuptools", undefined, true)
-    await setupPipPackWithPython(foundPython, "wheel", undefined, true)
+    await setupPipPackWithPython(foundPython, "setuptools", undefined, {
+      upgrade: true,
+      isLibrary: true,
+      usePipx: false,
+    })
+    await setupPipPackWithPython(foundPython, "wheel", undefined, { upgrade: true, isLibrary: true, usePipx: false })
   } catch (err) {
     warning(`Failed to install setuptools or wheel: ${(err as Error).toString()}. Ignoring...`)
   }
