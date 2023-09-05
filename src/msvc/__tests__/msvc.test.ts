@@ -5,13 +5,12 @@ import { warning } from "ci-log"
 
 jest.setTimeout(300000)
 describe("setup-msvc", () => {
-  const isWindows = process.platform === "win32"
-
+  if (process.platform !== "win32") {
+    it.skip("should setup msvc", () => {})
+    return
+  }
   it("should setup the pre-installed msvc", async () => {
     try {
-      if (!isWindows) {
-        return
-      }
       await setupMSVC("", "", process.arch)
       console.log(which.sync("cl"))
     } catch (err) {
@@ -22,10 +21,11 @@ describe("setup-msvc", () => {
   })
 
   for (const version of [2022, 2019, 2017, 2015]) {
+    if (runnerWindowsVersion() !== undefined && runnerWindowsVersion()! > version) {
+      it.skip(`should setup msvc ${version}`, () => {})
+      return
+    }
     it(`should setup msvc ${version}`, async () => {
-      if (!isWindows || (runnerWindowsVersion() !== undefined && runnerWindowsVersion()! > version)) {
-        return
-      }
       try {
         await setupMSVC(`${version}`, "", process.arch)
         console.log(which.sync("cl"))

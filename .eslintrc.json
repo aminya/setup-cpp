@@ -3,6 +3,7 @@
   "ignorePatterns": ["dist/", "node_modules/", "dev/cpp_vcpkg_project"],
   "rules": {
     "no-unused-vars": "off",
+    "no-empty-function": "off",
     "@typescript-eslint/no-unused-vars": [
       "warn",
       {
