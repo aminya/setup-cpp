@@ -6,7 +6,7 @@ RUN pacman -Syuu --noconfirm && \
     # install nodejs
     pacman -S --noconfirm --needed nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.35.1 && \
+    npm install -g setup-cpp@v0.35.2 && \
     # install the compiler and tools
     setup-cpp \
         --compiler mingw \
