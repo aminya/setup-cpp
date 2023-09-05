@@ -2,12 +2,14 @@ import { setupMacOSSDK } from "../macos-sdk"
 
 jest.setTimeout(300000)
 describe("setup-macos-sdk", () => {
+  if (process.platform !== "darwin") {
+    it.skip("should setup macos-sdk", () => {})
+    return
+  }
   it("should setup macos-sdk", async () => {
-    if (process.platform === "darwin") {
-      process.env.SDKROOT = undefined
-      await setupMacOSSDK()
-      expect(process.env.SDKROOT).toBeTruthy()
-      expect(typeof process.env.SDKROOT).toBe("string")
-    }
+    process.env.SDKROOT = undefined
+    await setupMacOSSDK()
+    expect(process.env.SDKROOT).toBeTruthy()
+    expect(typeof process.env.SDKROOT).toBe("string")
   })
 })
