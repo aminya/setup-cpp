@@ -54,9 +54,16 @@ export async function setupPipPackWithPython(
     const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
     const userFlag = !isPipx && user ? ["--user"] : []
 
-    execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
-      stdio: "inherit",
-    })
+    const hasPackage = await pipHasPackage(givenPython, name)
+    if (hasPackage) {
+      execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
+        stdio: "inherit",
+      })
+    } else {
+      if ((await setupPipPackSystem(name)) === null) {
+        throw new Error(`Failed to install ${name}.`)
+      }
+    }
   } catch (err) {
     info(`Failed to install ${name} via ${pip}: ${err}.`)
     if ((await setupPipPackSystem(name)) === null) {
@@ -84,6 +91,11 @@ async function getPython_raw(): Promise<string> {
   return pythonBin
 }
 const getPython = memoize(getPython_raw)
+
+async function pipHasPackage(python: string, name: string) {
+  const result = await execa(python, ["-m", "pip", "show", name], { stdio: "ignore", reject: false })
+  return result.exitCode === 0
+}
 
 async function findBinDir(dirs: string[], name: string) {
   const exists = await Promise.all(dirs.map((dir) => pathExists(join(dir, addExeExt(name)))))

@@ -47,6 +47,7 @@ async function setupPipx(foundPython: string) {
       await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
+    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
   } catch (err) {
     warning(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
   }
