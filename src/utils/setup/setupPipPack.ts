@@ -49,25 +49,25 @@ export async function setupPipPackWithPython(
 
   info(`Installing ${name} ${version ?? ""} via ${pip}`)
 
-  try {
-    const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
-    const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
-    const userFlag = !isPipx && user ? ["--user"] : []
+  const hasPackage = await pipHasPackage(givenPython, name)
+  if (hasPackage) {
+    try {
+      const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
+      const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
+      const userFlag = !isPipx && user ? ["--user"] : []
 
-    const hasPackage = await pipHasPackage(givenPython, name)
-    if (hasPackage) {
       execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
         stdio: "inherit",
       })
-    } else {
+    } catch (err) {
+      info(`Failed to install ${name} via ${pip}: ${err}.`)
       if ((await setupPipPackSystem(name)) === null) {
-        throw new Error(`Failed to install ${name}.`)
+        throw new Error(`Failed to install ${name} via ${pip}: ${err}.`)
       }
     }
-  } catch (err) {
-    info(`Failed to install ${name} via ${pip}: ${err}.`)
+  } else {
     if ((await setupPipPackSystem(name)) === null) {
-      throw new Error(`Failed to install ${name} via ${pip}: ${err}.`)
+      throw new Error(`Failed to install ${name} as it was not found via ${pip} or the system package manager`)
     }
   }
 
