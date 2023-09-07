@@ -90,7 +90,7 @@ async function getPython_raw(): Promise<string> {
   }
   return pythonBin
 }
-const getPython = memoize(getPython_raw)
+const getPython = memoize(getPython_raw, { isPromise: true })
 
 async function pipHasPackage(python: string, name: string) {
   const result = await execa(python, ["-m", "pip", "-qq", "index", "versions", name], {

@@ -276,4 +276,4 @@ async function addPythonBaseExecPrefix_raw(python: string) {
  *
  * The answer is cached for subsequent calls
  */
-export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_raw)
+export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_raw, { isPromise: true })

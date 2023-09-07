@@ -2,7 +2,7 @@ import { execaSync } from "execa"
 import { notice } from "ci-log"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix, dirname, join } from "patha"
-import { giveUserAccess } from "user-access"
+import { grantUserWriteAccess } from "user-access"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
 import { hasDnf } from "../utils/env/hasDnf"
@@ -62,7 +62,7 @@ export async function setupVcpkg(_version: string, setupDir: string, _arch: stri
       stdio: "inherit",
     })
 
-    giveUserAccess(setupDir)
+    grantUserWriteAccess(setupDir)
 
     await addPath(setupDir)
     // eslint-disable-next-line require-atomic-updates
