@@ -6,7 +6,7 @@ import { error, warning } from "ci-log"
 import { execPowershell } from "exec-powershell"
 import { delimiter } from "path"
 import escapeSpace from "escape-path-with-spaces"
-import { giveUserAccess } from "user-access"
+import { grantUserWriteAccess } from "user-access"
 import escapeQuote from "escape-quotes"
 import { pathExists } from "path-exists"
 
@@ -212,7 +212,7 @@ export async function finalizeCpprc() {
     writeFileSync(cpprc_path, unique_entries.join("\n"))
 
     try {
-      giveUserAccess(cpprc_path)
+      grantUserWriteAccess(cpprc_path)
     } catch {
       // ignore
     }

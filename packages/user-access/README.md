@@ -18,7 +18,7 @@ npm install --save user-access
 
 <!-- INSERT GENERATED DOCS START -->
 
-### `giveUserAccess` (function)
+### `grantUserWriteAccess` (function)
 
 Give the user access to the given path and its sub-directories. It changes the owner to the SUDO_USER. This allows
 the user to use the folder without sudo
@@ -27,7 +27,7 @@ the user to use the folder without sudo
 
 - path (`string`) - The path to give the user access to
 
-**returns:** void
+**returns:** Promise<void>
 
 <!-- INSERT GENERATED DOCS END -->
 

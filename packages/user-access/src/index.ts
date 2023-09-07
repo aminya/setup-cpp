@@ -1,4 +1,4 @@
-import { isSudo, execRootSync } from "admina"
+import { isSudo, execRoot } from "admina"
 import { statSync } from "fs"
 
 /**
@@ -7,14 +7,14 @@ import { statSync } from "fs"
  *
  * @param path The path to give the user access to
  */
-export function giveUserAccess(path: string) {
+export async function grantUserWriteAccess(path: string) {
   if (
     (process.platform === "linux" || process.platform === "darwin") &&
     isSudo() &&
     process.env.SUDO_USER !== undefined
   ) {
     const isDirectory = statSync(path).isDirectory()
-    execRootSync("chown", [...(isDirectory ? ["-R"] : []), process.env.SUDO_USER, path], {
+    await execRoot("chown", [...(isDirectory ? ["-R"] : []), process.env.SUDO_USER, path], {
       cwd: path,
       stdio: "inherit",
       shell: true,
