@@ -4,8 +4,7 @@ import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { InstallationInfo } from "./setupBin"
 import { execaSync } from "execa"
-import { info } from "@actions/core"
-import { notice } from "ci-log"
+import { info } from "ci-log"
 
 let hasChoco = false
 
@@ -38,7 +37,7 @@ export async function setupChocoPack(name: string, version?: string, args: strin
     } catch (err) {
       // if the package requires a reboot, downgrade the error to a notice
       if ((err as Error).message.includes("exit code 3010")) {
-        notice(`${name} might require a reboot for the completion of the installation.`)
+        info(`${name} might require a reboot for the completion of the installation.`)
       } else {
         throw err
       }
