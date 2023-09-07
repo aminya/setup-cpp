@@ -47,11 +47,11 @@ export async function setupPipPackWithPython(
   const isPipx = usePipx && !isLibrary && (await hasPipx(givenPython))
   const pip = isPipx ? "pipx" : "pip"
 
-  info(`Installing ${name} ${version ?? ""} via ${pip}`)
-
   const hasPackage = await pipHasPackage(givenPython, name)
   if (hasPackage) {
     try {
+      info(`Installing ${name} ${version ?? ""} via ${pip}`)
+
       const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
       const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
       const userFlag = !isPipx && user ? ["--user"] : []
@@ -93,7 +93,10 @@ async function getPython_raw(): Promise<string> {
 const getPython = memoize(getPython_raw)
 
 async function pipHasPackage(python: string, name: string) {
-  const result = await execa(python, ["-m", "pip", "show", name], { stdio: "ignore", reject: false })
+  const result = await execa(python, ["-m", "pip", "-qq", "index", "versions", name], {
+    stdio: "ignore",
+    reject: false,
+  })
   return result.exitCode === 0
 }
 
