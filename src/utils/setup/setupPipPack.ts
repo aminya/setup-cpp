@@ -58,8 +58,9 @@ export async function setupPipPackWithPython(
       stdio: "inherit",
     })
   } catch (err) {
+    info(`Failed to install ${name} via ${pip}: ${err}.`)
     if ((await setupPipPackSystem(name)) === null) {
-      throw new Error(`Failed to install ${name} via ${pip} ${err}`)
+      throw new Error(`Failed to install ${name} via ${pip}: ${err}.`)
     }
   }
 
@@ -102,6 +103,7 @@ async function findBinDir(dirs: string[], name: string) {
 
 export function setupPipPackSystem(name: string) {
   if (process.platform === "linux") {
+    info(`Installing ${name} via the system package manager`)
     if (isArch()) {
       return setupPacmanPack(`python-${name}`)
     } else if (hasDnf()) {
