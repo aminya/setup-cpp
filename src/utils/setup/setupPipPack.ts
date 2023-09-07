@@ -47,19 +47,27 @@ export async function setupPipPackWithPython(
   const isPipx = usePipx && !isLibrary && (await hasPipx(givenPython))
   const pip = isPipx ? "pipx" : "pip"
 
-  info(`Installing ${name} ${version ?? ""} via ${pip}`)
+  const hasPackage = await pipHasPackage(givenPython, name)
+  if (hasPackage) {
+    try {
+      info(`Installing ${name} ${version ?? ""} via ${pip}`)
 
-  try {
-    const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
-    const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
-    const userFlag = !isPipx && user ? ["--user"] : []
+      const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
+      const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
+      const userFlag = !isPipx && user ? ["--user"] : []
 
-    execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
-      stdio: "inherit",
-    })
-  } catch (err) {
+      execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
+        stdio: "inherit",
+      })
+    } catch (err) {
+      info(`Failed to install ${name} via ${pip}: ${err}.`)
+      if ((await setupPipPackSystem(name)) === null) {
+        throw new Error(`Failed to install ${name} via ${pip}: ${err}.`)
+      }
+    }
+  } else {
     if ((await setupPipPackSystem(name)) === null) {
-      throw new Error(`Failed to install ${name} via ${pip} ${err}`)
+      throw new Error(`Failed to install ${name} as it was not found via ${pip} or the system package manager`)
     }
   }
 
@@ -84,6 +92,14 @@ async function getPython_raw(): Promise<string> {
 }
 const getPython = memoize(getPython_raw)
 
+async function pipHasPackage(python: string, name: string) {
+  const result = await execa(python, ["-m", "pip", "-qq", "index", "versions", name], {
+    stdio: "ignore",
+    reject: false,
+  })
+  return result.exitCode === 0
+}
+
 async function findBinDir(dirs: string[], name: string) {
   const exists = await Promise.all(dirs.map((dir) => pathExists(join(dir, addExeExt(name)))))
   const dirIndex = exists.findIndex((exist) => exist)
@@ -102,6 +118,7 @@ async function findBinDir(dirs: string[], name: string) {
 
 export function setupPipPackSystem(name: string) {
   if (process.platform === "linux") {
+    info(`Installing ${name} via the system package manager`)
     if (isArch()) {
       return setupPacmanPack(`python-${name}`)
     } else if (hasDnf()) {
