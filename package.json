@@ -116,7 +116,7 @@
     "prettier-config-atomic": "^3.1.0",
     "retry-as-promised": "^7.0.4",
     "semver": "7.5.4",
-    "setup-python": "github:actions/setup-python#v4.7.0",
+    "setup-python": "github:aminya/setup-python#a783db655c6e40317e2c0c96f9d162d9c9f4a751",
     "shx": "0.3.4",
     "simple-update-notifier": "^2.0.0",
     "terser-config-atomic": "^1.0.0",
