@@ -1,4 +1,4 @@
-import { setupLLVM, setupClangTools } from "../llvm"
+import { setupLLVM, setupClangTools, setupClangFormat } from "../llvm"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { isUrlOnline } from "is-url-online"
 import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
@@ -98,7 +98,13 @@ describe("setup-llvm", () => {
     execaSync(main_exe, { cwd: __dirname, stdio: "inherit" })
   })
 
-  it("should setup clang-tidy and clang-format", async () => {
+  it("should setup clang-format", async () => {
+    const osVersion = await ubuntuVersion()
+    const { binDir } = await setupClangFormat(getVersion("llvm", "true", osVersion), directory, process.arch)
+    await testBin("clang-format", ["--version"], binDir)
+  })
+
+  it("should setup clang tools", async () => {
     const osVersion = await ubuntuVersion()
     const { binDir } = await setupClangTools(getVersion("llvm", "true", osVersion), directory, process.arch)
     await testBin("clang-tidy", ["--version"], binDir)
