@@ -211,10 +211,6 @@ export async function finalizeCpprc() {
 
     writeFileSync(cpprc_path, unique_entries.join("\n"))
 
-    try {
-      await grantUserWriteAccess(cpprc_path)
-    } catch {
-      // ignore
-    }
+    await grantUserWriteAccess(cpprc_path)
   }
 }

@@ -86,7 +86,7 @@
     "@types/semver": "^7.5.0",
     "@types/which": "^3.0.0",
     "@upleveled/babel-plugin-remove-node-prefix": "github:aminya/babel-plugin-remove-node-prefix#95fcbd92405b99a6eece48c493548996f12e6519",
-    "admina": "^0.2.1",
+    "admina": "^0.2.2",
     "caxa": "^3.0.1",
     "ci-info": "^3.8.0",
     "ci-log": "workspace:*",
