@@ -3,7 +3,7 @@ import { mkdirP } from "@actions/io"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
 import { warning } from "ci-log"
-import { grantUserWriteAccess } from "user-access"
+import { grantUserWriteAccess } from "admina"
 export { extractTar, extractXar } from "@actions/tool-cache"
 
 let sevenZip: string | undefined
@@ -11,7 +11,7 @@ let sevenZip: string | undefined
 /// Extract 7z using 7z
 export async function extract7Zip(file: string, dest: string) {
   await execa(await getSevenZip(), ["x", file, `-o${dest}`, "-y"], { stdio: "inherit" })
-  grantUserWriteAccess(dest)
+  await grantUserWriteAccess(dest)
   return dest
 }
 
