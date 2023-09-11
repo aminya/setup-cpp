@@ -54,6 +54,8 @@ NOTE: On Unix systems, when `setup-cpp` is used locally or in other CI services 
 
 NOTE: On Unix systems, if you are already a root user (e.g., in a GitLab runner or Docker), you will not need to use `sudo`.
 
+NOTE: setup-cpp requires Nodejs 12 or higher. If Nodejs shipped with your distribution is older than 12, install the latest Node (e.g. for [Ubuntu 20.04](https://github.com/aminya/setup-cpp/blob/e2b11c45c1108526f905729542711e343a54a7fb/dev/docker/setup-cpp-ubuntu-20.0.4.dockerfile#L4-L13)), or alternatively you can use the executables that are self-contained (see the next section).
+
 #### With executable
 
 Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.35.6), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
