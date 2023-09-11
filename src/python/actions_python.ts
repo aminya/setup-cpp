@@ -38,11 +38,11 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
       info(`Successfully set up ${installed.impl} (${pythonVersion})`)
     }
 
-    const cache = false
-    if (cache) {
-      const { cacheDependencies } = await import("setup-python/src/cache-dependencies")
-      await cacheDependencies("pip", pythonVersion)
-    }
+    // const cache = false
+    // if (cache) {
+    //   const { cacheDependencies } = await import("setup-python/src/cache-dependencies")
+    //   await cacheDependencies("pip", pythonVersion)
+    // }
   }
 
   if (GITHUB_ACTIONS) {
