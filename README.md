@@ -263,14 +263,14 @@ stages:
   apt-get update -qq
   apt-get install -y --no-install-recommends curl gnupg ca-certificates
 
-  # keys used by apt
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 3B4FE6ACC0B21F32
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
-  apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 1E9377A2BA9EF27F
-
 .setup-cpp: &setup-cpp |
-  curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.35.6/setup-cpp-x64-linux"
-  chmod +x setup-cpp-x64-linux
+  # install nodejs
+  apt-get install -y --no-install-recommends nodejs npm
+
+  # install setup-cpp
+  npm install -g setup-cpp@v0.35.6
+
+  # install the compiler and tools
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
   source ~/.cpprc
 
