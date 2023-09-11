@@ -50,9 +50,9 @@ async function patchAptLLVMScript(path: string, target_path: string, packages: L
 
   script = debugScript(script)
   script = nonInteractiveScript(script)
-  script = await removeConflictingPAckages(script)
-  script = useNalaScript(script)
   script = choosePackages(packages, script)
+  script = await removeConflictingPackages(script)
+  script = useNalaScript(script)
 
   await writeFile(target_path, script)
 
@@ -76,7 +76,7 @@ function nonInteractiveScript(script: string) {
   )
 }
 
-async function removeConflictingPAckages(givenScript: string) {
+async function removeConflictingPackages(givenScript: string) {
   // fix conflicts between libclang-rt and libclang
   let script = givenScript.replace(
     /apt-get install -y/g,
