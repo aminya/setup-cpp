@@ -23,7 +23,7 @@ export async function setupLLVMApt(
 
   await setupAptPack([{ name: "curl" }])
   await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
-  const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh", packages)
+  const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh", majorVersion, packages)
   await setupAptPack(neededPackages)
   await chmod("/tmp/llvm-setup-cpp.sh", "755")
   await execRoot(
@@ -45,12 +45,12 @@ export async function setupLLVMApt(
   }
 }
 
-async function patchAptLLVMScript(path: string, target_path: string, packages: LLVMPackages) {
+async function patchAptLLVMScript(path: string, target_path: string, majorVersion: number, packages: LLVMPackages) {
   let script = await readFile(path, "utf-8")
 
   script = debugScript(script)
   script = nonInteractiveScript(script)
-  script = choosePackages(packages, script)
+  script = choosePackages(packages, script, majorVersion)
   script = await removeConflictingPackages(script)
   script = useNalaScript(script)
 
@@ -105,9 +105,9 @@ function useNalaScript(script: string) {
   return script
 }
 
-function choosePackages(packages: LLVMPackages, script: string) {
+function choosePackages(packages: LLVMPackages, script: string, majorVersion: number) {
   if (packages === LLVMPackages.ClangFormat) {
-    return script.replace(/ -y \$PKG/g, " -y clang-format")
+    return script.replace(/ -y \$PKG/g, ` -y clang-format-${majorVersion}`)
   }
   return script
 }
