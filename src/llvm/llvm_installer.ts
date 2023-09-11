@@ -8,20 +8,33 @@ import { info } from "console"
 import { DEFAULT_TIMEOUT } from "../installTool"
 const { readFile, writeFile, chmod } = promises
 
-export async function setupLLVMApt(majorVersion: number): Promise<InstallationInfo> {
+export enum LLVMPackages {
+  All,
+  ClangFormat,
+  Core,
+}
+
+export async function setupLLVMApt(
+  majorVersion: number,
+  packages: LLVMPackages = LLVMPackages.All,
+): Promise<InstallationInfo> {
   // TODO for older versions, this also includes the minor version
   const installationFolder = `/usr/lib/llvm-${majorVersion}`
 
   await setupAptPack([{ name: "curl" }])
   await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
-  const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh")
+  const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh", packages)
   await setupAptPack(neededPackages)
   await chmod("/tmp/llvm-setup-cpp.sh", "755")
-  await execRoot("bash", ["/tmp/llvm-setup-cpp.sh", `${majorVersion}`, "all"], {
-    stdio: "inherit",
-    shell: true,
-    timeout: DEFAULT_TIMEOUT,
-  })
+  await execRoot(
+    "bash",
+    ["/tmp/llvm-setup-cpp.sh", `${majorVersion}`, ...(packages === LLVMPackages.All ? ["all"] : [])],
+    {
+      stdio: "inherit",
+      shell: true,
+      timeout: DEFAULT_TIMEOUT,
+    },
+  )
 
   await addPath(`${installationFolder}/bin`)
 
@@ -32,13 +45,14 @@ export async function setupLLVMApt(majorVersion: number): Promise<InstallationIn
   }
 }
 
-async function patchAptLLVMScript(path: string, target_path: string) {
+async function patchAptLLVMScript(path: string, target_path: string, packages: LLVMPackages) {
   let script = await readFile(path, "utf-8")
 
   script = debugScript(script)
   script = nonInteractiveScript(script)
   script = await removeConflictingPAckages(script)
   script = useNalaScript(script)
+  script = choosePackages(packages, script)
 
   await writeFile(target_path, script)
 
@@ -87,6 +101,13 @@ function useNalaScript(script: string) {
   // use nala if it is available
   if (hasNala()) {
     return script.replace(/apt-get/g, "nala")
+  }
+  return script
+}
+
+function choosePackages(packages: LLVMPackages, script: string) {
+  if (packages === LLVMPackages.ClangFormat) {
+    return script.replace(/ -y \$PKG/g, " -y clang-format")
   }
   return script
 }

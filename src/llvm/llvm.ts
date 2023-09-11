@@ -13,7 +13,7 @@ import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack
 import { InstallationInfo, setupBin } from "../utils/setup/setupBin"
 import { semverCoerceIfInvalid } from "../utils/setup/version"
 import { getVersion } from "../versions/versions"
-import { setupLLVMApt } from "./llvm_installer"
+import { LLVMPackages, setupLLVMApt } from "./llvm_installer"
 import { getLLVMPackageInfo } from "./llvm_url"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
@@ -34,17 +34,31 @@ async function setupLLVMWithoutActivation_raw(version: string, setupDir: string,
 }
 const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_raw, { isPromise: true })
 
-/** Setup llvm tools (clang tidy, clang format, etc) without activating llvm and using it as the compiler */
+/**
+ * Setup clang-format
+ *
+ * This uses the LLVM installer on Ubuntu, and the LLVM binaries on other platforms
+ */
+export function setupClangFormat(version: string, setupDir: string, arch: string) {
+  return setupLLVMOnly(version, setupDir, arch, LLVMPackages.ClangFormat)
+}
+
+/** Setup llvm tools (clang tidy, etc.) without activating llvm and using it as the compiler */
 export function setupClangTools(version: string, setupDir: string, arch: string) {
   return setupLLVMOnly(version, setupDir, arch)
 }
 
-async function setupLLVMOnly(version: string, setupDir: string, arch: string) {
+async function setupLLVMOnly(
+  version: string,
+  setupDir: string,
+  arch: string,
+  packages: LLVMPackages = LLVMPackages.All,
+) {
   const coeredVersion = semverCoerceIfInvalid(version)
   const majorVersion = parseInt(coeredVersion.split(".")[0], 10)
   try {
     if (isUbuntu()) {
-      return await setupLLVMApt(majorVersion)
+      return await setupLLVMApt(majorVersion, packages)
     }
   } catch (err) {
     info(`Failed to install llvm via system package manager ${err}`)

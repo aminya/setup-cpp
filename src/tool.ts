@@ -10,7 +10,7 @@ import { setupGcc } from "./gcc/gcc"
 import { setupGcovr } from "./gcovr/gcovr"
 import { setupGraphviz } from "./graphviz/graphviz"
 import { setupKcov } from "./kcov/kcov"
-import { setupClangTools, setupLLVM } from "./llvm/llvm"
+import { setupClangTools, setupLLVM, setupClangFormat } from "./llvm/llvm"
 import { setupMake } from "./make/make"
 import { setupMeson } from "./meson/meson"
 import { setupMSVC } from "./msvc/msvc"
@@ -48,7 +48,7 @@ export const setups = {
   graphviz: setupGraphviz,
   cppcheck: setupCppcheck,
   clangtidy: setupClangTools,
-  clangformat: setupClangTools,
+  clangformat: setupClangFormat,
   msvc: setupMSVC,
   vcvarsall: setupVCVarsall,
   kcov: setupKcov,
