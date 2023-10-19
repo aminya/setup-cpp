@@ -26,9 +26,9 @@ Asynchronously execute a powershell command.
 
 - command (`string`) - The powershell command to execute
 - startupFlags (`string[]`) - The optional startup flags to be passed to powershell. Defaults to `["-NoProfile", "-NoLogo", "-NonInteractive"]`. This means that the Powershell profile is not sourced first.
-- execOptions (`execa.Options`) - The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+- execOptions (`Options<string>`) - The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
 
-**returns:** execa.ExecaChildProcess<string>
+**returns:** ExecaChildProcess<string>
 
 ### `execPowershellSync` (function)
 
@@ -38,9 +38,9 @@ Execute a powershell command.
 
 - command (`string`) - The powershell command to execute
 - startupFlags (`string[]`) - The optional startup flags to be passed to powershell. Defaults to `["-NoProfile", "-NoLogo", "-NonInteractive"]`. This means that the Powershell profile is not sourced first.
-- execOptions (`execaSyncOptions`) - The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
+- execOptions (`SyncOptions<string>`) - The options passed to `execa`. Defaults to `{ stdio: "inherit" }`
 
-**returns:** execa.ExecaSyncReturnValue<string>
+**returns:** ExecaReturnBase<string>
 
 ### `getPowerShell` (function)
 

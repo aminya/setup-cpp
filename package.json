@@ -114,6 +114,7 @@
     "patha": "^0.4.1",
     "prettier": "3.0.0",
     "prettier-config-atomic": "^3.1.0",
+    "readme-md-generator": "^1.0.0",
     "retry-as-promised": "^7.0.4",
     "semver": "7.5.4",
     "setup-python": "github:aminya/setup-python#a783db655c6e40317e2c0c96f9d162d9c9f4a751",
