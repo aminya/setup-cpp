@@ -104,7 +104,7 @@
     "jest": "^29.6.2",
     "micro-memoize": "^4.1.2",
     "mri": "^1.2.0",
-    "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#9f672c1",
+    "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#97843d525947e3f3776ee359b597316909754c4d",
     "npm-check-updates": "^16.10.17",
     "npm-run-all2": "^6.0.6",
     "numerous": "1.0.3",
