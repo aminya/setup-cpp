@@ -26,6 +26,8 @@ words:
   - copr
   - CPATH
   - Cppcheck
+  - nodistro
+  - dearmor
   - CPPFLAGS
   - cpprc
   - Cpython
