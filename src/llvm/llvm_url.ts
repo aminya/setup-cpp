@@ -69,6 +69,9 @@ export const VERSIONS: Set<string> = getVersions([
   "16.0.4",
   "16.0.5",
   "16.0.6",
+  "17.0.1",
+  "17.0.2",
+  "17.0.3",
 ])
 
 /** The LLVM versions that were never released for the Windows platform. */
@@ -101,6 +104,9 @@ const DARWIN_MISSING = new Set([
   "16.0.4",
   "16.0.5",
   "16.0.6",
+  "17.0.1",
+  "17.0.2",
+  "17.0.3",
 ])
 
 /**
@@ -162,10 +168,11 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
   "16.0.2": "-ubuntu-22.04",
   "16.0.3": "-ubuntu-22.04",
   "16.0.4": "-ubuntu-22.04",
+  "17.0.2": "-ubuntu-22.04",
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
-const MAX_UBUNTU: string = "16.0.4"
+const MAX_UBUNTU: string = "17.0.2"
 
 //================================================
 // URL
