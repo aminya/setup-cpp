@@ -6,14 +6,14 @@ import { isArch } from "../utils/env/isArch"
 function getLLVMDefault() {
   switch (process.platform) {
     case "win32":
-      return "16.0.6"
+      return "17.0.3"
     case "linux":
       // used for non-ubuntu (Fedora, Arch)
-      return "16.0.4-ubuntu-22.04"
+      return "17.0.2-ubuntu-22.04"
     case "darwin":
       return "15.0.3"
     default:
-      return "16.0.6"
+      return "17.0.3"
   }
 }
 
