@@ -77,7 +77,7 @@ export const VERSIONS: Set<string> = getVersions([
 ])
 
 /** The LLVM versions that were never released for the Windows platform. */
-const WIN32_MISSING: Set<string> = new Set(["10.0.1", "15.0.5", "15.0.6"])
+const WIN32_MISSING: Set<string> = new Set(["10.0.1", "15.0.5", "15.0.6", "17.0.5"])
 
 /** The LLVM versions that were never released for the Darwin platform. */
 const DARWIN_MISSING = new Set([
