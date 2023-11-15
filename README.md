@@ -58,13 +58,13 @@ NOTE: setup-cpp requires Nodejs 12 or higher. If Nodejs shipped with your distri
 
 #### With executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.36.0), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.36.1), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```shell
 # windows example (open PowerShell as admin)
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.36.0/setup-cpp-x64-windows.exe"
+curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.36.1/setup-cpp-x64-windows.exe"
 ./setup-cpp-x64-windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
 RefreshEnv.cmd # activate cpp environment variables
@@ -72,7 +72,7 @@ RefreshEnv.cmd # activate cpp environment variables
 
 ```shell
 # linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.36.0/setup-cpp-x64-linux"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.36.1/setup-cpp-x64-linux"
 chmod +x ./setup-cpp-x64-linux
 sudo ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -81,7 +81,7 @@ source ~/.cpprc # activate cpp environment variables
 
 ```shell
 # macos example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.36.0/setup-cpp-x64-macos"
+wget "https://github.com/aminya/setup-cpp/releases/download/v0.36.1/setup-cpp-x64-macos"
 chmod +x ./setup-cpp-x64-macos
 sudo ./setup-cpp-x64-macos --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 
@@ -161,7 +161,7 @@ RUN apt-get update -qq && \
     # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.36.0 && \
+    npm install -g setup-cpp@v0.36.1 && \
     # install the compiler and tools
     setup-cpp \
         --nala true \
@@ -270,7 +270,7 @@ stages:
   apt-get install -y --no-install-recommends nodejs npm
 
   # install setup-cpp
-  npm install -g setup-cpp@v0.36.0
+  npm install -g setup-cpp@v0.36.1
 
   # install the compiler and tools
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
