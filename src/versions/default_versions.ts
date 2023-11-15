@@ -6,14 +6,14 @@ import { isArch } from "../utils/env/isArch"
 function getLLVMDefault() {
   switch (process.platform) {
     case "win32":
-      return "17.0.3"
+      return "17.0.4"
     case "linux":
       // used for non-ubuntu (Fedora, Arch)
-      return "17.0.2-ubuntu-22.04"
+      return "17.0.5-ubuntu-22.04"
     case "darwin":
       return "15.0.3"
     default:
-      return "17.0.3"
+      return "17.0.5"
   }
 }
 
@@ -24,10 +24,10 @@ export const DefaultVersions: Record<string, string | undefined> = {
   ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
   cmake: "3.27.4", // https://github.com/Kitware/CMake/releases
   gcovr: "6.0", // https://pypi.org/project/gcovr/
-  conan: "1.60.2", // https://github.com/conan-io/conan/releases
-  meson: "1.2.1", // https://github.com/mesonbuild/meson/releases
+  conan: "1.62.0", // https://github.com/conan-io/conan/releases
+  meson: "1.2.3", // https://github.com/mesonbuild/meson/releases
   kcov: "42", // https://github.com/SimonKagstrom/kcov/releases
-  task: "3.29.1", // https://github.com/go-task/task/releases
+  task: "3.31.0", // https://github.com/go-task/task/releases
   doxygen: isArch() ? "1.9.8-1" : "1.9.8", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: isArch() ? "13.2.1-3" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
   //mingw: isArch() ? "12.2.0-1" : "8", // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=mingw-w64 // https://archlinux.org/packages/extra/x86_64/mingw-w64-gcc/
@@ -54,8 +54,8 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     20: "7.0.0-2",
   },
   llvm: {
-    22: "17.0.2-ubuntu-22.04",
-    20: "17.0.2-ubuntu-22.04",
+    22: "17.0.5-ubuntu-22.04",
+    20: "17.0.5-ubuntu-22.04",
     18: "15.0.6-ubuntu-18.04",
     16: "15.0.6-ubuntu-18.04",
     14: "13.0.0-ubuntu-16.04",
