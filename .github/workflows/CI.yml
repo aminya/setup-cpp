@@ -39,7 +39,7 @@ jobs:
             "setupcpp-cache-OS:${{ matrix.os }}-"
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -96,7 +96,7 @@ jobs:
           name: dist
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -163,7 +163,7 @@ jobs:
           name: dist
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
 
@@ -198,7 +198,7 @@ jobs:
           RUNNER_OS_NAME: ${{ matrix.os }}
 
       - name: Setup Node 12
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 12
       - name: Smoke Test Node 12
@@ -206,7 +206,7 @@ jobs:
           node ./dist/legacy/setup-cpp.js --help
 
       - name: Setup Node 16
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 16
       - name: Smoke Test Node 16
