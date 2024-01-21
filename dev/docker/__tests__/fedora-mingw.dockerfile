@@ -1,5 +1,5 @@
 ## base image
-FROM fedora:38 as setup-cpp-fedora-mingw
+FROM fedora:40 as setup-cpp-fedora-mingw
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
