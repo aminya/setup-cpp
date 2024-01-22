@@ -1,5 +1,5 @@
-import { useCpythonVersion } from "setup-python/src/find-python"
-import { findPyPyVersion } from "setup-python/src/find-pypy"
+import { useCpythonVersion } from "setup-python/src/find-python.js"
+import { findPyPyVersion } from "setup-python/src/find-pypy.js"
 
 import { info, warning } from "ci-log"
 import { debug } from "@actions/core"
