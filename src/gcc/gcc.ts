@@ -78,7 +78,7 @@ function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: str
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupGcc(version: string, setupDir: string, arch: string) {
+export async function setupGcc(version: string, setupDir: string, arch: string, priority: number = 40) {
   let installationInfo: InstallationInfo | undefined
   switch (process.platform) {
     case "win32": {
@@ -139,7 +139,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string) 
     }
   }
   if (installationInfo !== undefined) {
-    await activateGcc(version, installationInfo.binDir)
+    await activateGcc(version, installationInfo.binDir, priority)
     return installationInfo
   }
   return undefined
@@ -199,7 +199,7 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
   return undefined
 }
 
-async function activateGcc(version: string, binDir: string) {
+async function activateGcc(version: string, binDir: string, priority: number = 40) {
   const promises: Promise<void | ExecaReturnValue<string>>[] = []
   // Setup gcc as the compiler
 
@@ -223,10 +223,10 @@ async function activateGcc(version: string, binDir: string) {
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`),
-          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`),
-          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`),
+          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, priority),
+          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, priority),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, priority),
+          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, priority),
         )
       }
     } else {
@@ -234,10 +234,10 @@ async function activateGcc(version: string, binDir: string) {
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${version}`),
-          updateAptAlternatives("cxx", `${binDir}/g++-${version}`),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`),
-          updateAptAlternatives("g++", `${binDir}/g++-${version}`),
+          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, priority),
+          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, priority),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, priority),
+          updateAptAlternatives("g++", `${binDir}/g++-${version}`, priority),
         )
       }
     }
