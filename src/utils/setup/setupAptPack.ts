@@ -219,14 +219,14 @@ export async function addAptKeyViaDownload(name: string, url: string) {
   return fileName
 }
 
-export async function updateAptAlternatives(name: string, path: string) {
+export async function updateAptAlternatives(name: string, path: string, priority: number = 40) {
   if (GITHUB_ACTIONS) {
-    return execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, "40"])
+    return execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, priority.toString()])
   } else {
     await setupCppInProfile()
     return appendFile(
       cpprc_path,
-      `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} 40; fi\n`,
+      `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} ${priority}; fi\n`,
     )
   }
 }

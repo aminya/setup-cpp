@@ -82,8 +82,9 @@ const llvmBinaryDeps = memoize(llvmBinaryDeps_raw, { isPromise: true })
 
 async function setupLLVMDeps_raw(arch: string) {
   if (process.platform === "linux") {
-    // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first
-    await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch)
+    // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first,
+    // but with a lower priority than the one used by activateLLVM()
+    await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch, 40)
   }
 }
 const setupLLVMDeps = memoize(setupLLVMDeps_raw, { isPromise: true })
@@ -125,9 +126,10 @@ export async function activateLLVM(directory: string) {
   // }
 
   if (isUbuntu()) {
+    const priority = 60
     actPromises.push(
-      updateAptAlternatives("cc", `${directory}/bin/clang`),
-      updateAptAlternatives("cxx", `${directory}/bin/clang++`),
+      updateAptAlternatives("cc", `${directory}/bin/clang`, priority),
+      updateAptAlternatives("cxx", `${directory}/bin/clang++`, priority),
       updateAptAlternatives("clang", `${directory}/bin/clang`),
       updateAptAlternatives("clang++", `${directory}/bin/clang++`),
       updateAptAlternatives("lld", `${directory}/bin/lld`),
