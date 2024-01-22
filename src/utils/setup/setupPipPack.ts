@@ -15,6 +15,7 @@ import { hasDnf } from "../env/hasDnf"
 import { setupDnfPack } from "./setupDnfPack"
 import { isUbuntu } from "../env/isUbuntu"
 import { setupAptPack } from "./setupAptPack"
+import { untildifyUser } from "untildify-user"
 
 export type SetupPipPackOptions = {
   /** Whether to use pipx instead of pip */
@@ -56,8 +57,17 @@ export async function setupPipPackWithPython(
       const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
       const userFlag = !isPipx && user ? ["--user"] : []
 
+      const env = process.env
+
+      if (isPipx && user) {
+        // install to user home
+        env.PIPX_HOME = untildifyUser("~/.local/pipx")
+        env.PIPX_BIN_DIR = untildifyUser("~/.local/bin")
+      }
+
       execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
         stdio: "inherit",
+        env,
       })
     } catch (err) {
       info(`Failed to install ${name} via ${pip}: ${err}.`)
