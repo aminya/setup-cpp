@@ -62,7 +62,7 @@ jobs:
           pnpm run test.lint
 
       - name: Upload Dist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dist
           path: |
@@ -126,7 +126,7 @@ jobs:
           pnpm run pack.exe
 
       - name: Upload Executables
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: exe
           path: |
