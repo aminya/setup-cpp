@@ -182,7 +182,8 @@
   "alias": {
     "electron": false,
     "patha": "patha/dist/index.node.mjs",
-    "admina": "admina/dist/index.mjs"
+    "admina": "admina/dist/index.mjs",
+    "fs/promises": "./src/utils/compat/fs/promises.ts"
   },
   "pnpm": {
     "overrides": {
