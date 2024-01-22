@@ -23,7 +23,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
   clangformat: getLLVMDefault(),
   ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
   cmake: "3.27.4", // https://github.com/Kitware/CMake/releases
-  gcovr: "6.0", // https://pypi.org/project/gcovr/
+  gcovr: "5.2", // "6.0", // https://pypi.org/project/gcovr/
   conan: "1.62.0", // https://github.com/conan-io/conan/releases
   meson: "1.2.3", // https://github.com/mesonbuild/meson/releases
   kcov: "42", // https://github.com/SimonKagstrom/kcov/releases
