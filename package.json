@@ -112,7 +112,7 @@
     "parcel": "2.9.3",
     "path-exists": "^5.0.0",
     "patha": "^0.4.1",
-    "prettier": "3.2.4",
+    "prettier": "3.2.2",
     "prettier-config-atomic": "^4.0.0",
     "readme-md-generator": "^1.0.0",
     "retry-as-promised": "^7.0.4",
