@@ -57,8 +57,8 @@ importers:
         specifier: github:aminya/babel-plugin-remove-node-prefix#95fcbd92405b99a6eece48c493548996f12e6519
         version: github.com/aminya/babel-plugin-remove-node-prefix/95fcbd92405b99a6eece48c493548996f12e6519(@babel/core@7.23.7)
       admina:
-        specifier: ^1.0.0
-        version: 1.0.0
+        specifier: ^1.0.1
+        version: 1.0.1
       caxa:
         specifier: ^3.0.1
         version: 3.0.1
@@ -208,8 +208,8 @@ importers:
   packages/untildify-user:
     dependencies:
       admina:
-        specifier: 1.0.0
-        version: 1.0.0
+        specifier: 1.0.1
+        version: 1.0.1
       untildify:
         specifier: ^5.0.0
         version: 5.0.0
@@ -3137,9 +3137,9 @@ packages:
     hasBin: true
     dev: true
 
-  /admina@1.0.0:
-    resolution: {integrity: sha512-TQoyRnVPH5b7gjw0pVgq3U9f6a1qAchqGKjC5QlcDgo99RrWxkUc1VG5YNOwj6MC3VDfrktmZcuVncBnCUiptA==}
-    engines: {deno: '>=1', node: '>=14.x'}
+  /admina@1.0.1:
+    resolution: {integrity: sha512-lLvUAj/X+Qh+zgtJibRvwBNPoGEdZqJRSeLKhKoZiZjBvdeCJwWrAR8GcVe8imRgHUKmBFkMTJKgJ397hncrWA==}
+    engines: {deno: '>=1', node: '>=12.x'}
     dependencies:
       execa: 7.2.0
       which: 4.0.0
