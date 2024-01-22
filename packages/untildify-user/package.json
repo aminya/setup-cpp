@@ -11,8 +11,8 @@
     "build": "tsc"
   },
   "dependencies": {
-    "admina": "0.1.1",
-    "untildify": "^4.0.0"
+    "admina": "1.0.1",
+    "untildify": "^5.0.0"
   },
   "keywords": [
     "tilde",
