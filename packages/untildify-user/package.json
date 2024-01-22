@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "admina": "0.3.0",
+    "admina": "1.0.0",
     "untildify": "^5.0.0"
   },
   "keywords": [
