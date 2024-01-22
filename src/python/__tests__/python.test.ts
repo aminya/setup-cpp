@@ -28,7 +28,7 @@ describe("setup-python", () => {
 
     const installInfo = await setupPython(getVersion("python", "true", await ubuntuVersion()), directory, process.arch)
 
-    await testBin("python", ["--version"], installInfo?.binDir)
+    await testBin("python", ["--version"], installInfo.binDir)
   })
 
   afterAll(async () => {

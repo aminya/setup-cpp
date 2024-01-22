@@ -238,13 +238,13 @@ async function ensurePipUpgrade(foundPython: string) {
     await execa(foundPython, ["-m", "ensurepip", "-U", "--upgrade"], { stdio: "inherit" })
     return true
   } catch (err1) {
-    info((err1 as Error)?.toString?.())
+    info((err1 as Error).toString())
     try {
       // ensure pip is disabled on Ubuntu
       await execa(foundPython, ["-m", "pip", "install", "--upgrade", "pip"], { stdio: "inherit" })
       return true
     } catch (err2) {
-      info((err2 as Error)?.toString?.())
+      info((err2 as Error).toString())
       // pip module not found
     }
   }
