@@ -28,7 +28,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
   meson: "1.2.3", // https://github.com/mesonbuild/meson/releases
   kcov: "42", // https://github.com/SimonKagstrom/kcov/releases
   task: "3.31.0", // https://github.com/go-task/task/releases
-  doxygen: isArch() ? "1.9.8-1" : "1.9.8", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
+  doxygen: isArch() ? "1.10.0-1" : "1.10.0", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: isArch() ? "13.2.1-3" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
   //mingw: isArch() ? "12.2.0-1" : "8", // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=mingw-w64 // https://archlinux.org/packages/extra/x86_64/mingw-w64-gcc/
 }
