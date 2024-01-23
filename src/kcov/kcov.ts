@@ -81,14 +81,14 @@ async function getCmake() {
   if (cmake === null) {
     const { binDir } = await setupCmake(
       getVersion("cmake", undefined, await ubuntuVersion()),
-      join(untildifyUser(""), "cmake"),
+      join(untildifyUser("~"), "cmake"),
       "",
     )
     cmake = join(binDir, "cmake")
   }
   const ninja = which.sync("ninja", { nothrow: true })
   if (ninja === null) {
-    await setupNinja(getVersion("ninja", undefined, await ubuntuVersion()), join(untildifyUser(""), "ninja"), "")
+    await setupNinja(getVersion("ninja", undefined, await ubuntuVersion()), join(untildifyUser("~"), "ninja"), "")
   }
   return cmake
 }

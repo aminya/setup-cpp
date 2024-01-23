@@ -30,6 +30,7 @@ words:
   - dearmor
   - CPPFLAGS
   - cpprc
+  - untildified
   - Cpython
   - DCMAKE
   - deps

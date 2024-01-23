@@ -100,7 +100,7 @@ export async function addPath(path: string) {
   }
 }
 
-export const cpprc_path = untildifyUser(".cpprc")
+export const cpprc_path = untildifyUser("~/.cpprc")
 
 async function addEnvSystem(name: string, valGiven: string | undefined, options: AddEnvOptions) {
   const val = valGiven ?? ""
@@ -188,12 +188,12 @@ export async function setupCppInProfile() {
 
   try {
     // source cpprc in .profile
-    const profile_path = untildifyUser(".profile")
+    const profile_path = untildifyUser("~/.profile")
     appendFileSync(profile_path, source_cpprc_string)
     info(`${source_cpprc_string} was added to ${profile_path}`)
 
     // source cpprc in .bashrc too
-    const bashrc_path = untildifyUser(".bashrc")
+    const bashrc_path = untildifyUser("~/.bashrc")
     appendFileSync(bashrc_path, source_cpprc_string)
     info(`${source_cpprc_string} was added to ${bashrc_path}`)
   } catch (err) {
