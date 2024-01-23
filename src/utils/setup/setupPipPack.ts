@@ -61,8 +61,8 @@ export async function setupPipPackWithPython(
 
       if (isPipx && user) {
         // install to user home
-        env.PIPX_HOME = untildifyUser("~/.local/pipx")
-        env.PIPX_BIN_DIR = untildifyUser("~/.local/bin")
+        env.PIPX_HOME = await getPipxHome()
+        env.PIPX_BIN_DIR = getPipxBinDir()
       }
 
       execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
@@ -91,6 +91,28 @@ export async function setupPipPackWithPython(
 
 export async function hasPipx(givenPython: string) {
   return (await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })).exitCode === 0
+}
+
+async function getPipxHome_raw() {
+  // Based on https://pipx.pypa.io/stable/installation/
+  const compatHome = untildifyUser("~/.local/pipx")
+  if (await pathExists(compatHome)) {
+    return compatHome
+  }
+
+  switch (process.platform) {
+    case "win32":
+      return untildifyUser("~/AppData/Local/pipx")
+    case "darwin":
+      return untildifyUser("~/Library/Application Support/pipx")
+    default:
+      return untildifyUser("~/.local/share/pipx")
+  }
+}
+const getPipxHome = memoize(getPipxHome_raw, { isPromise: true })
+
+function getPipxBinDir() {
+  return untildifyUser("~/.local/bin")
 }
 
 async function getPython_raw(): Promise<string> {
