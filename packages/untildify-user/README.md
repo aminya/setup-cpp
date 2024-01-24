@@ -18,13 +18,23 @@ npm install --save untildify-user
 
 <!-- INSERT GENERATED DOCS START -->
 
+### `userHomeDir` (function)
+
+**returns:** string
+
 ### `untildifyUser` (function)
+
+Replaces a tilde with the user's home directory
 
 **Parameters:**
 
-- path (`string`)
+- path (`string`) - The path to untildify
 
-**returns:** any
+**returns:** string
+
+```tsx
+UntildifyUser("~/foo") // /home/user/foo
+```
 
 <!-- INSERT GENERATED DOCS END -->
 

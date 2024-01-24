@@ -15,6 +15,8 @@ import { hasDnf } from "../env/hasDnf"
 import { setupDnfPack } from "./setupDnfPack"
 import { isUbuntu } from "../env/isUbuntu"
 import { setupAptPack } from "./setupAptPack"
+import { untildifyUser } from "untildify-user"
+import { mkdirp } from "mkdirp"
 
 export type SetupPipPackOptions = {
   /** Whether to use pipx instead of pip */
@@ -56,8 +58,17 @@ export async function setupPipPackWithPython(
       const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
       const userFlag = !isPipx && user ? ["--user"] : []
 
+      const env = process.env
+
+      if (isPipx && user) {
+        // install to user home
+        env.PIPX_HOME = await getPipxHome()
+        env.PIPX_BIN_DIR = await getPipxBinDir()
+      }
+
       execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
         stdio: "inherit",
+        env,
       })
     } catch (err) {
       info(`Failed to install ${name} via ${pip}: ${err}.`)
@@ -82,6 +93,53 @@ export async function setupPipPackWithPython(
 export async function hasPipx(givenPython: string) {
   return (await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })).exitCode === 0
 }
+
+async function getPipxHome_raw() {
+  let pipxHome = process.env.PIPX_HOME
+  if (pipxHome !== undefined) {
+    return pipxHome
+  }
+
+  // Based on https://pipx.pypa.io/stable/installation/
+  const compatHome = untildifyUser("~/.local/pipx")
+  if (await pathExists(compatHome)) {
+    return compatHome
+  }
+
+  switch (process.platform) {
+    case "win32": {
+      pipxHome = untildifyUser("~/AppData/Local/pipx")
+      break
+    }
+    case "darwin": {
+      pipxHome = untildifyUser("~/Library/Application Support/pipx")
+      break
+    }
+    default: {
+      pipxHome = untildifyUser("~/.local/share/pipx")
+      break
+    }
+  }
+
+  await mkdirp(pipxHome)
+  await mkdirp(join(pipxHome, "trash"))
+  await mkdirp(join(pipxHome, "shared"))
+  await mkdirp(join(pipxHome, "venv"))
+  return pipxHome
+}
+const getPipxHome = memoize(getPipxHome_raw, { isPromise: true })
+
+async function getPipxBinDir_raw() {
+  if (process.env.PIPX_BIN_DIR !== undefined) {
+    return process.env.PIPX_BIN_DIR
+  }
+
+  const pipxBinDir = untildifyUser("~/.local/bin")
+  await addPath(pipxBinDir)
+  await mkdirp(pipxBinDir)
+  return pipxBinDir
+}
+const getPipxBinDir = memoize(getPipxBinDir_raw, { isPromise: true })
 
 async function getPython_raw(): Promise<string> {
   const pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin

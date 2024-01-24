@@ -39,7 +39,7 @@ async function main(args: string[]): Promise<number> {
   const arch = opts.architecture ?? process.arch
 
   // the installation dir for the tools that are downloaded directly
-  const setupCppDir = process.env.SETUP_CPP_DIR ?? untildifyUser("")
+  const setupCppDir = process.env.SETUP_CPP_DIR ?? untildifyUser("~")
 
   // report messages
   const successMessages: string[] = []

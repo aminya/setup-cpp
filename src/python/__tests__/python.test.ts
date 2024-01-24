@@ -28,7 +28,8 @@ describe("setup-python", () => {
 
     const installInfo = await setupPython(getVersion("python", "true", await ubuntuVersion()), directory, process.arch)
 
-    await testBin("python", ["--version"], installInfo.binDir)
+    const python = process.platform === "darwin" ? "python3" : "python"
+    await testBin(python, ["--version"], installInfo.binDir)
   })
 
   afterAll(async () => {
