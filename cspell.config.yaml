@@ -26,13 +26,11 @@ words:
   - copr
   - CPATH
   - Cppcheck
-  - nodistro
-  - dearmor
   - CPPFLAGS
   - cpprc
-  - untildified
   - Cpython
   - DCMAKE
+  - dearmor
   - deps
   - devel
   - DVCPKG
@@ -64,6 +62,7 @@ words:
   - mxschmitt
   - nala
   - noconfirm
+  - nodistro
   - noprogressbar
   - nothrow
   - npmrc
@@ -85,6 +84,7 @@ words:
   - Trofimovich
   - tsbuildinfo
   - ucrt
+  - untildified
   - untildify
   - upleveled
   - vbatts
@@ -92,6 +92,7 @@ words:
   - VCPKG
   - vcvarsall
   - venv
+  - venvs
   - visualc
   - visualcpp
   - vsversion

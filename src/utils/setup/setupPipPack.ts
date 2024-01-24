@@ -63,6 +63,9 @@ export async function setupPipPackWithPython(
       if (isPipx && user) {
         const pipxHome = await getPipxHome()
         await mkdirp(pipxHome)
+        await mkdirp(join(pipxHome, "trash"))
+        await mkdirp(join(pipxHome, "shared"))
+        await mkdirp(join(pipxHome, "venv"))
 
         // install to user home
         env.PIPX_HOME = pipxHome
