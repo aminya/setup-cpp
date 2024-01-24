@@ -17,6 +17,12 @@ describe("setup-nala", () => {
   afterAll(() => {
     // remove nala to run the rest of the tests with apt-get
     execRootSync("apt-get", ["remove", "-y", "nala"])
-    execRootSync("apt-get", ["remove", "-y", "nala-legacy"])
+
+    try {
+      execRootSync("apt-get", ["remove", "-y", "nala-legacy"])
+    } catch (err) {
+      // ignore
+      console.error(err)
+    }
   })
 })
