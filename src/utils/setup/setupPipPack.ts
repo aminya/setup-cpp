@@ -62,7 +62,10 @@ export async function setupPipPackWithPython(
       if (isPipx && user) {
         // install to user home
         env.PIPX_HOME = await getPipxHome()
-        env.PIPX_BIN_DIR = getPipxBinDir()
+
+        const pipxBinDir = getPipxBinDir()
+        env.PIPX_BIN_DIR = pipxBinDir
+        await addPath(pipxBinDir)
       }
 
       execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
