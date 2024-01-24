@@ -16,6 +16,7 @@ import { setupDnfPack } from "./setupDnfPack"
 import { isUbuntu } from "../env/isUbuntu"
 import { setupAptPack } from "./setupAptPack"
 import { untildifyUser } from "untildify-user"
+import { mkdirp } from "mkdirp"
 
 export type SetupPipPackOptions = {
   /** Whether to use pipx instead of pip */
@@ -60,12 +61,17 @@ export async function setupPipPackWithPython(
       const env = process.env
 
       if (isPipx && user) {
+        const pipxHome = await getPipxHome()
+        await mkdirp(pipxHome)
+
         // install to user home
-        env.PIPX_HOME = await getPipxHome()
+        env.PIPX_HOME = pipxHome
 
         const pipxBinDir = getPipxBinDir()
-        env.PIPX_BIN_DIR = pipxBinDir
         await addPath(pipxBinDir)
+        await mkdirp(pipxBinDir)
+
+        env.PIPX_BIN_DIR = pipxBinDir
       }
 
       execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
