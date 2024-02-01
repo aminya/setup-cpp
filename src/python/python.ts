@@ -1,9 +1,11 @@
 import assert from "assert"
-/* eslint-disable require-atomic-updates */
+import { homedir } from "os"
+import { parse as pathParse } from "path"
 import { getExecOutput } from "@actions/exec"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
+import { readdir } from "fs/promises"
 import memoize from "micro-memoize"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
@@ -175,6 +177,24 @@ async function findPython(binDir?: string) {
       return foundPython
     }
   }
+
+  // On Windows, search in C:\PythonXX
+  if (process.platform === "win32") {
+    const rootDir = pathParse(homedir()).root
+    // find all directories in rootDir using readdir
+    const pythonDirs = (await readdir(rootDir)).filter((dir) => dir.startsWith("Python"))
+
+    for (const pythonDir of pythonDirs) {
+      for (const pythonBin of ["python3", "python"]) {
+        // eslint-disable-next-line no-await-in-loop
+        const foundPython = await isPythonUpToDate(pythonBin, join(rootDir, pythonDir))
+        if (foundPython !== undefined) {
+          return foundPython
+        }
+      }
+    }
+  }
+
   return undefined
 }
 
