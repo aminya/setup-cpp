@@ -89,7 +89,10 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
         const { setupActionsPython } = await import("./actions_python")
         await setupActionsPython(version, setupDir, arch)
 
-        foundPython = (await findPython(setupDir))!
+        foundPython = await findPython(setupDir)
+        if (foundPython === undefined) {
+          throw new Error("Python binary could not be found")
+        }
         const binDir = dirname(foundPython)
         installInfo = { bin: foundPython, installDir: binDir, binDir }
       } catch (err) {
@@ -103,7 +106,10 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
   }
 
   if (foundPython === undefined || installInfo.bin === undefined) {
-    foundPython = (await findPython(setupDir))!
+    foundPython = await findPython(setupDir)
+    if (foundPython === undefined) {
+      throw new Error("Python binary could not be found")
+    }
     installInfo.bin = foundPython
   }
 
@@ -120,7 +126,10 @@ async function setupPythonSystem(setupDir: string, version: string) {
         await setupChocoPack("python3", version)
       }
       // Adding the bin dir to the path
-      const bin = (await findPython(setupDir))!
+      const bin = await findPython(setupDir)
+      if (bin === undefined) {
+        throw new Error("Python binary could not be found")
+      }
       const binDir = dirname(bin)
       /** The directory which the tool is installed to */
       await addPath(binDir)
