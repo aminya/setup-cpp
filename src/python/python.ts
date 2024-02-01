@@ -22,6 +22,9 @@ import { unique } from "../utils/std"
 import { MinVersions } from "../versions/default_versions"
 import { pathExists } from "path-exists"
 import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack"
+import { homedir } from "os"
+import { parse as pathParse } from "path"
+import { readdir } from "fs/promises"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -166,6 +169,24 @@ async function findPython(binDir?: string) {
       return foundPython
     }
   }
+
+  // On Windows, search in C:\PythonXX
+  if (process.platform === "win32") {
+    const rootDir = pathParse(homedir()).root
+    // find all directories in rootDir using readdir
+    const pythonDirs = (await readdir(rootDir)).filter((dir) => dir.startsWith("Python"))
+
+    for (const pythonDir of pythonDirs) {
+      for (const pythonBin of ["python3", "python"]) {
+        // eslint-disable-next-line no-await-in-loop
+        const foundPython = await isPythonUpToDate(pythonBin, join(rootDir, pythonDir))
+        if (foundPython !== undefined) {
+          return foundPython
+        }
+      }
+    }
+  }
+
   return undefined
 }
 
