@@ -174,15 +174,15 @@ async function findBinDir(dirs: string[], name: string) {
   return dirs[dirs.length - 1]
 }
 
-export function setupPipPackSystem(name: string) {
+export function setupPipPackSystem(name: string, addPythonPrefix = true) {
   if (process.platform === "linux") {
     info(`Installing ${name} via the system package manager`)
     if (isArch()) {
-      return setupPacmanPack(`python-${name}`)
+      return setupPacmanPack(addPythonPrefix ? `python-${name}` : name)
     } else if (hasDnf()) {
-      return setupDnfPack([{ name: `python3-${name}` }])
+      return setupDnfPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     } else if (isUbuntu()) {
-      return setupAptPack([{ name: `python3-${name}` }])
+      return setupAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     }
   }
   return null
