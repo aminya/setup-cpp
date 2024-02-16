@@ -44,7 +44,13 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 async function setupPipx(foundPython: string) {
   try {
     if (!(await hasPipx(foundPython))) {
-      await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
+      try {
+        await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
+      } catch (err) {
+        if (setupPipPackSystem("pipx", false) === null) {
+          throw new Error(`pipx was not installed correctly ${err}`)
+        }
+      }
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
     await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
