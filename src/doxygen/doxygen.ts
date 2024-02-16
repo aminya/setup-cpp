@@ -17,6 +17,7 @@ import { isUbuntu } from "../utils/env/isUbuntu"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
+import { macosVersion } from "../utils/env/macos_version"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -64,7 +65,10 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
     }
     case "darwin": {
       const installationInfo = await setupBrewPack("doxygen", undefined)
-      await setupGraphviz(getVersion("graphviz", undefined), "", arch)
+      // only install graphviz if the macOS version is greater than 11
+      if (macosVersion()[0] > 11) {
+        await setupGraphviz(getVersion("graphviz", undefined), "", arch)
+      }
       return installationInfo
     }
     case "linux": {
