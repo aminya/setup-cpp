@@ -207,7 +207,7 @@
     "actions": {
       "context": "node",
       "engines": {
-        "node": ">=16.x"
+        "node": ">=20.x"
       },
       "includeNodeModules": {
         "update-notifier": false
