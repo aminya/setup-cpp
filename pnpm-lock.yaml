@@ -23,9 +23,9 @@ importers:
       '@babel/cli':
         specifier: ^7.23.9
         version: 7.23.9(@babel/core@7.23.9)
-      '@shockpkg/hdi-mac':
-        specifier: ^3.1.1
-        version: 3.1.1
+      '@shockpkg/archive-files':
+        specifier: https://github.com/shockpkg/archive-files#3.2.2
+        version: github.com/shockpkg/archive-files/da70511854c93c257210c4faf1aa04364ab0f7e1
       '@swc/jest':
         specifier: ^0.2.36
         version: 0.2.36(@swc/core@1.4.1)
@@ -5712,6 +5712,12 @@ packages:
       bser: 2.1.1
     dev: true
 
+  /fd-slicer@1.1.0:
+    resolution: {integrity: sha512-cE1qsB/VwyQozZ+q1dGxR8LBYNZeofhEdUNGSMbQD3Gw2lAzX9Zb3uIU6Ebc/Fmyjo9AWWfnn0AUCHqtevs/8g==}
+    dependencies:
+      pend: 1.2.0
+    dev: true
+
   /figures@3.2.0:
     resolution: {integrity: sha512-yaduQFRKLXYOGgEn6AZau90j3ggSOyiqXU0F9JZfeXYhNa+Jk4X+s45A2zg5jns87GAFa34BBm2kXw4XpNcbdg==}
     engines: {node: '>=8'}
@@ -6828,6 +6834,12 @@ packages:
     resolution: {integrity: sha512-LpB/54B+/2J5hqQ7imZHfdU31OlgQqx7ZicVlkm9kzg9/w8GKLEcFfJl/t7DCEDueOyBAD6zCCwTO6Fzs0NoEQ==}
     engines: {node: '>=16'}
 
+  /iso-constants@0.1.2:
+    resolution: {integrity: sha512-OTCM5ZCQsHBCI4Wdu4tSxvDIkmDHd5EwJDps5mKqnQnWJSKlnwMs3EDZ4n3Fh1tmkWkDlyd2vCDbEYuPbyrUNQ==}
+    engines: {node: '>=10'}
+    requiresBuild: true
+    dev: true
+
   /istanbul-lib-coverage@3.2.2:
     resolution: {integrity: sha512-O8dpsF+r0WV/8MNRKfnmrtCWhuKjxrq2w+jpzBL5UZKTi2LeVWnWOmWRxFlesJONmc+wLAGvKQZEOanko0LFTg==}
     engines: {node: '>=8'}
@@ -6885,6 +6897,44 @@ packages:
     dependencies:
       html-escaper: 2.0.2
       istanbul-lib-report: 3.0.1
+    dev: true
+
+  /it-reader@6.0.4:
+    resolution: {integrity: sha512-XCWifEcNFFjjBHtor4Sfaj8rcpt+FkY0L6WdhD578SCDhV4VUm7fCkF3dv5a+fTcfQqvN9BsxBTvWbYO6iCjTg==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    dependencies:
+      it-stream-types: 2.0.1
+      uint8arraylist: 2.4.8
+    dev: true
+
+  /it-stream-types@1.0.5:
+    resolution: {integrity: sha512-I88Ka1nHgfX62e5mi5LLL+oueqz7Ltg0bUdtsUKDe9SoUqbQPf2Mp5kxDTe9pNhHQGs4pvYPAINwuZ1HAt42TA==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    dev: true
+
+  /it-stream-types@2.0.1:
+    resolution: {integrity: sha512-6DmOs5r7ERDbvS4q8yLKENcj6Yecr7QQTqWApbZdfAUTEC947d+PEha7PCqhm//9oxaLYL7TWRekwhoXl2s6fg==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    dev: true
+
+  /it-tar@6.0.1:
+    resolution: {integrity: sha512-KMKNqYQr/m3mJE0ERg6F2Snlk1d68tEMeOP0bPf5vboka1y0L7CZD2nlf57H+C9R31TA0SbtiOqkblRxEIONfg==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    dependencies:
+      iso-constants: 0.1.2
+      it-reader: 6.0.4
+      it-stream-types: 1.0.5
+      it-to-buffer: 3.0.1
+      p-defer: 4.0.0
+      uint8arraylist: 2.4.8
+      uint8arrays: 4.0.10
+    dev: true
+
+  /it-to-buffer@3.0.1:
+    resolution: {integrity: sha512-TiMudfypF2yW+HdNfhDgbkNQ42yuK1MizB716kwnzIJSQa8AM15zh+VZG2L/xQWaqyWfra1dr9neWO55xsYolA==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    dependencies:
+      uint8arrays: 4.0.10
     dev: true
 
   /iterator.prototype@1.1.2:
@@ -8266,6 +8316,15 @@ packages:
       msgpackr-extract: 3.0.2
     dev: true
 
+  /multiformats@12.1.3:
+    resolution: {integrity: sha512-eajQ/ZH7qXZQR2AgtfpmSMizQzmyYVmCql7pdhldPuYQi4atACekbJaQplk6dWyIi10jCaFnd6pqvcEFXjbaJw==}
+    engines: {node: '>=16.0.0', npm: '>=7.0.0'}
+    dev: true
+
+  /multiformats@13.1.0:
+    resolution: {integrity: sha512-HzdtdBwxsIkzpeXzhQ5mAhhuxcHbjEHH+JQoxt7hG/2HGFjjwyolLo7hbaexcnhoEuV4e0TNJ8kkpMjiEYY4VQ==}
+    dev: true
+
   /mute-stream@0.0.8:
     resolution: {integrity: sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==}
     dev: true
@@ -8661,6 +8720,11 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
+  /p-defer@4.0.0:
+    resolution: {integrity: sha512-Vb3QRvQ0Y5XnF40ZUWW7JfLogicVh/EnA5gBIvKDJoYpeI82+1E3AlB9yOcKFS0AhHrWVnAQO39fbR0G99IVEQ==}
+    engines: {node: '>=12'}
+    dev: true
+
   /p-limit@2.3.0:
     resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
     engines: {node: '>=6'}
@@ -8872,6 +8936,10 @@ packages:
       '@types/replace-ext': 2.0.2
       path-browserify: 1.0.1
       process: 0.11.10
+    dev: true
+
+  /pend@1.2.0:
+    resolution: {integrity: sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==}
     dev: true
 
   /picocolors@1.0.0:
@@ -10299,6 +10367,24 @@ packages:
     resolution: {integrity: sha512-/IZMqVoMJ0Wl+vRJBlsIhbkpFlXnO9GdOk6zAiy0s4CyDJqpB/qp5T/ah4eoH1OL7ctNJN65nITtRIcbPCoU/w==}
     dev: true
 
+  /uint8arraylist@2.4.8:
+    resolution: {integrity: sha512-vc1PlGOzglLF0eae1M8mLRTBivsvrGsdmJ5RbK3e+QRvRLOZfZhQROTwH/OfyF3+ZVUg9/8hE8bmKP2CvP9quQ==}
+    dependencies:
+      uint8arrays: 5.0.2
+    dev: true
+
+  /uint8arrays@4.0.10:
+    resolution: {integrity: sha512-AnJNUGGDJAgFw/eWu/Xb9zrVKEGlwJJCaeInlf3BkecE/zcTobk5YXYIPNQJO1q5Hh1QZrQQHf0JvcHqz2hqoA==}
+    dependencies:
+      multiformats: 12.1.3
+    dev: true
+
+  /uint8arrays@5.0.2:
+    resolution: {integrity: sha512-S0GaeR+orZt7LaqzTRs4ZP8QqzAauJ+0d4xvP2lJTA99jIkKsE2FgDs4tGF/K/z5O9I/2W5Yvrh7IuqNeYH+0Q==}
+    dependencies:
+      multiformats: 13.1.0
+    dev: true
+
   /unbox-primitive@1.0.2:
     resolution: {integrity: sha512-61pPlCD9h51VoreyJ0BReideM3MDKMKnh6+V9L08331ipq6Q8OFXZYiqP6n/tbHx4s5I9uRhcye6BrbkizkBDw==}
     dependencies:
@@ -10306,6 +10392,13 @@ packages:
       has-bigints: 1.0.2
       has-symbols: 1.0.3
       which-boxed-primitive: 1.0.2
+    dev: true
+
+  /unbzip2-stream@1.4.3:
+    resolution: {integrity: sha512-mlExGW4w71ebDJviH16lQLtZS32VKqsSfk80GCfUlwT/4/hNRFsoscrF/c++9xinkMzECL1uL9DDwXqFWkruPg==}
+    dependencies:
+      buffer: 5.7.1
+      through: 2.3.8
     dev: true
 
   /undici-types@5.26.5:
@@ -10746,6 +10839,13 @@ packages:
       yargs-parser: 21.1.1
     dev: true
 
+  /yauzl@2.10.0:
+    resolution: {integrity: sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==}
+    dependencies:
+      buffer-crc32: 0.2.13
+      fd-slicer: 1.1.0
+    dev: true
+
   /yn@3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
     engines: {node: '>=6'}
@@ -10824,4 +10924,16 @@ packages:
     dependencies:
       is-node: 1.0.2
       numerous: 1.0.3
+    dev: true
+
+  github.com/shockpkg/archive-files/da70511854c93c257210c4faf1aa04364ab0f7e1:
+    resolution: {tarball: https://codeload.github.com/shockpkg/archive-files/tar.gz/da70511854c93c257210c4faf1aa04364ab0f7e1}
+    name: '@shockpkg/archive-files'
+    version: 3.2.2
+    engines: {node: '>=18.12.0'}
+    dependencies:
+      '@shockpkg/hdi-mac': 3.1.1
+      it-tar: 6.0.1
+      unbzip2-stream: 1.4.3
+      yauzl: 2.10.0
     dev: true

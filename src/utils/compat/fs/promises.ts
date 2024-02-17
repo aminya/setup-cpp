@@ -26,4 +26,5 @@ export const {
   unlink,
   utimes,
   writeFile,
+  rm,
 } = promises
