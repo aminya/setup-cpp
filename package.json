@@ -186,7 +186,8 @@
     "electron": false,
     "patha": "patha/dist/index.node.mjs",
     "admina": "admina/dist/index.mjs",
-    "fs/promises": "./src/utils/compat/fs/promises.ts"
+    "fs/promises": "./src/utils/compat/fs/promises.ts",
+    "stream/promises": "./src/utils/compat/stream/promises.ts"
   },
   "targets": {
     "main": {
