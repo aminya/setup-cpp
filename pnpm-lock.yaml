@@ -24,8 +24,8 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9(@babel/core@7.23.9)
       '@shockpkg/archive-files':
-        specifier: https://github.com/aminya/archive-files#f12d4f989d6d5698a9fc3f6fd805d0923b2c2a9e
-        version: github.com/aminya/archive-files/f12d4f989d6d5698a9fc3f6fd805d0923b2c2a9e
+        specifier: https://github.com/aminya/archive-files#54ec59fad46aca736ac6feb6c7bb526528141b9d
+        version: github.com/aminya/archive-files/54ec59fad46aca736ac6feb6c7bb526528141b9d
       '@swc/jest':
         specifier: ^0.2.36
         version: 0.2.36(@swc/core@1.4.1)
@@ -10865,8 +10865,8 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
-  github.com/aminya/archive-files/f12d4f989d6d5698a9fc3f6fd805d0923b2c2a9e:
-    resolution: {tarball: https://codeload.github.com/aminya/archive-files/tar.gz/f12d4f989d6d5698a9fc3f6fd805d0923b2c2a9e}
+  github.com/aminya/archive-files/54ec59fad46aca736ac6feb6c7bb526528141b9d:
+    resolution: {tarball: https://codeload.github.com/aminya/archive-files/tar.gz/54ec59fad46aca736ac6feb6c7bb526528141b9d}
     name: '@shockpkg/archive-files'
     version: 3.2.2
     engines: {node: '>=18.12.0'}
