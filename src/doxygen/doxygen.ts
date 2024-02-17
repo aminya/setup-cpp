@@ -18,6 +18,7 @@ import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
 import { macosVersion } from "../utils/env/macos_version"
+import { setupDmg } from "../utils/setup/setupDmg"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -43,6 +44,16 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
         url: `https://www.doxygen.nl/files/${folderName}.windows.x64.bin.zip`,
       }
     }
+    case "darwin": {
+      const folderName = `Doxygen-${version}`
+      return {
+        binRelativeDir: "bin/",
+        binFileName: addExeExt("doxygen"),
+        extractedFolderName: folderName,
+        extractFunction: setupDmg,
+        url: `https://doxygen.nl/files/${folderName}.dmg`,
+      }
+    }
     default:
       throw new Error(`Unsupported platform '${platform}'`)
   }
@@ -64,7 +75,12 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       return installationInfo
     }
     case "darwin": {
-      const installationInfo = await setupBrewPack("doxygen", undefined)
+      let installationInfo: InstallationInfo
+      try {
+        installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
+      } catch {
+        installationInfo = await setupBrewPack("doxygen", undefined)
+      }
       // only install graphviz if the macOS version is greater than 11
       if (macosVersion()[0] > 11) {
         await setupGraphviz(getVersion("graphviz", undefined), "", arch)
@@ -87,7 +103,11 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         try {
           // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
           installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-          await setupAptPack([{ name: "libclang-cpp9" }])
+          try {
+            await setupAptPack([{ name: "libclang-cpp9" }])
+          } catch (err) {
+            info(`Failed to download libclang-cpp9 that might be needed for running doxygen. ${err}`)
+          }
         } catch (err) {
           notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
           installationInfo = await setupAptPack([{ name: "doxygen" }])
