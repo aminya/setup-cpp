@@ -24,8 +24,8 @@ importers:
         specifier: ^7.23.9
         version: 7.23.9(@babel/core@7.23.9)
       '@shockpkg/archive-files':
-        specifier: https://github.com/shockpkg/archive-files#3.2.2
-        version: github.com/shockpkg/archive-files/da70511854c93c257210c4faf1aa04364ab0f7e1
+        specifier: https://github.com/aminya/archive-files#f12d4f989d6d5698a9fc3f6fd805d0923b2c2a9e
+        version: github.com/aminya/archive-files/f12d4f989d6d5698a9fc3f6fd805d0923b2c2a9e
       '@swc/jest':
         specifier: ^0.2.36
         version: 0.2.36(@swc/core@1.4.1)
@@ -10865,6 +10865,18 @@ packages:
       readable-stream: 3.6.2
     dev: true
 
+  github.com/aminya/archive-files/f12d4f989d6d5698a9fc3f6fd805d0923b2c2a9e:
+    resolution: {tarball: https://codeload.github.com/aminya/archive-files/tar.gz/f12d4f989d6d5698a9fc3f6fd805d0923b2c2a9e}
+    name: '@shockpkg/archive-files'
+    version: 3.2.2
+    engines: {node: '>=18.12.0'}
+    dependencies:
+      '@shockpkg/hdi-mac': 3.1.1
+      it-tar: 6.0.1
+      unbzip2-stream: 1.4.3
+      yauzl: 2.10.0
+    dev: true
+
   github.com/aminya/babel-plugin-remove-node-prefix/95fcbd92405b99a6eece48c493548996f12e6519(@babel/core@7.23.9):
     resolution: {tarball: https://codeload.github.com/aminya/babel-plugin-remove-node-prefix/tar.gz/95fcbd92405b99a6eece48c493548996f12e6519}
     id: github.com/aminya/babel-plugin-remove-node-prefix/95fcbd92405b99a6eece48c493548996f12e6519
@@ -10924,16 +10936,4 @@ packages:
     dependencies:
       is-node: 1.0.2
       numerous: 1.0.3
-    dev: true
-
-  github.com/shockpkg/archive-files/da70511854c93c257210c4faf1aa04364ab0f7e1:
-    resolution: {tarball: https://codeload.github.com/shockpkg/archive-files/tar.gz/da70511854c93c257210c4faf1aa04364ab0f7e1}
-    name: '@shockpkg/archive-files'
-    version: 3.2.2
-    engines: {node: '>=18.12.0'}
-    dependencies:
-      '@shockpkg/hdi-mac': 3.1.1
-      it-tar: 6.0.1
-      unbzip2-stream: 1.4.3
-      yauzl: 2.10.0
     dev: true
