@@ -7,17 +7,17 @@ import { macosVersion } from "../../utils/env/macos_version"
 
 jest.setTimeout(300000)
 describe("setup-graphviz", () => {
+  if (process.platform === "darwin" && macosVersion()[0] <= 11) {
+    test.skip("Skipping graphviz test on macOS 11 or earlier", () => {})
+    return
+  }
+
   let directory: string
   beforeAll(async () => {
     directory = await setupTmpDir("graphviz")
   })
 
   it("should setup graphviz", async () => {
-    if (macosVersion()[0] <= 11) {
-      test.todo("Skipping graphviz test on macOS 11 or earlier")
-      return
-    }
-
     const installInfo = await setupGraphviz(
       getVersion("graphviz", undefined, await ubuntuVersion()),
       directory,

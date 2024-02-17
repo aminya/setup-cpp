@@ -7,6 +7,10 @@ import memoize from "micro-memoize"
  * @returns {number[]} - The macOS version as an array of numbers
  */
 function macosVersion_raw() {
+  if (process.platform !== "darwin") {
+    return []
+  }
+
   const { version } = macosRelease()
   return version.split(".").map((v) => parseInt(v, 10))
 }
