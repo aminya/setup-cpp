@@ -235,6 +235,9 @@ export async function isPackageInstalled(regexp: string) {
   try {
     // check if a package matching the regexp is installed
     const { stdout } = await execa("dpkg", ["-l", regexp])
+    if (typeof stdout !== "string") {
+      return false
+    }
     const lines = stdout.split("\n")
     // check if the output contains any lines that start with "ii"
     return lines.some((line) => line.startsWith("ii"))
