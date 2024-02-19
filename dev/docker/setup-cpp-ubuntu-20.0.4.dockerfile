@@ -11,7 +11,7 @@ RUN apt-get update -qq && \
     apt-get update -qq && \
     apt-get install -y --no-install-recommends nodejs && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.36.2 && \
+    npm install -g setup-cpp@v0.37.0 && \
     # install the compiler and tools
     setup-cpp \
         --nala true \
