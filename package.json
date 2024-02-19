@@ -31,7 +31,7 @@
     "build": "run-s clean build.packages && run-p lint.tsc build.parcel copy.matchers",
     "build.packages": "pnpm run -r build",
     "build.parcel": "cross-env NODE_ENV=production parcel build && babel ./dist --out-dir dist --plugins @upleveled/babel-plugin-remove-node-prefix --compact --no-babelrc --source-maps true",
-    "bump": "ncu -u -x numerous,execa,prettier && pnpm update",
+    "bump": "ncu -u -x numerous,execa,prettier,@types/node && pnpm update",
     "clean": "shx rm -rf ./dist ./exe ./packages/*/dist/ && shx mkdir -p ./dist/legacy ./dist/actions ./dist/modern ",
     "copy.matchers": "run-p copy.matchers.legacy copy.matchers.actions copy.matchers.modern",
     "copy.matchers.legacy": "shx cp ./src/gcc/gcc_matcher.json ./dist/legacy/ && shx cp ./src/msvc/msvc_matcher.json ./dist/legacy/ && shx cp ./src/python/python_matcher.json ./dist/legacy/ && shx cp ./src/llvm/llvm_matcher.json ./dist/legacy/",
@@ -75,15 +75,16 @@
     "@actions/exec": "^1.1.1",
     "@actions/io": "^1.1.3",
     "@actions/tool-cache": "^2.0.1",
-    "@babel/cli": "^7.23.4",
-    "@swc/jest": "^0.2.31",
+    "@babel/cli": "^7.23.9",
+    "@shockpkg/archive-files": "https://github.com/aminya/archive-files#54ec59fad46aca736ac6feb6c7bb526528141b9d",
+    "@swc/jest": "^0.2.36",
     "@types/cross-spawn": "^6.0.6",
     "@types/eslint": "^8.56.2",
-    "@types/jest": "^29.5.11",
+    "@types/jest": "^29.5.12",
     "@types/mri": "^1.1.5",
-    "@types/node": "^20.11.5",
+    "@types/node": "^12",
     "@types/prettier": "2.7.3",
-    "@types/semver": "^7.5.6",
+    "@types/semver": "^7.5.7",
     "@types/which": "^3.0.3",
     "@upleveled/babel-plugin-remove-node-prefix": "github:aminya/babel-plugin-remove-node-prefix#95fcbd92405b99a6eece48c493548996f12e6519",
     "admina": "^1.0.1",
@@ -102,12 +103,13 @@
     "execa": "^7.2.0",
     "is-url-online": "^1.5.0",
     "jest": "^29.7.0",
+    "macos-release": "^3.2.0",
     "micro-memoize": "^4.1.2",
     "mkdirp": "^3.0.1",
     "mri": "^1.2.0",
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#97843d525947e3f3776ee359b597316909754c4d",
-    "npm-check-updates": "^16.14.12",
-    "npm-run-all2": "^6.1.1",
+    "npm-check-updates": "^16.14.15",
+    "npm-run-all2": "^6.1.2",
     "numerous": "1.0.3",
     "p-timeout": "^6.1.2",
     "parcel": "2.11.0",
@@ -117,7 +119,7 @@
     "prettier-config-atomic": "^4.0.0",
     "readme-md-generator": "^1.0.0",
     "retry-as-promised": "^7.0.4",
-    "semver": "7.5.4",
+    "semver": "7.6.0",
     "setup-python": "github:aminya/setup-python#a783db655c6e40317e2c0c96f9d162d9c9f4a751",
     "shx": "0.3.4",
     "simple-update-notifier": "^2.0.0",
@@ -184,12 +186,8 @@
     "electron": false,
     "patha": "patha/dist/index.node.mjs",
     "admina": "admina/dist/index.mjs",
-    "fs/promises": "./src/utils/compat/fs/promises.ts"
-  },
-  "pnpm": {
-    "overrides": {
-      "@actions/http-client": "2.1.0"
-    }
+    "fs/promises": "./src/utils/compat/fs/promises.ts",
+    "stream/promises": "./src/utils/compat/stream/promises.ts"
   },
   "targets": {
     "main": {
@@ -206,7 +204,7 @@
     "actions": {
       "context": "node",
       "engines": {
-        "node": ">=16.x"
+        "node": ">=20.x"
       },
       "includeNodeModules": {
         "update-notifier": false

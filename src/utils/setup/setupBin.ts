@@ -26,7 +26,7 @@ export type PackageInfo = {
   binFileName: string
   /** The function to extract the downloaded archive. It can be `undefined`, if the binary itself is downloaded directly. */
   extractFunction?: {
-    (file: string, dest: string): Promise<string> | Promise<void>
+    (file: string, dest: string): Promise<unknown>
   }
 }
 

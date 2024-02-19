@@ -17,7 +17,8 @@
     "preserveSymlinks": true,
     "removeComments": false,
     "skipLibCheck": true,
-    "lib": ["ES2020", "dom"],
+    // target Node.js 12 https://node.green/#ES2019
+    "lib": ["ES2019", "dom"],
     "target": "ESNext",
     "allowJs": true,
     "esModuleInterop": true,

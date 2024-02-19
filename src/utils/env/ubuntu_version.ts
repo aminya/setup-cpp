@@ -38,6 +38,10 @@ export const ubuntuVersion = memoize(ubuntuVersion_raw, { isPromise: true })
 
 /** Detect Ubuntu version using os.version() for Ubuntu based distros */
 function detectUsingOsVersion() {
+  if (!("version" in os && typeof os.version === "function")) {
+    return null
+  }
+
   // #46~22.04.1-Ubuntu SMP ...
   const osVersion = os.version()
   const versionSplitted = osVersion.split(".")
