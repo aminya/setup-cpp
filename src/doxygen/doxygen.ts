@@ -75,12 +75,13 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       return installationInfo
     }
     case "darwin": {
-      let installationInfo: InstallationInfo
-      try {
-        installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-      } catch {
-        installationInfo = await setupBrewPack("doxygen", undefined)
-      }
+      // let installationInfo: InstallationInfo
+      // try {
+      //   installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
+      // } catch {
+      const installationInfo = await setupBrewPack("doxygen", undefined)
+      // }
+
       // only install graphviz if the macOS version is greater than 11
       if (macosVersion()[0] > 11) {
         await setupGraphviz(getVersion("graphviz", undefined), "", arch)
