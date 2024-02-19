@@ -47,7 +47,7 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
     case "darwin": {
       const folderName = `Doxygen-${version}`
       return {
-        binRelativeDir: "bin/",
+        binRelativeDir: "Doxygen/Doxygen.app/Contents/Resources/",
         binFileName: addExeExt("doxygen"),
         extractedFolderName: folderName,
         extractFunction: setupDmg,
