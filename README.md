@@ -148,6 +148,7 @@ jobs:
           clangtidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
           # ...
 ```
+
 ### Prebuilt Docker Images
 
 To provide fast development environments, `setup-cpp` provides several prebuilt docker images that have the tools you need (e.g. `llvm, cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache`).
