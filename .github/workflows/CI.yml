@@ -55,7 +55,7 @@ jobs:
       - name: Build
         run: |
           pnpm build
-          pnpm build.docker_tests
+          pnpm build.docker-ci
 
       - name: Lint
         run: |
@@ -215,7 +215,7 @@ jobs:
           node ./dist/actions/setup-cpp.js --help
 
   Docker:
-    name: Test-${{ matrix.container }}
+    name: Docker-${{ matrix.container.image }}
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     needs: [Build]
     runs-on: ${{ matrix.os }}
@@ -229,12 +229,12 @@ jobs:
         pnpm:
           - 8
         container:
-          - "ubuntu.dockerfile"
-          - "fedora.dockerfile"
-          - "arch.dockerfile"
-          - "ubuntu-mingw.dockerfile"
-          # - "fedora-mingw.dockerfile"
-          # - "arch-mingw.dockerfile"
+          - { file: "ubuntu-llvm.dockerfile", image: "setup-cpp-ubuntu-llvm", tag: "22.04-0.37.0" }
+          - { file: "fedora-llvm.dockerfile", image: "setup-cpp-fedora-llvm", tag: "40-0.37.0" }
+          - { file: "arch-llvm.dockerfile", image: "setup-cpp-arch-llvm", tag: "base-0.37.0" }
+          - { file: "ubuntu-mingw.dockerfile", image: "setup-cpp-ubuntu-mingw", tag: "22.04-0.37.0" }
+          # - { file: "fedora-mingw.dockerfile", image: "setup-cpp-fedora-mingw", tag: "40-0.37.0" }
+          # - { file: "arch-mingw.dockerfile", image: "setup-cpp-arch-mingw", tag: "base-0.37.0" }
     steps:
       - uses: actions/checkout@v4
         with:
@@ -245,10 +245,28 @@ jobs:
         with:
           name: dist
 
-      - name: Build
-        id: docker_build
-        run: |
-          docker build -f ./dev/docker/__tests__/${{ matrix.container }} -t setup-cpp .
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        if: ${{ github.event_name != 'pull_request' }}
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./dev/docker/ci/${{ matrix.container.file }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:${{ matrix.container.tag }},${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:latest
+
+      - name: Test
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./dev/docker/examples/${{ matrix.container.file }}
+          push: false
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/test-${{ matrix.container.image }}:${{ matrix.container.tag }}
 
   Release:
     if: startsWith(github.ref, 'refs/tags/')

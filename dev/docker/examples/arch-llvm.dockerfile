@@ -1,5 +1,5 @@
 #### Building (example)
-FROM setup-cpp-fedora AS builder
+FROM aminya/setup-cpp-arch-llvm AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
@@ -8,7 +8,7 @@ RUN bash -c 'source ~/.cpprc \
 
 #### Running environment
 # use a fresh image as the runner
-FROM fedora:40 as runner
+FROM archlinux:base as runner
 
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/

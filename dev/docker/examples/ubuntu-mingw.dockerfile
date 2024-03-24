@@ -1,5 +1,5 @@
 #### Cross Building (example)
-FROM setup-cpp-ubuntu-mingw AS builder-mingw
+FROM aminya/setup-cpp-ubuntu-mingw AS builder-mingw
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app

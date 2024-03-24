@@ -55,19 +55,7 @@
     "test.lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/",
     "test.lint.prettier": "prettier . --check",
     "test": "jest --runInBand --forceExit --coverage",
-    "build.docker_tests": "node ./dev/docker/__tests__/generate-docker-tests.mjs",
-    "build.docker.arch": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/arch.dockerfile -t setup-cpp:arch .",
-    "build.docker.fedora": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/fedora.dockerfile -t setup-cpp:fedora .",
-    "build.docker.ubuntu": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/ubuntu.dockerfile -t setup-cpp:ubuntu .",
-    "build.docker.arch.mingw": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/arch-mingw.dockerfile -t setup-cpp:arch-mingw .",
-    "build.docker.fedora.mingw": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/fedora-mingw.dockerfile -t setup-cpp:fedora-mingw .",
-    "build.docker.ubuntu.mingw": "pnpm build.docker_tests && docker build -f ./dev/docker/__tests__/ubuntu-mingw.dockerfile -t setup-cpp:ubuntu-mingw .",
-    "test.docker.arch": "pnpm build.docker.arch && container-structure-test test --image setup-cpp:arch --config ./dev/docker/__tests__/arch.yml",
-    "test.docker.fedora": "pnpm build.docker.fedora && container-structure-test test --image setup-cpp:fedora --config ./dev/docker/__tests__/fedora.yml",
-    "test.docker.ubuntu": "pnpm build.docker.ubuntu && container-structure-test test --image setup-cpp:ubuntu --config ./dev/docker/__tests__/ubuntu.yml",
-    "test.docker.arch.mingw": "pnpm build.docker.arch.mingw && container-structure-test test --image setup-cpp:arch-mingw --config ./dev/docker/__tests__/arch-mingw.yml",
-    "test.docker.fedora.mingw": "pnpm build.docker.fedora.mingw && container-structure-test test --image setup-cpp:fedora-mingw --config ./dev/docker/__tests__/fedora-mingw.yml",
-    "test.docker.ubuntu.mingw": "pnpm build.docker.ubuntu.mingw && container-structure-test test --image setup-cpp:ubuntu-mingw --config ./dev/docker/__tests__/ubuntu-mingw.yml"
+    "build.docker-ci": "node ./dev/docker/ci/docker-ci.mjs"
   },
   "prettier": "prettier-config-atomic",
   "devDependencies": {
