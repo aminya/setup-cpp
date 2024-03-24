@@ -258,17 +258,7 @@ jobs:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.file }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:${{ matrix.container.tag }}
-
-      - name: Tag
-        run: |
-          docker tag ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:${{ matrix.container.tag }} ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:latest
-
-      - name: Push Latest
-        if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          docker login -u ${{ vars.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-          docker push ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:latest
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:${{ matrix.container.tag }},${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:latest
 
       - name: Test
         uses: docker/build-push-action@v5
