@@ -1,5 +1,5 @@
 #### Building (example)
-FROM setup-cpp-ubuntu AS builder
+FROM setup-cpp-ubuntu-llvm AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app

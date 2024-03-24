@@ -1,5 +1,5 @@
 #### Building (example)
-FROM setup-cpp-fedora AS builder
+FROM setup-cpp-fedora-llvm AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
