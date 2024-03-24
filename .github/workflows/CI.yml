@@ -229,12 +229,12 @@ jobs:
         pnpm:
           - 8
         container:
-          - { file: "ubuntu-llvm.dockerfile", image: "setup-cpp-ubuntu-llvm", tag: "22.04-17" }
-          - { file: "fedora-llvm.dockerfile", image: "setup-cpp-fedora-llvm", tag: "40-17" }
-          - { file: "arch-llvm.dockerfile", image: "setup-cpp-arch-llvm", tag: "base-17" }
-          - { file: "ubuntu-mingw.dockerfile", image: "setup-cpp-ubuntu-mingw", tag: "22.04-13" }
-          # - { file: "fedora-mingw.dockerfile", image: "setup-cpp-fedora-mingw", tag: "40-13" }
-          # - { file: "arch-mingw.dockerfile", image: "setup-cpp-arch-mingw", tag: "base-13" }
+          - { file: "ubuntu-llvm.dockerfile", image: "setup-cpp-ubuntu-llvm", tag: "22.04-0.37.0" }
+          - { file: "fedora-llvm.dockerfile", image: "setup-cpp-fedora-llvm", tag: "40-0.37.0" }
+          - { file: "arch-llvm.dockerfile", image: "setup-cpp-arch-llvm", tag: "base-0.37.0" }
+          - { file: "ubuntu-mingw.dockerfile", image: "setup-cpp-ubuntu-mingw", tag: "22.04-0.37.0" }
+          # - { file: "fedora-mingw.dockerfile", image: "setup-cpp-fedora-mingw", tag: "40-0.37.0" }
+          # - { file: "arch-mingw.dockerfile", image: "setup-cpp-arch-mingw", tag: "base-0.37.0" }
     steps:
       - uses: actions/checkout@v4
         with:
@@ -259,6 +259,11 @@ jobs:
           file: ./dev/docker/ci/${{ matrix.container.file }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:${{ matrix.container.tag }}
+
+      - name: Tag
+        run: |
+          docker tag ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:${{ matrix.container.tag }} ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:latest
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/${{ matrix.container.image }}:latest
 
       - name: Test
         uses: docker/build-push-action@v5
