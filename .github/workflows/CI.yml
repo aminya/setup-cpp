@@ -215,7 +215,7 @@ jobs:
           node ./dist/actions/setup-cpp.js --help
 
   Docker:
-    name: Test-${{ matrix.container }}
+    name: Docker-${{ matrix.container.image }}
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     needs: [Build]
     runs-on: ${{ matrix.os }}

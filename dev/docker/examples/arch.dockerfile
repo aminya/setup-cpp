@@ -1,5 +1,5 @@
 #### Building (example)
-FROM setup-cpp-arch-llvm AS builder
+FROM aminya/setup-cpp-arch-llvm AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
