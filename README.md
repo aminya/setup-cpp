@@ -148,6 +148,31 @@ jobs:
           clangtidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
           # ...
 ```
+### Prebuilt Docker Images
+
+To provide fast development environments, `setup-cpp` provides several prebuilt docker images that have the tools you need (e.g. `llvm, cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache`).
+
+You can use these images as a base image for your project.
+
+```dockerfile
+FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.37.0 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.37.0 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-fedora-llvm:40-0.37.0 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-arch-llvm:base-0.37.0 AS builder
+```
+
+The names are in the format `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
+
+If you need to install the tools selectively, see the next section.
 
 ### Inside Docker
 
