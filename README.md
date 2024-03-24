@@ -211,7 +211,7 @@ If you want to build the ones included, then run:
 ```shell
 git clone --recurse-submodules https://github.com/aminya/setup-cpp
 cd ./setup-cpp
-docker build -f ./dev/docker/setup-cpp-ubuntu.dockerfile -t setup-cpp-ubuntu .
+docker build -f ./dev/docker/setup-cpp/setup-cpp-ubuntu.dockerfile -t setup-cpp-ubuntu-llvm:22.04-17 ./
 ```
 
 Where you should use the path to the dockerfile after `-f`.
@@ -219,7 +219,7 @@ Where you should use the path to the dockerfile after `-f`.
 After build, run the following to start an interactive shell in your container
 
 ```shell
-docker run -it setup-cpp
+docker run -it setup-cpp-ubuntu-llvm:22.04-17
 ```
 
 ### Inside Docker inside GitHub Actions
