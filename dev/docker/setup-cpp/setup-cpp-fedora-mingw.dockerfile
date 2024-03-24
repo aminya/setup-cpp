@@ -1,5 +1,5 @@
 ## base image
-FROM fedora:40 as setup-cpp-fedora-mingw
+FROM fedora:41 as setup-cpp-fedora-mingw
 
 # install nodejs
 RUN dnf -y install nodejs npm && \

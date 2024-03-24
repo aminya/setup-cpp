@@ -1,5 +1,5 @@
 ## base image
-FROM fedora:40 as setup-cpp-fedora
+FROM fedora:41 as setup-cpp-fedora
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
