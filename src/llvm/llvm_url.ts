@@ -75,6 +75,9 @@ export const VERSIONS: Set<string> = getVersions([
   "17.0.4",
   "17.0.5",
   "17.0.6",
+  "18.1.0",
+  "18.1.1",
+  "18.1.2",
 ])
 
 /** The LLVM versions that were never released for the Windows platform. */
@@ -113,6 +116,9 @@ const DARWIN_MISSING = new Set([
   "17.0.4",
   "17.0.5",
   "17.0.6",
+  "18.1.0",
+  "18.1.1",
+  "18.1.2",
 ])
 
 /**

@@ -6,14 +6,15 @@ import { isArch } from "../utils/env/isArch"
 function getLLVMDefault() {
   switch (process.platform) {
     case "win32":
-      return "17.0.6"
+      return "18.1.2"
     case "linux":
       // used for non-ubuntu (Fedora, Arch)
+      // the suffixes relate to the suffix in the llvm releases
       return "17.0.6-ubuntu-22.04"
     case "darwin":
       return "15.0.3"
     default:
-      return "17.0.6"
+      return "18.1.2"
   }
 }
 
@@ -53,23 +54,24 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     22: "8.0.0-1",
     20: "7.0.0-2",
   },
+  // the suffixes relate to the suffix in the llvm releases
   llvm: {
-    22: "17.0.6-ubuntu-22.04",
-    20: "17.0.6-ubuntu-22.04",
+    22: "18.1.2",
+    20: "18.1.2",
     18: "15.0.6-ubuntu-18.04",
     16: "15.0.6-ubuntu-18.04",
     14: "13.0.0-ubuntu-16.04",
   },
   clangtidy: {
-    22: "17.0.2-ubuntu-22.04",
-    20: "17.0.2-ubuntu-22.04",
+    22: "18.1.2",
+    20: "18.1.2",
     18: "15.0.6-ubuntu-18.04",
     16: "15.0.6-ubuntu-18.04",
     14: "13.0.0-ubuntu-16.04",
   },
   clangformat: {
-    22: "17.0.2-ubuntu-22.04",
-    20: "17.0.2-ubuntu-22.04",
+    22: "18.1.2",
+    20: "18.1.2",
     18: "15.0.6-ubuntu-18.04",
     16: "15.0.6-ubuntu-18.04",
     14: "13.0.0-ubuntu-16.04",
