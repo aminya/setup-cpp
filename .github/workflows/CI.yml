@@ -36,8 +36,6 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
-            ./node_modules
-            ./.parcel-cache
           key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-cache-OS:${{ matrix.os }}-"
