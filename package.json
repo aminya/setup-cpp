@@ -93,7 +93,7 @@
     "micro-memoize": "^4.1.2",
     "mkdirp": "^3.0.1",
     "mri": "^1.2.0",
-    "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#97843d525947e3f3776ee359b597316909754c4d",
+    "msvc-dev-cmd": "github:ilammy/msvc-dev-cmd#460a772e4cf7358f9f2f23773240813e40e7a894",
     "npm-check-updates": "^16.14.18",
     "npm-run-all2": "^6.1.2",
     "numerous": "1.0.3",

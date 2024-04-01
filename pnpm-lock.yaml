@@ -114,8 +114,8 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0
       msvc-dev-cmd:
-        specifier: github:aminya/msvc-dev-cmd#97843d525947e3f3776ee359b597316909754c4d
-        version: github.com/aminya/msvc-dev-cmd/97843d525947e3f3776ee359b597316909754c4d
+        specifier: github:ilammy/msvc-dev-cmd#460a772e4cf7358f9f2f23773240813e40e7a894
+        version: github.com/ilammy/msvc-dev-cmd/460a772e4cf7358f9f2f23773240813e40e7a894
       npm-check-updates:
         specifier: ^16.14.18
         version: 16.14.18
@@ -11635,14 +11635,6 @@ packages:
       '@babel/core': 7.24.3
     dev: true
 
-  github.com/aminya/msvc-dev-cmd/97843d525947e3f3776ee359b597316909754c4d:
-    resolution: {tarball: https://codeload.github.com/aminya/msvc-dev-cmd/tar.gz/97843d525947e3f3776ee359b597316909754c4d}
-    name: msvc-dev-cmd
-    version: 1.13.0-dev
-    dependencies:
-      '@actions/core': 1.10.1
-    dev: true
-
   github.com/aminya/setup-python/a783db655c6e40317e2c0c96f9d162d9c9f4a751:
     resolution: {tarball: https://codeload.github.com/aminya/setup-python/tar.gz/a783db655c6e40317e2c0c96f9d162d9c9f4a751}
     name: setup-python
@@ -11683,4 +11675,12 @@ packages:
     dependencies:
       is-node: 1.0.2
       numerous: 1.0.3
+    dev: true
+
+  github.com/ilammy/msvc-dev-cmd/460a772e4cf7358f9f2f23773240813e40e7a894:
+    resolution: {tarball: https://codeload.github.com/ilammy/msvc-dev-cmd/tar.gz/460a772e4cf7358f9f2f23773240813e40e7a894}
+    name: msvc-dev-cmd
+    version: 1.13.0-dev
+    dependencies:
+      '@actions/core': 1.10.1
     dev: true

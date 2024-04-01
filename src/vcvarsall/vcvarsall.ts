@@ -35,5 +35,5 @@ export async function setupVCVarsall(
     await addEnv("VCTargetsPath", VCTargetsPath)
   }
 
-  setupMSVCDevCmd(getArch(arch), sdk, toolset, uwp, spectre, vsversion)
+  await setupMSVCDevCmd(getArch(arch), sdk, toolset, uwp, spectre, vsversion)
 }
