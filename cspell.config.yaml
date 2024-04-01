@@ -12,6 +12,7 @@ ignorePaths:
   - .vscode/extensions.json
 words:
   - aarch
+  - hadolint
   - aminya
   - applellvm
   - bazel
