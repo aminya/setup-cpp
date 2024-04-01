@@ -9,6 +9,10 @@ on:
     tags:
       - "*"
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   Build:
     runs-on: ubuntu-22.04
@@ -32,8 +36,6 @@ jobs:
           path: |
             ~/.pnpm-store
             D:\.pnpm-store
-            ./node_modules
-            ./.parcel-cache
           key: "setupcpp-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
           restore-keys: |
             "setupcpp-cache-OS:${{ matrix.os }}-"
@@ -60,6 +62,14 @@ jobs:
       - name: Lint
         run: |
           pnpm run test.lint
+
+      - name: Validate Dist
+        run: |
+          if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff --ignore-space-at-eol --text dist/
+            exit 1
+          fi
 
       - name: Upload Dist
         uses: actions/upload-artifact@v3
