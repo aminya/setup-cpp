@@ -5,16 +5,16 @@ import { error, warning } from "ci-log"
 import escapeSpace from "escape-path-with-spaces"
 import escapeQuote from "escape-quotes"
 import { execPowershell } from "exec-powershell"
-import { appendFileSync, readFileSync, writeFileSync } from "fs"
+import { appendFileSync, readFile, readFileSync, writeFileSync } from "fs"
 import { delimiter } from "path"
 import { pathExists } from "path-exists"
 import { untildifyUser } from "untildify-user"
 
 type AddEnvOptions = {
   /** If true, the value will be escaped with quotes and spaces will be escaped with backslash */
-  shouldEscapeSpace?: boolean
+  shouldEscapeSpace: boolean
   /** If true, the variable will be only added if it is not defined */
-  shouldAddOnlyIfNotDefined?: boolean
+  shouldAddOnlyIfNotDefined: boolean
 }
 
 const defaultAddEnvOptions: AddEnvOptions = {
@@ -30,8 +30,10 @@ const defaultAddEnvOptions: AddEnvOptions = {
 export async function addEnv(
   name: string,
   valGiven: string | undefined,
-  options: AddEnvOptions = defaultAddEnvOptions,
+  givenOptions: Partial<AddEnvOptions> = defaultAddEnvOptions,
 ) {
+  const options = { ...defaultAddEnvOptions, ...givenOptions }
+
   const val = escapeString(valGiven ?? "", options.shouldEscapeSpace)
   try {
     if (GITHUB_ACTIONS) {
@@ -173,14 +175,12 @@ export async function setupCppInProfile() {
 
   if (await pathExists(cpprc_path)) {
     const cpprc_content = readFileSync(cpprc_path, "utf8")
-    if (cpprc_content.includes(source_cpprc_str)) {
+    if (!cpprc_content.includes(source_cpprc_str)) {
       // already executed setupCppInProfile
-      return
+      appendFileSync(cpprc_path, `\n${source_cpprc_str}\n`)
+      info(`Added ${source_cpprc_str} to ${cpprc_path}`)
     }
   }
-
-  appendFileSync(cpprc_path, `\n${source_cpprc_str}\n`)
-  info(`Added ${source_cpprc_str} to ${cpprc_path}`)
 
   // source cpprc in bashrc/profile
 
@@ -190,13 +190,23 @@ export async function setupCppInProfile() {
   try {
     // source cpprc in .profile
     const profile_path = untildifyUser("~/.profile")
-    appendFileSync(profile_path, source_cpprc_string)
-    info(`${source_cpprc_string} was added to ${profile_path}`)
+    if (await pathExists(profile_path)) {
+      const profileContent = readFileSync(profile_path, "utf-8")
+      if (!profileContent.includes(source_cpprc_string)) {
+        appendFileSync(profile_path, source_cpprc_string)
+        info(`${source_cpprc_string} was added to ${profile_path}`)
+      }
+    }
 
     // source cpprc in .bashrc too
     const bashrc_path = untildifyUser("~/.bashrc")
-    appendFileSync(bashrc_path, source_cpprc_string)
-    info(`${source_cpprc_string} was added to ${bashrc_path}`)
+    if (await pathExists(bashrc_path)) {
+      const bashrcContent = readFileSync(bashrc_path, "utf-8")
+      if (!bashrcContent.includes(source_cpprc_string)) {
+        appendFileSync(bashrc_path, source_cpprc_string)
+        info(`${source_cpprc_string} was added to ${bashrc_path}`)
+      }
+    }
   } catch (err) {
     warning(`Failed to add ${source_cpprc_string} to .profile or .bashrc. You should add it manually: ${err}`)
   }
