@@ -2,7 +2,7 @@ import { execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { promises as fsPromises } from "fs"
 import { pathExists } from "path-exists"
-import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
+import { addEnv, cpprc_path, sourceCpprc } from "../env/addEnv"
 import { InstallationInfo } from "./setupBin"
 const { appendFile } = fsPromises
 import { info, warning } from "ci-log"
@@ -223,7 +223,7 @@ export async function updateAptAlternatives(name: string, path: string, priority
   if (GITHUB_ACTIONS) {
     return execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, priority.toString()])
   } else {
-    await setupCppInProfile()
+    await sourceCpprc()
     return appendFile(
       cpprc_path,
       `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} ${priority}; fi\n`,
