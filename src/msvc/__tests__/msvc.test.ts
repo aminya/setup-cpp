@@ -14,8 +14,8 @@ describe("setup-msvc", () => {
       await setupMSVC("", "", process.arch)
       console.log(which.sync("cl"))
     } catch (err) {
-      if ("toString" in (err as any)) {
-        warning((err as any).toString())
+      if (err instanceof Error) {
+        warning(err.toString())
       }
     }
   })
@@ -30,8 +30,8 @@ describe("setup-msvc", () => {
         await setupMSVC(`${version}`, "", process.arch)
         console.log(which.sync("cl"))
       } catch (err) {
-        if ("toString" in (err as any)) {
-          warning((err as any).toString())
+        if (err instanceof Error) {
+          warning(err.toString())
         }
       }
     })

@@ -130,7 +130,10 @@ async function setupPythonSystem(setupDir: string, version: string) {
     case "darwin": {
       installInfo = await setupBrewPack("python3", version)
       // add the python and pip binaries to the path
-      const brewPythonPrefix = await execa("brew", ["--prefix", "python"], { stdio: "pipe" })
+      const brewPythonPrefix: {
+        stdout: string
+        stderr: string
+      } = await execa("brew", ["--prefix", "python"], { stdio: "pipe" })
       const brewPythonBin = join(brewPythonPrefix.stdout, "libexec", "bin")
       await addPath(brewPythonBin)
 
@@ -176,6 +179,7 @@ async function isPythonUpToDate(candidate: string, binDir?: string) {
         }
       }
     }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const pythonBinPaths = (await which(candidate, { nothrow: true, all: true })) ?? []
     for (const pythonBinPath of pythonBinPaths) {
       // eslint-disable-next-line no-await-in-loop
@@ -215,10 +219,11 @@ async function findPip() {
 
 async function isPipUptoDate(pip: string) {
   try {
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const pipPaths = (await which(pip, { nothrow: true, all: true })) ?? []
     for (const pipPath of pipPaths) {
       // eslint-disable-next-line no-await-in-loop
-      if (pipPath !== null && (await isBinUptoDate(pipPath, MinVersions.pip!))) {
+      if (await isBinUptoDate(pipPath, MinVersions.pip!)) {
         return pipPath
       }
     }

@@ -60,7 +60,7 @@ async function patchAptLLVMScript(path: string, target_path: string, majorVersio
 }
 
 function debugScript(script: string) {
-  if (!process.env.NODE_DEBUG) {
+  if (process.env.NODE_DEBUG !== "1" && process.env.NODE_DEBUG !== "true") {
     return script.replace(/set -eux/g, "set -eu")
   }
   return script
