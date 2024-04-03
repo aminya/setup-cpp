@@ -1,7 +1,7 @@
-import { setupTask } from "../task"
-import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { GITHUB_ACTIONS } from "ci-info"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
+import { setupTask } from "../task"
 
 jest.setTimeout(300000)
 describe("setup-task", () => {

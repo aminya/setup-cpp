@@ -1,6 +1,6 @@
-import { setupConan } from "../conan"
 import { testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
+import { setupConan } from "../conan"
 
 jest.setTimeout(300000)
 describe("setup-conan", () => {

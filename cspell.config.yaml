@@ -33,6 +33,7 @@ words:
   - dearmor
   - deps
   - devel
+  - dprint
   - DVCPKG
   - dyld
   - eabi

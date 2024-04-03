@@ -1,18 +1,18 @@
-import { find, downloadTool, cacheDir } from "@actions/tool-cache"
-import { addPath } from "../env/addEnv"
-import { join } from "patha"
+import { cacheDir, downloadTool, find } from "@actions/tool-cache"
 import { info } from "ci-log"
+import { join } from "patha"
+import { addPath } from "../env/addEnv"
 
-import { tmpdir } from "os"
 import { GITHUB_ACTIONS } from "ci-info"
-import { setupAptPack } from "./setupAptPack"
-import { setupPacmanPack } from "./setupPacmanPack"
-import { isArch } from "../env/isArch"
-import { hasDnf } from "../env/hasDnf"
-import { setupDnfPack } from "./setupDnfPack"
-import { isUbuntu } from "../env/isUbuntu"
+import { tmpdir } from "os"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
+import { hasDnf } from "../env/hasDnf"
+import { isArch } from "../env/isArch"
+import { isUbuntu } from "../env/isUbuntu"
+import { setupAptPack } from "./setupAptPack"
+import { setupDnfPack } from "./setupDnfPack"
+import { setupPacmanPack } from "./setupPacmanPack"
 
 /** A type that describes a package */
 export type PackageInfo = {

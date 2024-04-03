@@ -1,13 +1,12 @@
 #### Base Image
-FROM ubuntu:22.04 as setup-cpp-ubuntu-mingw
+FROM ubuntu:22.04 AS setup-cpp-ubuntu-mingw
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
 RUN apt-get update -qq && \
-    # install nodejs
+# install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
-    
-    # install the compiler and tools
+# install the compiler and tools
     node /usr/lib/setup-cpp/setup-cpp.js \
         --nala true \
         --compiler mingw \
@@ -22,7 +21,7 @@ RUN apt-get update -qq && \
         --doxygen true \
         --ccache true \
         --powershell true && \
-    # cleanup
+# cleanup
     nala autoremove -y && \
     nala autopurge -y && \
     apt-get clean && \

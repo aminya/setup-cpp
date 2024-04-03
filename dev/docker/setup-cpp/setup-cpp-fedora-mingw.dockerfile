@@ -1,11 +1,11 @@
 ## base image
-FROM fedora:40 as setup-cpp-fedora-mingw
+FROM fedora:40 AS setup-cpp-fedora-mingw
 
 # install nodejs
 RUN dnf -y install nodejs npm && \
-    # install setup-cpp
+# install setup-cpp
     npm install -g setup-cpp@v0.37.0 && \
-    # install the compiler and tools
+# install the compiler and tools
     setup-cpp \
         --compiler mingw \
         --cmake true \
@@ -19,7 +19,7 @@ RUN dnf -y install nodejs npm && \
         --doxygen true \
         --ccache true \
         --powershell true && \
-    # cleanup
+# cleanup
     dnf clean all && \
     rm -rf /tmp/*
 

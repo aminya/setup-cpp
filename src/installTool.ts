@@ -1,12 +1,12 @@
 import { endGroup, startGroup } from "@actions/core"
 import { error } from "ci-log"
+import pTimeout from "p-timeout"
 import { join } from "patha"
 import { getSuccessMessage } from "./cli-options"
+import { setups, ToolName } from "./tool"
 import { InstallationInfo } from "./utils/setup/setupBin"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
 import { getVersion } from "./versions/versions"
-import pTimeout from "p-timeout"
-import { ToolName, setups } from "./tool"
 
 export const DEFAULT_TIMEOUT = 20 * 60 * 1000 // 20 minutes
 

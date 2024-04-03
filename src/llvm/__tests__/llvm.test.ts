@@ -1,13 +1,13 @@
-import { setupLLVM, setupClangTools, setupClangFormat } from "../llvm"
-import { getSpecificVersionAndUrl } from "../../utils/setup/version"
-import { isUrlOnline } from "is-url-online"
-import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { execaSync } from "execa"
-import path, { addExeExt } from "patha"
-import { chmodSync } from "fs"
-import { getVersion } from "../../versions/versions"
-import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import * as io from "@actions/io"
+import { execaSync } from "execa"
+import { chmodSync } from "fs"
+import { isUrlOnline } from "is-url-online"
+import path, { addExeExt } from "patha"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version"
+import { getSpecificVersionAndUrl } from "../../utils/setup/version"
+import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
+import { getVersion } from "../../versions/versions"
+import { setupClangFormat, setupClangTools, setupLLVM } from "../llvm"
 import { getLinuxUrl, getUrl, VERSIONS } from "../llvm_url"
 
 jest.setTimeout(400000)
@@ -27,24 +27,33 @@ describe("setup-llvm", () => {
 
   it("Finds URL for ubuntu version", async () => {
     expect(
-      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-16.04", (_plantform, version) =>
-        getLinuxUrl(version),
+      await getSpecificVersionAndUrl(
+        VERSIONS,
+        "linux",
+        "13.0.0-ubuntu-16.04",
+        (_plantform, version) => getLinuxUrl(version),
       ),
     ).toStrictEqual([
       "13.0.0-ubuntu-16.04",
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
     ])
     expect(
-      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.1-ubuntu-18.04", (_plantform, version) =>
-        getLinuxUrl(version),
+      await getSpecificVersionAndUrl(
+        VERSIONS,
+        "linux",
+        "13.0.1-ubuntu-18.04",
+        (_plantform, version) => getLinuxUrl(version),
       ),
     ).toStrictEqual([
       "13.0.1-ubuntu-18.04",
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
     ])
     expect(
-      await getSpecificVersionAndUrl(VERSIONS, "linux", "13.0.0-ubuntu-20.04", (_plantform, version) =>
-        getLinuxUrl(version),
+      await getSpecificVersionAndUrl(
+        VERSIONS,
+        "linux",
+        "13.0.0-ubuntu-20.04",
+        (_plantform, version) => getLinuxUrl(version),
       ),
     ).toStrictEqual([
       "13.0.0-ubuntu-20.04",

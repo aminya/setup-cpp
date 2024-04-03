@@ -1,5 +1,5 @@
-import { setupOpencppcoverage } from "../opencppcoverage"
 import { testBin } from "../../utils/tests/test-helpers"
+import { setupOpencppcoverage } from "../opencppcoverage"
 
 jest.setTimeout(300000)
 describe("setup-OpenCppCoverage", () => {

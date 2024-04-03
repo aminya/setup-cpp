@@ -1,5 +1,5 @@
+import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { setupVcpkg } from "../vcpkg"
-import { testBin, setupTmpDir } from "../../utils/tests/test-helpers"
 
 jest.setTimeout(300000)
 async function testVcpkg(directory: string) {

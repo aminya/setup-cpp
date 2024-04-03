@@ -1,6 +1,6 @@
 import { addExeExt } from "patha"
 import { extractZip } from "../utils/setup/extract"
-import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
+import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 
 /** Get the platform name Ninja uses in their download links */
 function getNinjaPlatform(platform: NodeJS.Platform) {

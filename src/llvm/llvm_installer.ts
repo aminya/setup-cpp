@@ -1,11 +1,11 @@
 import { execRoot } from "admina"
+import { info } from "console"
 import { execa } from "execa"
+import { promises } from "fs"
+import { DEFAULT_TIMEOUT } from "../installTool"
 import { addPath } from "../utils/env/addEnv"
 import { hasNala, isPackageInstalled, setupAptPack } from "../utils/setup/setupAptPack"
 import { InstallationInfo } from "../utils/setup/setupBin"
-import { promises } from "fs"
-import { info } from "console"
-import { DEFAULT_TIMEOUT } from "../installTool"
 const { readFile, writeFile, chmod } = promises
 
 export enum LLVMPackages {
@@ -72,7 +72,7 @@ function nonInteractiveScript(script: string) {
   return script.replace(
     /add-apt-repository "\${REPO_NAME}"/g,
     // eslint-disable-next-line no-template-curly-in-string
-    'add-apt-repository -y "${REPO_NAME}"',
+    "add-apt-repository -y \"${REPO_NAME}\"",
   )
 }
 
@@ -80,7 +80,7 @@ async function removeConflictingPackages(givenScript: string) {
   // fix conflicts between libclang-rt and libclang
   let script = givenScript.replace(
     /apt-get install -y/g,
-    'apt-get install -o Dpkg::Options::="--force-overwrite" -y --fix-broken',
+    "apt-get install -o Dpkg::Options::=\"--force-overwrite\" -y --fix-broken",
   )
 
   // check if these are installed and if so, remove them from the script as they conflict

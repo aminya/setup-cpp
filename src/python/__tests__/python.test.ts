@@ -1,9 +1,9 @@
-import { setupPython } from "../python"
-import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { getVersion } from "../../versions/versions"
-import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info } from "ci-log"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
+import { getVersion } from "../../versions/versions"
+import { setupPython } from "../python"
 
 jest.setTimeout(300000)
 describe("setup-python", () => {

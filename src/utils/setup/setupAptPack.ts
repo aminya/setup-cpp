@@ -1,13 +1,13 @@
-import { InstallationInfo } from "./setupBin"
 import { execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
-import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
-import { pathExists } from "path-exists"
 import { promises as fsPromises } from "fs"
+import { pathExists } from "path-exists"
+import { addEnv, cpprc_path, setupCppInProfile } from "../env/addEnv"
+import { InstallationInfo } from "./setupBin"
 const { appendFile } = fsPromises
-import { execa, ExecaError } from "execa"
+import { info, warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
-import { warning, info } from "ci-log"
+import { execa, ExecaError } from "execa"
 import which from "which"
 
 /* eslint-disable require-atomic-updates */

@@ -11,13 +11,13 @@ import { untildifyUser } from "untildify-user"
 import { checkUpdates } from "./check-updates"
 import { parseArgs, printHelp } from "./cli-options"
 import { installCompiler } from "./compilers"
+import { installTool } from "./installTool"
+import { tools } from "./tool"
 import { finalizeCpprc } from "./utils/env/addEnv"
 import { isArch } from "./utils/env/isArch"
 import { ubuntuVersion } from "./utils/env/ubuntu_version"
 import { setupPacmanPack } from "./utils/setup/setupPacmanPack"
 import { syncVersions } from "./versions/versions"
-import { installTool } from "./installTool"
-import { tools } from "./tool"
 
 /** The main entry function */
 async function main(args: string[]): Promise<number> {

@@ -29,11 +29,10 @@ export const {
 } = fs.promises
 
 import { promisify } from "util"
-export const rm =
-  "rm" in fs.promises
-    ? (
-        fs.promises as typeof fs.promises & {
-          rm: (path: string, options?: fs.RmDirOptions) => Promise<void>
-        }
-      ).rm
-    : promisify(fs.unlink)
+export const rm = "rm" in fs.promises
+  ? (
+    fs.promises as typeof fs.promises & {
+      rm: (path: string, options?: fs.RmDirOptions) => Promise<void>
+    }
+  ).rm
+  : promisify(fs.unlink)

@@ -10,7 +10,7 @@ async function main() {
         .replace(/FROM (.*)/g, `FROM $1\n\nCOPY "./dist/legacy" "/usr/lib/setup-cpp/"`)
         .replace("setup-cpp ", "node /usr/lib/setup-cpp/setup-cpp.js ")
         // remove the npm install line
-        .replace(/# install setup-cpp\n\s*npm install -g setup-cpp.*/, "")
+        .replace(/# install setup-cpp\n\s*npm install -g setup-cpp.*\n/, "")
 
       // write the new file in dev/docker/ci
       await writeFile(`./dev/docker/ci/${name}.dockerfile`, modifiedDockerFile)

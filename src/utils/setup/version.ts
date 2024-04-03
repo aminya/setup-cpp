@@ -1,9 +1,9 @@
-import { isUrlOnline } from "is-url-online"
-import semverCompare from "semver/functions/compare"
-import semverCoerce from "semver/functions/coerce"
-import semverValid from "semver/functions/valid"
 import { getExecOutput } from "@actions/exec"
 import { info } from "ci-log"
+import { isUrlOnline } from "is-url-online"
+import semverCoerce from "semver/functions/coerce"
+import semverCompare from "semver/functions/compare"
+import semverValid from "semver/functions/valid"
 
 /**
  * Gets the specific versions supported by this action compatible with the supplied (specific or minimum) version in
@@ -56,9 +56,11 @@ export async function getSpecificVersionAndUrl(
   // if the given set doesn't include the version, throw an error
   if (!versions.has(version)) {
     throw new Error(
-      `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${JSON.stringify(
-        versions,
-      )}`,
+      `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${
+        JSON.stringify(
+          versions,
+        )
+      }`,
     )
   }
 
@@ -79,9 +81,11 @@ export async function getSpecificVersionAndUrl(
   }
 
   throw new Error(
-    `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${JSON.stringify(
-      versions,
-    )}`,
+    `Unsupported target! (platform='${platform}', version='${version}'). Try one of the following: ${
+      JSON.stringify(
+        versions,
+      )
+    }`,
   )
 }
 

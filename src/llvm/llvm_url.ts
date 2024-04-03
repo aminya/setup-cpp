@@ -1,14 +1,14 @@
-import semverLte from "semver/functions/lte"
-import { isUrlOnline } from "is-url-online"
-import { getSpecificVersionAndUrl, getSpecificVersions, getVersions } from "../utils/setup/version"
 import { info, warning } from "ci-log"
-import { PackageInfo } from "../utils/setup/setupBin"
+import { isUrlOnline } from "is-url-online"
 import { addExeExt } from "patha"
+import semverLte from "semver/functions/lte"
 import { extractExe, extractTarByExe } from "../utils/setup/extract"
+import { PackageInfo } from "../utils/setup/setupBin"
+import { getSpecificVersionAndUrl, getSpecificVersions, getVersions } from "../utils/setup/version"
 
-//================================================
+// ================================================
 // Version
-//================================================
+// ================================================
 
 /** The specific and minimum LLVM versions supported by this action. */
 export const VERSIONS: Set<string> = getVersions([
@@ -189,9 +189,9 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
 const MAX_UBUNTU: string = "17.0.6"
 
-//================================================
+// ================================================
 // URL
-//================================================
+// ================================================
 
 /** Gets a LLVM download URL for GitHub. */
 function getGitHubUrl(version: string, prefix: string, suffix: string): string {
@@ -317,11 +317,10 @@ export async function getLLVMPackageInfo(
     extractedFolderName: "",
     binRelativeDir: "bin",
     binFileName: addExeExt("clang"),
-    extractFunction:
-      platform === "win32"
-        ? extractExe
-        : (file: string, dest: string) => {
-            return extractTarByExe(file, dest, ["--strip-components=1"])
-          },
+    extractFunction: platform === "win32"
+      ? extractExe
+      : (file: string, dest: string) => {
+        return extractTarByExe(file, dest, ["--strip-components=1"])
+      },
   }
 }

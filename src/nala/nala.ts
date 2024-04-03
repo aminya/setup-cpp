@@ -1,7 +1,7 @@
+import { execRootSync } from "admina"
 import { dirname } from "patha"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { execRootSync } from "admina"
 import { addAptKeyViaDownload, hasNala, setupAptPack } from "../utils/setup/setupAptPack"
 
 let binDir: string | undefined

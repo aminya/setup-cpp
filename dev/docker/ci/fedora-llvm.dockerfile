@@ -1,12 +1,11 @@
 ## base image
-FROM fedora:40 as setup-cpp-fedora
+FROM fedora:40 AS setup-cpp-fedora
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
 # install nodejs
 RUN dnf -y install nodejs npm && \
-    
-    # install the compiler and tools
+# install the compiler and tools
     node /usr/lib/setup-cpp/setup-cpp.js \
         --compiler llvm \
         --cmake true \
@@ -19,7 +18,7 @@ RUN dnf -y install nodejs npm && \
         --gcovr true \
         --doxygen true \
         --ccache true && \
-    # cleanup
+# cleanup
     dnf clean all && \
     rm -rf /tmp/*
 

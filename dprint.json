@@ -1,0 +1,46 @@
+{
+  "lineWidth": 120,
+  "indentWidth": 2,
+  "newLineKind": "lf",
+  "useTabs": false,
+  "incremental": true,
+  "typescript": {
+    "semiColons": "asi",
+    "quoteProps": "asNeeded",
+    "useBraces": "always"
+  },
+  "json": {},
+  "markdown": {},
+  "dockerfile": {},
+  "exec": {
+    "commands": [
+      {
+        "command": "node ./node_modules/prettier/bin/prettier.cjs --stdin-filepath {{file_path}} --tab-width {{indent_width}} --print-width {{line_width}}",
+        "exts": ["yaml", "yml"]
+      }
+    ],
+    "associations": [
+      "**/*{.yaml,.yml}"
+    ]
+  },
+  "includes": [
+    "**/*{.ts,.tsx,.mts,.cts,.js,.jsx,.cjs,.mjs,.json,.md,.yaml,.yml,.dockerfile}"
+  ],
+  "excludes": [
+    "**/node_modules",
+    "*.lock*",
+    "*-lock*",
+    "./.cache/",
+    "**/build",
+    "**/dist",
+    "dev/cpp_vcpkg_project"
+  ],
+  "plugins": [
+    "https://plugins.dprint.dev/typescript-0.89.3.wasm",
+    "https://plugins.dprint.dev/json-0.19.2.wasm",
+    "https://plugins.dprint.dev/markdown-0.16.4.wasm",
+    "https://plugins.dprint.dev/dockerfile-0.3.0.wasm",
+    "https://plugins.dprint.dev/exec-0.4.4.json@c207bf9b9a4ee1f0ecb75c594f774924baf62e8e53a2ce9d873816a408cecbf7"
+  ],
+  "$schema": "https://dprint.dev/schemas/v0.json"
+}

@@ -1,8 +1,8 @@
 import { getInput } from "@actions/core"
 import { info } from "ci-log"
 import mri from "mri"
-import { InstallationInfo } from "./utils/setup/setupBin"
 import { Inputs, inputs } from "./tool"
+import { InstallationInfo } from "./utils/setup/setupBin"
 
 export function parseArgs(args: string[]): Opts {
   return mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {

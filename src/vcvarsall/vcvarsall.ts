@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
-import { addEnv } from "../utils/env/addEnv"
 import { info } from "ci-log"
+import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
 import { pathExists } from "path-exists"
+import { addEnv } from "../utils/env/addEnv"
 
 function getArch(arch: string): string {
   switch (arch) {

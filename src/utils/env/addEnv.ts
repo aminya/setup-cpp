@@ -1,14 +1,14 @@
-import { exportVariable, addPath as ghAddPath, info, setFailed } from "@actions/core"
-import { GITHUB_ACTIONS } from "ci-info"
-import { untildifyUser } from "untildify-user"
-import { appendFileSync, readFileSync, writeFileSync } from "fs"
-import { error, warning } from "ci-log"
-import { execPowershell } from "exec-powershell"
-import { delimiter } from "path"
-import escapeSpace from "escape-path-with-spaces"
+import { addPath as ghAddPath, exportVariable, info, setFailed } from "@actions/core"
 import { grantUserWriteAccess } from "admina"
+import { GITHUB_ACTIONS } from "ci-info"
+import { error, warning } from "ci-log"
+import escapeSpace from "escape-path-with-spaces"
 import escapeQuote from "escape-quotes"
+import { execPowershell } from "exec-powershell"
+import { appendFileSync, readFileSync, writeFileSync } from "fs"
+import { delimiter } from "path"
 import { pathExists } from "path-exists"
+import { untildifyUser } from "untildify-user"
 
 type AddEnvOptions = {
   /** If true, the value will be escaped with quotes and spaces will be escaped with backslash */
@@ -58,7 +58,7 @@ export async function addEnv(
 
 function escapeString(valGiven: string, shouldEscapeSpace: boolean = false) {
   const spaceEscaped = shouldEscapeSpace ? escapeSpace(valGiven) : valGiven
-  return escapeQuote(spaceEscaped, '"', "\\")
+  return escapeQuote(spaceEscaped, "\"", "\\")
 }
 
 const ignoredPaths = [/\/usr\/bin\/?/, /\/usr\/local\/bin\/?/]
@@ -184,7 +184,8 @@ export async function setupCppInProfile() {
 
   // source cpprc in bashrc/profile
 
-  const source_cpprc_string = `\n# source .cpprc if SOURCE_CPPRC is not set to 0\nif [[ "$SOURCE_CPPRC" != 0 && -f "${cpprc_path}" ]]; then source "${cpprc_path}"; fi\n`
+  const source_cpprc_string =
+    `\n# source .cpprc if SOURCE_CPPRC is not set to 0\nif [[ "$SOURCE_CPPRC" != 0 && -f "${cpprc_path}" ]]; then source "${cpprc_path}"; fi\n`
 
   try {
     // source cpprc in .profile

@@ -1,6 +1,6 @@
-import { setupBazel } from "../bazel"
-import { testBin } from "../../utils/tests/test-helpers"
 import { InstallationInfo } from "../../utils/setup/setupBin"
+import { testBin } from "../../utils/tests/test-helpers"
+import { setupBazel } from "../bazel"
 
 jest.setTimeout(300000)
 describe("setup-bazel", () => {

@@ -1,12 +1,12 @@
-import { useCpythonVersion } from "setup-python/src/find-python"
 import { findPyPyVersion } from "setup-python/src/find-pypy"
+import { useCpythonVersion } from "setup-python/src/find-python"
 
-import { info, warning } from "ci-log"
 import { debug } from "@actions/core"
-import { join } from "patha"
 import { GITHUB_ACTIONS } from "ci-info"
-import { IS_MAC } from "setup-python/src/utils"
+import { info, warning } from "ci-log"
 import { pathExists } from "path-exists"
+import { join } from "patha"
+import { IS_MAC } from "setup-python/src/utils"
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy")

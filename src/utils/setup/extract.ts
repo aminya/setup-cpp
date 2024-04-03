@@ -1,9 +1,9 @@
-import { execa } from "execa"
 import { mkdirP } from "@actions/io"
+import { grantUserWriteAccess } from "admina"
+import { warning } from "ci-log"
+import { execa } from "execa"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip"
-import { warning } from "ci-log"
-import { grantUserWriteAccess } from "admina"
 export { extractTar, extractXar } from "@actions/tool-cache"
 
 let sevenZip: string | undefined
