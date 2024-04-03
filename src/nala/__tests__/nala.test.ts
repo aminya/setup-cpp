@@ -1,7 +1,7 @@
-import { setupNala } from "../nala"
-import { testBin } from "../../utils/tests/test-helpers"
-import { isUbuntu } from "../../utils/env/isUbuntu"
 import { execRootSync } from "admina"
+import { isUbuntu } from "../../utils/env/isUbuntu"
+import { testBin } from "../../utils/tests/test-helpers"
+import { setupNala } from "../nala"
 
 jest.setTimeout(300000)
 describe("setup-nala", () => {

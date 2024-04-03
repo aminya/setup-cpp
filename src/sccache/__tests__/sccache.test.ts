@@ -1,6 +1,6 @@
-import { setupSccache } from "../sccache"
-import { testBin } from "../../utils/tests/test-helpers"
 import { InstallationInfo } from "../../utils/setup/setupBin"
+import { testBin } from "../../utils/tests/test-helpers"
+import { setupSccache } from "../sccache"
 
 jest.setTimeout(300000)
 describe("setup-sccache", () => {

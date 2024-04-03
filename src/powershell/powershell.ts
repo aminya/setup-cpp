@@ -1,14 +1,14 @@
+import { execRootSync } from "admina"
 import { addPath } from "../utils/env/addEnv"
+import { hasDnf } from "../utils/env/hasDnf"
+import { isArch } from "../utils/env/isArch"
+import { isUbuntu } from "../utils/env/isUbuntu"
+import { ubuntuVersion } from "../utils/env/ubuntu_version"
 import { setupAptPack } from "../utils/setup/setupAptPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { isArch } from "../utils/env/isArch"
-import { hasDnf } from "../utils/env/hasDnf"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { execRootSync } from "admina"
-import { ubuntuVersion } from "../utils/env/ubuntu_version"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupPowershell(version: string | undefined, _setupDir: string, _arch: string) {

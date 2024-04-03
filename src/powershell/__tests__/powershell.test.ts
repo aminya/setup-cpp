@@ -1,7 +1,7 @@
-import { setupPowershell } from "../powershell"
+import { GITHUB_ACTIONS } from "ci-info"
 import { testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
-import { GITHUB_ACTIONS } from "ci-info"
+import { setupPowershell } from "../powershell"
 
 jest.setTimeout(300000)
 describe("setup-powershell", () => {

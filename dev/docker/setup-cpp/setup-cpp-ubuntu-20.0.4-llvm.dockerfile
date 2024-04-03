@@ -1,8 +1,8 @@
 #### Base Image
-FROM ubuntu:20.04 as setup-cpp-ubuntu-mingw
+FROM ubuntu:20.04 AS setup-cpp-ubuntu-mingw
 
 RUN apt-get update -qq && \
-    # install latest nodejs on ubuntu 20.04
+# install latest nodejs on ubuntu 20.04
     apt-get update -qq && \
     apt-get install -y --no-install-recommends curl gnupg ca-certificates && \
     mkdir -p /etc/apt/keyrings && \
@@ -10,9 +10,9 @@ RUN apt-get update -qq && \
     echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
     apt-get update -qq && \
     apt-get install -y --no-install-recommends nodejs && \
-    # install setup-cpp
+# install setup-cpp
     npm install -g setup-cpp@v0.37.0 && \
-    # install the compiler and tools
+# install the compiler and tools
     setup-cpp \
         --nala true \
         --compiler mingw \
@@ -27,7 +27,7 @@ RUN apt-get update -qq && \
         --doxygen true \
         --ccache true \
         --powershell true && \
-    # cleanup
+# cleanup
     nala autoremove -y && \
     nala autopurge -y && \
     apt-get clean && \

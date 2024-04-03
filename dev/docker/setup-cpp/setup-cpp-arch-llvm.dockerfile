@@ -1,13 +1,13 @@
 ## base image
-FROM archlinux:base as setup-cpp-arch
+FROM archlinux:base AS setup-cpp-arch
 
 RUN pacman -Syuu --noconfirm && \
     pacman-db-upgrade && \
-    # install nodejs
+# install nodejs
     pacman -S --noconfirm --needed nodejs npm && \
-    # install setup-cpp
+# install setup-cpp
     npm install -g setup-cpp@v0.37.0 && \
-    # install the compiler and tools
+# install the compiler and tools
     setup-cpp \
         --compiler llvm \
         --cmake true \
@@ -20,7 +20,7 @@ RUN pacman -Syuu --noconfirm && \
         --gcovr true \
         --doxygen true \
         --ccache true && \
-    # arch cleanup
+# arch cleanup
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /tmp/*

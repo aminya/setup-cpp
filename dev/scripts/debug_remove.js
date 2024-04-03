@@ -12,6 +12,6 @@ async function main() {
   writeFileSync(`${file}.map`, map)
 }
 
-main().catch(function (err) {
+main().catch(function(err) {
   throw err
 })

@@ -1,23 +1,23 @@
-import { addPath, addEnv } from "../utils/env/addEnv"
+import { addEnv, addPath } from "../utils/env/addEnv"
 
-import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
-import { setupBrewPack } from "../utils/setup/setupBrewPack"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import semverMajor from "semver/functions/major"
-import semverCoerce from "semver/functions/coerce"
-import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { join, addExeExt } from "patha"
-import { warning, info } from "ci-log"
 import { GITHUB_ACTIONS } from "ci-info"
-import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
-import { extract7Zip } from "../utils/setup/extract"
+import { info, warning } from "ci-log"
+import { ExecaReturnValue } from "execa"
+import { pathExists } from "path-exists"
+import { addExeExt, join } from "patha"
+import semverCoerce from "semver/functions/coerce"
+import semverMajor from "semver/functions/major"
+import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
+import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
-import { hasDnf } from "../utils/env/hasDnf"
+import { extract7Zip } from "../utils/setup/extract"
+import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
+import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
+import { setupBrewPack } from "../utils/setup/setupBrewPack"
+import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { pathExists } from "path-exists"
-import { ExecaReturnValue } from "execa"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 
 interface MingwInfo {
   releaseName: string
@@ -69,7 +69,8 @@ function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: str
         binFileName: addExeExt("g++"),
         extractedFolderName: "mingw64",
         extractFunction: extract7Zip,
-        url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${mingwInfo.releaseName}/winlibs-${mingwArch}-posix-${exceptionModel}-gcc-${mingwInfo.fileSuffix}.7z`,
+        url:
+          `https://github.com/brechtsanders/winlibs_mingw/releases/download/${mingwInfo.releaseName}/winlibs-${mingwArch}-posix-${exceptionModel}-gcc-${mingwInfo.fileSuffix}.7z`,
       }
     }
     default:
@@ -171,11 +172,11 @@ export async function setupMingw(version: string, setupDir: string, arch: string
   }
   if (installationInfo !== undefined) {
     // TODO: setup alternatives and update CC/CXX env. ?
-    //Setting up g++-mingw-w64-i686-win32 (10.3.0-14ubuntu1+24.3) ...
+    // Setting up g++-mingw-w64-i686-win32 (10.3.0-14ubuntu1+24.3) ...
     // update-alternatives: using /usr/bin/i686-w64-mingw32-g++-win32 to provide /usr/bin/i686-w64-mingw32-g++ (i686-w64-mingw32-g++) in auto mode
-    //Setting up g++-mingw-w64-x86-64-win32 (10.3.0-14ubuntu1+24.3) ...
+    // Setting up g++-mingw-w64-x86-64-win32 (10.3.0-14ubuntu1+24.3) ...
     // update-alternatives: using /usr/bin/x86_64-w64-mingw32-g++-win32 to provide /usr/bin/x86_64-w64-mingw32-g++ (x86_64-w64-mingw32-g++) in auto mode
-    //await activateGcc(version, installationInfo.binDir)
+    // await activateGcc(version, installationInfo.binDir)
     return installationInfo
   }
   return undefined

@@ -1,6 +1,6 @@
-import { setupMake } from "../make"
-import { testBin } from "../../utils/tests/test-helpers"
 import { InstallationInfo } from "../../utils/setup/setupBin"
+import { testBin } from "../../utils/tests/test-helpers"
+import { setupMake } from "../make"
 
 jest.setTimeout(300000)
 describe("setup-make", () => {

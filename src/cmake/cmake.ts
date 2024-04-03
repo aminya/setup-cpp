@@ -1,9 +1,9 @@
 import { extractTar } from "@actions/tool-cache"
-import semverLte from "semver/functions/lte"
-import semverCoerce from "semver/functions/coerce"
-import { setupBin, PackageInfo, InstallationInfo } from "../utils/setup/setupBin"
 import { addExeExt } from "patha"
+import semverCoerce from "semver/functions/coerce"
+import semverLte from "semver/functions/lte"
 import { extractZip } from "../utils/setup/extract"
+import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 
 /** Get the platform data for cmake */
 function getCmakePackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {

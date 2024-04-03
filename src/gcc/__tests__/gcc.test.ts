@@ -1,10 +1,10 @@
-import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { setupGcc } from "../gcc"
-import { getVersion } from "../../versions/versions"
-import { join, addExeExt } from "patha"
 import { execaSync } from "execa"
 import { chmodSync } from "fs"
+import { addExeExt, join } from "patha"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
+import { getVersion } from "../../versions/versions"
+import { setupGcc } from "../gcc"
 
 jest.setTimeout(3000000)
 describe("setup-gcc", () => {

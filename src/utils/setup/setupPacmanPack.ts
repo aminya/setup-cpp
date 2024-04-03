@@ -1,8 +1,8 @@
-import { InstallationInfo } from "./setupBin"
 import { execRootSync } from "admina"
 import { info, warning } from "ci-log"
 import { execa, execaSync } from "execa"
 import which from "which"
+import { InstallationInfo } from "./setupBin"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false

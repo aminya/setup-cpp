@@ -1,0 +1,71 @@
+{
+  "[dockerfile]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
+  "cSpell.advanced.feature.useReferenceProviderWithRename": true,
+  "cSpell.checkOnlyEnabledFileTypes": false,
+  "cSpell.numSuggestions": 3,
+  "cSpell.showAutocompleteSuggestions": true,
+  "eslint.enable": true,
+  "eslint.options": {
+    "cache": true,
+    "cacheLocation": "./node_modules/.cache/eslint/",
+    "errorOnUnmatchedPattern": false,
+    "extensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "cjs",
+      "mjs",
+      "json",
+      "yaml",
+      "astro",
+      "mdx",
+      "html"
+    ]
+  },
+  "eslint.probe": [
+    "typescript",
+    "typescriptreact",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "yaml",
+    "markdown",
+    "html",
+    "astro"
+  ],
+  "explorer.copyRelativePathSeparator": "/",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "hadolint.hadolintPath": "./target/bin/hadolint",
+  // use dprint instead
+  "prettier.enable": false
+}

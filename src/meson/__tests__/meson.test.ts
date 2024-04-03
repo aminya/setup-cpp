@@ -1,7 +1,7 @@
-import { setupMeson } from "../meson"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import { testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
-import { ubuntuVersion } from "../../utils/env/ubuntu_version"
+import { setupMeson } from "../meson"
 
 jest.setTimeout(300000)
 describe("setup-meson", () => {

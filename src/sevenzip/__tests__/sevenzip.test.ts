@@ -1,6 +1,6 @@
-import { setupSevenZip } from "../sevenzip"
-import { testBin } from "../../utils/tests/test-helpers"
 import { InstallationInfo } from "../../utils/setup/setupBin"
+import { testBin } from "../../utils/tests/test-helpers"
+import { setupSevenZip } from "../sevenzip"
 
 jest.setTimeout(300000)
 describe("setup-7z", () => {

@@ -2,8 +2,8 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { vsversion_to_versionnumber, findVcvarsall } from "msvc-dev-cmd/lib.js"
 import { GITHUB_ACTIONS } from "ci-info"
+import { findVcvarsall, vsversion_to_versionnumber } from "msvc-dev-cmd/lib.js"
 import { join } from "patha"
 
 import { error, info, warning } from "ci-log"

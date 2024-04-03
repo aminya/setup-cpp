@@ -1,7 +1,7 @@
-import { setupCmake } from "../cmake"
-import { setupTmpDir, cleanupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { GITHUB_ACTIONS } from "ci-info"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
+import { setupCmake } from "../cmake"
 
 jest.setTimeout(300000)
 

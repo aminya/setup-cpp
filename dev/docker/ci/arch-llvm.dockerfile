@@ -1,14 +1,13 @@
 ## base image
-FROM archlinux:base as setup-cpp-arch
+FROM archlinux:base AS setup-cpp-arch
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
 RUN pacman -Syuu --noconfirm && \
     pacman-db-upgrade && \
-    # install nodejs
+# install nodejs
     pacman -S --noconfirm --needed nodejs npm && \
-    
-    # install the compiler and tools
+# install the compiler and tools
     node /usr/lib/setup-cpp/setup-cpp.js \
         --compiler llvm \
         --cmake true \
@@ -21,7 +20,7 @@ RUN pacman -Syuu --noconfirm && \
         --gcovr true \
         --doxygen true \
         --ccache true && \
-    # arch cleanup
+# arch cleanup
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /tmp/*

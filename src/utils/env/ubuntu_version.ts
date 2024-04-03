@@ -1,10 +1,10 @@
 import { warning } from "ci-log"
+import memoize from "micro-memoize"
+import os from "os"
 import { getUbuntuVersion } from "ubuntu-version"
 import which from "which"
 import { setupAptPack } from "../setup/setupAptPack"
 import { isUbuntu } from "./isUbuntu"
-import os from "os"
-import memoize from "micro-memoize"
 
 async function ubuntuVersion_raw(): Promise<number[] | null> {
   try {

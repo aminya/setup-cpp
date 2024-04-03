@@ -1,12 +1,12 @@
 #### Base Image
-FROM ubuntu:22.04 as setup-cpp-ubuntu
+FROM ubuntu:22.04 AS setup-cpp-ubuntu
 
 RUN apt-get update -qq && \
-    # install nodejs
+# install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
-    # install setup-cpp
+# install setup-cpp
     npm install -g setup-cpp@v0.37.0 && \
-    # install the compiler and tools
+# install the compiler and tools
     setup-cpp \
         --nala true \
         --compiler llvm \
@@ -20,7 +20,7 @@ RUN apt-get update -qq && \
         --gcovr true \
         --doxygen true \
         --ccache true && \
-    # cleanup
+# cleanup
     nala autoremove -y && \
     nala autopurge -y && \
     apt-get clean && \

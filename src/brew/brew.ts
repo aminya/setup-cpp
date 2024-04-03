@@ -1,10 +1,10 @@
+import { mkdirP } from "@actions/io"
 import { execaSync } from "execa"
-import { dirname } from "patha"
-import which from "which"
+import { readFileSync } from "fs"
 import { tmpdir } from "os"
 import path, { join } from "path"
-import { mkdirP } from "@actions/io"
-import { readFileSync } from "fs"
+import { dirname } from "patha"
+import which from "which"
 import { addPath } from "../utils/env/addEnv"
 
 /* eslint-disable require-atomic-updates */

@@ -1,24 +1,24 @@
+import { info, notice } from "ci-log"
+import { addExeExt, join } from "patha"
+import { setupGraphviz } from "../graphviz/graphviz"
 import { addPath } from "../utils/env/addEnv"
+import { extractTar, extractZip } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { addExeExt, join } from "patha"
-import { extractTar, extractZip } from "../utils/setup/extract"
-import { info, notice } from "ci-log"
-import { setupGraphviz } from "../graphviz/graphviz"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 import { getVersion } from "../versions/versions"
 
-import { isArch } from "../utils/env/isArch"
-import { hasDnf } from "../utils/env/hasDnf"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { isUbuntu } from "../utils/env/isUbuntu"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
-import { ubuntuVersion } from "../utils/env/ubuntu_version"
+import { hasDnf } from "../utils/env/hasDnf"
+import { isArch } from "../utils/env/isArch"
+import { isUbuntu } from "../utils/env/isUbuntu"
 import { macosVersion } from "../utils/env/macos_version"
+import { ubuntuVersion } from "../utils/env/ubuntu_version"
 import { setupDmg } from "../utils/setup/setupDmg"
+import { setupDnfPack } from "../utils/setup/setupDnfPack"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -128,11 +128,13 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
 async function activateWinDoxygen() {
   switch (process.platform) {
     case "win32": {
-      for (const binDir of [
-        "C:/ProgramData/chocolatey/bin",
-        "C:/Program Files/doxygen/bin",
-        "C:/Program Files (x86)/doxygen",
-      ]) {
+      for (
+        const binDir of [
+          "C:/ProgramData/chocolatey/bin",
+          "C:/Program Files/doxygen/bin",
+          "C:/Program Files (x86)/doxygen",
+        ]
+      ) {
         // eslint-disable-next-line no-await-in-loop
         if (await pathExists(join(binDir, "doxygen.exe"))) {
           // eslint-disable-next-line no-await-in-loop

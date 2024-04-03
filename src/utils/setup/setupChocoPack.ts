@@ -1,10 +1,10 @@
 /* eslint-disable require-atomic-updates */
-import { addPath } from "../env/addEnv"
+import { info } from "ci-log"
+import { execaSync } from "execa"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
+import { addPath } from "../env/addEnv"
 import { InstallationInfo } from "./setupBin"
-import { execaSync } from "execa"
-import { info } from "ci-log"
 
 let hasChoco = false
 

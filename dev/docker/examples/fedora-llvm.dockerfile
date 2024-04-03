@@ -8,7 +8,7 @@ RUN bash -c 'source ~/.cpprc \
 
 #### Running environment
 # use a fresh image as the runner
-FROM fedora:40 as runner
+FROM fedora:40 AS runner
 
 # copy the built binaries and their runtime dependencies
 COPY --from=builder /home/app/build/my_exe/Release/ /home/app/
