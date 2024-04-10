@@ -1,6 +1,6 @@
 import { mkdirP } from "@actions/io"
 import { execaSync } from "execa"
-import { readFileSync } from "fs"
+import { readFile } from "fs/promises"
 import { tmpdir } from "os"
 import path, { join } from "path"
 import { dirname } from "patha"
@@ -35,8 +35,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
   const installSh = join(brewTempDirectory, "install.sh")
 
   if (process.platform === "linux") {
-    const installShContent = readFileSync(installSh, "utf-8")
-
+    const installShContent = await readFile(installSh, "utf-8")
     installShContent.replace("#!/bin/bash", "")
   }
 

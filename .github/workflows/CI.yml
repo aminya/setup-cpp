@@ -67,7 +67,7 @@ jobs:
         run: |
           if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
             echo "Detected uncommitted changes after build. See status below:"
-            git diff --ignore-space-at-eol --text dist/
+            git diff --ignore-space-at-eol --text dist/ ':(exclude)*.js.map'
             exit 1
           fi
 
@@ -92,6 +92,7 @@ jobs:
         os:
           - windows-2022
           - ubuntu-22.04
+          - macos-13
           - macos-12
         node:
           - 20

@@ -43,7 +43,7 @@ function detectUsingOsVersion() {
   }
 
   // #46~22.04.1-Ubuntu SMP ...
-  const osVersion = os.version()
+  const osVersion: string = os.version()
   const versionSplitted = osVersion.split(".")
   const majorVersion = parseInt(versionSplitted[0].replace("#", ""), 10)
   const minorVersion = parseInt(versionSplitted[1].replace("~", ""), 10)

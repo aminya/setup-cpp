@@ -1,5 +1,5 @@
 import { execaSync } from "execa"
-import { chmodSync } from "fs"
+import { chmod } from "fs/promises"
 import { addExeExt, join } from "patha"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
@@ -31,7 +31,7 @@ describe("setup-gcc", () => {
     const main_exe = join(__dirname, addExeExt("main"))
     execaSync("g++", [file, "-o", main_exe], { cwd: __dirname })
     if (process.platform !== "win32") {
-      chmodSync(main_exe, "755")
+      await chmod(main_exe, "755")
     }
     execaSync(main_exe, { cwd: __dirname, stdio: "inherit" })
   })

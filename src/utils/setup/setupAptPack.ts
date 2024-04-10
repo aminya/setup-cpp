@@ -1,14 +1,13 @@
 import { execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
-import { promises as fsPromises } from "fs"
-import { pathExists } from "path-exists"
-import { addEnv, cpprc_path, sourceCpprc } from "../env/addEnv"
-import { InstallationInfo } from "./setupBin"
-const { appendFile } = fsPromises
 import { info, warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
 import { execa, ExecaError } from "execa"
+import { appendFile } from "fs/promises"
+import { pathExists } from "path-exists"
 import which from "which"
+import { addEnv, cpprc_path, sourceCpprc } from "../env/addEnv"
+import { InstallationInfo } from "./setupBin"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
@@ -221,10 +220,10 @@ export async function addAptKeyViaDownload(name: string, url: string) {
 
 export async function updateAptAlternatives(name: string, path: string, priority: number = 40) {
   if (GITHUB_ACTIONS) {
-    return execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, priority.toString()])
+    await execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, priority.toString()])
   } else {
     await sourceCpprc()
-    return appendFile(
+    await appendFile(
       cpprc_path,
       `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} ${priority}; fi\n`,
     )

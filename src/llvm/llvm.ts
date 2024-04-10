@@ -93,7 +93,7 @@ export async function activateLLVM(directory: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
-  const actPromises: Promise<any>[] = [
+  const actPromises: Promise<void>[] = [
     // the output of this action
     addEnv("LLVM_PATH", directory),
 

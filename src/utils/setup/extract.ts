@@ -55,6 +55,6 @@ export async function extractTarByExe(file: string, dest: string, flags = ["--st
     }
   }
 
-  grantUserWriteAccess(dest)
+  await grantUserWriteAccess(dest)
   return dest
 }

@@ -1,8 +1,8 @@
 import * as io from "@actions/io"
 import { execaSync } from "execa"
-import { chmodSync } from "fs"
+import { chmod } from "fs/promises"
 import { isUrlOnline } from "is-url-online"
-import path, { addExeExt } from "patha"
+import { addExeExt, join } from "patha"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
 import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
@@ -98,11 +98,11 @@ describe("setup-llvm", () => {
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
 
     // test compilation
-    const file = path.join(__dirname, "main.cpp")
-    const main_exe = path.join(__dirname, addExeExt("main"))
+    const file = join(__dirname, "main.cpp")
+    const main_exe = join(__dirname, addExeExt("main"))
     execaSync("clang++", [file, "-o", main_exe], { cwd: __dirname })
     if (process.platform !== "win32") {
-      chmodSync(main_exe, "755")
+      await chmod(main_exe, "755")
     }
     execaSync(main_exe, { cwd: __dirname, stdio: "inherit" })
   })

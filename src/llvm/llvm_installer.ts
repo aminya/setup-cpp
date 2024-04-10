@@ -1,12 +1,11 @@
 import { execRoot } from "admina"
 import { info } from "console"
 import { execa } from "execa"
-import { promises } from "fs"
+import { chmod, readFile, writeFile } from "fs/promises"
 import { DEFAULT_TIMEOUT } from "../installTool"
 import { addPath } from "../utils/env/addEnv"
 import { hasNala, isPackageInstalled, setupAptPack } from "../utils/setup/setupAptPack"
 import { InstallationInfo } from "../utils/setup/setupBin"
-const { readFile, writeFile, chmod } = promises
 
 export enum LLVMPackages {
   All,
@@ -61,7 +60,7 @@ async function patchAptLLVMScript(path: string, target_path: string, majorVersio
 }
 
 function debugScript(script: string) {
-  if (!process.env.NODE_DEBUG) {
+  if (process.env.NODE_DEBUG !== "1" && process.env.NODE_DEBUG !== "true") {
     return script.replace(/set -eux/g, "set -eu")
   }
   return script

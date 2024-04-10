@@ -26,7 +26,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
       if (isArch()) {
         return setupPacmanPack("powershell-bin", version, "yay")
       } else if (hasDnf()) {
-        setupDnfPack([{ name: "curl" }])
+        await setupDnfPack([{ name: "curl" }])
         execRootSync("/bin/bash", [
           "-c",
           `curl https://packages.microsoft.com/config/rhel/8/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo`,
