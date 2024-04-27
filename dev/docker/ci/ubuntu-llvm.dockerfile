@@ -1,5 +1,5 @@
 #### Base Image
-FROM ubuntu:22.04 AS setup-cpp-ubuntu
+FROM ubuntu:24.04 AS setup-cpp-ubuntu
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
