@@ -11,7 +11,7 @@
     "build": "tsc"
   },
   "dependencies": {
-    "execa": "<8",
+    "execa": "<10",
     "which": "^4.0.0"
   },
   "devDependencies": {
