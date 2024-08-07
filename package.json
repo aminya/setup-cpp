@@ -116,6 +116,7 @@
     "typescript": "^5.5.4",
     "ubuntu-version": "^2.0.0",
     "untildify-user": "workspace:*",
+    "web-streams-polyfill": "^4.0.0",
     "which": "^4.0.0"
   },
   "productionDependencies": [
@@ -144,7 +145,8 @@
     "simple-update-notifier",
     "time-delta",
     "ubuntu-version",
-    "untildify-user"
+    "untildify-user",
+    "web-streams-polyfill"
   ],
   "engines": {
     "node": ">=12.x",
@@ -174,7 +176,8 @@
     "patha": "patha/dist/index.node.mjs",
     "admina": "admina/dist/index.mjs",
     "fs/promises": "./src/utils/compat/fs/promises.ts",
-    "stream/promises": "./src/utils/compat/stream/promises.ts"
+    "stream/promises": "./src/utils/compat/stream/promises.ts",
+    "stream/web": "web-streams-polyfill/dist/ponyfill.mjs"
   },
   "targets": {
     "main": {
