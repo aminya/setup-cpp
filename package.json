@@ -79,6 +79,7 @@
     "cross-env": "7.0.3",
     "cross-spawn": "^7.0.3",
     "cspell": "^8.13.1",
+    "diagnostics_channel": "^1.1.0",
     "dprint": "^0.47.2",
     "escape-path-with-spaces": "^1.0.2",
     "escape-quotes": "^1.0.2",
@@ -148,7 +149,8 @@
     "ubuntu-version",
     "untildify-user",
     "web-streams-polyfill",
-    "util.types"
+    "util.types",
+    "diagnostics_channel"
   ],
   "engines": {
     "node": ">=12.x",
@@ -180,7 +182,8 @@
     "fs/promises": "./src/utils/compat/fs/promises.ts",
     "stream/promises": "./src/utils/compat/stream/promises.ts",
     "stream/web": "web-streams-polyfill/dist/ponyfill.mjs",
-    "util/types": "util.types/index.js"
+    "util/types": "util.types/index.js",
+    "diagnostics_channel": "diagnostics_channel/index.js"
   },
   "targets": {
     "main": {
