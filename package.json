@@ -116,6 +116,7 @@
     "typescript": "^5.5.4",
     "ubuntu-version": "^2.0.0",
     "untildify-user": "workspace:*",
+    "util.types": "^0.0.2",
     "web-streams-polyfill": "^4.0.0",
     "which": "^4.0.0"
   },
@@ -146,7 +147,8 @@
     "time-delta",
     "ubuntu-version",
     "untildify-user",
-    "web-streams-polyfill"
+    "web-streams-polyfill",
+    "util.types"
   ],
   "engines": {
     "node": ">=12.x",
@@ -177,7 +179,8 @@
     "admina": "admina/dist/index.mjs",
     "fs/promises": "./src/utils/compat/fs/promises.ts",
     "stream/promises": "./src/utils/compat/stream/promises.ts",
-    "stream/web": "web-streams-polyfill/dist/ponyfill.mjs"
+    "stream/web": "web-streams-polyfill/dist/ponyfill.mjs",
+    "util/types": "util.types/index.js"
   },
   "targets": {
     "main": {

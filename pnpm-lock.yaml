@@ -188,6 +188,9 @@ importers:
       untildify-user:
         specifier: workspace:*
         version: link:packages/untildify-user
+      util.types:
+        specifier: ^0.0.2
+        version: 0.0.2
       web-streams-polyfill:
         specifier: ^4.0.0
         version: 4.0.0
@@ -4992,6 +4995,9 @@ packages:
 
   util-deprecate@1.0.2:
     resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
+
+  util.types@0.0.2:
+    resolution: {integrity: sha512-BexVqJ5GnaSMuf3IP4xXOgD81VjbZcjHcnbpSe1C8jZp2Yu5wxAWQCoro/J8dYiY/lV2fijWjDsqtL/JD12IuA==}
 
   utility-types@3.11.0:
     resolution: {integrity: sha512-6Z7Ma2aVEWisaL6TvBCy7P8rm2LQoPv6dJ7ecIaIixHcwfbJ0x7mWdbcwlIM5IGQxPZSFYeqRCqlOOeKoJYMkw==}
@@ -11182,6 +11188,10 @@ snapshots:
       punycode: 2.3.1
 
   util-deprecate@1.0.2: {}
+
+  util.types@0.0.2:
+    dependencies:
+      define-properties: 1.2.1
 
   utility-types@3.11.0: {}
 
