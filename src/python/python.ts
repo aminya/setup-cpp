@@ -1,9 +1,11 @@
 import assert from "assert"
-/* eslint-disable require-atomic-updates */
+import { homedir } from "os"
+import { parse as pathParse } from "path"
 import { getExecOutput } from "@actions/exec"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
+import { readdir } from "fs/promises"
 import memoize from "micro-memoize"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
@@ -89,7 +91,10 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
         const { setupActionsPython } = await import("./actions_python")
         await setupActionsPython(version, setupDir, arch)
 
-        foundPython = (await findPython(setupDir))!
+        foundPython = await findPython(setupDir)
+        if (foundPython === undefined) {
+          throw new Error("Python binary could not be found")
+        }
         const binDir = dirname(foundPython)
         installInfo = { bin: foundPython, installDir: binDir, binDir }
       } catch (err) {
@@ -103,7 +108,10 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
   }
 
   if (foundPython === undefined || installInfo.bin === undefined) {
-    foundPython = (await findPython(setupDir))!
+    foundPython = await findPython(setupDir)
+    if (foundPython === undefined) {
+      throw new Error("Python binary could not be found")
+    }
     installInfo.bin = foundPython
   }
 
@@ -120,7 +128,10 @@ async function setupPythonSystem(setupDir: string, version: string) {
         await setupChocoPack("python3", version)
       }
       // Adding the bin dir to the path
-      const bin = (await findPython(setupDir))!
+      const bin = await findPython(setupDir)
+      if (bin === undefined) {
+        throw new Error("Python binary could not be found")
+      }
       const binDir = dirname(bin)
       /** The directory which the tool is installed to */
       await addPath(binDir)
@@ -166,6 +177,24 @@ async function findPython(binDir?: string) {
       return foundPython
     }
   }
+
+  // On Windows, search in C:\PythonXX
+  if (process.platform === "win32") {
+    const rootDir = pathParse(homedir()).root
+    // find all directories in rootDir using readdir
+    const pythonDirs = (await readdir(rootDir)).filter((dir) => dir.startsWith("Python"))
+
+    for (const pythonDir of pythonDirs) {
+      for (const pythonBin of ["python3", "python"]) {
+        // eslint-disable-next-line no-await-in-loop
+        const foundPython = await isPythonUpToDate(pythonBin, join(rootDir, pythonDir))
+        if (foundPython !== undefined) {
+          return foundPython
+        }
+      }
+    }
+  }
+
   return undefined
 }
 
