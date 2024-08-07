@@ -24,5 +24,6 @@
     "user",
     "shell",
     "bash"
-  ]
+  ],
+  "devDependencies": {}
 }
