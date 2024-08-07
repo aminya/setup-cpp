@@ -1,4 +1,4 @@
-import { InstallationInfo } from "../../utils/setup/setupBin"
+import type { InstallationInfo } from "../../utils/setup/setupBin"
 import { testBin } from "../../utils/tests/test-helpers"
 import { setupSevenZip } from "../sevenzip"
 

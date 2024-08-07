@@ -4,7 +4,7 @@ import { execaSync } from "execa"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
 import { addPath } from "../env/addEnv"
-import { InstallationInfo } from "./setupBin"
+import type { InstallationInfo } from "./setupBin"
 
 let hasChoco = false
 
@@ -20,9 +20,9 @@ export async function setupChocoPack(name: string, version?: string, args: strin
   // https://github.com/jberezanski/ChocolateyPackages/issues/97#issuecomment-986825694
   const PATH = process.env.PATH
   const env = { ...process.env }
-  delete env.TMP
-  delete env.TEMP
-  delete env.Path
+  env.TMP = undefined
+  env.TEMP = undefined
+  env.Path = undefined
   env.PATH = PATH
 
   if (version !== undefined && version !== "") {

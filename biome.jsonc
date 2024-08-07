@@ -1,0 +1,50 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
+    "files": {
+        "ignore": [
+            "**/node_modules/**",
+            "**/.pnpm-store/**",
+            "**/dist/**",
+            "dev/cpp_vcpkg_project/**/*",
+            "**/.venv/",
+            "**/.*cache/"
+        ],
+        "ignoreUnknown": true
+    },
+    "organizeImports": {
+        "enabled": true
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "style": {
+                "noInferrableTypes": "off",
+                "noUselessElse": "off",
+                "noNonNullAssertion": "off",
+                "useNodejsImportProtocol": "off"
+            },
+            "complexity": {
+                "useLiteralKeys": "off"
+            },
+            "suspicious": {
+                "noConfusingVoidType": "off"
+            }
+        }
+    },
+    "formatter": {
+        "enabled": false,
+        "indentWidth": 4,
+        "indentStyle": "space"
+    },
+    "json": {
+        "formatter": {
+            "enabled": false,
+            "trailingCommas": "none"
+        },
+        "parser": {
+            "allowComments": true,
+            "allowTrailingCommas": true
+        }
+    }
+}

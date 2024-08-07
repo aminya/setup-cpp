@@ -27,10 +27,10 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "cppcheck", version }])
       }
-      throw new Error(`Unsupported linux distribution`)
+      throw new Error("Unsupported linux distribution")
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }

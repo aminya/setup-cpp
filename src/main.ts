@@ -97,7 +97,7 @@ async function main(args: string[]): Promise<number> {
         setupCppDir,
         successMessages,
         errorMessages,
-        parseFloat(opts.timeout ?? "20") * 60 * 1000,
+        Number.parseFloat(opts.timeout ?? "20") * 60 * 1000,
       )
       time2 = Date.now()
       info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
@@ -123,8 +123,12 @@ async function main(args: string[]): Promise<number> {
   }
 
   // report the messages in the end
-  successMessages.forEach((tool) => success(tool))
-  errorMessages.forEach((tool) => error(tool))
+  for (const tool of successMessages) {
+    success(tool)
+  }
+  for (const tool of errorMessages) {
+    error(tool)
+  }
 
   info("setup-cpp finished")
 

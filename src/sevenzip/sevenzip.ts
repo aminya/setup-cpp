@@ -27,10 +27,10 @@ export function setupSevenZip(version: string, _setupDir: string, _arch: string)
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "p7zip-full", version }])
       }
-      throw new Error(`Unsupported linux distribution`)
+      throw new Error("Unsupported linux distribution")
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }

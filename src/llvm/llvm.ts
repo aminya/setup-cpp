@@ -1,7 +1,7 @@
+import { delimiter } from "path"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import memoize from "micro-memoize"
-import { delimiter } from "path"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import { setupGcc } from "../gcc/gcc"
@@ -10,7 +10,7 @@ import { addEnv } from "../utils/env/addEnv"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
-import { InstallationInfo, setupBin } from "../utils/setup/setupBin"
+import { type InstallationInfo, setupBin } from "../utils/setup/setupBin"
 import { semverCoerceIfInvalid } from "../utils/setup/version"
 import { getVersion } from "../versions/versions"
 import { LLVMPackages, setupLLVMApt } from "./llvm_installer"
@@ -55,7 +55,7 @@ async function setupLLVMOnly(
   packages: LLVMPackages = LLVMPackages.All,
 ) {
   const coeredVersion = semverCoerceIfInvalid(version)
-  const majorVersion = parseInt(coeredVersion.split(".")[0], 10)
+  const majorVersion = Number.parseInt(coeredVersion.split(".")[0], 10)
   try {
     if (isUbuntu()) {
       return await setupLLVMApt(majorVersion, packages)

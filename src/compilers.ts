@@ -1,6 +1,6 @@
+import { join } from "path"
 import { endGroup, notice, startGroup } from "@actions/core"
 import { error, info } from "ci-log"
-import { join } from "path"
 import semverValid from "semver/functions/valid"
 import { getSuccessMessage } from "./cli-options"
 import { setupGcc, setupMingw } from "./gcc/gcc"

@@ -138,7 +138,7 @@ export function semverCoerceIfInvalid(version: string) {
 }
 
 export function removeVPrefix(version: string) {
-  return parseInt(version.replace(/^v/, ""), 10)
+  return Number.parseInt(version.replace(/^v/, ""), 10)
 }
 
 export function addVPrefix(version: string) {

@@ -8,7 +8,7 @@ import { getSpecificVersionAndUrl } from "../../utils/setup/version"
 import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
 import { setupClangFormat, setupClangTools, setupLLVM } from "../llvm"
-import { getLinuxUrl, getUrl, VERSIONS } from "../llvm_url"
+import { VERSIONS, getLinuxUrl, getUrl } from "../llvm_url"
 
 jest.setTimeout(400000)
 async function testUrl(version: string) {

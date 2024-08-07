@@ -3,7 +3,7 @@ import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { setupAptPack } from "../utils/setup/setupAptPack"
-import { InstallationInfo } from "../utils/setup/setupBin"
+import type { InstallationInfo } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
@@ -27,10 +27,10 @@ export async function setupGraphviz(version: string, _setupDir: string, _arch: s
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "graphviz", version }])
       }
-      throw new Error(`Unsupported linux distribution`)
+      throw new Error("Unsupported linux distribution")
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }
@@ -43,7 +43,7 @@ async function activateGraphviz(): Promise<InstallationInfo> {
       return { binDir }
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }

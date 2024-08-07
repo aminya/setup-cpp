@@ -3,8 +3,8 @@ import { info } from "ci-log"
 import { join } from "patha"
 import { addPath } from "../env/addEnv"
 
-import { GITHUB_ACTIONS } from "ci-info"
 import { tmpdir } from "os"
+import { GITHUB_ACTIONS } from "ci-info"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
 import { hasDnf } from "../env/hasDnf"
@@ -25,9 +25,7 @@ export type PackageInfo = {
   /** The main binary file. */
   binFileName: string
   /** The function to extract the downloaded archive. It can be `undefined`, if the binary itself is downloaded directly. */
-  extractFunction?: {
-    (file: string, dest: string): Promise<unknown>
-  }
+  extractFunction?: (file: string, dest: string) => Promise<unknown>
 }
 
 export type InstallationInfo = {
@@ -102,7 +100,7 @@ export async function setupBin(
       )
 
       if (!didInit) {
-        info(`Installing extraction dependencies`)
+        info("Installing extraction dependencies")
         if (process.platform === "linux") {
           if (isArch()) {
             await Promise.all([setupPacmanPack("unzip"), setupPacmanPack("tar"), setupPacmanPack("xz")])

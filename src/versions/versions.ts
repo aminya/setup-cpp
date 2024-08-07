@@ -1,5 +1,5 @@
-import { Opts } from "../cli-options"
-import { Inputs } from "../tool"
+import type { Opts } from "../cli-options"
+import type { Inputs } from "../tool"
 import { DefaultLinuxVersion, DefaultVersions } from "./default_versions"
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
@@ -24,7 +24,7 @@ function getDefaultLinuxVersion(osVersion: number[], toolLinuxVersions: Record<n
 
   // find which version block the os version is in
   const satisfyingVersion = Object.keys(toolLinuxVersions)
-    .map((v) => parseInt(v, 10))
+    .map((v) => Number.parseInt(v, 10))
     .sort((a, b) => b - a) // sort in descending order
     .find((v) => osVersionMaj >= v)
 
@@ -47,9 +47,9 @@ export function syncVersions(opts: Opts, tools: Inputs[]): boolean {
     return false
   }
 
-  toolsInUse.forEach((tool) => {
+  for (const tool of toolsInUse) {
     opts[tool] = targetVersion
-  })
+  }
 
   return true
 }

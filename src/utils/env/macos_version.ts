@@ -12,6 +12,6 @@ function macosVersion_raw() {
   }
 
   const { version } = macosRelease()
-  return version.split(".").map((v) => parseInt(v, 10))
+  return version.split(".").map((v) => Number.parseInt(v, 10))
 }
 export const macosVersion = memoize(macosVersion_raw)

@@ -1,7 +1,7 @@
 import { execRootSync } from "admina"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
-import { InstallationInfo } from "./setupBin"
+import type { InstallationInfo } from "./setupBin"
 
 type DnfPackage = {
   name: string

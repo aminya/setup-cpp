@@ -14,7 +14,7 @@ import { isArch } from "../env/isArch"
 import { isUbuntu } from "../env/isUbuntu"
 import { ubuntuVersion } from "../env/ubuntu_version"
 import { setupAptPack } from "./setupAptPack"
-import { InstallationInfo } from "./setupBin"
+import type { InstallationInfo } from "./setupBin"
 import { setupDnfPack } from "./setupDnfPack"
 import { setupPacmanPack } from "./setupPacmanPack"
 
