@@ -7,7 +7,9 @@
   "typescript": {
     "semiColons": "asi",
     "quoteProps": "asNeeded",
-    "useBraces": "always"
+    "useBraces": "always",
+    "module.sortImportDeclarations": "maintain",
+    "importDeclaration.sortNamedImports": "maintain"
   },
   "json": {},
   "markdown": {},

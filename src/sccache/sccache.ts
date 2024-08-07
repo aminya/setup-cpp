@@ -12,7 +12,7 @@ export function setupSccache(version: string, _setupDir: string, _arch: string) 
       return setupBrewPack("sccache", version)
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }

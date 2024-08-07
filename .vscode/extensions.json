@@ -1,3 +1,8 @@
 {
-  "recommendations": ["orta.vscode-jest", "esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+  "recommendations": [
+    "orta.vscode-jest",
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    "biomejs.biome"
+  ]
 }

@@ -1,6 +1,6 @@
 import { addExeExt } from "patha"
 import { extractTarByExe, extractZip } from "../utils/setup/extract"
-import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
+import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin"
 
 /** Get the platform name task uses in their download links */
 function getTaskPlatform(platform: NodeJS.Platform) {

@@ -1,6 +1,6 @@
+import os from "os"
 import { warning } from "ci-log"
 import memoize from "micro-memoize"
-import os from "os"
 import { getUbuntuVersion } from "ubuntu-version"
 import which from "which"
 import { setupAptPack } from "../setup/setupAptPack"
@@ -45,9 +45,9 @@ function detectUsingOsVersion() {
   // #46~22.04.1-Ubuntu SMP ...
   const osVersion: string = os.version()
   const versionSplitted = osVersion.split(".")
-  const majorVersion = parseInt(versionSplitted[0].replace("#", ""), 10)
-  const minorVersion = parseInt(versionSplitted[1].replace("~", ""), 10)
-  const patchVersion = parseInt(versionSplitted[2].split("-")[0], 10)
+  const majorVersion = Number.parseInt(versionSplitted[0].replace("#", ""), 10)
+  const minorVersion = Number.parseInt(versionSplitted[1].replace("~", ""), 10)
+  const patchVersion = Number.parseInt(versionSplitted[2].split("-")[0], 10)
 
   return [majorVersion, minorVersion, patchVersion]
 }

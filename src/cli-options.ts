@@ -1,8 +1,8 @@
 import { getInput } from "@actions/core"
 import { info } from "ci-log"
 import mri from "mri"
-import { Inputs, inputs } from "./tool"
-import { InstallationInfo } from "./utils/setup/setupBin"
+import { type Inputs, inputs } from "./tool"
+import type { InstallationInfo } from "./utils/setup/setupBin"
 
 export function parseArgs(args: string[]): Opts {
   return mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
@@ -31,13 +31,13 @@ All the available tools:
 
   console.table(
     {
-      "compiler and analyzer": { tools: `--llvm, --gcc, --msvc, --vcvarsall, --cppcheck, --clangtidy, --clangformat` },
-      "build system": { tools: `--cmake, --ninja, --meson, --make, --task, --bazel` },
-      "package manager": { tools: `--vcpkg, --conan, --choco, --brew, --nala` },
-      cache: { tools: `--cppcache, --sccache` },
-      documentation: { tools: `--doxygen, --graphviz` },
-      coverage: { tools: `--gcovr, --opencppcoverage, --kcov` },
-      other: { tools: `--python, --powershell, --sevenzip` },
+      "compiler and analyzer": { tools: "--llvm, --gcc, --msvc, --vcvarsall, --cppcheck, --clangtidy, --clangformat" },
+      "build system": { tools: "--cmake, --ninja, --meson, --make, --task, --bazel" },
+      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala" },
+      cache: { tools: "--cppcache, --sccache" },
+      documentation: { tools: "--doxygen, --graphviz" },
+      coverage: { tools: "--gcovr, --opencppcoverage, --kcov" },
+      other: { tools: "--python, --powershell, --sevenzip" },
     },
     ["tools"],
   )

@@ -1,16 +1,16 @@
-import { execRoot } from "admina"
 import { info } from "console"
+import { execRoot } from "admina"
 import { execa } from "execa"
 import { chmod, readFile, writeFile } from "fs/promises"
 import { DEFAULT_TIMEOUT } from "../installTool"
 import { addPath } from "../utils/env/addEnv"
 import { hasNala, isPackageInstalled, setupAptPack } from "../utils/setup/setupAptPack"
-import { InstallationInfo } from "../utils/setup/setupBin"
+import type { InstallationInfo } from "../utils/setup/setupBin"
 
 export enum LLVMPackages {
-  All,
-  ClangFormat,
-  Core,
+  All = 0,
+  ClangFormat = 1,
+  Core = 2,
 }
 
 export async function setupLLVMApt(

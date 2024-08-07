@@ -15,6 +15,8 @@ words:
   - hadolint
   - aminya
   - applellvm
+  - biome
+  - biomejs
   - bazel
   - bazelisk
   - buildtools

@@ -1,6 +1,6 @@
 import { macosVersion } from "../../utils/env/macos_version"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version"
-import { InstallationInfo } from "../../utils/setup/setupBin"
+import type { InstallationInfo } from "../../utils/setup/setupBin"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { getVersion } from "../../versions/versions"
 import { setupGraphviz } from "../graphviz"

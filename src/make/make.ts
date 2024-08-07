@@ -27,10 +27,10 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "make", version }])
       }
-      throw new Error(`Unsupported linux distribution`)
+      throw new Error("Unsupported linux distribution")
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }

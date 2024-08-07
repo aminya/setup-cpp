@@ -2,12 +2,12 @@ import { execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
-import { execa, ExecaError } from "execa"
+import { type ExecaError, execa } from "execa"
 import { appendFile } from "fs/promises"
 import { pathExists } from "path-exists"
 import which from "which"
 import { addEnv, cpprc_path, sourceCpprc } from "../env/addEnv"
-import { InstallationInfo } from "./setupBin"
+import type { InstallationInfo } from "./setupBin"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
@@ -75,10 +75,10 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 }
 
 export enum AptPackageType {
-  NameDashVersion,
-  NameEqualsVersion,
-  Name,
-  None,
+  NameDashVersion = 0,
+  NameEqualsVersion = 1,
+  Name = 2,
+  None = 3,
 }
 
 export async function aptPackageType(name: string, version: string | undefined): Promise<AptPackageType> {
@@ -125,7 +125,6 @@ async function getAptArg(name: string, version: string | undefined) {
       return `${name}=${version}`
     case AptPackageType.Name:
       return name
-    case AptPackageType.None:
     default:
       throw new Error(`Could not find package ${name} ${version ?? ""}`)
   }

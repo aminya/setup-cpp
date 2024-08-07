@@ -1,6 +1,6 @@
 import { info } from "@actions/core"
 import which from "which"
-import { InstallationInfo } from "../../utils/setup/setupBin"
+import type { InstallationInfo } from "../../utils/setup/setupBin"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
 import { setupKcov } from "../kcov"
 

@@ -1,6 +1,6 @@
+import { tmpdir } from "os"
 import * as io from "@actions/io"
 import spawn from "cross-spawn"
-import { tmpdir } from "os"
 import * as path from "patha"
 import { addExeExt, join } from "patha"
 
@@ -66,5 +66,5 @@ export function runnerWindowsVersion() {
     return undefined
   }
 
-  return parseInt(maybeVersionString, 10)
+  return Number.parseInt(maybeVersionString, 10)
 }

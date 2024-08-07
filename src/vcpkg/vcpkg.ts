@@ -9,7 +9,7 @@ import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { setupAptPack } from "../utils/setup/setupAptPack"
-import { InstallationInfo } from "../utils/setup/setupBin"
+import type { InstallationInfo } from "../utils/setup/setupBin"
 import { setupDnfPack } from "../utils/setup/setupDnfPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
 

@@ -29,7 +29,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
         await setupDnfPack([{ name: "curl" }])
         execRootSync("/bin/bash", [
           "-c",
-          `curl https://packages.microsoft.com/config/rhel/8/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo`,
+          "curl https://packages.microsoft.com/config/rhel/8/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo",
         ])
         return setupDnfPack([{ name: "powershell", version }])
       } else if (isUbuntu()) {
@@ -55,10 +55,10 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
 
         return setupAptPack([{ name: "powershell", version }], true)
       }
-      throw new Error(`Unsupported linux distribution`)
+      throw new Error("Unsupported linux distribution")
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }

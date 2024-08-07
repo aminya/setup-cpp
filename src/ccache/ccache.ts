@@ -24,10 +24,10 @@ export function setupCcache(version: string, _setupDir: string, _arch: string) {
       } else if (isUbuntu()) {
         return setupAptPack([{ name: "ccache", version }])
       }
-      throw new Error(`Unsupported linux distribution`)
+      throw new Error("Unsupported linux distribution")
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }

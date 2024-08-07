@@ -10,7 +10,7 @@ export async function setupMacOSSDK() {
       if (sdkroot) {
         await addEnv("SDKROOT", sdkroot.trim())
       } else {
-        error(`SDKROOT not set`)
+        error("SDKROOT not set")
       }
     } catch (e) {
       error(e as Error | string)

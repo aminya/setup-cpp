@@ -4,7 +4,7 @@ import { pathExists } from "path-exists"
 import { dirname } from "patha"
 import which from "which"
 import { addPath } from "../utils/env/addEnv"
-import { InstallationInfo } from "../utils/setup/setupBin"
+import type { InstallationInfo } from "../utils/setup/setupBin"
 
 let binDir: string | undefined
 

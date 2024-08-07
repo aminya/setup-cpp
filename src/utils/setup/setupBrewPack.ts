@@ -4,7 +4,7 @@ import { execaSync } from "execa"
 import { join } from "patha"
 import which from "which"
 import { getBrewPath, setupBrew } from "../../brew/brew"
-import { InstallationInfo } from "./setupBin"
+import type { InstallationInfo } from "./setupBin"
 
 let hasBrew = false
 

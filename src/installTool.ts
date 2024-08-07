@@ -3,8 +3,8 @@ import { error } from "ci-log"
 import pTimeout from "p-timeout"
 import { join } from "patha"
 import { getSuccessMessage } from "./cli-options"
-import { setups, ToolName } from "./tool"
-import { InstallationInfo } from "./utils/setup/setupBin"
+import { type ToolName, setups } from "./tool"
+import type { InstallationInfo } from "./utils/setup/setupBin"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall"
 import { getVersion } from "./versions/versions"
 
@@ -23,7 +23,7 @@ export async function installTool(
   startGroup(`Installing ${tool} ${version}`)
   let hasLLVM = false
   try {
-    hasLLVM = await pTimeout(installToolImpl(tool, version, osVersion, arch, hasLLVM, setupCppDir, successMessages), {
+    hasLLVM = await pTimeout(installToolImpl(tool, version, osVersion, arch, setupCppDir, successMessages), {
       milliseconds: timeout,
       message: `Timeout while installing ${tool} ${version}. You can increase the timeout from options`,
     })
@@ -41,10 +41,12 @@ async function installToolImpl(
   version: string,
   osVersion: number[] | null,
   arch: string,
-  hasLLVM: boolean,
   setupCppDir: string,
   successMessages: string[],
 ) {
+  // eslint-disable-next-line no-param-reassign
+  const hasLLVM = ["llvm", "clangformat", "clangtidy"].includes(tool)
+
   let installationInfo: InstallationInfo | undefined | void
   if (tool === "vcvarsall") {
     // eslint-disable-next-line no-await-in-loop
@@ -52,9 +54,6 @@ async function installToolImpl(
   } else {
     // get the setup function
     const setupFunction = setups[tool]
-
-    // eslint-disable-next-line no-param-reassign
-    hasLLVM = ["llvm", "clangformat", "clangtidy"].includes(tool)
 
     // the tool installation directory (for the functions that ue it)
     const setupDir = join(setupCppDir, hasLLVM ? "llvm" : tool)

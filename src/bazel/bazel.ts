@@ -38,10 +38,10 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
         ])
         return setupAptPack([{ name: "bazel", version }], true)
       }
-      throw new Error(`Unsupported linux distribution`)
+      throw new Error("Unsupported linux distribution")
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }

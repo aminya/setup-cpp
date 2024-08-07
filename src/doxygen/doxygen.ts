@@ -4,7 +4,7 @@ import { setupGraphviz } from "../graphviz/graphviz"
 import { addPath } from "../utils/env/addEnv"
 import { extractTar, extractZip } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
-import { InstallationInfo, PackageInfo, setupBin } from "../utils/setup/setupBin"
+import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin"
 import { setupBrewPack } from "../utils/setup/setupBrewPack"
 import { setupChocoPack } from "../utils/setup/setupChocoPack"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
@@ -98,7 +98,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         } else if (isUbuntu()) {
           installationInfo = await setupAptPack([{ name: "doxygen", version }])
         } else {
-          throw new Error(`Unsupported linux distributions`)
+          throw new Error("Unsupported linux distributions")
         }
       } else if (isUbuntu()) {
         try {
@@ -114,13 +114,13 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
           installationInfo = await setupAptPack([{ name: "doxygen" }])
         }
       } else {
-        throw new Error(`Unsupported linux distributions`)
+        throw new Error("Unsupported linux distributions")
       }
       await setupGraphviz(getVersion("graphviz", undefined, await ubuntuVersion()), "", arch)
       return installationInfo
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }
@@ -145,7 +145,7 @@ async function activateWinDoxygen() {
       throw new Error("Failed to find doxygen binary")
     }
     default: {
-      throw new Error(`Unsupported platform`)
+      throw new Error("Unsupported platform")
     }
   }
 }
