@@ -145,7 +145,8 @@
     "untildify-user"
   ],
   "engines": {
-    "node": ">=12.x"
+    "node": ">=12.x",
+    "pnpm": "^9"
   },
   "keywords": [
     "github-actions",

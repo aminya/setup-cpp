@@ -24,9 +24,9 @@ jobs:
         os:
           - ubuntu-22.04
         node:
-          - 20
+          - 22
         pnpm:
-          - 8
+          - 9
     steps:
       - uses: actions/checkout@v4
 
@@ -96,9 +96,9 @@ jobs:
           - macos-13
           - macos-12
         node:
-          - 20
+          - 22
         pnpm:
-          - 8
+          - 9
     steps:
       - uses: actions/checkout@v4
 
@@ -162,9 +162,9 @@ jobs:
           - macos-12
           - macos-11
         node:
-          - 20
+          - 22
         pnpm:
-          - 8
+          - 9
     steps:
       - uses: actions/checkout@v4
         with:
@@ -237,9 +237,9 @@ jobs:
         os:
           - ubuntu-22.04
         node:
-          - 20
+          - 22
         pnpm:
-          - 8
+          - 9
         container:
           - { file: "ubuntu-llvm.dockerfile", image: "setup-cpp-ubuntu-llvm", tag: "22.04-0.37.0" }
           - { file: "fedora-llvm.dockerfile", image: "setup-cpp-fedora-llvm", tag: "40-0.37.0" }
