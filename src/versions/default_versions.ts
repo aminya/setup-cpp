@@ -44,6 +44,7 @@ export const MinVersions: Record<string, string | undefined> = {
 // - the older ones use ""
 export const DefaultLinuxVersion: Record<string, Record<number, string> | undefined> = {
   gcc: {
+    24: "13",
     22: "13",
     20: "11",
     18: "11",
@@ -51,11 +52,13 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     14: "11",
   },
   mingw: {
+    24: "8.0.0-1",
     22: "8.0.0-1",
     20: "7.0.0-2",
   },
   // the suffixes relate to the suffix in the llvm releases
   llvm: {
+    24: "17.0.6-ubuntu-22.04",
     22: "17.0.6-ubuntu-22.04",
     20: "17.0.6-ubuntu-22.04",
     18: "15.0.6-ubuntu-18.04",
@@ -63,6 +66,7 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     14: "13.0.0-ubuntu-16.04",
   },
   clangtidy: {
+    24: "17.0.6-ubuntu-22.04",
     22: "17.0.6-ubuntu-22.04",
     20: "17.0.6-ubuntu-22.04",
     18: "15.0.6-ubuntu-18.04",
@@ -70,6 +74,7 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     14: "13.0.0-ubuntu-16.04",
   },
   clangformat: {
+    24: "17.0.6-ubuntu-22.04",
     22: "17.0.6-ubuntu-22.04",
     20: "17.0.6-ubuntu-22.04",
     18: "15.0.6-ubuntu-18.04",
@@ -77,15 +82,19 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     14: "13.0.0-ubuntu-16.04",
   },
   gcovr: {
+    24: "6.0",
     22: "6.0",
     20: "6.0",
     18: "5.0",
   },
   meson: {
+    24: "1.0.0",
+    22: "1.0.0",
     20: "1.0.0",
     18: "0.61.4",
   },
   nala: {
+    24: "",
     22: "",
     21: "legacy",
     20: "legacy",
@@ -94,6 +103,7 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     14: "legacy",
   },
   kcov: {
+    24: "42-binary",
     22: "42-binary",
     20: "40-binary", // https://github.com/SimonKagstrom/kcov/releases
     18: "40",

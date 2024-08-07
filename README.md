@@ -8,7 +8,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 `setup-cpp` can be used locally from terminal, from CI services like GitHub Actions and GitLab Pipelines, and inside containers like Docker.
 
-`setup-cpp` is supported on many platforms. It is continuously tested on several configurations including Windows (11, 10, 2022, 2019), Linux (Ubuntu 22.04, Ubuntu 20.04, Fedora, ArchLinux), and macOS (13, 12, 11, 10.15). `setup-cpp` is backed by unit tests for each tool and integration tests for compiling cpp projects.
+`setup-cpp` is supported on many platforms. It is continuously tested on several configurations including Windows (11, 10, 2022, 2019), Linux (Ubuntu 24.0, 22.04, 20.04, 18.04, Fedora, ArchLinux), and macOS (13, 12, 11, 10.15). `setup-cpp` is backed by unit tests for each tool and integration tests for compiling cpp projects.
 
 ## Features
 
@@ -111,7 +111,7 @@ jobs:
       matrix:
         os:
           - windows-2022
-          - ubuntu-22.04
+          - ubuntu-24.04
           - macos-12
         compiler:
           - llvm
@@ -259,7 +259,7 @@ jobs:
     strategy:
       matrix:
         os:
-          - ubuntu-22.04
+          - ubuntu-24.04
     steps:
       - uses: actions/checkout@v3
       - name: Build
