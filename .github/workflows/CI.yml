@@ -15,14 +15,14 @@ concurrency:
 
 jobs:
   Build:
-    runs-on: ubuntu-22.04
+    runs-on: ${{ matrix.os }}
     name: Build
     if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     strategy:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-22.04
+          - ubuntu-24.04
         node:
           - 22
         pnpm:
@@ -92,7 +92,7 @@ jobs:
       matrix:
         os:
           - windows-2022
-          - ubuntu-22.04
+          - ubuntu-24.04
           - macos-13
           - macos-12
         node:
@@ -156,6 +156,7 @@ jobs:
         os:
           - windows-2022
           - windows-2019
+          - ubuntu-24.04
           - ubuntu-22.04
           - ubuntu-20.04
           - macos-13
@@ -234,7 +235,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-22.04
+          - ubuntu-24.04
         node:
           - 22
         pnpm:
@@ -282,7 +283,7 @@ jobs:
   Release:
     if: startsWith(github.ref, 'refs/tags/')
     needs: [Build, BuildExecutable, Test, Docker]
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Download All Artifacts
         uses: actions/download-artifact@v3
