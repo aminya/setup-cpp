@@ -21,14 +21,14 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
     return { binDir }
   }
 
-  // https://github.com/volitank/nala#-installation
+  // https://gitlab.com/volian/nala/-/wikis/Installation
   const keyFileName = await addAptKeyViaDownload(
-    "volian-archive-scar-unstable.gpg",
-    "https://deb.volian.org/volian/scar.key",
+    "volian-archive-nala.gpg",
+    "https://deb.volian.org/volian/nala.key",
   )
   execRootSync("/bin/bash", [
     "-c",
-    `echo "deb [signed-by=${keyFileName}] http://deb.volian.org/volian/ scar main" | tee /etc/apt/sources.list.d/volian-archive-scar-unstable.list`,
+    `echo "deb [signed-by=${keyFileName}] http://deb.volian.org/volian/ nala main" | tee /etc/apt/sources.list.d/volian-archive-nala.list`,
   ])
 
   try {
