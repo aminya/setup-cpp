@@ -7,6 +7,7 @@ import { tmpdir } from "os"
 import { GITHUB_ACTIONS } from "ci-info"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
+import { maybeGetInput } from "../../cli-options"
 import { hasDnf } from "../env/hasDnf"
 import { isArch } from "../env/isArch"
 import { isUbuntu } from "../env/isUbuntu"
@@ -132,7 +133,9 @@ export async function setupBin(
 
   // check if inside Github Actions. If so, cache the installation
   if (GITHUB_ACTIONS && typeof process.env.RUNNER_TOOL_CACHE === "string") {
-    await cacheDir(setupDir, name, version)
+    if (maybeGetInput("cache-tools") === "true" || process.env.CACHE_TOOLS === "true") {
+      await cacheDir(setupDir, name, version)
+    }
   }
 
   return { installDir, binDir }

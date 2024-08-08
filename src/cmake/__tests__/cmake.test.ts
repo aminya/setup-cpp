@@ -9,6 +9,7 @@ describe("setup-cmake", () => {
   let directory: string
   beforeAll(async () => {
     directory = await setupTmpDir("cmake")
+    process.env.CACHE_TOOLS = "true"
   })
 
   it("should setup CMake", async () => {

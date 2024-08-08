@@ -3,6 +3,9 @@ description: "Install all the tools required for building and testing C++/C proj
 author: "Amin Yahyaabadi"
 
 inputs:
+  cache-tools:
+    description: "If should cache the installed tools? (Default: false)"
+    required: false
   compiler:
     description: "The compiler to use and its optional version separated by - e.g. llvm-13.0.0"
     required: false

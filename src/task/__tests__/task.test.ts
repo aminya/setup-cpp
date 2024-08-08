@@ -8,6 +8,7 @@ describe("setup-task", () => {
   let directory: string
   beforeAll(async () => {
     directory = await setupTmpDir("task")
+    process.env.CACHE_TOOLS = "true"
   })
 
   it("should setup task", async () => {
