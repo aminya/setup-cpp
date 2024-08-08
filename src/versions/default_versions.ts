@@ -110,4 +110,10 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     16: "40",
     14: "40",
   },
+  doxygen: {
+    24: "1.11.0",
+    22: "1.11.0",
+    20: "1.10.0",
+    18: "1.10.0",
+  },
 }
