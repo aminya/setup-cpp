@@ -35,16 +35,6 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
-  if (!didUpdate || update) {
-    updateRepos(apt)
-    didUpdate = true
-  }
-
-  if (!didInit) {
-    await initApt(apt)
-    didInit = true
-  }
-
   const allRepositories = [...new Set(packages.flatMap((pack) => pack.repositories ?? []))]
 
   if (allRepositories.length !== 0) {
@@ -56,15 +46,33 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
     updateRepos(apt)
   }
 
-  const aptArgs = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
+  let qualifiedPacks = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
+
+  // find the packages that are not installed
+  qualifiedPacks = await Promise.all(qualifiedPacks.filter(async (pack) => !(await isPackageInstalled(pack))))
+
+  if (qualifiedPacks.length === 0) {
+    return { binDir: "/usr/bin/" }
+  }
+
+  if (!didUpdate || update) {
+    updateRepos(apt)
+    didUpdate = true
+  }
+
+  if (!didInit) {
+    await initApt(apt)
+    didInit = true
+  }
+
   try {
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...qualifiedPacks])
   } catch (err) {
     if ("stderr" in (err as ExecaError)) {
       const stderr = (err as ExecaError).stderr
       if (retryErrors.some((error) => stderr.includes(error))) {
-        warning(`Failed to install packages ${aptArgs}. Retrying...`)
-        execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+        warning(`Failed to install packages ${qualifiedPacks}. Retrying...`)
+        execRootSync(apt, ["install", "--fix-broken", "-y", ...qualifiedPacks])
       }
     } else {
       throw err
@@ -229,7 +237,22 @@ export async function updateAptAlternatives(name: string, path: string, priority
   }
 }
 
-export async function isPackageInstalled(regexp: string) {
+export async function isPackageInstalled(pack: string) {
+  try {
+    // check if a package is installed
+    const { stdout } = await execa("dpkg", ["-s", pack])
+    if (typeof stdout !== "string") {
+      return false
+    }
+    const lines = stdout.split("\n")
+    // check if the output contains a line that starts with "Status: install ok installed"
+    return lines.some((line) => line.startsWith("Status: install ok installed"))
+  } catch {
+    return false
+  }
+}
+
+export async function isPackageRegexInstalled(regexp: string) {
   try {
     // check if a package matching the regexp is installed
     const { stdout } = await execa("dpkg", ["-l", regexp])

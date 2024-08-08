@@ -4,7 +4,7 @@ import { execa } from "execa"
 import { chmod, readFile, writeFile } from "fs/promises"
 import { DEFAULT_TIMEOUT } from "../installTool"
 import { addPath } from "../utils/env/addEnv"
-import { hasNala, isPackageInstalled, setupAptPack } from "../utils/setup/setupAptPack"
+import { hasNala, isPackageRegexInstalled, setupAptPack } from "../utils/setup/setupAptPack"
 import type { InstallationInfo } from "../utils/setup/setupBin"
 
 export enum LLVMPackages {
@@ -87,7 +87,7 @@ async function removeConflictingPackages(givenScript: string) {
   await Promise.all(
     conflictingPackages.map(async (pack) => {
       const installingPack = pack.replace("$LLVM_VERSION", "*")
-      if (await isPackageInstalled(installingPack)) {
+      if (await isPackageRegexInstalled(installingPack)) {
         info(`Removing conflicting package ${installingPack}`)
         script = script.replace(pack, "")
       }
