@@ -78,13 +78,19 @@ export const VERSIONS: Set<string> = getVersions([
   "18.1.0",
   "18.1.1",
   "18.1.2",
+  "18.1.3",
+  "18.1.4",
+  "18.1.5",
+  "18.1.6",
+  "18.1.7",
+  "18.1.8",
 ])
 
 /** The LLVM versions that were never released for the Windows platform. */
 const WIN32_MISSING: Set<string> = new Set(["10.0.1", "15.0.5", "15.0.6", "17.0.5"])
 
 /** The LLVM versions that were never released for the Darwin platform. */
-const DARWIN_MISSING = new Set([
+const DARWIN_X64_MISSING = new Set([
   "3.5.1",
   "3.6.1",
   "3.6.2",
@@ -98,8 +104,6 @@ const DARWIN_MISSING = new Set([
   "11.0.1",
   "11.1.0",
   "12.0.1",
-  // missing x86_64
-  // TODO add arm64 support
   "15.0.4",
   "15.0.5",
   "15.0.6",
@@ -119,6 +123,12 @@ const DARWIN_MISSING = new Set([
   "18.1.0",
   "18.1.1",
   "18.1.2",
+  "18.1.3",
+  "18.1.4",
+  "18.1.5",
+  "18.1.6",
+  "18.1.7",
+  "18.1.8",
 ])
 
 /**
@@ -134,7 +144,7 @@ const UBUNTU_RC: Map<string, string> = new Map()
  * https://github.com/llvm/llvm-project/releases/tag/llvmorg-14.0.1 or https://releases.llvm.org/14.0.1
  */
 // TODO change based on ubuntu version
-const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
+const UBUNTU_X64_SUFFIX_MAP: { [key: string]: string } = {
   "3.5.0": "-ubuntu-14.04",
   "3.5.1": "",
   "3.5.2": "-ubuntu-14.04",
@@ -172,7 +182,6 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
   "13.0.1": "-ubuntu-18.04",
   "13.0.1-ubuntu-18.04": "-ubuntu-18.04",
   "14.0.0": "-ubuntu-18.04",
-  // "14.0.1": "-ubuntu-18.04",  // only available for powerpc64le
   "15.0.2": "-rhel86",
   "15.0.5": "-ubuntu-18.04",
   "15.0.6": "-ubuntu-18.04",
@@ -184,10 +193,13 @@ const UBUNTU_SUFFIX_MAP: { [key: string]: string } = {
   "17.0.4": "-ubuntu-22.04",
   "17.0.5": "-ubuntu-22.04",
   "17.0.6": "-ubuntu-22.04",
+  "18.1.4": "-ubuntu-18.04",
+  "18.1.7": "-ubuntu-18.04",
+  "18.1.8": "-ubuntu-18.04",
 }
 
 /** The latest supported LLVM version for the Linux (Ubuntu) platform. */
-const MAX_UBUNTU: string = "17.0.6"
+const MAX_UBUNTU: string = "18.1.8"
 
 // ================================================
 // URL
@@ -207,7 +219,7 @@ function getReleaseUrl(version: string, prefix: string, suffix: string): string 
 
 /** Gets an LLVM download URL for the Darwin platform. */
 function getDarwinUrl(version: string): string | null {
-  if (DARWIN_MISSING.has(version)) {
+  if (DARWIN_X64_MISSING.has(version)) {
     return null
   }
 
@@ -239,11 +251,11 @@ export function getLinuxUrl(versionGiven: string): string {
     }
     linuxVersion = version.replace(givenUbuntuVersion, "")
     version = getSpecificVersions(VERSIONS, givenUbuntuVersion)[0]
-  } else if (version !== "" && version in UBUNTU_SUFFIX_MAP) {
-    linuxVersion = UBUNTU_SUFFIX_MAP[version]
+  } else if (version !== "" && version in UBUNTU_X64_SUFFIX_MAP) {
+    linuxVersion = UBUNTU_X64_SUFFIX_MAP[version]
   } else {
     // default to the maximum version
-    linuxVersion = UBUNTU_SUFFIX_MAP[MAX_UBUNTU]
+    linuxVersion = UBUNTU_X64_SUFFIX_MAP[MAX_UBUNTU]
     warning(`Falling back to LLVM version ${MAX_UBUNTU} ${linuxVersion} for the Ubuntu.`)
   }
 

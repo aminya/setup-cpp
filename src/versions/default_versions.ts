@@ -22,14 +22,14 @@ export const DefaultVersions: Record<string, string | undefined> = {
   llvm: getLLVMDefault(), // https://github.com/llvm/llvm-project/releases
   clangtidy: getLLVMDefault(),
   clangformat: getLLVMDefault(),
-  ninja: "1.11.1", // https://github.com/ninja-build/ninja/releases
-  cmake: "3.28.1", // https://github.com/Kitware/CMake/releases
+  ninja: "1.12.1", // https://github.com/ninja-build/ninja/releases
+  cmake: "3.30.2", // https://github.com/Kitware/CMake/releases
   gcovr: "5.2", // "6.0", // https://pypi.org/project/gcovr/
-  conan: "1.62.0", // 2.0.17 // https://github.com/conan-io/conan/releases
-  meson: "1.3.1", // https://github.com/mesonbuild/meson/releases
+  conan: "1.64.1", // 2.0.17 // https://github.com/conan-io/conan/releases
+  meson: "1.5.1", // https://github.com/mesonbuild/meson/releases
   kcov: "42", // https://github.com/SimonKagstrom/kcov/releases
-  task: "3.33.1", // https://github.com/go-task/task/releases
-  doxygen: isArch() ? "1.10.0-1" : "1.10.0", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
+  task: "3.38.0", // https://github.com/go-task/task/releases
+  doxygen: isArch() ? "1.11.0-4" : "1.11.0", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: isArch() ? "13.2.1-3" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
   // mingw: isArch() ? "12.2.0-1" : "8", // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=mingw-w64 // https://archlinux.org/packages/extra/x86_64/mingw-w64-gcc/
 }
@@ -109,5 +109,11 @@ export const DefaultLinuxVersion: Record<string, Record<number, string> | undefi
     18: "40",
     16: "40",
     14: "40",
+  },
+  doxygen: {
+    24: "1.11.0",
+    22: "1.11.0",
+    20: "1.10.0",
+    18: "1.10.0",
   },
 }
