@@ -35,6 +35,12 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
+  // Update the repos if needed
+  if (update) {
+    updateRepos(apt)
+    didUpdate = true
+  }
+
   // Add the repos if needed
   await addRepositories(apt, packages)
 
@@ -47,12 +53,6 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
   if (qualifiedPacks.length === 0) {
     info("All packages are already installed")
     return { binDir: "/usr/bin/" }
-  }
-
-  // Update the repos if needed
-  if (!didUpdate || update) {
-    updateRepos(apt)
-    didUpdate = true
   }
 
   // Initialize apt if needed
@@ -181,7 +181,7 @@ async function installAddAptRepo() {
   if (await isPackageInstalled("software-properties-common")) {
     return
   }
-  execRootSync("apt-get", ["install", "-y", "software-properties-common"])
+  execRootSync("apt-get", ["install", "-y", "--fix-broken", "software-properties-common"])
 }
 
 /** Install gnupg and certificates (usually missing from docker containers) */
@@ -192,12 +192,12 @@ async function initApt(apt: string) {
     didUpdate = true
   }
 
-  if (!(await isPackageInstalled("ca-certificates"))) {
-    execRootSync(apt, ["install", "--fix-broken", "-y", "ca-certificates"])
+  const toInstall = ["ca-certificates", "gnupg", "apt-utils"].filter(async (pack) => !(await isPackageInstalled(pack)))
+
+  if (toInstall.length !== 0) {
+    execRootSync(apt, ["install", "-y", "--fix-broken", ...toInstall])
   }
-  if (!(await isPackageInstalled("gnupg"))) {
-    execRootSync(apt, ["install", "--fix-broken", "-y", "gnupg"])
-  }
+
   const promises: Promise<string | void>[] = [
     addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg"),
     addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
