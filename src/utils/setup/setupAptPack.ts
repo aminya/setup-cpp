@@ -35,36 +35,33 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
-  const allRepositories = [...new Set(packages.flatMap((pack) => pack.repositories ?? []))]
+  // Add the repos if needed
+  await addRepositories(apt, packages)
 
-  if (allRepositories.length !== 0) {
-    for (const repo of allRepositories) {
-      // eslint-disable-next-line no-await-in-loop
-      execRootSync("add-apt-repository", ["-y", repo])
-    }
-
-    updateRepos(apt)
-  }
-
+  // Qualify the packages into full package name/version
   let qualifiedPacks = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
 
   // find the packages that are not installed
   qualifiedPacks = await Promise.all(qualifiedPacks.filter(async (pack) => !(await isPackageInstalled(pack))))
 
   if (qualifiedPacks.length === 0) {
+    info("All packages are already installed")
     return { binDir: "/usr/bin/" }
   }
 
+  // Update the repos if needed
   if (!didUpdate || update) {
     updateRepos(apt)
     didUpdate = true
   }
 
+  // Initialize apt if needed
   if (!didInit) {
     await initApt(apt)
     didInit = true
   }
 
+  // Install
   try {
     execRootSync(apt, ["install", "--fix-broken", "-y", ...qualifiedPacks])
   } catch (err) {
@@ -87,6 +84,23 @@ export enum AptPackageType {
   NameEqualsVersion = 1,
   Name = 2,
   None = 3,
+}
+
+async function addRepositories(apt: string, packages: AptPackage[]) {
+  const allRepositories = [...new Set(packages.flatMap((pack) => pack.repositories ?? []))]
+  if (allRepositories.length !== 0) {
+    if (!didInit) {
+      await initApt(apt)
+      didInit = true
+    }
+    await installAddAptRepo()
+    for (const repo of allRepositories) {
+      // eslint-disable-next-line no-await-in-loop
+      execRootSync("add-apt-repository", ["-y", repo])
+    }
+    updateRepos(apt)
+    didUpdate = true
+  }
 }
 
 export async function aptPackageType(name: string, version: string | undefined): Promise<AptPackageType> {
@@ -119,6 +133,13 @@ export async function aptPackageType(name: string, version: string | undefined):
     }
   } catch {
     // ignore
+  }
+
+  // If apt-cache fails, update the repos and try again
+  if (!didUpdate) {
+    updateRepos(getApt())
+    didUpdate = true
+    return aptPackageType(name, version)
   }
 
   return AptPackageType.None
@@ -156,17 +177,27 @@ function updateRepos(apt: string) {
   execRootSync(apt, apt !== "nala" ? ["update", "-y"] : ["update"])
 }
 
-/** Install apt utils and certificates (usually missing from docker containers) */
+async function installAddAptRepo() {
+  if (await isPackageInstalled("software-properties-common")) {
+    return
+  }
+  execRootSync("apt-get", ["install", "-y", "software-properties-common"])
+}
+
+/** Install gnupg and certificates (usually missing from docker containers) */
 async function initApt(apt: string) {
-  execRootSync(apt, [
-    "install",
-    "--fix-broken",
-    "-y",
-    "software-properties-common",
-    "apt-utils",
-    "ca-certificates",
-    "gnupg",
-  ])
+  // Update the repos if needed
+  if (!didUpdate) {
+    updateRepos(apt)
+    didUpdate = true
+  }
+
+  if (!(await isPackageInstalled("ca-certificates"))) {
+    execRootSync(apt, ["install", "--fix-broken", "-y", "ca-certificates"])
+  }
+  if (!(await isPackageInstalled("gnupg"))) {
+    execRootSync(apt, ["install", "--fix-broken", "-y", "gnupg"])
+  }
   const promises: Promise<string | void>[] = [
     addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg"),
     addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
