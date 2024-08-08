@@ -29,14 +29,13 @@
   "scripts": {
     "build": "run-s clean build.packages && run-p lint.tsc build.parcel copy.matchers",
     "build.packages": "pnpm run -r build",
-    "build.parcel": "cross-env NODE_ENV=production parcel build --detailed-report 10 && run-s build.babel",
+    "build.parcel": "cross-env NODE_ENV=production parcel build && run-s build.babel && shx cp -r ./dist/actions/* ./dist/modern",
     "build.babel": "babel ./dist --out-dir dist --plugins @upleveled/babel-plugin-remove-node-prefix --plugins @babel/plugin-transform-private-methods --compact --no-babelrc --source-maps true",
     "bump": "ncu -u -x numerous,execa,prettier,@types/node,eslint,@types/eslint && pnpm update && pnpx typesync",
     "clean": "shx rm -rf ./dist ./exe ./packages/*/dist/ ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/actions ./dist/modern ",
-    "copy.matchers": "run-p copy.matchers.legacy copy.matchers.actions copy.matchers.modern",
+    "copy.matchers": "run-p copy.matchers.legacy copy.matchers.actions",
     "copy.matchers.legacy": "shx cp ./src/gcc/gcc_matcher.json ./dist/legacy/ && shx cp ./src/msvc/msvc_matcher.json ./dist/legacy/ && shx cp ./src/python/python_matcher.json ./dist/legacy/ && shx cp ./src/llvm/llvm_matcher.json ./dist/legacy/",
     "copy.matchers.actions": "shx cp ./src/gcc/gcc_matcher.json ./dist/actions/ && shx cp ./src/msvc/msvc_matcher.json ./dist/actions/ && shx cp ./src/python/python_matcher.json ./dist/actions/ && shx cp ./src/llvm/llvm_matcher.json ./dist/actions/",
-    "copy.matchers.modern": "shx cp ./src/gcc/gcc_matcher.json ./dist/modern/ && shx cp ./src/msvc/msvc_matcher.json ./dist/modern/ && shx cp ./src/python/python_matcher.json ./dist/modern/ && shx cp ./src/llvm/llvm_matcher.json ./dist/modern/",
     "dev": "cross-env NODE_ENV=development parcel watch",
     "docs": "shx rm -rf packages/*/README.md && pnpm -r exec readme --path ../../dev/readme/template.md -y && pnpm -r exec ts-readme",
     "format": "run-s lint.dprint",
@@ -196,15 +195,6 @@
       "outputFormat": "commonjs"
     },
     "actions": {
-      "context": "node",
-      "engines": {
-        "node": ">=20.x"
-      },
-      "includeNodeModules": true,
-      "optimize": true,
-      "outputFormat": "commonjs"
-    },
-    "modern": {
       "context": "node",
       "engines": {
         "node": ">=20.x"

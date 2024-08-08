@@ -37,7 +37,7 @@ export function extractZip(file: string, dest: string) {
   return extract7Zip(file, dest)
 }
 
-export async function extractTarByExe(file: string, dest: string, flags = ["--strip-components=0"]) {
+export async function extractTarByExe(file: string, dest: string, stripComponents: number = 0, flags: string[] = []) {
   try {
     await mkdirP(dest)
   } catch {
@@ -48,7 +48,9 @@ export async function extractTarByExe(file: string, dest: string, flags = ["--st
   // https://github.com/heroku/heroku-slugs/issues/3
 
   try {
-    await execa("tar", ["xf", file, "-C", dest, ...flags], { stdio: "inherit" })
+    await execa("tar", ["xf", file, "-C", dest, `--strip-components=${stripComponents}`, ...flags], {
+      stdio: "inherit",
+    })
   } catch (e) {
     if (process.platform === "win32" && (e as Error).message.includes("Can't create '\\\\?\\C:")) {
       warning(`Failed to extract symlink ${file} to ${dest}. Ignoring this symlink.`)

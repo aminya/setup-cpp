@@ -332,7 +332,7 @@ export async function getLLVMPackageInfo(
     extractFunction: platform === "win32"
       ? extractExe
       : (file: string, dest: string) => {
-        return extractTarByExe(file, dest, ["--strip-components=1"])
+        return extractTarByExe(file, dest, 1)
       },
   }
 }

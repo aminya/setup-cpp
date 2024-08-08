@@ -1,8 +1,7 @@
-import { extractTar } from "@actions/tool-cache"
 import { addExeExt } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverLte from "semver/functions/lte"
-import { extractZip } from "../utils/setup/extract"
+import { extractTarByExe, extractZip } from "../utils/setup/extract"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin"
 
 /** Get the platform data for cmake */
@@ -34,7 +33,7 @@ function getCmakePackageInfo(version: string, platform: NodeJS.Platform, arch: s
         binRelativeDir: "CMake.app/Contents/bin/",
         binFileName: addExeExt("cmake"),
         extractedFolderName: folderName,
-        extractFunction: extractTar,
+        extractFunction: extractTarByExe,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.tar.gz`,
       }
     }
@@ -51,7 +50,7 @@ function getCmakePackageInfo(version: string, platform: NodeJS.Platform, arch: s
         binRelativeDir: "bin/",
         binFileName: addExeExt("cmake"),
         extractedFolderName: folderName,
-        extractFunction: extractTar,
+        extractFunction: extractTarByExe,
         url: `https://github.com/Kitware/CMake/releases/download/v${version}/${folderName}.tar.gz`,
       }
     }
