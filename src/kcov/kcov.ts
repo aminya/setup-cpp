@@ -38,7 +38,7 @@ function getBuildKcovPackageInfo(version: string): PackageInfo {
 }
 
 async function buildKcov(file: string, dest: string) {
-  const out = await extractTarByExe(file, dest, ["--strip-components=1"])
+  const out = await extractTarByExe(file, dest, 1)
 
   // build after extraction using CMake
   const cmake = await getCmake()

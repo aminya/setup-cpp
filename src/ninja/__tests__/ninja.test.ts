@@ -14,6 +14,7 @@ describe("setup-ninja", () => {
   let directory: string
   beforeEach(async () => {
     directory = await setupTmpDir("ninja")
+    process.env.CACHE_TOOLS = "true"
   })
 
   it("should setup Ninja", async () => {
