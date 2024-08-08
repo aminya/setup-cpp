@@ -35,36 +35,41 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   process.env.DEBIAN_FRONTEND = "noninteractive"
 
-  if (!didUpdate || update) {
+  // Update the repos if needed
+  if (update) {
     updateRepos(apt)
     didUpdate = true
   }
 
+  // Add the repos if needed
+  await addRepositories(apt, packages)
+
+  // Qualify the packages into full package name/version
+  let qualifiedPacks = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
+
+  // find the packages that are not installed
+  qualifiedPacks = await Promise.all(qualifiedPacks.filter(async (pack) => !(await isPackageInstalled(pack))))
+
+  if (qualifiedPacks.length === 0) {
+    info("All packages are already installed")
+    return { binDir: "/usr/bin/" }
+  }
+
+  // Initialize apt if needed
   if (!didInit) {
     await initApt(apt)
     didInit = true
   }
 
-  const allRepositories = [...new Set(packages.flatMap((pack) => pack.repositories ?? []))]
-
-  if (allRepositories.length !== 0) {
-    for (const repo of allRepositories) {
-      // eslint-disable-next-line no-await-in-loop
-      execRootSync("add-apt-repository", ["-y", repo])
-    }
-
-    updateRepos(apt)
-  }
-
-  const aptArgs = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
+  // Install
   try {
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...qualifiedPacks])
   } catch (err) {
     if ("stderr" in (err as ExecaError)) {
       const stderr = (err as ExecaError).stderr
       if (retryErrors.some((error) => stderr.includes(error))) {
-        warning(`Failed to install packages ${aptArgs}. Retrying...`)
-        execRootSync(apt, ["install", "--fix-broken", "-y", ...aptArgs])
+        warning(`Failed to install packages ${qualifiedPacks}. Retrying...`)
+        execRootSync(apt, ["install", "--fix-broken", "-y", ...qualifiedPacks])
       }
     } else {
       throw err
@@ -79,6 +84,23 @@ export enum AptPackageType {
   NameEqualsVersion = 1,
   Name = 2,
   None = 3,
+}
+
+async function addRepositories(apt: string, packages: AptPackage[]) {
+  const allRepositories = [...new Set(packages.flatMap((pack) => pack.repositories ?? []))]
+  if (allRepositories.length !== 0) {
+    if (!didInit) {
+      await initApt(apt)
+      didInit = true
+    }
+    await installAddAptRepo()
+    for (const repo of allRepositories) {
+      // eslint-disable-next-line no-await-in-loop
+      execRootSync("add-apt-repository", ["-y", repo])
+    }
+    updateRepos(apt)
+    didUpdate = true
+  }
 }
 
 export async function aptPackageType(name: string, version: string | undefined): Promise<AptPackageType> {
@@ -111,6 +133,13 @@ export async function aptPackageType(name: string, version: string | undefined):
     }
   } catch {
     // ignore
+  }
+
+  // If apt-cache fails, update the repos and try again
+  if (!didUpdate) {
+    updateRepos(getApt())
+    didUpdate = true
+    return aptPackageType(name, version)
   }
 
   return AptPackageType.None
@@ -148,17 +177,27 @@ function updateRepos(apt: string) {
   execRootSync(apt, apt !== "nala" ? ["update", "-y"] : ["update"])
 }
 
-/** Install apt utils and certificates (usually missing from docker containers) */
+async function installAddAptRepo() {
+  if (await isPackageInstalled("software-properties-common")) {
+    return
+  }
+  execRootSync("apt-get", ["install", "-y", "--fix-broken", "software-properties-common"])
+}
+
+/** Install gnupg and certificates (usually missing from docker containers) */
 async function initApt(apt: string) {
-  execRootSync(apt, [
-    "install",
-    "--fix-broken",
-    "-y",
-    "software-properties-common",
-    "apt-utils",
-    "ca-certificates",
-    "gnupg",
-  ])
+  // Update the repos if needed
+  if (!didUpdate) {
+    updateRepos(apt)
+    didUpdate = true
+  }
+
+  const toInstall = ["ca-certificates", "gnupg", "apt-utils"].filter(async (pack) => !(await isPackageInstalled(pack)))
+
+  if (toInstall.length !== 0) {
+    execRootSync(apt, ["install", "-y", "--fix-broken", ...toInstall])
+  }
+
   const promises: Promise<string | void>[] = [
     addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg"),
     addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
@@ -229,7 +268,22 @@ export async function updateAptAlternatives(name: string, path: string, priority
   }
 }
 
-export async function isPackageInstalled(regexp: string) {
+export async function isPackageInstalled(pack: string) {
+  try {
+    // check if a package is installed
+    const { stdout } = await execa("dpkg", ["-s", pack])
+    if (typeof stdout !== "string") {
+      return false
+    }
+    const lines = stdout.split("\n")
+    // check if the output contains a line that starts with "Status: install ok installed"
+    return lines.some((line) => line.startsWith("Status: install ok installed"))
+  } catch {
+    return false
+  }
+}
+
+export async function isPackageRegexInstalled(regexp: string) {
   try {
     // check if a package matching the regexp is installed
     const { stdout } = await execa("dpkg", ["-l", regexp])
