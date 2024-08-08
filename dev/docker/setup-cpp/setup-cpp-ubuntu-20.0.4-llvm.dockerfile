@@ -1,5 +1,5 @@
 #### Base Image
-FROM ubuntu:20.04 AS setup-cpp-ubuntu-mingw
+FROM ubuntu:24.04 AS setup-cpp-ubuntu-mingw
 
 RUN apt-get update -qq && \
 # install latest nodejs on ubuntu 20.04

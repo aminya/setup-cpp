@@ -1,5 +1,5 @@
 #### Base Image
-FROM ubuntu:22.04 AS setup-cpp-ubuntu-mingw
+FROM ubuntu:24.04 AS setup-cpp-ubuntu-mingw
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
