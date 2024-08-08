@@ -21,6 +21,8 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
     return { binDir }
   }
 
+  await setupAptPack([{ name: "python3-apt" }])
+
   // https://gitlab.com/volian/nala/-/wikis/Installation
   const keyFileName = await addAptKeyViaDownload(
     "volian-archive-nala.gpg",
