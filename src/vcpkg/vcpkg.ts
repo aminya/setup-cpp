@@ -58,7 +58,7 @@ export async function setupVcpkg(version: string, setupDir: string, _arch: strin
     }
 
     // if version specified, checkout the version
-    if (!(version in ["", "true"])) {
+    if (version !== "" && version !== "true") {
       info(`Checking out vcpkg version ${version}`)
       execaSync("git", ["checkout", version], {
         cwd: setupDir,
