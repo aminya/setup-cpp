@@ -44,13 +44,9 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
   // Add the repos if needed
   await addRepositories(apt, packages)
 
-  // Qualify the packages into full package name/version
-  let qualifiedPacks = await Promise.all(packages.map((pack) => getAptArg(pack.name, pack.version)))
+  const needToInstall = await filterAndQualifyAptPackages(packages)
 
-  // find the packages that are not installed
-  qualifiedPacks = await Promise.all(qualifiedPacks.filter(async (pack) => !(await isPackageInstalled(pack))))
-
-  if (qualifiedPacks.length === 0) {
+  if (needToInstall.length === 0) {
     info("All packages are already installed")
     return { binDir: "/usr/bin/" }
   }
@@ -63,13 +59,13 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   // Install
   try {
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...qualifiedPacks])
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall])
   } catch (err) {
     if ("stderr" in (err as ExecaError)) {
       const stderr = (err as ExecaError).stderr
       if (retryErrors.some((error) => stderr.includes(error))) {
-        warning(`Failed to install packages ${qualifiedPacks}. Retrying...`)
-        execRootSync(apt, ["install", "--fix-broken", "-y", ...qualifiedPacks])
+        warning(`Failed to install packages ${needToInstall}. Retrying...`)
+        execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall])
       }
     } else {
       throw err
@@ -84,6 +80,21 @@ export enum AptPackageType {
   NameEqualsVersion = 1,
   Name = 2,
   None = 3,
+}
+
+/**
+ * Filter out the packages that are already installed and qualify the packages into a full package name/version
+ */
+async function filterAndQualifyAptPackages(packages: AptPackage[]) {
+  return (await Promise.all(packages.map(qualifiedNeededAptPackage)))
+    .filter((pack) => pack !== undefined)
+}
+
+async function qualifiedNeededAptPackage(pack: AptPackage) {
+  // Qualify the packages into full package name/version
+  const qualified = await getAptArg(pack.name, pack.version)
+  // filter out the packages that are already installed
+  return (await isPackageInstalled(qualified)) ? undefined : qualified
 }
 
 async function addRepositories(apt: string, packages: AptPackage[]) {
@@ -192,7 +203,11 @@ async function initApt(apt: string) {
     didUpdate = true
   }
 
-  const toInstall = ["ca-certificates", "gnupg", "apt-utils"].filter(async (pack) => !(await isPackageInstalled(pack)))
+  const toInstall = await filterAndQualifyAptPackages([
+    { name: "ca-certificates" },
+    { name: "gnupg" },
+    { name: "apt-utils" },
+  ])
 
   if (toInstall.length !== 0) {
     execRootSync(apt, ["install", "-y", "--fix-broken", ...toInstall])
