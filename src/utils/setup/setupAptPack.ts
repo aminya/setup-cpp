@@ -14,7 +14,7 @@ let didUpdate: boolean = false
 let didInit: boolean = false
 
 // wait up to 300 seconds if the apt-get lock is held
-const aptTimeout = "DPkg::Lock::Timeout=300"
+export const aptTimeout = "DPkg::Lock::Timeout=300"
 
 export type AptPackage = {
   name: string
@@ -177,7 +177,7 @@ export function hasNala() {
   return which.sync("nala", { nothrow: true }) !== null
 }
 
-function getApt() {
+export function getApt() {
   let apt: string
   if (hasNala()) {
     apt = "nala"
