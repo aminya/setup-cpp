@@ -23,12 +23,14 @@ export async function setupLLVM(version: string, setupDir: string, arch: string)
 }
 
 async function setupLLVMWithoutActivation_raw(version: string, setupDir: string, arch: string) {
-  // install LLVM and its dependencies in parallel
-  const [installationInfo, _1, _2] = await Promise.all([
+  // install LLVM
+  const [installationInfo, _1] = await Promise.all([
     setupLLVMOnly(version, setupDir, arch),
-    setupLLVMDeps(arch),
     addLLVMLoggingMatcher(),
   ])
+
+  // install LLVM dependencies
+  await setupLLVMDeps(arch)
 
   return installationInfo
 }
