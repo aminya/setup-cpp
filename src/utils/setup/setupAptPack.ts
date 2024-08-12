@@ -13,6 +13,9 @@ import type { InstallationInfo } from "./setupBin"
 let didUpdate: boolean = false
 let didInit: boolean = false
 
+// wait up to 300 seconds if the apt-get lock is held
+const aptTimeout = "DPkg::Lock::Timeout=300"
+
 export type AptPackage = {
   name: string
   version?: string
@@ -65,7 +68,7 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
       const stderr = (err as ExecaError).stderr
       if (retryErrors.some((error) => stderr.includes(error))) {
         warning(`Failed to install packages ${needToInstall}. Retrying...`)
-        execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall])
+        execRootSync(apt, ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall])
       }
     } else {
       throw err
@@ -104,10 +107,10 @@ async function addRepositories(apt: string, packages: AptPackage[]) {
       await initApt(apt)
       didInit = true
     }
-    await installAddAptRepo()
+    await installAddAptRepo(apt)
     for (const repo of allRepositories) {
       // eslint-disable-next-line no-await-in-loop
-      execRootSync("add-apt-repository", ["-y", repo])
+      execRootSync("add-apt-repository", ["-y", "--no-update", repo])
     }
     updateRepos(apt)
     didUpdate = true
@@ -185,14 +188,14 @@ function getApt() {
 }
 
 function updateRepos(apt: string) {
-  execRootSync(apt, apt !== "nala" ? ["update", "-y"] : ["update"])
+  execRootSync(apt, apt !== "nala" ? ["update", "-y", "-o", aptTimeout] : ["update", "-o", aptTimeout])
 }
 
-async function installAddAptRepo() {
+async function installAddAptRepo(apt: string) {
   if (await isPackageInstalled("software-properties-common")) {
     return
   }
-  execRootSync("apt-get", ["install", "-y", "--fix-broken", "software-properties-common"])
+  execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, "software-properties-common"])
 }
 
 /** Install gnupg and certificates (usually missing from docker containers) */
@@ -210,7 +213,7 @@ async function initApt(apt: string) {
   ])
 
   if (toInstall.length !== 0) {
-    execRootSync(apt, ["install", "-y", "--fix-broken", ...toInstall])
+    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall])
   }
 
   const promises: Promise<string | void>[] = [
