@@ -17,3 +17,5 @@ exe/
 *.log
 *.exe
 .cache/
+
+coverage
