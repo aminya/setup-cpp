@@ -3,93 +3,99 @@ description: "Install all the tools required for building and testing C++/C proj
 author: "Amin Yahyaabadi"
 
 inputs:
+  timeout:
+    description: "The timeout for installation of one tool (in minutes)."
+    default: "20"
+    required: false
   cache-tools:
     description: "If should cache the installed tools? (Default: false)"
-    required: false
-  compiler:
-    description: "The compiler to use and its optional version separated by - e.g. llvm-13.0.0"
     required: false
   architecture:
     description: "The CPU architecture"
     required: false
+  compiler:
+    description: "The compiler to use and its optional version separated by - e.g. llvm-13.0.0"
+    required: false
   llvm:
-    description: "The llvm version to install"
+    description: "Wether to install llvm (true/false) or the specific version to install"
     required: false
   gcc:
-    description: "The gcc version to install"
+    description: "Wether to install gcc (true/false) or the specific version to install"
     required: false
   msvc:
-    description: "The msvc version to install"
+    description: "Wether to install msvc (true/false) or the specific version to install"
     required: false
   vcvarsall:
     description: "If should run vcvarsall?"
     required: false
-  cmake:
-    description: "The cmake version to install."
-    required: false
-  ninja:
-    description: "The ninja version to install."
-    required: false
-  conan:
-    description: "The conan version to install."
-    required: false
-  make:
-    description: "The make version to install."
-    required: false
-  task:
-    description: "The task version to install."
-    required: false
-  vcpkg:
-    description: "The vcpkg version to install."
-    required: false
-  meson:
-    description: "The meson version to install."
-    required: false
-  gcovr:
-    description: "The gcovr version to install."
-    required: false
-  python:
-    description: "The python version to install."
-    required: false
-  ccache:
-    description: "The ccache version to install."
-    required: false
-  sccache:
-    description: "The sccache version to install."
-    required: false
-  doxygen:
-    description: "The doxygen version to install."
-    required: false
-  graphviz:
-    description: "The graphviz version to install."
-    required: false
   cppcheck:
-    description: "The cppcheck version to install."
+    description: "Wether to install cppcheck (true/false) or the specific version to install."
     required: false
   clangtidy:
-    description: "The clang-tidy version to install."
+    description: "The clangWether to install tidy (true/false) or the specific version to install."
     required: false
   clangformat:
-    description: "The clang-format version to install."
+    description: "The clangWether to install format (true/false) or the specific version to install."
     required: false
-  opencppcoverage:
-    description: "The opencppcoverage version to install."
+  cmake:
+    description: "Wether to install cmake (true/false) or the specific version to install."
     required: false
-  kcov:
-    description: "The kcov version to install."
+  ninja:
+    description: "Wether to install ninja (true/false) or the specific version to install."
     required: false
-  sevenzip:
-    description: "The 7z version to install."
+  conan:
+    description: "Wether to install conan (true/false) or the specific version to install."
+    required: false
+  make:
+    description: "Wether to install make (true/false) or the specific version to install."
+    required: false
+  task:
+    description: "Wether to install task (true/false) or the specific version to install."
+    required: false
+  vcpkg:
+    description: "Wether to install vcpkg (true/false) or the specific version to install."
+    required: false
+  meson:
+    description: "Wether to install meson (true/false) or the specific version to install."
+    required: false
+  choco:
+    description: "Wether to install chocolatey (true/false) or the specific version to install."
+    required: false
+  brew:
+    description: "Wether to install brew (true/false) or the specific version to install."
     required: false
   nala:
-    description: 'The nala version to install ("" or "legacy").'
+    description: 'Wether to install nala (true/false) or the specific version to install ("" or "legacy").'
+    required: false
+  ccache:
+    description: "Wether to install ccache (true/false) or the specific version to install."
+    required: false
+  sccache:
+    description: "Wether to install sccache (true/false) or the specific version to install."
+    required: false
+  doxygen:
+    description: "Wether to install doxygen (true/false) or the specific version to install."
+    required: false
+  graphviz:
+    description: "Wether to install graphviz (true/false) or the specific version to install."
+    required: false
+  gcovr:
+    description: "Wether to install gcovr (true/false) or the specific version to install."
+    required: false
+  opencppcoverage:
+    description: "Wether to install opencppcoverage (true/false) or the specific version to install."
+    required: false
+  kcov:
+    description: "Wether to install kcov (true/false) or the specific version to install."
+    required: false
+  sevenzip:
+    description: "Wether to install 7z (true/false) or the specific version to install."
     required: false
   powershell:
-    description: "The powershell version to install."
+    description: "Wether to install powershell (true/false) or the specific version to install."
     required: false
-  timeout:
-    description: "The timeout for installation of one tool (in minutes)."
-    default: "20"
+  python:
+    description: "Wether to install python (true/false) or the specific version to install."
     required: false
 
 runs:

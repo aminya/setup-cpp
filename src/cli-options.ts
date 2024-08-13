@@ -34,7 +34,7 @@ All the available tools:
       "compiler and analyzer": { tools: "--llvm, --gcc, --msvc, --vcvarsall, --cppcheck, --clangtidy, --clangformat" },
       "build system": { tools: "--cmake, --ninja, --meson, --make, --task, --bazel" },
       "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala" },
-      cache: { tools: "--cppcache, --sccache" },
+      cache: { tools: "--ccache, --sccache" },
       documentation: { tools: "--doxygen, --graphviz" },
       coverage: { tools: "--gcovr, --opencppcoverage, --kcov" },
       other: { tools: "--python, --powershell, --sevenzip" },
