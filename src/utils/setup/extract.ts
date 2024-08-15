@@ -3,7 +3,7 @@ import { grantUserWriteAccess } from "admina"
 import { warning } from "ci-log"
 import { execa } from "execa"
 import which from "which"
-import { setupSevenZip } from "../../sevenzip/sevenzip"
+import { setupSevenZip } from "../../sevenzip/sevenzip.js"
 export { extractTar, extractXar } from "@actions/tool-cache"
 
 let sevenZip: string | undefined

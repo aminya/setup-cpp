@@ -3,8 +3,8 @@ import { info } from "@actions/core"
 import { execaSync } from "execa"
 import { join } from "patha"
 import which from "which"
-import { getBrewPath, setupBrew } from "../../brew/brew"
-import type { InstallationInfo } from "./setupBin"
+import { getBrewPath, setupBrew } from "../../brew/brew.js"
+import type { InstallationInfo } from "./setupBin.js"
 
 let hasBrew = false
 

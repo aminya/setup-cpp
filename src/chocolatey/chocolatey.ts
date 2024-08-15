@@ -3,8 +3,8 @@ import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { dirname } from "patha"
 import which from "which"
-import { rcOptions } from "../cli-options"
-import type { InstallationInfo } from "../utils/setup/setupBin"
+import { rcOptions } from "../cli-options.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
 
 /* eslint-disable require-atomic-updates */
 let binDir: string | undefined

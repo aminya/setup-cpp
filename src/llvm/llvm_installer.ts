@@ -3,10 +3,10 @@ import { execRoot } from "admina"
 import { execa } from "execa"
 import { chmod, readFile, writeFile } from "fs/promises"
 import { addPath } from "os-env"
-import { rcOptions } from "../cli-options"
-import { DEFAULT_TIMEOUT } from "../installTool"
-import { aptTimeout, hasNala, isPackageRegexInstalled, setupAptPack } from "../utils/setup/setupAptPack"
-import type { InstallationInfo } from "../utils/setup/setupBin"
+import { rcOptions } from "../cli-options.js"
+import { DEFAULT_TIMEOUT } from "../installTool.js"
+import { aptTimeout, hasNala, isPackageRegexInstalled, setupAptPack } from "../utils/setup/setupAptPack.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
 
 export enum LLVMPackages {
   All = 0,

@@ -1,6 +1,6 @@
 import { addPath } from "os-env"
-import { rcOptions } from "../cli-options"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
+import { rcOptions } from "../cli-options.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupOpencppcoverage(version: string | undefined, _setupDir: string, _arch: string) {

@@ -1,8 +1,8 @@
 import { info } from "@actions/core"
 import which from "which"
-import type { InstallationInfo } from "../../utils/setup/setupBin"
-import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { setupKcov } from "../kcov"
+import type { InstallationInfo } from "../../utils/setup/setupBin.js"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
+import { setupKcov } from "../kcov.js"
 
 jest.setTimeout(300000)
 describe("setup-Kcov", () => {

@@ -1,10 +1,10 @@
 import { execaSync } from "execa"
 import { chmod } from "fs/promises"
 import { addExeExt, join } from "patha"
-import { ubuntuVersion } from "../../utils/env/ubuntu_version"
-import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { getVersion } from "../../versions/versions"
-import { setupGcc } from "../gcc"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
+import { getVersion } from "../../versions/versions.js"
+import { setupGcc } from "../gcc.js"
 
 jest.setTimeout(3000000)
 describe("setup-gcc", () => {

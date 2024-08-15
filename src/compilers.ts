@@ -3,12 +3,12 @@ import { endGroup, notice, startGroup } from "@actions/core"
 import { error, info } from "ci-log"
 import { addEnv } from "os-env"
 import semverValid from "semver/functions/valid"
-import { getSuccessMessage, rcOptions } from "./cli-options"
-import { setupGcc, setupMingw } from "./gcc/gcc"
-import { activateGcovGCC, activateGcovLLVM } from "./gcovr/gcovr"
-import { setupLLVM } from "./llvm/llvm"
-import { setupMSVC } from "./msvc/msvc"
-import { getVersion } from "./versions/versions"
+import { getSuccessMessage, rcOptions } from "./cli-options.js"
+import { setupGcc, setupMingw } from "./gcc/gcc.js"
+import { activateGcovGCC, activateGcovLLVM } from "./gcovr/gcovr.js"
+import { setupLLVM } from "./llvm/llvm.js"
+import { setupMSVC } from "./msvc/msvc.js"
+import { getVersion } from "./versions/versions.js"
 
 /** Detecting the compiler version. Divide the given string by `-` and use the second element as the version */
 export function getCompilerInfo(compilerAndVersion: string) {

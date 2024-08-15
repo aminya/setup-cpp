@@ -1,8 +1,8 @@
 import { addEnv } from "os-env"
 import semverMajor from "semver/functions/major"
 import semverValid from "semver/functions/valid"
-import { rcOptions } from "../cli-options"
-import { setupPipPack } from "../utils/setup/setupPipPack"
+import { rcOptions } from "../cli-options.js"
+import { setupPipPack } from "../utils/setup/setupPipPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setupGcovr(version: string | undefined, _setupDir: string, _arch: string) {

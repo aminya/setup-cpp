@@ -1,9 +1,9 @@
 import { GITHUB_ACTIONS } from "ci-info"
 import { info } from "ci-log"
-import { ubuntuVersion } from "../../utils/env/ubuntu_version"
-import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { getVersion } from "../../versions/versions"
-import { setupPython } from "../python"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
+import { getVersion } from "../../versions/versions.js"
+import { setupPython } from "../python.js"
 
 jest.setTimeout(300000)
 describe("setup-python", () => {
@@ -15,7 +15,7 @@ describe("setup-python", () => {
   it("should setup python in GitHub Actions", async () => {
     if (GITHUB_ACTIONS) {
       info("Installing python in GitHub Actions")
-      const { setupActionsPython } = await import("../actions_python")
+      const { setupActionsPython } = await import("../actions_python.js")
       await setupActionsPython(getVersion("python", "true", await ubuntuVersion()), directory, process.arch)
 
       await testBin("python", ["--version"])

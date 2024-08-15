@@ -3,9 +3,9 @@ import { info } from "ci-log"
 import { execaSync } from "execa"
 import { addPath } from "os-env"
 import which from "which"
-import { setupChocolatey } from "../../chocolatey/chocolatey"
-import { rcOptions } from "../../cli-options"
-import type { InstallationInfo } from "./setupBin"
+import { setupChocolatey } from "../../chocolatey/chocolatey.js"
+import { rcOptions } from "../../cli-options.js"
+import type { InstallationInfo } from "./setupBin.js"
 
 let hasChoco = false
 

@@ -3,12 +3,12 @@ import { execaSync } from "execa"
 import { chmod } from "fs/promises"
 import { isUrlOnline } from "is-url-online"
 import { addExeExt, join } from "patha"
-import { ubuntuVersion } from "../../utils/env/ubuntu_version"
-import { getSpecificVersionAndUrl } from "../../utils/setup/version"
-import { setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { getVersion } from "../../versions/versions"
-import { setupClangFormat, setupClangTools, setupLLVM } from "../llvm"
-import { VERSIONS, getLinuxUrl, getUrl } from "../llvm_url"
+import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
+import { getSpecificVersionAndUrl } from "../../utils/setup/version.js"
+import { setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
+import { getVersion } from "../../versions/versions.js"
+import { setupClangFormat, setupClangTools, setupLLVM } from "../llvm.js"
+import { VERSIONS, getLinuxUrl, getUrl } from "../llvm_url.js"
 
 jest.setTimeout(400000)
 async function testUrl(version: string) {

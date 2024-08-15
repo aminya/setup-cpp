@@ -11,20 +11,20 @@ import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
-import { rcOptions } from "../cli-options"
-import { hasDnf } from "../utils/env/hasDnf"
-import { isArch } from "../utils/env/isArch"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { setupAptPack } from "../utils/setup/setupAptPack"
-import type { InstallationInfo } from "../utils/setup/setupBin"
-import { setupBrewPack } from "../utils/setup/setupBrewPack"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
-import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack"
-import { isBinUptoDate } from "../utils/setup/version"
-import { unique } from "../utils/std"
-import { MinVersions } from "../versions/default_versions"
+import { rcOptions } from "../cli-options.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { setupAptPack } from "../utils/setup/setupAptPack.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
+import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack.js"
+import { isBinUptoDate } from "../utils/setup/version.js"
+import { unique } from "../utils/std/index.js"
+import { MinVersions } from "../versions/default_versions.js"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -89,7 +89,7 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
       // install python in GitHub Actions
       try {
         info("Installing python in GitHub Actions")
-        const { setupActionsPython } = await import("./actions_python")
+        const { setupActionsPython } = await import("./actions_python.js")
         await setupActionsPython(version, setupDir, arch)
 
         foundPython = await findPython(setupDir)

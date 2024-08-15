@@ -1,6 +1,6 @@
-import { testBin } from "../../utils/tests/test-helpers"
-import { getVersion } from "../../versions/versions"
-import { setupCppcheck } from "../cppcheck"
+import { testBin } from "../../utils/tests/test-helpers.js"
+import { getVersion } from "../../versions/versions.js"
+import { setupCppcheck } from "../cppcheck.js"
 
 jest.setTimeout(300000)
 describe("setup-cppcheck", () => {

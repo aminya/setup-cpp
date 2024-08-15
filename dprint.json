@@ -11,7 +11,9 @@
     "module.sortImportDeclarations": "maintain",
     "importDeclaration.sortNamedImports": "maintain"
   },
-  "json": {},
+  "json": {
+    "trailingCommas": "never"
+  },
   "markdown": {},
   "dockerfile": {},
   "exec": {
@@ -26,7 +28,7 @@
     ]
   },
   "includes": [
-    "**/*{.ts,.tsx,.mts,.cts,.js,.jsx,.cjs,.mjs,.json,.md,.yaml,.yml,.dockerfile}"
+    "**/*{.ts,.tsx,.mts,.cts,.js,.jsx,.cjs,.mjs,.json,.jsonc,.md,.yaml,.yml,.dockerfile}"
   ],
   "excludes": [
     "**/node_modules",

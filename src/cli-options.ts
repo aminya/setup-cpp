@@ -2,8 +2,8 @@ import { getInput } from "@actions/core"
 import { info } from "ci-log"
 import mri from "mri"
 import { untildifyUser } from "untildify-user"
-import { type Inputs, inputs } from "./tool"
-import type { InstallationInfo } from "./utils/setup/setupBin"
+import { type Inputs, inputs } from "./tool.js"
+import type { InstallationInfo } from "./utils/setup/setupBin.js"
 
 export function parseArgs(args: string[]): Opts {
   return mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {

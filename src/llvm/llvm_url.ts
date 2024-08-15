@@ -2,9 +2,9 @@ import { info, warning } from "ci-log"
 import { isUrlOnline } from "is-url-online"
 import { addExeExt } from "patha"
 import semverLte from "semver/functions/lte"
-import { extractExe, extractTarByExe } from "../utils/setup/extract"
-import type { PackageInfo } from "../utils/setup/setupBin"
-import { getSpecificVersionAndUrl, getSpecificVersions, getVersions } from "../utils/setup/version"
+import { extractExe, extractTarByExe } from "../utils/setup/extract.js"
+import type { PackageInfo } from "../utils/setup/setupBin.js"
+import { getSpecificVersionAndUrl, getSpecificVersions, getVersions } from "../utils/setup/version.js"
 
 // ================================================
 // Version

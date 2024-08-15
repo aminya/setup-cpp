@@ -3,8 +3,8 @@ import { warning } from "ci-log"
 import memoize from "micro-memoize"
 import { getUbuntuVersion } from "ubuntu-version"
 import which from "which"
-import { setupAptPack } from "../setup/setupAptPack"
-import { isUbuntu } from "./isUbuntu"
+import { setupAptPack } from "../setup/setupAptPack.js"
+import { isUbuntu } from "./isUbuntu.js"
 
 async function ubuntuVersion_raw(): Promise<number[] | null> {
   try {

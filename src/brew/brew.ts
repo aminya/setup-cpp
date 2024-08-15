@@ -6,7 +6,7 @@ import { readFile } from "fs/promises"
 import { addPath } from "os-env"
 import { dirname } from "patha"
 import which from "which"
-import { rcOptions } from "../cli-options"
+import { rcOptions } from "../cli-options.js"
 
 /* eslint-disable require-atomic-updates */
 let binDir: string | undefined

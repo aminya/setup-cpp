@@ -1,5 +1,5 @@
-import { setupBrewPack } from "../utils/setup/setupBrewPack"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
+import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setupSccache(version: string, _setupDir: string, _arch: string) {

@@ -1,7 +1,7 @@
 import { warning } from "ci-log"
 import which from "which"
-import { runnerWindowsVersion } from "../../utils/tests/test-helpers"
-import { setupMSVC } from "../msvc"
+import { runnerWindowsVersion } from "../../utils/tests/test-helpers.js"
+import { setupMSVC } from "../msvc.js"
 
 jest.setTimeout(300000)
 describe("setup-msvc", () => {

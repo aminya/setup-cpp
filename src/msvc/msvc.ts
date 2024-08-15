@@ -3,8 +3,8 @@
 import { GITHUB_ACTIONS } from "ci-info"
 import { findVcvarsall, vsversion_to_versionnumber } from "msvc-dev-cmd/lib.js"
 import { join } from "patha"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { setupVCVarsall } from "../vcvarsall/vcvarsall"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupVCVarsall } from "../vcvarsall/vcvarsall.js"
 
 import { error, info, warning } from "ci-log"
 import { pathExists } from "path-exists"

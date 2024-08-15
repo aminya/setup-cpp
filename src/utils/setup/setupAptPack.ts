@@ -7,8 +7,8 @@ import { appendFile } from "fs/promises"
 import { addEnv, sourceRC } from "os-env"
 import { pathExists } from "path-exists"
 import which from "which"
-import { rcOptions } from "../../cli-options"
-import type { InstallationInfo } from "./setupBin"
+import { rcOptions } from "../../cli-options.js"
+import type { InstallationInfo } from "./setupBin.js"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
