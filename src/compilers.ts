@@ -1,13 +1,13 @@
 import { join } from "path"
 import { endGroup, notice, startGroup } from "@actions/core"
 import { error, info } from "ci-log"
+import { addEnv } from "os-env"
 import semverValid from "semver/functions/valid"
 import { getSuccessMessage } from "./cli-options"
 import { setupGcc, setupMingw } from "./gcc/gcc"
 import { activateGcovGCC, activateGcovLLVM } from "./gcovr/gcovr"
 import { setupLLVM } from "./llvm/llvm"
 import { setupMSVC } from "./msvc/msvc"
-import { addEnv } from "./utils/env/addEnv"
 import { getVersion } from "./versions/versions"
 
 /** Detecting the compiler version. Divide the given string by `-` and use the second element as the version */

@@ -1,4 +1,5 @@
-import { addPath } from "../utils/env/addEnv"
+import { addPath } from "os-env"
+import { rcPath } from "../cli-options"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -37,6 +38,6 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
 
 async function activateWinCppcheck() {
   const binDir = "C:/Program Files/Cppcheck"
-  await addPath(binDir)
+  await addPath(binDir, { rcPath })
   return binDir
 }

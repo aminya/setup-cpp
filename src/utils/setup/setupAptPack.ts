@@ -4,9 +4,9 @@ import { info, warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
 import { type ExecaError, execa } from "execa"
 import { appendFile } from "fs/promises"
+import { addEnv, sourceRC } from "os-env"
 import { pathExists } from "path-exists"
 import which from "which"
-import { addEnv, cpprc_path, sourceCpprc } from "../env/addEnv"
 import type { InstallationInfo } from "./setupBin"
 
 /* eslint-disable require-atomic-updates */
@@ -274,13 +274,13 @@ export async function addAptKeyViaDownload(name: string, url: string) {
   return fileName
 }
 
-export async function updateAptAlternatives(name: string, path: string, priority: number = 40) {
+export async function updateAptAlternatives(name: string, path: string, rcPath: string, priority: number = 40) {
   if (GITHUB_ACTIONS) {
     await execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, priority.toString()])
   } else {
-    await sourceCpprc()
+    await sourceRC(rcPath)
     await appendFile(
-      cpprc_path,
+      rcPath,
       `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} ${priority}; fi\n`,
     )
   }

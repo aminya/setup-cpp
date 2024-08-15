@@ -1,9 +1,10 @@
 /* eslint-disable require-atomic-updates */
 import { info } from "ci-log"
 import { execaSync } from "execa"
+import { addPath } from "os-env"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey"
-import { addPath } from "../env/addEnv"
+import { rcPath } from "../../cli-options"
 import type { InstallationInfo } from "./setupBin"
 
 let hasChoco = false
@@ -45,7 +46,7 @@ export async function setupChocoPack(name: string, version?: string, args: strin
   }
 
   const binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
-  await addPath(binDir)
+  await addPath(binDir, { rcPath })
 
   return { binDir }
 }

@@ -2,11 +2,12 @@ import { delimiter } from "path"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import memoize from "micro-memoize"
+import { addEnv } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
+import { rcPath } from "../cli-options"
 import { setupGcc } from "../gcc/gcc"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { addEnv } from "../utils/env/addEnv"
 import { isUbuntu } from "../utils/env/isUbuntu"
 import { ubuntuVersion } from "../utils/env/ubuntu_version"
 import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
@@ -130,13 +131,13 @@ export async function activateLLVM(directory: string) {
   if (isUbuntu()) {
     const priority = 60
     actPromises.push(
-      updateAptAlternatives("cc", `${directory}/bin/clang`, priority),
-      updateAptAlternatives("cxx", `${directory}/bin/clang++`, priority),
-      updateAptAlternatives("clang", `${directory}/bin/clang`),
-      updateAptAlternatives("clang++", `${directory}/bin/clang++`),
-      updateAptAlternatives("lld", `${directory}/bin/lld`),
-      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`),
-      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`),
+      updateAptAlternatives("cc", `${directory}/bin/clang`, rcPath, priority),
+      updateAptAlternatives("cxx", `${directory}/bin/clang++`, rcPath, priority),
+      updateAptAlternatives("clang", `${directory}/bin/clang`, rcPath),
+      updateAptAlternatives("clang++", `${directory}/bin/clang++`, rcPath),
+      updateAptAlternatives("lld", `${directory}/bin/lld`, rcPath),
+      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`, rcPath),
+      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`, rcPath),
     )
   }
 

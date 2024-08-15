@@ -5,15 +5,15 @@ import { GITHUB_ACTIONS, isCI } from "ci-info"
 import { error, info, success, warning } from "ci-log"
 import * as numerous from "numerous"
 import numerousLocale from "numerous/locales/en.js"
+import { finalizeRC } from "os-env"
 import * as timeDelta from "time-delta"
 import timeDeltaLocale from "time-delta/locales/en.js"
 import { untildifyUser } from "untildify-user"
 import { checkUpdates } from "./check-updates"
-import { parseArgs, printHelp } from "./cli-options"
+import { parseArgs, printHelp, rcPath } from "./cli-options"
 import { installCompiler } from "./compilers"
 import { installTool } from "./installTool"
 import { tools } from "./tool"
-import { finalizeCpprc } from "./utils/env/addEnv"
 import { isArch } from "./utils/env/isArch"
 import { ubuntuVersion } from "./utils/env/ubuntu_version"
 import { setupPacmanPack } from "./utils/setup/setupPacmanPack"
@@ -115,7 +115,7 @@ async function main(args: string[]): Promise<number> {
     }
   }
 
-  await finalizeCpprc()
+  await finalizeRC(rcPath)
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
     warning("setup-cpp was called without any arguments. Nothing to do.")

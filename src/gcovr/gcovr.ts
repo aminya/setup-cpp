@@ -1,6 +1,6 @@
+import { addEnv } from "os-env"
 import semverMajor from "semver/functions/major"
 import semverValid from "semver/functions/valid"
-import { addEnv } from "../utils/env/addEnv"
 import { setupPipPack } from "../utils/setup/setupPipPack"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -2,8 +2,8 @@
 // @ts-ignore
 import { info } from "ci-log"
 import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
+import { addEnv } from "os-env"
 import { pathExists } from "path-exists"
-import { addEnv } from "../utils/env/addEnv"
 
 function getArch(arch: string): string {
   switch (arch) {

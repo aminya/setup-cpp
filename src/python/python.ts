@@ -7,10 +7,11 @@ import { info, warning } from "ci-log"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
 import memoize from "micro-memoize"
+import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
-import { addPath } from "../utils/env/addEnv"
+import { rcPath } from "../cli-options"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -134,7 +135,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       }
       const binDir = dirname(bin)
       /** The directory which the tool is installed to */
-      await addPath(binDir)
+      await addPath(binDir, { rcPath })
       installInfo = { installDir: binDir, binDir, bin }
       break
     }
@@ -146,7 +147,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
         stderr: string
       } = await execa("brew", ["--prefix", "python"], { stdio: "pipe" })
       const brewPythonBin = join(brewPythonPrefix.stdout, "libexec", "bin")
-      await addPath(brewPythonBin)
+      await addPath(brewPythonBin, { rcPath })
 
       break
     }

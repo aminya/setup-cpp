@@ -1,4 +1,5 @@
-import { addPath } from "../utils/env/addEnv"
+import { addPath } from "os-env"
+import { rcPath } from "../cli-options"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -16,7 +17,7 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
     }
     case "darwin": {
       await setupBrewPack("make", version)
-      await addPath("/usr/local/opt/make/libexec/gnubin")
+      await addPath("/usr/local/opt/make/libexec/gnubin", { rcPath })
       return { binDir: "/usr/local/opt/make/libexec/gnubin" }
     }
     case "linux": {

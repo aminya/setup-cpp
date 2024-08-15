@@ -8,6 +8,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -34,6 +35,7 @@
     "dev/scripts",
     "packages/untildify-user/untildify.ts",
     "dev/docker/ci/docker-ci.mjs",
-    "./jest.config.ts"
+    "./jest.config.ts",
+    "packages/os-env/src/escape-quotes.d.ts"
   ]
 }

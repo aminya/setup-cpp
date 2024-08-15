@@ -1,13 +1,13 @@
 import { cacheDir, downloadTool, find } from "@actions/tool-cache"
 import { info } from "ci-log"
+import { addPath } from "os-env"
 import { join } from "patha"
-import { addPath } from "../env/addEnv"
 
 import { tmpdir } from "os"
 import { GITHUB_ACTIONS } from "ci-info"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
-import { maybeGetInput } from "../../cli-options"
+import { maybeGetInput, rcPath } from "../../cli-options"
 import { hasDnf } from "../env/hasDnf"
 import { isArch } from "../env/isArch"
 import { isUbuntu } from "../env/isUbuntu"
@@ -74,7 +74,7 @@ export async function setupBin(
         const binDir = join(installDir, binRelativeDir)
         if (await pathExists(join(binDir, binFileName))) {
           info(`${name} ${version} was found in the cache at ${binDir}.`)
-          await addPath(binDir)
+          await addPath(binDir, { rcPath })
 
           return { installDir, binDir }
         }
@@ -129,7 +129,7 @@ export async function setupBin(
   // Adding the bin dir to the path
   /** The directory which the tool is installed to */
   info(`Add ${binDir} to PATH`)
-  await addPath(binDir)
+  await addPath(binDir, { rcPath })
 
   // check if inside Github Actions. If so, cache the installation
   if (GITHUB_ACTIONS && typeof process.env.RUNNER_TOOL_CACHE === "string") {

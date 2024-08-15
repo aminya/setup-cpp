@@ -2,8 +2,9 @@ import { info } from "console"
 import { execRoot } from "admina"
 import { execa } from "execa"
 import { chmod, readFile, writeFile } from "fs/promises"
+import { addPath } from "os-env"
+import { rcPath } from "../cli-options"
 import { DEFAULT_TIMEOUT } from "../installTool"
-import { addPath } from "../utils/env/addEnv"
 import { aptTimeout, hasNala, isPackageRegexInstalled, setupAptPack } from "../utils/setup/setupAptPack"
 import type { InstallationInfo } from "../utils/setup/setupBin"
 
@@ -35,7 +36,7 @@ export async function setupLLVMApt(
     },
   )
 
-  await addPath(`${installationFolder}/bin`)
+  await addPath(`${installationFolder}/bin`, { rcPath })
 
   return {
     installDir: `${installationFolder}`,

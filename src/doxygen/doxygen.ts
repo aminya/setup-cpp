@@ -1,7 +1,7 @@
 import { info, notice } from "ci-log"
+import { addPath } from "os-env"
 import { addExeExt, join } from "patha"
 import { setupGraphviz } from "../graphviz/graphviz"
-import { addPath } from "../utils/env/addEnv"
 import { extractTar, extractZip } from "../utils/setup/extract"
 import { setupAptPack } from "../utils/setup/setupAptPack"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin"
@@ -12,6 +12,7 @@ import { getVersion } from "../versions/versions"
 
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
+import { rcPath } from "../cli-options"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -138,7 +139,7 @@ async function activateWinDoxygen() {
         // eslint-disable-next-line no-await-in-loop
         if (await pathExists(join(binDir, "doxygen.exe"))) {
           // eslint-disable-next-line no-await-in-loop
-          await addPath(binDir)
+          await addPath(binDir, { rcPath })
           return binDir
         }
       }

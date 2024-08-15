@@ -1,4 +1,4 @@
-import { addEnv, addPath } from "../utils/env/addEnv"
+import { addEnv, addPath } from "os-env"
 
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
@@ -7,6 +7,7 @@ import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
+import { rcPath } from "../cli-options"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
@@ -187,10 +188,10 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
   let binDir: string | undefined
   if (arch === "x64" && (await pathExists("C:/tools/mingw64/bin"))) {
     binDir = "C:/tools/mingw64/bin"
-    await addPath(binDir)
+    await addPath(binDir, { rcPath })
   } else if (arch === "ia32" && (await pathExists("C:/tools/mingw32/bin"))) {
     binDir = "C:/tools/mingw32/bin"
-    await addPath(binDir)
+    await addPath(binDir, { rcPath })
   } else if (await pathExists(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
     binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   }
@@ -224,10 +225,10 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, priority),
+          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, rcPath, priority),
+          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, rcPath, priority),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, rcPath, priority),
+          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, rcPath, priority),
         )
       }
     } else {
@@ -235,10 +236,10 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${version}`, priority),
+          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, rcPath, priority),
+          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, rcPath, priority),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, rcPath, priority),
+          updateAptAlternatives("g++", `${binDir}/g++-${version}`, rcPath, priority),
         )
       }
     }

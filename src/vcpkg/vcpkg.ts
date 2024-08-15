@@ -1,10 +1,11 @@
 import { grantUserWriteAccess } from "admina"
 import { info, notice } from "ci-log"
 import { execaSync } from "execa"
+import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix, dirname, join } from "patha"
 import which from "which"
-import { addPath } from "../utils/env/addEnv"
+import { rcPath } from "../cli-options"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -75,7 +76,7 @@ export async function setupVcpkg(version: string, setupDir: string, _arch: strin
 
     await grantUserWriteAccess(setupDir)
 
-    await addPath(setupDir)
+    await addPath(setupDir, { rcPath })
     // eslint-disable-next-line require-atomic-updates
     hasVCPKG = true
     return { binDir: setupDir }

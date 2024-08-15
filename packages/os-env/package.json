@@ -1,0 +1,42 @@
+{
+  "name": "os-env",
+  "version": "1.0.0",
+  "description": "Manage environment variables, PATH, and rc files",
+  "homepage": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@types/node": "^12",
+    "admina": "^1.0.1",
+    "ci-info": "^4.0.0",
+    "escape-path-with-spaces": "^1.0.2",
+    "escape-quotes": "^1.0.2",
+    "micro-memoize": "^4.1.2",
+    "path-exists": "^5.0.0",
+    "ci-log": "workspace:*",
+    "exec-powershell": "workspace:*",
+    "untildify-user": "workspace:*"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "env",
+    "path",
+    "dotenv",
+    "rc",
+    "addEnv",
+    "addPath",
+    "setEnv",
+    "linux",
+    "windows",
+    "unix",
+    "macos"
+  ]
+}

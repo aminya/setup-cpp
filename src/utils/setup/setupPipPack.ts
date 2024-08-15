@@ -2,13 +2,14 @@ import { info } from "@actions/core"
 import { execa, execaSync } from "execa"
 import memoize from "micro-memoize"
 import { mkdirp } from "mkdirp"
+import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import { untildifyUser } from "untildify-user"
 import which from "which"
+import { rcPath } from "../../cli-options"
 import { addPythonBaseExecPrefix, setupPython } from "../../python/python"
 import { getVersion } from "../../versions/versions"
-import { addPath } from "../env/addEnv"
 import { hasDnf } from "../env/hasDnf"
 import { isArch } from "../env/isArch"
 import { isUbuntu } from "../env/isUbuntu"
@@ -85,7 +86,7 @@ export async function setupPipPackWithPython(
   const execPaths = await addPythonBaseExecPrefix(givenPython)
   const binDir = await findBinDir(execPaths, name)
 
-  await addPath(binDir)
+  await addPath(binDir, { rcPath })
 
   return { binDir }
 }
@@ -135,7 +136,7 @@ async function getPipxBinDir_raw() {
   }
 
   const pipxBinDir = untildifyUser("~/.local/bin")
-  await addPath(pipxBinDir)
+  await addPath(pipxBinDir, { rcPath })
   await mkdirp(pipxBinDir)
   return pipxBinDir
 }
