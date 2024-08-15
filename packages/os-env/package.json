@@ -38,5 +38,6 @@
     "windows",
     "unix",
     "macos"
-  ]
+  ],
+  "devDependencies": {}
 }

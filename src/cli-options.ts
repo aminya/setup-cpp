@@ -74,6 +74,6 @@ export function getSuccessMessage(tool: string, installationInfo: InstallationIn
 }
 
 export const rcOptions = {
-  rcPath: untildifyUser(".cpprc"),
+  rcPath: untildifyUser("~/.cpprc"),
   guard: "cpp",
 }
