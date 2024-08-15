@@ -19,7 +19,7 @@
     "removeComments": false,
     "skipLibCheck": true,
     // target Node.js 12 https://node.green/#ES2019
-    "lib": ["ES2019", "dom"],
+    "lib": ["ES2019"],
     "target": "ESNext",
     "allowJs": true,
     "esModuleInterop": true,
