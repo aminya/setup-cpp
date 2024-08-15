@@ -11,7 +11,7 @@ import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import which from "which"
-import { rcPath } from "../cli-options"
+import { rcOptions } from "../cli-options"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -135,7 +135,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       }
       const binDir = dirname(bin)
       /** The directory which the tool is installed to */
-      await addPath(binDir, { rcPath })
+      await addPath(binDir, rcOptions)
       installInfo = { installDir: binDir, binDir, bin }
       break
     }
@@ -147,7 +147,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
         stderr: string
       } = await execa("brew", ["--prefix", "python"], { stdio: "pipe" })
       const brewPythonBin = join(brewPythonPrefix.stdout, "libexec", "bin")
-      await addPath(brewPythonBin, { rcPath })
+      await addPath(brewPythonBin, rcOptions)
 
       break
     }

@@ -10,7 +10,7 @@ import * as timeDelta from "time-delta"
 import timeDeltaLocale from "time-delta/locales/en.js"
 import { untildifyUser } from "untildify-user"
 import { checkUpdates } from "./check-updates"
-import { parseArgs, printHelp, rcPath } from "./cli-options"
+import { parseArgs, printHelp, rcOptions } from "./cli-options"
 import { installCompiler } from "./compilers"
 import { installTool } from "./installTool"
 import { tools } from "./tool"
@@ -115,7 +115,7 @@ async function main(args: string[]): Promise<number> {
     }
   }
 
-  await finalizeRC(rcPath)
+  await finalizeRC(rcOptions)
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
     warning("setup-cpp was called without any arguments. Nothing to do.")

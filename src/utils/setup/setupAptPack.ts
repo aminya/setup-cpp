@@ -7,6 +7,7 @@ import { appendFile } from "fs/promises"
 import { addEnv, sourceRC } from "os-env"
 import { pathExists } from "path-exists"
 import which from "which"
+import { rcOptions } from "../../cli-options"
 import type { InstallationInfo } from "./setupBin"
 
 /* eslint-disable require-atomic-updates */
@@ -223,8 +224,8 @@ async function initApt(apt: string) {
   if (apt === "nala") {
     // enable utf8 otherwise it fails because of the usage of ASCII encoding
     promises.push(
-      addEnv("LANG", "C.UTF-8", { shouldAddOnlyIfNotDefined: true }),
-      addEnv("LC_ALL", "C.UTF-8", { shouldAddOnlyIfNotDefined: true }),
+      addEnv("LANG", "C.UTF-8", { shouldAddOnlyIfNotDefined: true, ...rcOptions }),
+      addEnv("LC_ALL", "C.UTF-8", { shouldAddOnlyIfNotDefined: true, ...rcOptions }),
     )
   }
   await Promise.all(promises)
@@ -278,7 +279,7 @@ export async function updateAptAlternatives(name: string, path: string, rcPath: 
   if (GITHUB_ACTIONS) {
     await execRoot("update-alternatives", ["--install", `/usr/bin/${name}`, name, path, priority.toString()])
   } else {
-    await sourceRC(rcPath)
+    await sourceRC(rcOptions)
     await appendFile(
       rcPath,
       `\nif [ $UID -eq 0 ]; then update-alternatives --install /usr/bin/${name} ${name} ${path} ${priority}; fi\n`,

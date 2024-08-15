@@ -7,7 +7,7 @@ import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import { untildifyUser } from "untildify-user"
 import which from "which"
-import { rcPath } from "../../cli-options"
+import { rcOptions } from "../../cli-options"
 import { addPythonBaseExecPrefix, setupPython } from "../../python/python"
 import { getVersion } from "../../versions/versions"
 import { hasDnf } from "../env/hasDnf"
@@ -86,7 +86,7 @@ export async function setupPipPackWithPython(
   const execPaths = await addPythonBaseExecPrefix(givenPython)
   const binDir = await findBinDir(execPaths, name)
 
-  await addPath(binDir, { rcPath })
+  await addPath(binDir, rcOptions)
 
   return { binDir }
 }
@@ -136,7 +136,7 @@ async function getPipxBinDir_raw() {
   }
 
   const pipxBinDir = untildifyUser("~/.local/bin")
-  await addPath(pipxBinDir, { rcPath })
+  await addPath(pipxBinDir, rcOptions)
   await mkdirp(pipxBinDir)
   return pipxBinDir
 }

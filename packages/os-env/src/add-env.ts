@@ -3,8 +3,7 @@ import { exportVariable as ghExportVariable } from "@actions/core"
 import { GITHUB_ACTIONS } from "ci-info"
 import { error, info } from "ci-log"
 import { execPowershell } from "exec-powershell"
-import { untildifyUser } from "untildify-user"
-import { sourceRC } from "./rc-file.js"
+import { defaultRcPath, sourceRCInRc } from "./rc-file.js"
 import { escapeString } from "./utils.js"
 const { appendFile } = promises
 
@@ -17,6 +16,8 @@ export type AddEnvOptions = {
    * The path to the RC file that the env variables should be added to.
    */
   rcPath: string
+  /** Provide a name (your tool) to add a variable guard for sourcing your rc file */
+  guard?: string
 }
 /**
  * Add an environment variable.
@@ -32,7 +33,7 @@ export async function addEnv(
   const options = {
     shouldEscapeSpace: false,
     shouldAddOnlyIfNotDefined: false,
-    rcPath: untildifyUser(".bashrc"),
+    rcPath: defaultRcPath,
     ...givenOptions,
   }
 
@@ -76,7 +77,7 @@ async function addEnvSystem(name: string, valGiven: string | undefined, options:
     }
     case "linux":
     case "darwin": {
-      await sourceRC(options.rcPath)
+      await sourceRCInRc(options)
       if (options.shouldAddOnlyIfNotDefined) {
         await appendFile(options.rcPath, `\nif [ -z "\${${name}}" ]; then export ${name}="${val}"; fi\n`)
         info(`if not defined ${name} then ${name}="${val}" was added to "${options.rcPath}`)

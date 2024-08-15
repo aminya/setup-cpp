@@ -5,7 +5,7 @@ import memoize from "micro-memoize"
 import { addEnv } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
-import { rcPath } from "../cli-options"
+import { rcOptions } from "../cli-options"
 import { setupGcc } from "../gcc/gcc"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -98,21 +98,21 @@ export async function activateLLVM(directory: string) {
 
   const actPromises: Promise<void>[] = [
     // the output of this action
-    addEnv("LLVM_PATH", directory),
+    addEnv("LLVM_PATH", directory, rcOptions),
 
     // Setup LLVM as the compiler
-    addEnv("LD_LIBRARY_PATH", `${directory}/lib${delimiter}${ld}`),
-    addEnv("DYLD_LIBRARY_PATH", `${directory}/lib${delimiter}${dyld}`),
+    addEnv("LD_LIBRARY_PATH", `${directory}/lib${delimiter}${ld}`, rcOptions),
+    addEnv("DYLD_LIBRARY_PATH", `${directory}/lib${delimiter}${dyld}`, rcOptions),
 
     // compiler flags
-    addEnv("LDFLAGS", `-L"${directory}/lib"`),
-    addEnv("CPPFLAGS", `-I"${directory}/include"`),
+    addEnv("LDFLAGS", `-L"${directory}/lib"`, rcOptions),
+    addEnv("CPPFLAGS", `-I"${directory}/include"`, rcOptions),
 
     // compiler paths
-    addEnv("CC", addExeExt(`${directory}/bin/clang`)),
-    addEnv("CXX", addExeExt(`${directory}/bin/clang++`)),
+    addEnv("CC", addExeExt(`${directory}/bin/clang`), rcOptions),
+    addEnv("CXX", addExeExt(`${directory}/bin/clang++`), rcOptions),
 
-    addEnv("LIBRARY_PATH", `${directory}/lib`),
+    addEnv("LIBRARY_PATH", `${directory}/lib`, rcOptions),
 
     // os sdks
     setupMacOSSDK(),
@@ -122,22 +122,22 @@ export async function activateLLVM(directory: string) {
   // TODO Windows builds fail with llvm's CPATH
   // if (process.platform !== "win32") {
   //   if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
-  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
+  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`, rcOptions))
   //   } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
-  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`))
+  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`, rcOptions))
   //   }
   // }
 
   if (isUbuntu()) {
     const priority = 60
     actPromises.push(
-      updateAptAlternatives("cc", `${directory}/bin/clang`, rcPath, priority),
-      updateAptAlternatives("cxx", `${directory}/bin/clang++`, rcPath, priority),
-      updateAptAlternatives("clang", `${directory}/bin/clang`, rcPath),
-      updateAptAlternatives("clang++", `${directory}/bin/clang++`, rcPath),
-      updateAptAlternatives("lld", `${directory}/bin/lld`, rcPath),
-      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`, rcPath),
-      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`, rcPath),
+      updateAptAlternatives("cc", `${directory}/bin/clang`, rcOptions.rcPath, priority),
+      updateAptAlternatives("cxx", `${directory}/bin/clang++`, rcOptions.rcPath, priority),
+      updateAptAlternatives("clang", `${directory}/bin/clang`, rcOptions.rcPath),
+      updateAptAlternatives("clang++", `${directory}/bin/clang++`, rcOptions.rcPath),
+      updateAptAlternatives("lld", `${directory}/bin/lld`, rcOptions.rcPath),
+      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`, rcOptions.rcPath),
+      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`, rcOptions.rcPath),
     )
   }
 

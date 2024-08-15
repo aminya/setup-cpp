@@ -3,7 +3,7 @@ import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { dirname } from "patha"
 import which from "which"
-import { rcPath } from "../cli-options"
+import { rcOptions } from "../cli-options"
 import type { InstallationInfo } from "../utils/setup/setupBin"
 
 /* eslint-disable require-atomic-updates */
@@ -55,7 +55,7 @@ export async function setupChocolatey(
   )
 
   const chocoPath = `${process.env.ALLUSERSPROFILE}\\chocolatey\\bin`
-  await addPath(chocoPath, { rcPath })
+  await addPath(chocoPath, rcOptions)
 
   const maybeChoco = which.sync("choco", { nothrow: true })
   if (maybeChoco !== null) {

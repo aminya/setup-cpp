@@ -1,5 +1,5 @@
 import { addPath } from "os-env"
-import { rcPath } from "../cli-options"
+import { rcOptions } from "../cli-options"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -40,7 +40,7 @@ async function activateGraphviz(): Promise<InstallationInfo> {
   switch (process.platform) {
     case "win32": {
       const binDir = "C:/Program Files/Graphviz/bin"
-      await addPath(binDir, { rcPath })
+      await addPath(binDir, rcOptions)
       return { binDir }
     }
     default: {

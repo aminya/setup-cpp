@@ -4,8 +4,7 @@ import { addPath as ghAddPath } from "@actions/core"
 import { GITHUB_ACTIONS } from "ci-info"
 import { error, info } from "ci-log"
 import { execPowershell } from "exec-powershell"
-import { untildifyUser } from "untildify-user"
-import { sourceRC } from "./rc-file.js"
+import { defaultRcPath, sourceRCInRc } from "./rc-file.js"
 const { appendFile } = promises
 
 type AddPathOptions = {
@@ -13,6 +12,8 @@ type AddPathOptions = {
    * The path to the RC file that the PATH variables should be added to.
    */
   rcPath: string
+  /** Provide a name (your tool) to add a variable guard for sourcing your rc file */
+  guard?: string
 }
 /**
  * Add a path to the PATH environment variable.
@@ -21,7 +22,7 @@ type AddPathOptions = {
  */
 
 export async function addPath(path: string, givenOptions: Partial<AddPathOptions> = {}) {
-  const options = { rcPath: untildifyUser(".bashrc"), ...givenOptions }
+  const options = { rcPath: defaultRcPath, ...givenOptions }
 
   if (isIgnoredPath(path)) {
     return
@@ -34,17 +35,17 @@ export async function addPath(path: string, givenOptions: Partial<AddPathOptions
         ghAddPath(path)
       } catch (err) {
         error(err as Error)
-        await addPathSystem(path, options.rcPath)
+        await addPathSystem(path, options)
       }
     } else {
-      await addPathSystem(path, options.rcPath)
+      await addPathSystem(path, options)
     }
   } catch (err) {
     error(`${err}\nFailed to add ${path} to the percistent PATH. You should add it manually.`)
   }
 }
 
-async function addPathSystem(path: string, rcPath: string) {
+async function addPathSystem(path: string, options: AddPathOptions) {
   switch (process.platform) {
     case "win32": {
       // We do not use `execaSync(`setx PATH "${path};%PATH%"`)` because of its character limit and also because %PATH% is different for user and system
@@ -56,9 +57,9 @@ async function addPathSystem(path: string, rcPath: string) {
     }
     case "linux":
     case "darwin": {
-      await sourceRC(rcPath)
-      await appendFile(rcPath, `\nexport PATH="${path}:$PATH"\n`)
-      info(`"${path}" was added to "${rcPath}"`)
+      await sourceRCInRc(options)
+      await appendFile(options.rcPath, `\nexport PATH="${path}:$PATH"\n`)
+      info(`"${path}" was added to "${options.rcPath}"`)
       return
     }
     default: {

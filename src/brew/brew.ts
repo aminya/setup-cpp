@@ -6,7 +6,7 @@ import { readFile } from "fs/promises"
 import { addPath } from "os-env"
 import { dirname } from "patha"
 import which from "which"
-import { rcPath } from "../cli-options"
+import { rcOptions } from "../cli-options"
 
 /* eslint-disable require-atomic-updates */
 let binDir: string | undefined
@@ -48,7 +48,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
   })
 
   binDir = getBrewPath()
-  await addPath(binDir, { rcPath })
+  await addPath(binDir, rcOptions)
 
   return { binDir }
 }

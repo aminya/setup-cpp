@@ -4,6 +4,7 @@ import { info } from "ci-log"
 import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
 import { addEnv } from "os-env"
 import { pathExists } from "path-exists"
+import { rcOptions } from "../cli-options"
 
 function getArch(arch: string): string {
   switch (arch) {
@@ -32,7 +33,7 @@ export async function setupVCVarsall(
 ) {
   if (VCTargetsPath !== undefined && (await pathExists(VCTargetsPath))) {
     info(`Adding ${VCTargetsPath} to PATH`)
-    await addEnv("VCTargetsPath", VCTargetsPath)
+    await addEnv("VCTargetsPath", VCTargetsPath, rcOptions)
   }
 
   await setupMSVCDevCmd(getArch(arch), sdk, toolset, uwp, spectre, vsversion)

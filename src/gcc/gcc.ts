@@ -7,7 +7,7 @@ import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
-import { rcPath } from "../cli-options"
+import { rcOptions } from "../cli-options"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
@@ -188,10 +188,10 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
   let binDir: string | undefined
   if (arch === "x64" && (await pathExists("C:/tools/mingw64/bin"))) {
     binDir = "C:/tools/mingw64/bin"
-    await addPath(binDir, { rcPath })
+    await addPath(binDir, rcOptions)
   } else if (arch === "ia32" && (await pathExists("C:/tools/mingw32/bin"))) {
     binDir = "C:/tools/mingw32/bin"
-    await addPath(binDir, { rcPath })
+    await addPath(binDir, rcOptions)
   } else if (await pathExists(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
     binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   }
@@ -209,37 +209,46 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
   // const ld = process.env.LD_LIBRARY_PATH ?? ""
   // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
   // promises.push(
-  //   addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`),
-  //   addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`),
-  //   addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`),
-  //   addEnv("LDFLAGS", `-L${installDir}/lib`),
-  //   addEnv("CPPFLAGS", `-I${installDir}/include`)
+  //   addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`, rcOptions),
+  //   addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`, rcOptions),
+  //   addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`, rcOptions),
+  //   addEnv("LDFLAGS", `-L${installDir}/lib`, rcOptions),
+  //   addEnv("CPPFLAGS", `-I${installDir}/include`, rcOptions),
   // )
 
   if (process.platform === "win32") {
-    promises.push(addEnv("CC", addExeExt(`${binDir}/gcc`)), addEnv("CXX", addExeExt(`${binDir}/g++`)))
+    promises.push(
+      addEnv("CC", addExeExt(`${binDir}/gcc`), rcOptions),
+      addEnv("CXX", addExeExt(`${binDir}/g++`), rcOptions),
+    )
   } else {
     const majorVersion = semverMajor(semverCoerce(version) ?? version)
     if (majorVersion >= 5) {
-      promises.push(addEnv("CC", `${binDir}/gcc-${majorVersion}`), addEnv("CXX", `${binDir}/g++-${majorVersion}`))
+      promises.push(
+        addEnv("CC", `${binDir}/gcc-${majorVersion}`, rcOptions),
+        addEnv("CXX", `${binDir}/g++-${majorVersion}`, rcOptions),
+      )
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, rcPath, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, rcPath, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, rcPath, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, rcPath, priority),
+          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, rcOptions.rcPath, priority),
+          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, rcOptions.rcPath, priority),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, rcOptions.rcPath, priority),
+          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, rcOptions.rcPath, priority),
         )
       }
     } else {
-      promises.push(addEnv("CC", `${binDir}/gcc-${version}`), addEnv("CXX", `${binDir}/g++-${version}`))
+      promises.push(
+        addEnv("CC", `${binDir}/gcc-${version}`, rcOptions),
+        addEnv("CXX", `${binDir}/g++-${version}`, rcOptions),
+      )
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, rcPath, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, rcPath, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, rcPath, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${version}`, rcPath, priority),
+          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, rcOptions.rcPath, priority),
+          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, rcOptions.rcPath, priority),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, rcOptions.rcPath, priority),
+          updateAptAlternatives("g++", `${binDir}/g++-${version}`, rcOptions.rcPath, priority),
         )
       }
     }

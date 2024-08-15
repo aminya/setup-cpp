@@ -12,7 +12,7 @@ import { getVersion } from "../versions/versions"
 
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
-import { rcPath } from "../cli-options"
+import { rcOptions } from "../cli-options"
 import { hasDnf } from "../utils/env/hasDnf"
 import { isArch } from "../utils/env/isArch"
 import { isUbuntu } from "../utils/env/isUbuntu"
@@ -139,7 +139,7 @@ async function activateWinDoxygen() {
         // eslint-disable-next-line no-await-in-loop
         if (await pathExists(join(binDir, "doxygen.exe"))) {
           // eslint-disable-next-line no-await-in-loop
-          await addPath(binDir, { rcPath })
+          await addPath(binDir, rcOptions)
           return binDir
         }
       }

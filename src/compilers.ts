@@ -3,7 +3,7 @@ import { endGroup, notice, startGroup } from "@actions/core"
 import { error, info } from "ci-log"
 import { addEnv } from "os-env"
 import semverValid from "semver/functions/valid"
-import { getSuccessMessage } from "./cli-options"
+import { getSuccessMessage, rcOptions } from "./cli-options"
 import { setupGcc, setupMingw } from "./gcc/gcc"
 import { activateGcovGCC, activateGcovLLVM } from "./gcovr/gcovr"
 import { setupLLVM } from "./llvm/llvm"
@@ -69,7 +69,7 @@ export async function installCompiler(
 
         if (hasLLVM) {
           // remove back the added CPPFLAGS of LLVM that include the LLVM headers
-          await addEnv("CPPFLAGS", "")
+          await addEnv("CPPFLAGS", "", rcOptions)
         }
 
         await activateGcovGCC(gccVersion)
@@ -92,7 +92,7 @@ export async function installCompiler(
 
         if (hasLLVM) {
           // remove the CPPFLAGS of LLVM that include the LLVM headers
-          await addEnv("CPPFLAGS", "")
+          await addEnv("CPPFLAGS", "", rcOptions)
         }
 
         successMessages.push(getSuccessMessage("msvc", installationInfo))
@@ -101,7 +101,7 @@ export async function installCompiler(
       case "appleclang":
       case "applellvm": {
         notice("Assuming apple-clang is already installed")
-        await Promise.all([addEnv("CC", "clang"), addEnv("CXX", "clang++")])
+        await Promise.all([addEnv("CC", "clang", rcOptions), addEnv("CXX", "clang++", rcOptions)])
         successMessages.push(getSuccessMessage("apple-clang", undefined))
         break
       }
