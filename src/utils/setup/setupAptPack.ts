@@ -2,9 +2,8 @@ import { defaultExecOptions, execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
-import { type ExecaError, type SyncOptions, execa } from "execa"
+import { type ExecaError, execa } from "execa"
 import { appendFile } from "fs/promises"
-import memoize from "micro-memoize"
 import { sourceRC } from "os-env"
 import { pathExists } from "path-exists"
 import which from "which"
@@ -62,16 +61,15 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   // Install
   try {
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], getAptExecOptions({ apt }))
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], { ...defaultExecOptions, env: getEnv(apt) })
   } catch (err) {
-    if ("stderr" in (err as ExecaError)) {
-      const stderr = (err as ExecaError).stderr
-      if (retryErrors.some((error) => stderr.includes(error))) {
+    if (isExecaError(err)) {
+      if (retryErrors.some((error) => err.stderr.includes(error))) {
         warning(`Failed to install packages ${needToInstall}. Retrying...`)
         execRootSync(
           apt,
           ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall],
-          getAptExecOptions({ apt }),
+          { ...defaultExecOptions, env: getEnv(apt) },
         )
       }
     } else {
@@ -80,6 +78,10 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
   }
 
   return { binDir: "/usr/bin/" }
+}
+
+function isExecaError(err: unknown): err is ExecaError {
+  return typeof (err as ExecaError).stderr === "string"
 }
 
 export function hasNala() {
@@ -111,18 +113,6 @@ function getEnv(apt: string) {
 
   return env
 }
-
-function getAptExecOptionsRaw(givenOpts: { apt?: string; pipe?: boolean } = {}): SyncOptions {
-  const opts = {
-    apt: "apt-get",
-    pipe: false,
-    ...givenOpts,
-  }
-
-  return { env: getEnv(opts.apt), ...defaultExecOptions, stdio: opts.pipe ? "pipe" : "inherit" }
-}
-
-const getAptExecOptions = memoize(getAptExecOptionsRaw)
 
 export enum AptPackageType {
   NameDashVersion = 0,
@@ -156,7 +146,7 @@ async function addRepositories(apt: string, packages: AptPackage[]) {
     await installAddAptRepo(apt)
     for (const repo of allRepositories) {
       // eslint-disable-next-line no-await-in-loop
-      execRootSync("add-apt-repository", ["-y", "--no-update", repo], getAptExecOptions())
+      execRootSync("add-apt-repository", ["-y", "--no-update", repo], { ...defaultExecOptions, env: getEnv(apt) })
     }
     updateRepos(apt)
     didUpdate = true
@@ -169,7 +159,7 @@ async function aptPackageType(apt: string, name: string, version: string | undef
       "search",
       "--names-only",
       `^${escapeRegex(name)}-${escapeRegex(version)}$`,
-    ], getAptExecOptions({ apt, pipe: true }))
+    ], { env: getEnv(apt), stdio: "pipe" })
     if (stdout.trim() !== "") {
       return AptPackageType.NameDashVersion
     }
@@ -177,7 +167,7 @@ async function aptPackageType(apt: string, name: string, version: string | undef
     try {
       // check if apt-get show can find the version
       // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`], getAptExecOptions())
+      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`], { env: getEnv(apt) })
       if (stdout.trim() === "") {
         return AptPackageType.NameEqualsVersion
       }
@@ -187,7 +177,7 @@ async function aptPackageType(apt: string, name: string, version: string | undef
   }
 
   try {
-    const { stdout: showStdout } = await execa("apt-cache", ["show", name], getAptExecOptions({ pipe: true }))
+    const { stdout: showStdout } = await execa("apt-cache", ["show", name], { env: getEnv(apt), stdio: "pipe" })
     if (showStdout.trim() !== "") {
       return AptPackageType.Name
     }
@@ -213,8 +203,8 @@ async function getAptArg(apt: string, name: string, version: string | undefined)
     case AptPackageType.NameEqualsVersion:
       return `${name}=${version}`
     case AptPackageType.Name:
-      if (version !== undefined) {
-        warning(`Could not find package ${name} ${version}. Installing the latest version.`)
+      if (version !== undefined && version !== "") {
+        warning(`Could not find package ${name} with version ${version}. Installing the latest version.`)
       }
       return name
     default:
@@ -226,7 +216,7 @@ function updateRepos(apt: string) {
   execRootSync(
     apt,
     apt !== "nala" ? ["update", "-y", "-o", aptTimeout] : ["update", "-o", aptTimeout],
-    getAptExecOptions({ apt }),
+    { ...defaultExecOptions, env: getEnv(apt) },
   )
 }
 
@@ -237,7 +227,7 @@ async function installAddAptRepo(apt: string) {
   execRootSync(
     apt,
     ["install", "-y", "--fix-broken", "-o", aptTimeout, "software-properties-common"],
-    getAptExecOptions({ apt }),
+    { ...defaultExecOptions, env: getEnv(apt) },
   )
 }
 
@@ -256,7 +246,10 @@ async function initApt(apt: string) {
   ])
 
   if (toInstall.length !== 0) {
-    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall], getAptExecOptions({ apt }))
+    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall], {
+      ...defaultExecOptions,
+      env: getEnv(apt),
+    })
   }
 
   const promises: Promise<string | void>[] = [
@@ -325,7 +318,7 @@ export async function updateAptAlternatives(name: string, path: string, rcPath: 
 export async function isPackageInstalled(pack: string) {
   try {
     // check if a package is installed
-    const { stdout } = await execa("dpkg", ["-s", pack], getAptExecOptions({ pipe: true }))
+    const { stdout } = await execa("dpkg", ["-s", pack], { env: getEnv("apt-get"), stdio: "pipe" })
     if (typeof stdout !== "string") {
       return false
     }
@@ -340,7 +333,7 @@ export async function isPackageInstalled(pack: string) {
 export async function isPackageRegexInstalled(regexp: string) {
   try {
     // check if a package matching the regexp is installed
-    const { stdout } = await execa("dpkg", ["-l", regexp], getAptExecOptions({ pipe: true }))
+    const { stdout } = await execa("dpkg", ["-l", regexp], { env: getEnv("apt-get"), stdio: "pipe" })
     if (typeof stdout !== "string") {
       return false
     }

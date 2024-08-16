@@ -30,6 +30,9 @@ export async function installTool(
   } catch (e) {
     // push error message to the logger
     error(e as string | Error)
+    if (e instanceof Error && e.stack !== undefined) {
+      error(e.stack)
+    }
     errorMessages.push(`${tool} failed to install`)
   }
   endGroup()
