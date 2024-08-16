@@ -1,8 +1,8 @@
 import { execRootSync } from "admina"
+import { addAptKeyViaDownload, installAptPack } from "setup-apt"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { addAptKeyViaDownload, setupAptPack } from "../utils/setup/setupAptPack.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
@@ -36,7 +36,7 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
           "-c",
           `echo "deb [arch=amd64 signed-by=${keyFileName}] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list`,
         ])
-        return setupAptPack([{ name: "bazel", version }], true)
+        return installAptPack([{ name: "bazel", version }], true)
       }
       throw new Error("Unsupported linux distribution")
     }

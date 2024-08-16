@@ -5,12 +5,12 @@ import memoize from "micro-memoize"
 import { addEnv } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
+import { installAptPack, updateAptAlternatives } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { setupGcc } from "../gcc/gcc.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
-import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack.js"
 import { type InstallationInfo, setupBin } from "../utils/setup/setupBin.js"
 import { semverCoerceIfInvalid } from "../utils/setup/version.js"
 import { getVersion } from "../versions/versions.js"
@@ -75,9 +75,9 @@ async function setupLLVMOnly(
 async function llvmBinaryDeps_raw(majorVersion: number) {
   if (isUbuntu()) {
     if (majorVersion <= 10) {
-      await setupAptPack([{ name: "libtinfo5" }])
+      await installAptPack([{ name: "libtinfo5" }])
     } else {
-      await setupAptPack([{ name: "libtinfo-dev" }])
+      await installAptPack([{ name: "libtinfo-dev" }])
     }
   }
 }
@@ -131,13 +131,13 @@ export async function activateLLVM(directory: string) {
   if (isUbuntu()) {
     const priority = 60
     actPromises.push(
-      updateAptAlternatives("cc", `${directory}/bin/clang`, rcOptions.rcPath, priority),
-      updateAptAlternatives("cxx", `${directory}/bin/clang++`, rcOptions.rcPath, priority),
-      updateAptAlternatives("clang", `${directory}/bin/clang`, rcOptions.rcPath),
-      updateAptAlternatives("clang++", `${directory}/bin/clang++`, rcOptions.rcPath),
-      updateAptAlternatives("lld", `${directory}/bin/lld`, rcOptions.rcPath),
-      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`, rcOptions.rcPath),
-      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`, rcOptions.rcPath),
+      updateAptAlternatives("cc", `${directory}/bin/clang`, rcOptions, priority),
+      updateAptAlternatives("cxx", `${directory}/bin/clang++`, rcOptions, priority),
+      updateAptAlternatives("clang", `${directory}/bin/clang`, rcOptions),
+      updateAptAlternatives("clang++", `${directory}/bin/clang++`, rcOptions),
+      updateAptAlternatives("lld", `${directory}/bin/lld`, rcOptions),
+      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`, rcOptions),
+      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`, rcOptions),
     )
   }
 

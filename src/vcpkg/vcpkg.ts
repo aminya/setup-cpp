@@ -4,12 +4,12 @@ import { execaSync } from "execa"
 import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix, dirname, join } from "patha"
+import { installAptPack } from "setup-apt"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { setupAptPack } from "../utils/setup/setupAptPack.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -40,7 +40,7 @@ export async function setupVcpkg(version: string, setupDir: string, _arch: strin
           { name: "pkg-config" },
         ])
       } else if (isUbuntu()) {
-        await setupAptPack([
+        await installAptPack([
           { name: "curl" },
           { name: "zip" },
           { name: "unzip" },

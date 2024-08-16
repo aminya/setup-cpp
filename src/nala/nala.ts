@@ -1,8 +1,8 @@
 import { execRootSync } from "admina"
 import { dirname } from "patha"
+import { addAptKeyViaDownload, hasNala, installAptPack } from "setup-apt"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { addAptKeyViaDownload, hasNala, setupAptPack } from "../utils/setup/setupAptPack.js"
 
 let binDir: string | undefined
 
@@ -21,7 +21,7 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
     return { binDir }
   }
 
-  await setupAptPack([{ name: "python3-apt" }])
+  await installAptPack([{ name: "python3-apt" }])
 
   // https://gitlab.com/volian/nala/-/wikis/Installation
   const keyFileName = await addAptKeyViaDownload(
@@ -35,12 +35,12 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
 
   try {
     if (version !== "legacy") {
-      await setupAptPack([{ name: "nala" }], true)
+      await installAptPack([{ name: "nala" }], true)
     } else {
-      await setupAptPack([{ name: "nala-legacy" }], true)
+      await installAptPack([{ name: "nala-legacy" }], true)
     }
   } catch (err) {
-    await setupAptPack([{ name: "nala-legacy" }], true)
+    await installAptPack([{ name: "nala-legacy" }], true)
   }
 
   binDir = "/usr/bin" // eslint-disable-line require-atomic-updates

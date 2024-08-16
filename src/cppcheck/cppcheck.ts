@@ -1,9 +1,9 @@
 import { addPath } from "os-env"
+import { installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { setupAptPack } from "../utils/setup/setupAptPack.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
@@ -26,7 +26,7 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
       } else if (hasDnf()) {
         return setupDnfPack([{ name: "ccache", version }])
       } else if (isUbuntu()) {
-        return setupAptPack([{ name: "cppcheck", version }])
+        return installAptPack([{ name: "cppcheck", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

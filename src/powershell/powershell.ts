@@ -1,11 +1,11 @@
 import { execRootSync } from "admina"
 import { addPath } from "os-env"
+import { installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
-import { setupAptPack } from "../utils/setup/setupAptPack.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
@@ -34,7 +34,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
         ])
         return setupDnfPack([{ name: "powershell", version }])
       } else if (isUbuntu()) {
-        await setupAptPack([{ name: "curl" }])
+        await installAptPack([{ name: "curl" }])
         const ubuntuVerSplitted = (await ubuntuVersion())!
         const ubuntuVersionString = `${ubuntuVerSplitted[0]}.0${ubuntuVerSplitted[1]}`
 
@@ -54,7 +54,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
         //   `echo "deb [arch=amd64 signed-by=${keyFileName}] https://packages.microsoft.com/repos/microsoft-debian-bullseye-prod bullseye main" > /etc/apt/sources.list.d/microsoft.list`,
         // ])
 
-        return setupAptPack([{ name: "powershell", version }], true)
+        return installAptPack([{ name: "powershell", version }], true)
       }
       throw new Error("Unsupported linux distribution")
     }

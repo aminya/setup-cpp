@@ -10,12 +10,12 @@ import memoize from "micro-memoize"
 import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
+import { installAptPack } from "setup-apt"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { setupAptPack } from "../utils/setup/setupAptPack.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
@@ -157,7 +157,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       } else if (hasDnf()) {
         installInfo = await setupDnfPack([{ name: "python3", version }])
       } else if (isUbuntu()) {
-        installInfo = await setupAptPack([{ name: "python3", version }, { name: "python-is-python3" }])
+        installInfo = await installAptPack([{ name: "python3", version }, { name: "python-is-python3" }])
       } else {
         throw new Error("Unsupported linux distributions")
       }

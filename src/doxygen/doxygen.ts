@@ -1,9 +1,9 @@
 import { info, notice } from "ci-log"
 import { addPath } from "os-env"
 import { addExeExt, join } from "patha"
+import { installAptPack } from "setup-apt"
 import { setupGraphviz } from "../graphviz/graphviz.js"
 import { extractTar, extractZip } from "../utils/setup/extract.js"
-import { setupAptPack } from "../utils/setup/setupAptPack.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
@@ -97,7 +97,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         } else if (hasDnf()) {
           return setupDnfPack([{ name: "doxygen", version }])
         } else if (isUbuntu()) {
-          installationInfo = await setupAptPack([{ name: "doxygen", version }])
+          installationInfo = await installAptPack([{ name: "doxygen", version }])
         } else {
           throw new Error("Unsupported linux distributions")
         }
@@ -106,13 +106,13 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
           // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
           installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
           try {
-            await setupAptPack([{ name: "libclang-cpp9" }])
+            await installAptPack([{ name: "libclang-cpp9" }])
           } catch (err) {
             info(`Failed to download libclang-cpp9 that might be needed for running doxygen. ${err}`)
           }
         } catch (err) {
           notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
-          installationInfo = await setupAptPack([{ name: "doxygen" }])
+          installationInfo = await installAptPack([{ name: "doxygen" }])
         }
       } else {
         throw new Error("Unsupported linux distributions")

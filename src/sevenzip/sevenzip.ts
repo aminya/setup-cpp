@@ -1,7 +1,7 @@
+import { installAptPack } from "setup-apt"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { setupAptPack } from "../utils/setup/setupAptPack.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
@@ -25,7 +25,7 @@ export function setupSevenZip(version: string, _setupDir: string, _arch: string)
           { name: "p7zip-plugins", version },
         ])
       } else if (isUbuntu()) {
-        return setupAptPack([{ name: "p7zip-full", version }])
+        return installAptPack([{ name: "p7zip-full", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

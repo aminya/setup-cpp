@@ -5,6 +5,7 @@ import { mkdirp } from "mkdirp"
 import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
+import { installAptPack } from "setup-apt"
 import { untildifyUser } from "untildify-user"
 import which from "which"
 import { rcOptions } from "../../cli-options.js"
@@ -14,7 +15,6 @@ import { hasDnf } from "../env/hasDnf.js"
 import { isArch } from "../env/isArch.js"
 import { isUbuntu } from "../env/isUbuntu.js"
 import { ubuntuVersion } from "../env/ubuntu_version.js"
-import { setupAptPack } from "./setupAptPack.js"
 import type { InstallationInfo } from "./setupBin.js"
 import { setupDnfPack } from "./setupDnfPack.js"
 import { setupPacmanPack } from "./setupPacmanPack.js"
@@ -183,7 +183,7 @@ export function setupPipPackSystem(name: string, addPythonPrefix = true) {
     } else if (hasDnf()) {
       return setupDnfPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     } else if (isUbuntu()) {
-      return setupAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
+      return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     }
   }
   return null

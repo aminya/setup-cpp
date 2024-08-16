@@ -7,11 +7,11 @@ import { tmpdir } from "os"
 import { GITHUB_ACTIONS } from "ci-info"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
+import { installAptPack } from "setup-apt"
 import { maybeGetInput, rcOptions } from "../../cli-options.js"
 import { hasDnf } from "../env/hasDnf.js"
 import { isArch } from "../env/isArch.js"
 import { isUbuntu } from "../env/isUbuntu.js"
-import { setupAptPack } from "./setupAptPack.js"
 import { setupDnfPack } from "./setupDnfPack.js"
 import { setupPacmanPack } from "./setupPacmanPack.js"
 
@@ -108,7 +108,7 @@ export async function setupBin(
           } else if (hasDnf()) {
             await setupDnfPack([{ name: "unzip" }, { name: "tar" }, { name: "xz" }])
           } else if (isUbuntu()) {
-            await setupAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
+            await installAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
           }
         }
         // eslint-disable-next-line require-atomic-updates

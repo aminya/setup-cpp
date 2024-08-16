@@ -1,7 +1,7 @@
+import { installAptPack } from "setup-apt"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { setupAptPack } from "../utils/setup/setupAptPack.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
@@ -22,7 +22,7 @@ export function setupCcache(version: string, _setupDir: string, _arch: string) {
       } else if (hasDnf()) {
         return setupDnfPack([{ name: "ccache", version }])
       } else if (isUbuntu()) {
-        return setupAptPack([{ name: "ccache", version }])
+        return installAptPack([{ name: "ccache", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

@@ -1,0 +1,47 @@
+{
+  "name": "setup-apt",
+  "version": "1.0.0",
+  "description": "Setup apt packages and repositories in Debian/Ubuntu-based distributions",
+  "homepage": "https://github.com/aminya/setup-cpp",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --pretty",
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix"
+  },
+  "dependencies": {
+    "@types/node": "^12",
+    "admina": "^1.0.1",
+    "ci-info": "^4.0.0",
+    "path-exists": "^5.0.0",
+    "ci-log": "workspace:*",
+    "os-env": "workspace:*",
+    "which": "4.0.0",
+    "execa": "^7.2.0",
+    "escape-string-regexp": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "setup",
+    "apt",
+    "apt-get",
+    "repository",
+    "add-apt-repository",
+    "apt-cache",
+    "aptitude",
+    "install",
+    "setup-apt",
+    "repositories",
+    "linux",
+    "ubuntu",
+    "debian",
+    "package",
+    "apt-key"
+  ],
+  "devDependencies": {}
+}

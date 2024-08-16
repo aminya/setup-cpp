@@ -7,13 +7,13 @@ import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
+import { installAptPack, updateAptAlternatives } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { extract7Zip } from "../utils/setup/extract.js"
-import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
@@ -110,7 +110,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
             { name: "libstdc++-devel" },
           ])
         } else if (isUbuntu()) {
-          installationInfo = await setupAptPack([
+          installationInfo = await installAptPack([
             { name: "gcc", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
             { name: "g++", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
           ])
@@ -120,7 +120,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
         if (isArch()) {
           await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
-          await setupAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
+          await installAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
         }
       }
       break
@@ -129,7 +129,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
     // TODO support abi
     // case "none": {
     //   if (arch === "arm" || arch === "arm64") {
-    //     return setupAptPack("gcc-arm-none-eabi", version, [
+    //     return installAptPack("gcc-arm-none-eabi", version, [
     //       "ppa:ubuntu-toolchain-r/test",
     //     ])
     //   } else {
@@ -161,7 +161,7 @@ export async function setupMingw(version: string, setupDir: string, arch: string
       } else if (hasDnf()) {
         installationInfo = await setupDnfPack([{ name: "mingw64-gcc", version }])
       } else if (isUbuntu()) {
-        installationInfo = await setupAptPack([
+        installationInfo = await installAptPack([
           { name: "mingw-w64", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
         ])
       }
@@ -231,10 +231,10 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, rcOptions.rcPath, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, rcOptions.rcPath, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, rcOptions.rcPath, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, rcOptions.rcPath, priority),
+          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
+          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
+          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
         )
       }
     } else {
@@ -245,10 +245,10 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, rcOptions.rcPath, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, rcOptions.rcPath, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, rcOptions.rcPath, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${version}`, rcOptions.rcPath, priority),
+          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, rcOptions, priority),
+          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, rcOptions, priority),
+          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, rcOptions, priority),
+          updateAptAlternatives("g++", `${binDir}/g++-${version}`, rcOptions, priority),
         )
       }
     }
