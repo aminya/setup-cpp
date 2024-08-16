@@ -33,7 +33,7 @@ Replaces a tilde with the user's home directory
 **returns:** string
 
 ```tsx
-UntildifyUser("~/foo") // /home/user/foo
+UntildifyUser('~/foo'); // /home/user/foo
 ```
 
 <!-- INSERT GENERATED DOCS END -->
