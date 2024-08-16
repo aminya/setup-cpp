@@ -9,7 +9,8 @@
   "source": "./src/index.ts",
   "scripts": {
     "build": "tsc --pretty",
-    "lint": "tsc --noEmit --pretty"
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix"
   },
   "dependencies": {
     "execa": "<8",

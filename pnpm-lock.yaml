@@ -105,8 +105,8 @@ importers:
         specifier: ^8.57.0
         version: 8.57.0
       eslint-config-atomic:
-        specifier: ^1.22.0
-        version: 1.22.0(eslint@8.57.0)
+        specifier: ^1.22.1
+        version: 1.22.1(eslint@8.57.0)
       exec-powershell:
         specifier: workspace:*
         version: link:packages/exec-powershell
@@ -2696,8 +2696,8 @@ packages:
       eslint-plugin-react: ^7.21.5
       eslint-plugin-react-hooks: ^4 || ^3 || ^2.3.0 || ^1.7.0
 
-  eslint-config-atomic@1.22.0:
-    resolution: {integrity: sha512-WizguluLCqhvX3fegGBjfx+ITq84DU7Zz4io3AwpYSyf4RApZMuAECvEPiA41UEf1/HFYDcTLWXHkfB0C+9kwQ==}
+  eslint-config-atomic@1.22.1:
+    resolution: {integrity: sha512-SM7IjUMWZnwa3q9xSD/p3oHF630xCsIH3vWP4Yyxgw5Pqf2Ur3YgH4RtKvcC3zt5BKVzMeCq+t/wsJmW2c5r1Q==}
     peerDependencies:
       eslint: ^8 || ^7 || ^6
 
@@ -8417,7 +8417,7 @@ snapshots:
       object.entries: 1.1.8
     optional: true
 
-  eslint-config-atomic@1.22.0(eslint@8.57.0):
+  eslint-config-atomic@1.22.1(eslint@8.57.0):
     dependencies:
       '@babel/core': 7.25.2
       '@babel/eslint-parser': 7.25.1(@babel/core@7.25.2)(eslint@8.57.0)
@@ -8618,7 +8618,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 8.57.0
       has: 1.0.4
-      jsx-ast-utils: 2.4.1
+      jsx-ast-utils: 3.3.5
       minimatch: 3.1.2
       object.entries: 1.1.8
       object.fromentries: 2.0.8

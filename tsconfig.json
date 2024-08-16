@@ -34,10 +34,7 @@
   "compileOnSave": false,
   "include": [
     "./src",
-    "dev/scripts",
-    "packages/untildify-user/untildify.ts",
-    "dev/docker/ci/docker-ci.mjs",
-    "./jest.config.ts",
-    "packages/os-env/src/escape-quotes.d.ts"
+    "./dev/",
+    "./*.ts"
   ]
 }

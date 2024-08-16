@@ -6,6 +6,17 @@
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": ["dist/**"]
+    },
+    "lint.tsc": {
+      "dependsOn": ["^lint.tsc"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    },
+    "lint.eslint": {
+      "dependsOn": ["^lint.eslint"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*"]
+    },
+    "lint": {
+      "dependsOn": ["lint.tsc", "lint.eslint"]
     }
   },
   "ui": "stream"
