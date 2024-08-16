@@ -213,6 +213,9 @@ async function getAptArg(apt: string, name: string, version: string | undefined)
     case AptPackageType.NameEqualsVersion:
       return `${name}=${version}`
     case AptPackageType.Name:
+      if (version !== undefined) {
+        warning(`Could not find package ${name} ${version}. Installing the latest version.`)
+      }
       return name
     default:
       throw new Error(`Could not find package ${name} ${version ?? ""}`)
