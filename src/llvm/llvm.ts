@@ -2,19 +2,20 @@ import { delimiter } from "path"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import memoize from "micro-memoize"
+import { addEnv } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
-import { setupGcc } from "../gcc/gcc"
-import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { addEnv } from "../utils/env/addEnv"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { ubuntuVersion } from "../utils/env/ubuntu_version"
-import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
-import { type InstallationInfo, setupBin } from "../utils/setup/setupBin"
-import { semverCoerceIfInvalid } from "../utils/setup/version"
-import { getVersion } from "../versions/versions"
-import { LLVMPackages, setupLLVMApt } from "./llvm_installer"
-import { getLLVMPackageInfo } from "./llvm_url"
+import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
+import { rcOptions } from "../cli-options.js"
+import { setupGcc } from "../gcc/gcc.js"
+import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
+import { type InstallationInfo, setupBin } from "../utils/setup/setupBin.js"
+import { semverCoerceIfInvalid } from "../utils/setup/version.js"
+import { getVersion } from "../versions/versions.js"
+import { LLVMPackages, setupLLVMApt } from "./llvm_installer.js"
+import { getLLVMPackageInfo } from "./llvm_url.js"
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
@@ -74,9 +75,9 @@ async function setupLLVMOnly(
 async function llvmBinaryDeps_raw(majorVersion: number) {
   if (isUbuntu()) {
     if (majorVersion <= 10) {
-      await setupAptPack([{ name: "libtinfo5" }])
+      await installAptPack([{ name: "libtinfo5" }])
     } else {
-      await setupAptPack([{ name: "libtinfo-dev" }])
+      await installAptPack([{ name: "libtinfo-dev" }])
     }
   }
 }
@@ -97,21 +98,21 @@ export async function activateLLVM(directory: string) {
 
   const actPromises: Promise<void>[] = [
     // the output of this action
-    addEnv("LLVM_PATH", directory),
+    addEnv("LLVM_PATH", directory, rcOptions),
 
     // Setup LLVM as the compiler
-    addEnv("LD_LIBRARY_PATH", `${directory}/lib${delimiter}${ld}`),
-    addEnv("DYLD_LIBRARY_PATH", `${directory}/lib${delimiter}${dyld}`),
+    addEnv("LD_LIBRARY_PATH", `${directory}/lib${delimiter}${ld}`, rcOptions),
+    addEnv("DYLD_LIBRARY_PATH", `${directory}/lib${delimiter}${dyld}`, rcOptions),
 
     // compiler flags
-    addEnv("LDFLAGS", `-L"${directory}/lib"`),
-    addEnv("CPPFLAGS", `-I"${directory}/include"`),
+    addEnv("LDFLAGS", `-L"${directory}/lib"`, rcOptions),
+    addEnv("CPPFLAGS", `-I"${directory}/include"`, rcOptions),
 
     // compiler paths
-    addEnv("CC", addExeExt(`${directory}/bin/clang`)),
-    addEnv("CXX", addExeExt(`${directory}/bin/clang++`)),
+    addEnv("CC", addExeExt(`${directory}/bin/clang`), rcOptions),
+    addEnv("CXX", addExeExt(`${directory}/bin/clang++`), rcOptions),
 
-    addEnv("LIBRARY_PATH", `${directory}/lib`),
+    addEnv("LIBRARY_PATH", `${directory}/lib`, rcOptions),
 
     // os sdks
     setupMacOSSDK(),
@@ -121,22 +122,22 @@ export async function activateLLVM(directory: string) {
   // TODO Windows builds fail with llvm's CPATH
   // if (process.platform !== "win32") {
   //   if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
-  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`))
+  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`, rcOptions))
   //   } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
-  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`))
+  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`, rcOptions))
   //   }
   // }
 
   if (isUbuntu()) {
     const priority = 60
     actPromises.push(
-      updateAptAlternatives("cc", `${directory}/bin/clang`, priority),
-      updateAptAlternatives("cxx", `${directory}/bin/clang++`, priority),
-      updateAptAlternatives("clang", `${directory}/bin/clang`),
-      updateAptAlternatives("clang++", `${directory}/bin/clang++`),
-      updateAptAlternatives("lld", `${directory}/bin/lld`),
-      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`),
-      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`),
+      addUpdateAlternativesToRc("cc", `${directory}/bin/clang`, rcOptions, priority),
+      addUpdateAlternativesToRc("cxx", `${directory}/bin/clang++`, rcOptions, priority),
+      addUpdateAlternativesToRc("clang", `${directory}/bin/clang`, rcOptions),
+      addUpdateAlternativesToRc("clang++", `${directory}/bin/clang++`, rcOptions),
+      addUpdateAlternativesToRc("lld", `${directory}/bin/lld`, rcOptions),
+      addUpdateAlternativesToRc("ld.lld", `${directory}/bin/ld.lld`, rcOptions),
+      addUpdateAlternativesToRc("llvm-ar", `${directory}/bin/llvm-ar`, rcOptions),
     )
   }
 

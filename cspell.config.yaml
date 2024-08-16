@@ -25,6 +25,7 @@ words:
   - choco
   - clangd
   - cmake
+  - iarna
   - cobertura
   - copr
   - CPATH

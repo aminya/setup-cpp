@@ -5,19 +5,19 @@ import { GITHUB_ACTIONS, isCI } from "ci-info"
 import { error, info, success, warning } from "ci-log"
 import * as numerous from "numerous"
 import numerousLocale from "numerous/locales/en.js"
+import { finalizeRC } from "os-env"
 import * as timeDelta from "time-delta"
 import timeDeltaLocale from "time-delta/locales/en.js"
 import { untildifyUser } from "untildify-user"
-import { checkUpdates } from "./check-updates"
-import { parseArgs, printHelp } from "./cli-options"
-import { installCompiler } from "./compilers"
-import { installTool } from "./installTool"
-import { tools } from "./tool"
-import { finalizeCpprc } from "./utils/env/addEnv"
-import { isArch } from "./utils/env/isArch"
-import { ubuntuVersion } from "./utils/env/ubuntu_version"
-import { setupPacmanPack } from "./utils/setup/setupPacmanPack"
-import { syncVersions } from "./versions/versions"
+import { checkUpdates } from "./check-updates.js"
+import { parseArgs, printHelp, rcOptions } from "./cli-options.js"
+import { installCompiler } from "./compilers.js"
+import { installTool } from "./installTool.js"
+import { tools } from "./tool.js"
+import { isArch } from "./utils/env/isArch.js"
+import { ubuntuVersion } from "./utils/env/ubuntu_version.js"
+import { setupPacmanPack } from "./utils/setup/setupPacmanPack.js"
+import { syncVersions } from "./versions/versions.js"
 
 /** The main entry function */
 async function main(args: string[]): Promise<number> {
@@ -115,7 +115,7 @@ async function main(args: string[]): Promise<number> {
     }
   }
 
-  await finalizeCpprc()
+  await finalizeRC(rcOptions)
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
     warning("setup-cpp was called without any arguments. Nothing to do.")

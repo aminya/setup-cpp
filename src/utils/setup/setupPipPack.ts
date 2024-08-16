@@ -2,21 +2,22 @@ import { info } from "@actions/core"
 import { execa, execaSync } from "execa"
 import memoize from "micro-memoize"
 import { mkdirp } from "mkdirp"
+import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
+import { installAptPack } from "setup-apt"
 import { untildifyUser } from "untildify-user"
 import which from "which"
-import { addPythonBaseExecPrefix, setupPython } from "../../python/python"
-import { getVersion } from "../../versions/versions"
-import { addPath } from "../env/addEnv"
-import { hasDnf } from "../env/hasDnf"
-import { isArch } from "../env/isArch"
-import { isUbuntu } from "../env/isUbuntu"
-import { ubuntuVersion } from "../env/ubuntu_version"
-import { setupAptPack } from "./setupAptPack"
-import type { InstallationInfo } from "./setupBin"
-import { setupDnfPack } from "./setupDnfPack"
-import { setupPacmanPack } from "./setupPacmanPack"
+import { rcOptions } from "../../cli-options.js"
+import { addPythonBaseExecPrefix, setupPython } from "../../python/python.js"
+import { getVersion } from "../../versions/versions.js"
+import { hasDnf } from "../env/hasDnf.js"
+import { isArch } from "../env/isArch.js"
+import { isUbuntu } from "../env/isUbuntu.js"
+import { ubuntuVersion } from "../env/ubuntu_version.js"
+import type { InstallationInfo } from "./setupBin.js"
+import { setupDnfPack } from "./setupDnfPack.js"
+import { setupPacmanPack } from "./setupPacmanPack.js"
 
 export type SetupPipPackOptions = {
   /** Whether to use pipx instead of pip */
@@ -85,7 +86,7 @@ export async function setupPipPackWithPython(
   const execPaths = await addPythonBaseExecPrefix(givenPython)
   const binDir = await findBinDir(execPaths, name)
 
-  await addPath(binDir)
+  await addPath(binDir, rcOptions)
 
   return { binDir }
 }
@@ -135,7 +136,7 @@ async function getPipxBinDir_raw() {
   }
 
   const pipxBinDir = untildifyUser("~/.local/bin")
-  await addPath(pipxBinDir)
+  await addPath(pipxBinDir, rcOptions)
   await mkdirp(pipxBinDir)
   return pipxBinDir
 }
@@ -182,7 +183,7 @@ export function setupPipPackSystem(name: string, addPythonPrefix = true) {
     } else if (hasDnf()) {
       return setupDnfPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     } else if (isUbuntu()) {
-      return setupAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
+      return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     }
   }
   return null

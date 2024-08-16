@@ -2,10 +2,11 @@ import { info } from "console"
 import { execRoot } from "admina"
 import { execa } from "execa"
 import { chmod, readFile, writeFile } from "fs/promises"
-import { DEFAULT_TIMEOUT } from "../installTool"
-import { addPath } from "../utils/env/addEnv"
-import { aptTimeout, hasNala, isPackageRegexInstalled, setupAptPack } from "../utils/setup/setupAptPack"
-import type { InstallationInfo } from "../utils/setup/setupBin"
+import { addPath } from "os-env"
+import { aptTimeout, hasNala, installAptPack, isAptPackRegexInstalled } from "setup-apt"
+import { rcOptions } from "../cli-options.js"
+import { DEFAULT_TIMEOUT } from "../installTool.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
 
 export enum LLVMPackages {
   All = 0,
@@ -20,10 +21,10 @@ export async function setupLLVMApt(
   // TODO for older versions, this also includes the minor version
   const installationFolder = `/usr/lib/llvm-${majorVersion}`
 
-  await setupAptPack([{ name: "curl" }])
+  await installAptPack([{ name: "curl" }])
   await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
   const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh", majorVersion, packages)
-  await setupAptPack(neededPackages)
+  await installAptPack(neededPackages)
   await chmod("/tmp/llvm-setup-cpp.sh", "755")
   await execRoot(
     "bash",
@@ -35,7 +36,7 @@ export async function setupLLVMApt(
     },
   )
 
-  await addPath(`${installationFolder}/bin`)
+  await addPath(`${installationFolder}/bin`, rcOptions)
 
   return {
     installDir: `${installationFolder}`,
@@ -87,7 +88,7 @@ async function removeConflictingPackages(givenScript: string) {
   await Promise.all(
     conflictingPackages.map(async (pack) => {
       const installingPack = pack.replace("$LLVM_VERSION", "*")
-      if (await isPackageRegexInstalled(installingPack)) {
+      if (await isAptPackRegexInstalled(installingPack)) {
         info(`Removing conflicting package ${installingPack}`)
         script = script.replace(pack, "")
       }

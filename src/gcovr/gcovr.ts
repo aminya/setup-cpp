@@ -1,7 +1,8 @@
+import { addEnv } from "os-env"
 import semverMajor from "semver/functions/major"
 import semverValid from "semver/functions/valid"
-import { addEnv } from "../utils/env/addEnv"
-import { setupPipPack } from "../utils/setup/setupPipPack"
+import { rcOptions } from "../cli-options.js"
+import { setupPipPack } from "../utils/setup/setupPipPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setupGcovr(version: string | undefined, _setupDir: string, _arch: string) {
@@ -9,7 +10,7 @@ export function setupGcovr(version: string | undefined, _setupDir: string, _arch
 }
 
 export function activateGcovLLVM() {
-  return addEnv("GCOV", "llvm-cov gcov")
+  return addEnv("GCOV", "llvm-cov gcov", rcOptions)
 }
 
 export function activateGcovGCC(gccVersion: string) {
@@ -17,5 +18,5 @@ export function activateGcovGCC(gccVersion: string) {
   const gccMajor = gccSemver !== null ? semverMajor(gccSemver) : gccVersion
   const gcov = gccMajor !== "" ? `gcov-${gccMajor}` : "gcov"
 
-  return addEnv("GCOV", gcov)
+  return addEnv("GCOV", gcov, rcOptions)
 }

@@ -1,11 +1,12 @@
-/* eslint-disable require-atomic-updates */
 import { execaSync } from "execa"
+import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { dirname } from "patha"
 import which from "which"
-import { addPath } from "../utils/env/addEnv"
-import type { InstallationInfo } from "../utils/setup/setupBin"
+import { rcOptions } from "../cli-options.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
 
+/* eslint-disable require-atomic-updates */
 let binDir: string | undefined
 
 export async function setupChocolatey(
@@ -54,7 +55,7 @@ export async function setupChocolatey(
   )
 
   const chocoPath = `${process.env.ALLUSERSPROFILE}\\chocolatey\\bin`
-  await addPath(chocoPath)
+  await addPath(chocoPath, rcOptions)
 
   const maybeChoco = which.sync("choco", { nothrow: true })
   if (maybeChoco !== null) {

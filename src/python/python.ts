@@ -7,23 +7,24 @@ import { info, warning } from "ci-log"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
 import memoize from "micro-memoize"
+import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
+import { installAptPack } from "setup-apt"
 import which from "which"
-import { addPath } from "../utils/env/addEnv"
-import { hasDnf } from "../utils/env/hasDnf"
-import { isArch } from "../utils/env/isArch"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { setupAptPack } from "../utils/setup/setupAptPack"
-import type { InstallationInfo } from "../utils/setup/setupBin"
-import { setupBrewPack } from "../utils/setup/setupBrewPack"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
-import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack"
-import { isBinUptoDate } from "../utils/setup/version"
-import { unique } from "../utils/std"
-import { MinVersions } from "../versions/default_versions"
+import { rcOptions } from "../cli-options.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
+import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack.js"
+import { isBinUptoDate } from "../utils/setup/version.js"
+import { unique } from "../utils/std/index.js"
+import { MinVersions } from "../versions/default_versions.js"
 
 export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
@@ -88,7 +89,7 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
       // install python in GitHub Actions
       try {
         info("Installing python in GitHub Actions")
-        const { setupActionsPython } = await import("./actions_python")
+        const { setupActionsPython } = await import("./actions_python.js")
         await setupActionsPython(version, setupDir, arch)
 
         foundPython = await findPython(setupDir)
@@ -134,7 +135,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       }
       const binDir = dirname(bin)
       /** The directory which the tool is installed to */
-      await addPath(binDir)
+      await addPath(binDir, rcOptions)
       installInfo = { installDir: binDir, binDir, bin }
       break
     }
@@ -146,7 +147,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
         stderr: string
       } = await execa("brew", ["--prefix", "python"], { stdio: "pipe" })
       const brewPythonBin = join(brewPythonPrefix.stdout, "libexec", "bin")
-      await addPath(brewPythonBin)
+      await addPath(brewPythonBin, rcOptions)
 
       break
     }
@@ -156,7 +157,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       } else if (hasDnf()) {
         installInfo = await setupDnfPack([{ name: "python3", version }])
       } else if (isUbuntu()) {
-        installInfo = await setupAptPack([{ name: "python3", version }, { name: "python-is-python3" }])
+        installInfo = await installAptPack([{ name: "python3", version }, { name: "python-is-python3" }])
       } else {
         throw new Error("Unsupported linux distributions")
       }

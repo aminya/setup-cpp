@@ -1,21 +1,21 @@
 import { info } from "ci-log"
 import { execa } from "execa"
 import { addExeExt, join } from "patha"
+import { installAptPack } from "setup-apt"
 import { untildifyUser } from "untildify-user"
 import which from "which"
-import { setupCmake } from "../cmake/cmake"
-import { setupNinja } from "../ninja/ninja"
-import { hasDnf } from "../utils/env/hasDnf"
-import { isArch } from "../utils/env/isArch"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { ubuntuVersion } from "../utils/env/ubuntu_version"
-import { extractTarByExe } from "../utils/setup/extract"
-import { setupAptPack } from "../utils/setup/setupAptPack"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
-import { addVPrefix, removeVPrefix } from "../utils/setup/version"
-import { getVersion } from "../versions/versions"
+import { setupCmake } from "../cmake/cmake.js"
+import { setupNinja } from "../ninja/ninja.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
+import { extractTarByExe } from "../utils/setup/extract.js"
+import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { addVPrefix, removeVPrefix } from "../utils/setup/version.js"
+import { getVersion } from "../versions/versions.js"
 
 function getDownloadKcovPackageInfo(version: string): PackageInfo {
   return {
@@ -49,7 +49,7 @@ async function buildKcov(file: string, dest: string) {
     } else if (hasDnf()) {
       await setupDnfPack([{ name: "libdwarf-devel" }, { name: "libcurl-devel" }])
     } else if (isUbuntu()) {
-      await setupAptPack([{ name: "libdw-dev" }, { name: "libcurl4-openssl-dev" }])
+      await installAptPack([{ name: "libdw-dev" }, { name: "libcurl4-openssl-dev" }])
     }
   }
 
@@ -117,7 +117,7 @@ export async function setupKcov(versionGiven: string, setupDir: string, arch: st
     } else if (hasDnf()) {
       await setupDnfPack([{ name: "binutils" }])
     } else if (isUbuntu()) {
-      await setupAptPack([{ name: "libbinutils" }])
+      await installAptPack([{ name: "libbinutils" }])
     }
     return installationInfo
   } else {

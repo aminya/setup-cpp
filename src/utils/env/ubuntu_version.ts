@@ -1,17 +1,17 @@
 import os from "os"
 import { warning } from "ci-log"
 import memoize from "micro-memoize"
+import { installAptPack } from "setup-apt"
 import { getUbuntuVersion } from "ubuntu-version"
 import which from "which"
-import { setupAptPack } from "../setup/setupAptPack"
-import { isUbuntu } from "./isUbuntu"
+import { isUbuntu } from "./isUbuntu.js"
 
 async function ubuntuVersion_raw(): Promise<number[] | null> {
   try {
     if (isUbuntu()) {
       try {
         if (which.sync("lsb_release", { nothrow: true }) === null) {
-          await setupAptPack([{ name: "lsb-release" }])
+          await installAptPack([{ name: "lsb-release" }])
         }
       } catch {
         return detectUsingOsVersion()

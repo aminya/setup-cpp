@@ -1,13 +1,14 @@
-import { addPath } from "../utils/env/addEnv"
-import { hasDnf } from "../utils/env/hasDnf"
-import { isArch } from "../utils/env/isArch"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { setupAptPack } from "../utils/setup/setupAptPack"
-import type { InstallationInfo } from "../utils/setup/setupBin"
-import { setupBrewPack } from "../utils/setup/setupBrewPack"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
+import { addPath } from "os-env"
+import { installAptPack } from "setup-apt"
+import { rcOptions } from "../cli-options.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
+import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGraphviz(version: string, _setupDir: string, _arch: string) {
@@ -25,7 +26,7 @@ export async function setupGraphviz(version: string, _setupDir: string, _arch: s
       } else if (hasDnf()) {
         return setupDnfPack([{ name: "graphviz", version }])
       } else if (isUbuntu()) {
-        return setupAptPack([{ name: "graphviz", version }])
+        return installAptPack([{ name: "graphviz", version }])
       }
       throw new Error("Unsupported linux distribution")
     }
@@ -39,7 +40,7 @@ async function activateGraphviz(): Promise<InstallationInfo> {
   switch (process.platform) {
     case "win32": {
       const binDir = "C:/Program Files/Graphviz/bin"
-      await addPath(binDir)
+      await addPath(binDir, rcOptions)
       return { binDir }
     }
     default: {

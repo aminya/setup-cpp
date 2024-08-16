@@ -1,17 +1,18 @@
 import { grantUserWriteAccess } from "admina"
 import { info, notice } from "ci-log"
 import { execaSync } from "execa"
+import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix, dirname, join } from "patha"
+import { installAptPack } from "setup-apt"
 import which from "which"
-import { addPath } from "../utils/env/addEnv"
-import { hasDnf } from "../utils/env/hasDnf"
-import { isArch } from "../utils/env/isArch"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { setupAptPack } from "../utils/setup/setupAptPack"
-import type { InstallationInfo } from "../utils/setup/setupBin"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
+import { rcOptions } from "../cli-options.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 let hasVCPKG = false
 
@@ -39,7 +40,7 @@ export async function setupVcpkg(version: string, setupDir: string, _arch: strin
           { name: "pkg-config" },
         ])
       } else if (isUbuntu()) {
-        await setupAptPack([
+        await installAptPack([
           { name: "curl" },
           { name: "zip" },
           { name: "unzip" },
@@ -75,7 +76,7 @@ export async function setupVcpkg(version: string, setupDir: string, _arch: strin
 
     await grantUserWriteAccess(setupDir)
 
-    await addPath(setupDir)
+    await addPath(setupDir, rcOptions)
     // eslint-disable-next-line require-atomic-updates
     hasVCPKG = true
     return { binDir: setupDir }

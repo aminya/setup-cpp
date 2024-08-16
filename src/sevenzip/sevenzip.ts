@@ -1,11 +1,11 @@
-import { hasDnf } from "../utils/env/hasDnf"
-import { isArch } from "../utils/env/isArch"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { setupAptPack } from "../utils/setup/setupAptPack"
-import { setupBrewPack } from "../utils/setup/setupBrewPack"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
+import { installAptPack } from "setup-apt"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function setupSevenZip(version: string, _setupDir: string, _arch: string) {
@@ -25,7 +25,7 @@ export function setupSevenZip(version: string, _setupDir: string, _arch: string)
           { name: "p7zip-plugins", version },
         ])
       } else if (isUbuntu()) {
-        return setupAptPack([{ name: "p7zip-full", version }])
+        return installAptPack([{ name: "p7zip-full", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

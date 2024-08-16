@@ -1,19 +1,19 @@
 import { cacheDir, downloadTool, find } from "@actions/tool-cache"
 import { info } from "ci-log"
+import { addPath } from "os-env"
 import { join } from "patha"
-import { addPath } from "../env/addEnv"
 
 import { tmpdir } from "os"
 import { GITHUB_ACTIONS } from "ci-info"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
-import { maybeGetInput } from "../../cli-options"
-import { hasDnf } from "../env/hasDnf"
-import { isArch } from "../env/isArch"
-import { isUbuntu } from "../env/isUbuntu"
-import { setupAptPack } from "./setupAptPack"
-import { setupDnfPack } from "./setupDnfPack"
-import { setupPacmanPack } from "./setupPacmanPack"
+import { installAptPack } from "setup-apt"
+import { maybeGetInput, rcOptions } from "../../cli-options.js"
+import { hasDnf } from "../env/hasDnf.js"
+import { isArch } from "../env/isArch.js"
+import { isUbuntu } from "../env/isUbuntu.js"
+import { setupDnfPack } from "./setupDnfPack.js"
+import { setupPacmanPack } from "./setupPacmanPack.js"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -74,7 +74,7 @@ export async function setupBin(
         const binDir = join(installDir, binRelativeDir)
         if (await pathExists(join(binDir, binFileName))) {
           info(`${name} ${version} was found in the cache at ${binDir}.`)
-          await addPath(binDir)
+          await addPath(binDir, rcOptions)
 
           return { installDir, binDir }
         }
@@ -108,7 +108,7 @@ export async function setupBin(
           } else if (hasDnf()) {
             await setupDnfPack([{ name: "unzip" }, { name: "tar" }, { name: "xz" }])
           } else if (isUbuntu()) {
-            await setupAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
+            await installAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
           }
         }
         // eslint-disable-next-line require-atomic-updates
@@ -129,7 +129,7 @@ export async function setupBin(
   // Adding the bin dir to the path
   /** The directory which the tool is installed to */
   info(`Add ${binDir} to PATH`)
-  await addPath(binDir)
+  await addPath(binDir, rcOptions)
 
   // check if inside Github Actions. If so, cache the installation
   if (GITHUB_ACTIONS && typeof process.env.RUNNER_TOOL_CACHE === "string") {

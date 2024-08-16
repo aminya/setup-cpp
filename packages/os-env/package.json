@@ -1,0 +1,47 @@
+{
+  "name": "os-env",
+  "version": "1.0.0",
+  "description": "Manage environment variables, PATH, and rc files",
+  "repository": "https://github.com/aminya/setup-cpp",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/os-env",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "scripts": {
+    "build": "tsc --pretty",
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.1",
+    "@types/node": "^12",
+    "admina": "^1.0.1",
+    "ci-info": "^4.0.0",
+    "escape-path-with-spaces": "^1.0.2",
+    "escape-quotes": "^1.0.2",
+    "micro-memoize": "^4.1.2",
+    "path-exists": "^5.0.0",
+    "ci-log": "workspace:*",
+    "exec-powershell": "workspace:*",
+    "untildify-user": "workspace:*"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "env",
+    "path",
+    "dotenv",
+    "rc",
+    "addEnv",
+    "addPath",
+    "setEnv",
+    "linux",
+    "windows",
+    "unix",
+    "macos"
+  ],
+  "devDependencies": {}
+}

@@ -2,11 +2,11 @@ import { endGroup, startGroup } from "@actions/core"
 import { error } from "ci-log"
 import pTimeout from "p-timeout"
 import { join } from "patha"
-import { getSuccessMessage } from "./cli-options"
-import { type ToolName, setups } from "./tool"
-import type { InstallationInfo } from "./utils/setup/setupBin"
-import { setupVCVarsall } from "./vcvarsall/vcvarsall"
-import { getVersion } from "./versions/versions"
+import { getSuccessMessage } from "./cli-options.js"
+import { type ToolName, setups } from "./tool.js"
+import type { InstallationInfo } from "./utils/setup/setupBin.js"
+import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
+import { getVersion } from "./versions/versions.js"
 
 export const DEFAULT_TIMEOUT = 20 * 60 * 1000 // 20 minutes
 
@@ -30,6 +30,9 @@ export async function installTool(
   } catch (e) {
     // push error message to the logger
     error(e as string | Error)
+    if (e instanceof Error && e.stack !== undefined) {
+      error(e.stack)
+    }
     errorMessages.push(`${tool} failed to install`)
   }
   endGroup()

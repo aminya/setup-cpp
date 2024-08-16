@@ -8,6 +8,7 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noFallthroughCasesInSwitch": true,
+    "forceConsistentCasingInFileNames": true,
     "declaration": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -17,8 +18,10 @@
     "preserveSymlinks": true,
     "removeComments": false,
     "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     // target Node.js 12 https://node.green/#ES2019
-    "lib": ["ES2019", "dom"],
+    "lib": ["ES2019"],
     "target": "ESNext",
     "allowJs": true,
     "esModuleInterop": true,
@@ -31,9 +34,7 @@
   "compileOnSave": false,
   "include": [
     "./src",
-    "dev/scripts",
-    "packages/untildify-user/untildify.ts",
-    "dev/docker/ci/docker-ci.mjs",
-    "./jest.config.ts"
+    "./dev/",
+    "./*.ts"
   ]
 }

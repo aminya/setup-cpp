@@ -1,5 +1,5 @@
-import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { setupVcpkg } from "../vcpkg"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
+import { setupVcpkg } from "../vcpkg.js"
 
 jest.setTimeout(300000)
 

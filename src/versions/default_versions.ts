@@ -1,4 +1,4 @@
-import { isArch } from "../utils/env/isArch"
+import { isArch } from "../utils/env/isArch.js"
 
 // passing "" to a tool installed by a package manager (apt, brew, choco) will result in the default version of that package manager.
 // the directly downloaded tools require a given version ("" doesn't work).

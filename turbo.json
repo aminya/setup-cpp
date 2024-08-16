@@ -1,0 +1,20 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["OS", "RUNNER_OS"],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/"]
+    },
+    "lint.tsc": {
+      "dependsOn": ["build", "^lint.tsc"]
+    },
+    "lint.eslint": {
+      "dependsOn": ["build", "^lint.eslint"]
+    },
+    "lint": {
+      "dependsOn": ["lint.tsc", "lint.eslint"]
+    }
+  },
+  "ui": "stream"
+}

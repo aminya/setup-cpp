@@ -1,8 +1,8 @@
-import { parseArgs } from "../cli-options"
-import { getCompilerInfo } from "../compilers"
-import type { Inputs } from "../tool"
-import { DefaultLinuxVersion } from "../versions/default_versions"
-import { getVersion, syncVersions } from "../versions/versions"
+import { parseArgs } from "../cli-options.js"
+import { getCompilerInfo } from "../compilers.js"
+import type { Inputs } from "../tool.js"
+import { DefaultLinuxVersion } from "../versions/default_versions.js"
+import { getVersion, syncVersions } from "../versions/versions.js"
 
 jest.setTimeout(300000)
 describe("getCompilerInfo", () => {

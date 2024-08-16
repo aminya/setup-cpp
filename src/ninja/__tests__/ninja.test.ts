@@ -1,7 +1,7 @@
 import { GITHUB_ACTIONS } from "ci-info"
-import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers"
-import { getVersion } from "../../versions/versions"
-import { setupNinja } from "../ninja"
+import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
+import { getVersion } from "../../versions/versions.js"
+import { setupNinja } from "../ninja.js"
 
 jest.setTimeout(300000)
 async function testNinja(directory: string) {

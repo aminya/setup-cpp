@@ -1,4 +1,4 @@
-import { setupMacOSSDK } from "../macos-sdk"
+import { setupMacOSSDK } from "../macos-sdk.js"
 
 jest.setTimeout(300000)
 describe("setup-macos-sdk", () => {

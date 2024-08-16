@@ -3,9 +3,10 @@ import path, { join } from "path"
 import { mkdirP } from "@actions/io"
 import { execaSync } from "execa"
 import { readFile } from "fs/promises"
+import { addPath } from "os-env"
 import { dirname } from "patha"
 import which from "which"
-import { addPath } from "../utils/env/addEnv"
+import { rcOptions } from "../cli-options.js"
 
 /* eslint-disable require-atomic-updates */
 let binDir: string | undefined
@@ -47,7 +48,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
   })
 
   binDir = getBrewPath()
-  await addPath(binDir)
+  await addPath(binDir, rcOptions)
 
   return { binDir }
 }

@@ -1,24 +1,25 @@
 import { info, notice } from "ci-log"
+import { addPath } from "os-env"
 import { addExeExt, join } from "patha"
-import { setupGraphviz } from "../graphviz/graphviz"
-import { addPath } from "../utils/env/addEnv"
-import { extractTar, extractZip } from "../utils/setup/extract"
-import { setupAptPack } from "../utils/setup/setupAptPack"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin"
-import { setupBrewPack } from "../utils/setup/setupBrewPack"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
-import { getVersion } from "../versions/versions"
+import { installAptPack } from "setup-apt"
+import { setupGraphviz } from "../graphviz/graphviz.js"
+import { extractTar, extractZip } from "../utils/setup/extract.js"
+import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
+import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { getVersion } from "../versions/versions.js"
 
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
-import { hasDnf } from "../utils/env/hasDnf"
-import { isArch } from "../utils/env/isArch"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { macosVersion } from "../utils/env/macos_version"
-import { ubuntuVersion } from "../utils/env/ubuntu_version"
-import { setupDmg } from "../utils/setup/setupDmg"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
+import { rcOptions } from "../cli-options.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { macosVersion } from "../utils/env/macos_version.js"
+import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
+import { setupDmg } from "../utils/setup/setupDmg.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -96,7 +97,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
         } else if (hasDnf()) {
           return setupDnfPack([{ name: "doxygen", version }])
         } else if (isUbuntu()) {
-          installationInfo = await setupAptPack([{ name: "doxygen", version }])
+          installationInfo = await installAptPack([{ name: "doxygen", version }])
         } else {
           throw new Error("Unsupported linux distributions")
         }
@@ -105,13 +106,13 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
           // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
           installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
           try {
-            await setupAptPack([{ name: "libclang-cpp9" }])
+            await installAptPack([{ name: "libclang-cpp9" }])
           } catch (err) {
             info(`Failed to download libclang-cpp9 that might be needed for running doxygen. ${err}`)
           }
         } catch (err) {
           notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
-          installationInfo = await setupAptPack([{ name: "doxygen" }])
+          installationInfo = await installAptPack([{ name: "doxygen" }])
         }
       } else {
         throw new Error("Unsupported linux distributions")
@@ -138,7 +139,7 @@ async function activateWinDoxygen() {
         // eslint-disable-next-line no-await-in-loop
         if (await pathExists(join(binDir, "doxygen.exe"))) {
           // eslint-disable-next-line no-await-in-loop
-          await addPath(binDir)
+          await addPath(binDir, rcOptions)
           return binDir
         }
       }

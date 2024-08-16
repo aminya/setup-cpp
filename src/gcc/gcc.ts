@@ -1,4 +1,4 @@
-import { addEnv, addPath } from "../utils/env/addEnv"
+import { addEnv, addPath } from "os-env"
 
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
@@ -7,17 +7,18 @@ import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
-import { setupMacOSSDK } from "../macos-sdk/macos-sdk"
-import { hasDnf } from "../utils/env/hasDnf"
-import { isArch } from "../utils/env/isArch"
-import { isUbuntu } from "../utils/env/isUbuntu"
-import { extract7Zip } from "../utils/setup/extract"
-import { setupAptPack, updateAptAlternatives } from "../utils/setup/setupAptPack"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin"
-import { setupBrewPack } from "../utils/setup/setupBrewPack"
-import { setupChocoPack } from "../utils/setup/setupChocoPack"
-import { setupDnfPack } from "../utils/setup/setupDnfPack"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack"
+import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
+import { rcOptions } from "../cli-options.js"
+import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { extract7Zip } from "../utils/setup/extract.js"
+import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
+import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 interface MingwInfo {
   releaseName: string
@@ -109,7 +110,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
             { name: "libstdc++-devel" },
           ])
         } else if (isUbuntu()) {
-          installationInfo = await setupAptPack([
+          installationInfo = await installAptPack([
             { name: "gcc", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
             { name: "g++", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
           ])
@@ -119,7 +120,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
         if (isArch()) {
           await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
-          await setupAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
+          await installAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
         }
       }
       break
@@ -128,7 +129,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
     // TODO support abi
     // case "none": {
     //   if (arch === "arm" || arch === "arm64") {
-    //     return setupAptPack("gcc-arm-none-eabi", version, [
+    //     return installAptPack("gcc-arm-none-eabi", version, [
     //       "ppa:ubuntu-toolchain-r/test",
     //     ])
     //   } else {
@@ -160,7 +161,7 @@ export async function setupMingw(version: string, setupDir: string, arch: string
       } else if (hasDnf()) {
         installationInfo = await setupDnfPack([{ name: "mingw64-gcc", version }])
       } else if (isUbuntu()) {
-        installationInfo = await setupAptPack([
+        installationInfo = await installAptPack([
           { name: "mingw-w64", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
         ])
       }
@@ -187,10 +188,10 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
   let binDir: string | undefined
   if (arch === "x64" && (await pathExists("C:/tools/mingw64/bin"))) {
     binDir = "C:/tools/mingw64/bin"
-    await addPath(binDir)
+    await addPath(binDir, rcOptions)
   } else if (arch === "ia32" && (await pathExists("C:/tools/mingw32/bin"))) {
     binDir = "C:/tools/mingw32/bin"
-    await addPath(binDir)
+    await addPath(binDir, rcOptions)
   } else if (await pathExists(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
     binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
   }
@@ -208,37 +209,46 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
   // const ld = process.env.LD_LIBRARY_PATH ?? ""
   // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
   // promises.push(
-  //   addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`),
-  //   addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`),
-  //   addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`),
-  //   addEnv("LDFLAGS", `-L${installDir}/lib`),
-  //   addEnv("CPPFLAGS", `-I${installDir}/include`)
+  //   addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`, rcOptions),
+  //   addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`, rcOptions),
+  //   addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`, rcOptions),
+  //   addEnv("LDFLAGS", `-L${installDir}/lib`, rcOptions),
+  //   addEnv("CPPFLAGS", `-I${installDir}/include`, rcOptions),
   // )
 
   if (process.platform === "win32") {
-    promises.push(addEnv("CC", addExeExt(`${binDir}/gcc`)), addEnv("CXX", addExeExt(`${binDir}/g++`)))
+    promises.push(
+      addEnv("CC", addExeExt(`${binDir}/gcc`), rcOptions),
+      addEnv("CXX", addExeExt(`${binDir}/g++`), rcOptions),
+    )
   } else {
     const majorVersion = semverMajor(semverCoerce(version) ?? version)
     if (majorVersion >= 5) {
-      promises.push(addEnv("CC", `${binDir}/gcc-${majorVersion}`), addEnv("CXX", `${binDir}/g++-${majorVersion}`))
+      promises.push(
+        addEnv("CC", `${binDir}/gcc-${majorVersion}`, rcOptions),
+        addEnv("CXX", `${binDir}/g++-${majorVersion}`, rcOptions),
+      )
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, priority),
+          addUpdateAlternativesToRc("cc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
+          addUpdateAlternativesToRc("cxx", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
+          addUpdateAlternativesToRc("gcc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
+          addUpdateAlternativesToRc("g++", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
         )
       }
     } else {
-      promises.push(addEnv("CC", `${binDir}/gcc-${version}`), addEnv("CXX", `${binDir}/g++-${version}`))
+      promises.push(
+        addEnv("CC", `${binDir}/gcc-${version}`, rcOptions),
+        addEnv("CXX", `${binDir}/g++-${version}`, rcOptions),
+      )
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${version}`, priority),
+          addUpdateAlternativesToRc("cc", `${binDir}/gcc-${version}`, rcOptions, priority),
+          addUpdateAlternativesToRc("cxx", `${binDir}/g++-${version}`, rcOptions, priority),
+          addUpdateAlternativesToRc("gcc", `${binDir}/gcc-${version}`, rcOptions, priority),
+          addUpdateAlternativesToRc("g++", `${binDir}/g++-${version}`, rcOptions, priority),
         )
       }
     }

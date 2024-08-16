@@ -1,6 +1,6 @@
-import type { Opts } from "../cli-options"
-import type { Inputs } from "../tool"
-import { DefaultLinuxVersion, DefaultVersions } from "./default_versions"
+import type { Opts } from "../cli-options.js"
+import type { Inputs } from "../tool.js"
+import { DefaultLinuxVersion, DefaultVersions } from "./default_versions.js"
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {

@@ -2,17 +2,22 @@
   "name": "exec-powershell",
   "version": "1.0.0",
   "description": "Run a powershell command.",
-  "homepage": "https://github.com/aminya/setup-cpp",
+  "repository": "https://github.com/aminya/setup-cpp",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/exec-powershell",
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc --pretty",
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
+    "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "execa": "<8",
-    "which": "^4.0.0"
+    "execa": "^7",
+    "which": "^4.0.0",
+    "@types/node": "^14"
   },
   "devDependencies": {
     "@types/which": "^3.0.0"

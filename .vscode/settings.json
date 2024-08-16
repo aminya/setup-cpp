@@ -66,6 +66,7 @@
   "files.insertFinalNewline": true,
   "files.trimFinalNewlines": true,
   "hadolint.hadolintPath": "./target/bin/hadolint",
-  // use dprint instead
-  "prettier.enable": false
+  "prettier.enable": false,
+  "javascript.preferences.importModuleSpecifierEnding": "js",
+  "typescript.preferences.importModuleSpecifierEnding": "js"
 }
