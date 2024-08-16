@@ -8,6 +8,10 @@ const jestConfig: Config = {
   transform: {
     "^.+\\.(t|j)sx?$": "@swc/jest",
   },
+  // resolve js files from ts files
+  moduleNameMapper: {
+    "(.+)\\.js": "$1",
+  },
   // coverage
   collectCoverageFrom: ["src/**/*.{ts,tsx,js,jsx}"],
   coveragePathIgnorePatterns: ["assets", ".css.d.ts"],
