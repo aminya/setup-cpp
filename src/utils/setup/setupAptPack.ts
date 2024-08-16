@@ -16,7 +16,7 @@ let didUpdate: boolean = false
 let didInit: boolean = false
 
 // wait up to 300 seconds if the apt-get lock is held
-export const aptTimeout = "DPkg::Lock::Timeout=300"
+export const aptTimeout = "Dpkg::Lock::Timeout=300"
 
 export type AptPackage = {
   name: string
