@@ -222,10 +222,10 @@ async function initApt(apt: string) {
     addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
   ]
   if (apt === "nala") {
-    // enable utf8 otherwise it fails because of the usage of ASCII encoding
+    // If LANGE/LC_ALL is not set, enable utf8 otherwise nala fails because of ASCII encoding
     promises.push(
-      addEnv("LANG", "C.UTF-8", { shouldAddOnlyIfNotDefined: true, ...rcOptions }),
-      addEnv("LC_ALL", "C.UTF-8", { shouldAddOnlyIfNotDefined: true, ...rcOptions }),
+      addEnv("LANG", "C.UTF-8", { overwrite: false, ...rcOptions }),
+      addEnv("LC_ALL", "C.UTF-8", { overwrite: false, ...rcOptions }),
     )
   }
   await Promise.all(promises)

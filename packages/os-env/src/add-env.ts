@@ -9,9 +9,9 @@ const { appendFile } = promises
 
 export type AddEnvOptions = {
   /** If true, the value will be escaped with quotes and spaces will be escaped with backslash */
-  shouldEscapeSpace: boolean
-  /** If true, the variable will be only added if it is not defined */
-  shouldAddOnlyIfNotDefined: boolean
+  escapeSpace: boolean
+  /** If false, the variable will be only added if it is not already defined (Default to true) */
+  overwrite: boolean
   /**
    * The path to the RC file that the env variables should be added to.
    */
@@ -31,17 +31,17 @@ export async function addEnv(
   givenOptions: Partial<AddEnvOptions> = {},
 ) {
   const options = {
-    shouldEscapeSpace: false,
-    shouldAddOnlyIfNotDefined: false,
+    escapeSpace: false,
+    overwrite: true,
     rcPath: defaultRcPath,
     ...givenOptions,
   }
 
-  const val = escapeString(valGiven ?? "", options.shouldEscapeSpace)
+  const val = escapeString(valGiven ?? "", options.escapeSpace)
   try {
     if (GITHUB_ACTIONS) {
       try {
-        if (options.shouldAddOnlyIfNotDefined) {
+        if (!options.overwrite) {
           if (process.env[name] !== undefined) {
             info(`Environment variable ${name} is already defined. Skipping.`)
             return
@@ -64,7 +64,7 @@ async function addEnvSystem(name: string, valGiven: string | undefined, options:
   const val = valGiven ?? ""
   switch (process.platform) {
     case "win32": {
-      if (options.shouldAddOnlyIfNotDefined) {
+      if (!options.overwrite) {
         if (process.env[name] !== undefined) {
           info(`Environment variable ${name} is already defined. Skipping.`)
           return
@@ -78,7 +78,7 @@ async function addEnvSystem(name: string, valGiven: string | undefined, options:
     case "linux":
     case "darwin": {
       await sourceRCInRc(options)
-      if (options.shouldAddOnlyIfNotDefined) {
+      if (!options.overwrite) {
         await appendFile(options.rcPath, `\nif [ -z "\${${name}}" ]; then export ${name}="${val}"; fi\n`)
         info(`if not defined ${name} then ${name}="${val}" was added to "${options.rcPath}`)
       } else {

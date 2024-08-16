@@ -8,11 +8,11 @@
       "outputs": ["dist/**"]
     },
     "lint.tsc": {
-      "dependsOn": ["^lint.tsc"],
+      "dependsOn": ["build", "^lint.tsc"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
     "lint.eslint": {
-      "dependsOn": ["^lint.eslint"],
+      "dependsOn": ["build", "^lint.eslint"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"]
     },
     "lint": {
