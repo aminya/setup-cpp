@@ -2,7 +2,7 @@ import { defaultExecOptions, execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
-import { type ExecaError, execa } from "execa"
+import { type ExecaError, type SyncOptions, execa } from "execa"
 import { appendFile } from "fs/promises"
 import memoize from "micro-memoize"
 import { sourceRC } from "os-env"
@@ -47,7 +47,7 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
   // Add the repos if needed
   await addRepositories(apt, packages)
 
-  const needToInstall = await filterAndQualifyAptPackages(packages)
+  const needToInstall = await filterAndQualifyAptPackages(apt, packages)
 
   if (needToInstall.length === 0) {
     info("All packages are already installed")
@@ -62,13 +62,17 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   // Install
   try {
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], getAptExecOptions(apt))
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], getAptExecOptions({ apt }))
   } catch (err) {
     if ("stderr" in (err as ExecaError)) {
       const stderr = (err as ExecaError).stderr
       if (retryErrors.some((error) => stderr.includes(error))) {
         warning(`Failed to install packages ${needToInstall}. Retrying...`)
-        execRootSync(apt, ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall], getAptExecOptions(apt))
+        execRootSync(
+          apt,
+          ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall],
+          getAptExecOptions({ apt }),
+        )
       }
     } else {
       throw err
@@ -108,8 +112,14 @@ function getEnv(apt: string) {
   return env
 }
 
-function getAptExecOptionsRaw(apt: string = "apt-get") {
-  return { env: getEnv(apt), ...defaultExecOptions }
+function getAptExecOptionsRaw(givenOpts: { apt?: string; pipe?: boolean } = {}): SyncOptions {
+  const opts = {
+    apt: "apt-get",
+    pipe: false,
+    ...givenOpts,
+  }
+
+  return { env: getEnv(opts.apt), ...defaultExecOptions, stdio: opts.pipe ? "pipe" : "inherit" }
 }
 
 const getAptExecOptions = memoize(getAptExecOptionsRaw)
@@ -124,14 +134,14 @@ export enum AptPackageType {
 /**
  * Filter out the packages that are already installed and qualify the packages into a full package name/version
  */
-async function filterAndQualifyAptPackages(packages: AptPackage[]) {
-  return (await Promise.all(packages.map(qualifiedNeededAptPackage)))
+async function filterAndQualifyAptPackages(apt: string, packages: AptPackage[]) {
+  return (await Promise.all(packages.map((pack) => qualifiedNeededAptPackage(apt, pack))))
     .filter((pack) => pack !== undefined)
 }
 
-async function qualifiedNeededAptPackage(pack: AptPackage) {
+async function qualifiedNeededAptPackage(apt: string, pack: AptPackage) {
   // Qualify the packages into full package name/version
-  const qualified = await getAptArg(pack.name, pack.version)
+  const qualified = await getAptArg(apt, pack.name, pack.version)
   // filter out the packages that are already installed
   return (await isPackageInstalled(qualified)) ? undefined : qualified
 }
@@ -153,13 +163,13 @@ async function addRepositories(apt: string, packages: AptPackage[]) {
   }
 }
 
-export async function aptPackageType(name: string, version: string | undefined): Promise<AptPackageType> {
+async function aptPackageType(apt: string, name: string, version: string | undefined): Promise<AptPackageType> {
   if (version !== undefined && version !== "") {
     const { stdout } = await execa("apt-cache", [
       "search",
       "--names-only",
       `^${escapeRegex(name)}-${escapeRegex(version)}$`,
-    ], getAptExecOptions())
+    ], getAptExecOptions({ apt, pipe: true }))
     if (stdout.trim() !== "") {
       return AptPackageType.NameDashVersion
     }
@@ -177,7 +187,7 @@ export async function aptPackageType(name: string, version: string | undefined):
   }
 
   try {
-    const { stdout: showStdout } = await execa("apt-cache", ["show", name], getAptExecOptions())
+    const { stdout: showStdout } = await execa("apt-cache", ["show", name], getAptExecOptions({ pipe: true }))
     if (showStdout.trim() !== "") {
       return AptPackageType.Name
     }
@@ -189,14 +199,14 @@ export async function aptPackageType(name: string, version: string | undefined):
   if (!didUpdate) {
     updateRepos(getApt())
     didUpdate = true
-    return aptPackageType(name, version)
+    return aptPackageType(apt, name, version)
   }
 
   return AptPackageType.None
 }
 
-async function getAptArg(name: string, version: string | undefined) {
-  const package_type = await aptPackageType(name, version)
+async function getAptArg(apt: string, name: string, version: string | undefined) {
+  const package_type = await aptPackageType(apt, name, version)
   switch (package_type) {
     case AptPackageType.NameDashVersion:
       return `${name}-${version}`
@@ -213,7 +223,7 @@ function updateRepos(apt: string) {
   execRootSync(
     apt,
     apt !== "nala" ? ["update", "-y", "-o", aptTimeout] : ["update", "-o", aptTimeout],
-    getAptExecOptions(apt),
+    getAptExecOptions({ apt }),
   )
 }
 
@@ -224,7 +234,7 @@ async function installAddAptRepo(apt: string) {
   execRootSync(
     apt,
     ["install", "-y", "--fix-broken", "-o", aptTimeout, "software-properties-common"],
-    getAptExecOptions(apt),
+    getAptExecOptions({ apt }),
   )
 }
 
@@ -236,14 +246,14 @@ async function initApt(apt: string) {
     didUpdate = true
   }
 
-  const toInstall = await filterAndQualifyAptPackages([
+  const toInstall = await filterAndQualifyAptPackages(apt, [
     { name: "ca-certificates" },
     { name: "gnupg" },
     { name: "apt-utils" },
   ])
 
   if (toInstall.length !== 0) {
-    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall], getAptExecOptions(apt))
+    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall], getAptExecOptions({ apt }))
   }
 
   const promises: Promise<string | void>[] = [
@@ -312,7 +322,7 @@ export async function updateAptAlternatives(name: string, path: string, rcPath: 
 export async function isPackageInstalled(pack: string) {
   try {
     // check if a package is installed
-    const { stdout } = await execa("dpkg", ["-s", pack], getAptExecOptions())
+    const { stdout } = await execa("dpkg", ["-s", pack], getAptExecOptions({ pipe: true }))
     if (typeof stdout !== "string") {
       return false
     }
@@ -327,7 +337,7 @@ export async function isPackageInstalled(pack: string) {
 export async function isPackageRegexInstalled(regexp: string) {
   try {
     // check if a package matching the regexp is installed
-    const { stdout } = await execa("dpkg", ["-l", regexp], getAptExecOptions())
+    const { stdout } = await execa("dpkg", ["-l", regexp], getAptExecOptions({ pipe: true }))
     if (typeof stdout !== "string") {
       return false
     }
