@@ -1,0 +1,7 @@
+pre-commit:
+  parallel: false
+  commands:
+    lint:
+      run: pnpm run lint
+    build:
+      run: pnpm run clean && pnpm i && pnpm run build -- --no-color && git add ./dist
