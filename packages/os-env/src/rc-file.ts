@@ -8,6 +8,9 @@ const { appendFile, readFile, writeFile } = promises
 
 export const defaultRcPath = untildifyUser("~/.bashrc")
 
+/**
+ * Options for adding an rc file
+ */
 export type RcOptions = {
   /** The path to the RC file that the env variables should be added to. */
   rcPath: string

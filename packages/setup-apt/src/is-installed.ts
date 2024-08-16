@@ -1,5 +1,5 @@
 import { execa } from "execa"
-import { getEnv } from "./install.js"
+import { getAptEnv } from "./install.js"
 
 /**
  * Check if a package is installed
@@ -9,7 +9,7 @@ import { getEnv } from "./install.js"
 export async function isAptPackInstalled(pack: string) {
   try {
     // check if a package is installed
-    const { stdout } = await execa("dpkg", ["-s", pack], { env: getEnv("apt-get"), stdio: "pipe" })
+    const { stdout } = await execa("dpkg", ["-s", pack], { env: getAptEnv("apt-get"), stdio: "pipe" })
     if (typeof stdout !== "string") {
       return false
     }
@@ -29,7 +29,7 @@ export async function isAptPackInstalled(pack: string) {
 export async function isAptPackRegexInstalled(regexp: string) {
   try {
     // check if a package matching the regexp is installed
-    const { stdout } = await execa("dpkg", ["-l", regexp], { env: getEnv("apt-get"), stdio: "pipe" })
+    const { stdout } = await execa("dpkg", ["-l", regexp], { env: getAptEnv("apt-get"), stdio: "pipe" })
     if (typeof stdout !== "string") {
       return false
     }

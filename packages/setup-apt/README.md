@@ -64,7 +64,7 @@ Check if a package matching a regexp is installed
 
 **returns:** Promise<boolean>
 
-### `updateRepos` (function)
+### `updateAptRepos` (function)
 
 Update the apt repositories
 
@@ -111,7 +111,7 @@ If nala is installed, use that, otherwise use apt-get
 
 **returns:** string
 
-### `getEnv` (function)
+### `getAptEnv` (function)
 
 Get the environment variables to use for the apt command
 

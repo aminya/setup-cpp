@@ -7,6 +7,9 @@ import { defaultRcPath, sourceRCInRc } from "./rc-file.js"
 import { escapeString } from "./utils.js"
 const { appendFile } = promises
 
+/**
+ * The options for adding an environment variable
+ */
 export type AddEnvOptions = {
   /** If true, the value will be escaped with quotes and spaces will be escaped with backslash */
   escapeSpace: boolean

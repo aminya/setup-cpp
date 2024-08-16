@@ -37,10 +37,12 @@ handles adding conditions to source rc file from .bashrc and .profile
 
 ### `escapeString` (function)
 
+Escape a string for use in a shell command
+
 **Parameters:**
 
-- valGiven (`string`)
-- shouldEscapeSpace (`boolean`)
+- valGiven (`string`) - The string to escape
+- shouldEscapeSpace (`boolean`) - Whether to escape spaces in the string
 
 **returns:** any
 

@@ -7,6 +7,9 @@ import { execPowershell } from "exec-powershell"
 import { defaultRcPath, sourceRCInRc } from "./rc-file.js"
 const { appendFile } = promises
 
+/**
+ * The options for adding a PATH variable
+ */
 type AddPathOptions = {
   /**
    * The path to the RC file that the PATH variables should be added to.

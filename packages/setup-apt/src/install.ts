@@ -5,7 +5,7 @@ import { type ExecaError, execa } from "execa"
 import which from "which"
 import { addAptKeyViaServer } from "./apt-key.js"
 import { isAptPackInstalled } from "./is-installed.js"
-import { updateRepos } from "./update.js"
+import { updateAptRepos } from "./update.js"
 
 /**
  * The information about an installation result
@@ -63,7 +63,7 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
 
   // Update the repos if needed
   if (update) {
-    updateRepos(apt)
+    updateAptRepos(apt)
     didUpdate = true
   }
 
@@ -85,7 +85,10 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
 
   // Install
   try {
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], { ...defaultExecOptions, env: getEnv(apt) })
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], {
+      ...defaultExecOptions,
+      env: getAptEnv(apt),
+    })
   } catch (err) {
     if (isExecaError(err)) {
       if (retryErrors.some((error) => err.stderr.includes(error))) {
@@ -93,7 +96,7 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
         execRootSync(
           apt,
           ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall],
-          { ...defaultExecOptions, env: getEnv(apt) },
+          { ...defaultExecOptions, env: getAptEnv(apt) },
         )
       }
     } else {
@@ -134,7 +137,7 @@ export function getApt() {
  * @param apt The apt command to use
  * @private Used internally
  */
-export function getEnv(apt: string) {
+export function getAptEnv(apt: string) {
   const env: NodeJS.ProcessEnv = { ...process.env, DEBIAN_FRONTEND: "noninteractive" }
 
   if (apt === "nala") {
@@ -185,9 +188,9 @@ async function addRepositories(apt: string, packages: AptPackage[]) {
     await installAddAptRepo(apt)
     for (const repo of allRepositories) {
       // eslint-disable-next-line no-await-in-loop
-      execRootSync("add-apt-repository", ["-y", "--no-update", repo], { ...defaultExecOptions, env: getEnv(apt) })
+      execRootSync("add-apt-repository", ["-y", "--no-update", repo], { ...defaultExecOptions, env: getAptEnv(apt) })
     }
-    updateRepos(apt)
+    updateAptRepos(apt)
     didUpdate = true
   }
 }
@@ -198,7 +201,7 @@ async function aptPackageType(apt: string, name: string, version: string | undef
       "search",
       "--names-only",
       `^${escapeRegex(name)}-${escapeRegex(version)}$`,
-    ], { env: getEnv(apt), stdio: "pipe" })
+    ], { env: getAptEnv(apt), stdio: "pipe" })
     if (stdout.trim() !== "") {
       return AptPackageType.NameDashVersion
     }
@@ -206,7 +209,7 @@ async function aptPackageType(apt: string, name: string, version: string | undef
     try {
       // check if apt-get show can find the version
       // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`], { env: getEnv(apt) })
+      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`], { env: getAptEnv(apt) })
       if (stdout.trim() === "") {
         return AptPackageType.NameEqualsVersion
       }
@@ -216,7 +219,7 @@ async function aptPackageType(apt: string, name: string, version: string | undef
   }
 
   try {
-    const { stdout: showStdout } = await execa("apt-cache", ["show", name], { env: getEnv(apt), stdio: "pipe" })
+    const { stdout: showStdout } = await execa("apt-cache", ["show", name], { env: getAptEnv(apt), stdio: "pipe" })
     if (showStdout.trim() !== "") {
       return AptPackageType.Name
     }
@@ -226,7 +229,7 @@ async function aptPackageType(apt: string, name: string, version: string | undef
 
   // If apt-cache fails, update the repos and try again
   if (!didUpdate) {
-    updateRepos(getApt())
+    updateAptRepos(getApt())
     didUpdate = true
     return aptPackageType(apt, name, version)
   }
@@ -258,7 +261,7 @@ async function installAddAptRepo(apt: string) {
   execRootSync(
     apt,
     ["install", "-y", "--fix-broken", "-o", aptTimeout, "software-properties-common"],
-    { ...defaultExecOptions, env: getEnv(apt) },
+    { ...defaultExecOptions, env: getAptEnv(apt) },
   )
 }
 
@@ -266,7 +269,7 @@ async function installAddAptRepo(apt: string) {
 async function initApt(apt: string) {
   // Update the repos if needed
   if (!didUpdate) {
-    updateRepos(apt)
+    updateAptRepos(apt)
     didUpdate = true
   }
 
@@ -279,7 +282,7 @@ async function initApt(apt: string) {
   if (toInstall.length !== 0) {
     execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall], {
       ...defaultExecOptions,
-      env: getEnv(apt),
+      env: getAptEnv(apt),
     })
   }
 

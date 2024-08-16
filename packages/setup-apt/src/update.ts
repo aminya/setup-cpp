@@ -1,14 +1,14 @@
 import { defaultExecOptions, execRootSync } from "admina"
-import { aptTimeout, getApt, getEnv } from "./install.js"
+import { aptTimeout, getApt, getAptEnv } from "./install.js"
 
 /**
  * Update the apt repositories
  * @param apt The apt command to use (optional)
  */
-export function updateRepos(apt: string = getApt()) {
+export function updateAptRepos(apt: string = getApt()) {
   execRootSync(
     apt,
     apt !== "nala" ? ["update", "-y", "-o", aptTimeout] : ["update", "-o", aptTimeout],
-    { ...defaultExecOptions, env: getEnv(apt) },
+    { ...defaultExecOptions, env: getAptEnv(apt) },
   )
 }
