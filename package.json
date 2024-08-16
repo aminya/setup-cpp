@@ -119,7 +119,7 @@
     "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",
     "ts-node": "^10.9.2",
     "ts-readme": "^1.1.3",
-    "turbo": "2.0.5",
+    "turbo": "2.0.14",
     "typescript": "^5.5.4",
     "ubuntu-version": "^2.0.0",
     "untildify-user": "workspace:*",

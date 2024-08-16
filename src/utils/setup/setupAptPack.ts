@@ -1,10 +1,11 @@
-import { execRoot, execRootSync } from "admina"
+import { defaultExecOptions, execRoot, execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
 import { type ExecaError, execa } from "execa"
 import { appendFile } from "fs/promises"
-import { addEnv, sourceRC } from "os-env"
+import memoize from "micro-memoize"
+import { sourceRC } from "os-env"
 import { pathExists } from "path-exists"
 import which from "which"
 import { rcOptions } from "../../cli-options.js"
@@ -37,8 +38,6 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
     info(`Installing ${name} ${version ?? ""} via ${apt}`)
   }
 
-  process.env.DEBIAN_FRONTEND = "noninteractive"
-
   // Update the repos if needed
   if (update) {
     updateRepos(apt)
@@ -63,13 +62,13 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   // Install
   try {
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall])
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], getAptExecOptions(apt))
   } catch (err) {
     if ("stderr" in (err as ExecaError)) {
       const stderr = (err as ExecaError).stderr
       if (retryErrors.some((error) => stderr.includes(error))) {
         warning(`Failed to install packages ${needToInstall}. Retrying...`)
-        execRootSync(apt, ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall])
+        execRootSync(apt, ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall], getAptExecOptions(apt))
       }
     } else {
       throw err
@@ -78,6 +77,42 @@ export async function setupAptPack(packages: AptPackage[], update = false): Prom
 
   return { binDir: "/usr/bin/" }
 }
+
+export function hasNala() {
+  return which.sync("nala", { nothrow: true }) !== null
+}
+
+export function getApt() {
+  let apt: string
+  if (hasNala()) {
+    apt = "nala"
+  } else {
+    apt = "apt-get"
+  }
+  return apt
+}
+
+function getEnv(apt: string) {
+  const env: NodeJS.ProcessEnv = { ...process.env, DEBIAN_FRONTEND: "noninteractive" }
+
+  if (apt === "nala") {
+    // if LANG/LC_ALL is not set, enable utf8 otherwise nala fails because of ASCII encoding
+    if (env.LANG === undefined) {
+      env.LANG = "C.UTF-8"
+    }
+    if (env.LC_ALL === undefined) {
+      env.LC_ALL = "C.UTF-8"
+    }
+  }
+
+  return env
+}
+
+function getAptExecOptionsRaw(apt: string = "apt-get") {
+  return { env: getEnv(apt), ...defaultExecOptions }
+}
+
+const getAptExecOptions = memoize(getAptExecOptionsRaw)
 
 export enum AptPackageType {
   NameDashVersion = 0,
@@ -111,7 +146,7 @@ async function addRepositories(apt: string, packages: AptPackage[]) {
     await installAddAptRepo(apt)
     for (const repo of allRepositories) {
       // eslint-disable-next-line no-await-in-loop
-      execRootSync("add-apt-repository", ["-y", "--no-update", repo])
+      execRootSync("add-apt-repository", ["-y", "--no-update", repo], getAptExecOptions())
     }
     updateRepos(apt)
     didUpdate = true
@@ -124,7 +159,7 @@ export async function aptPackageType(name: string, version: string | undefined):
       "search",
       "--names-only",
       `^${escapeRegex(name)}-${escapeRegex(version)}$`,
-    ])
+    ], getAptExecOptions())
     if (stdout.trim() !== "") {
       return AptPackageType.NameDashVersion
     }
@@ -132,7 +167,7 @@ export async function aptPackageType(name: string, version: string | undefined):
     try {
       // check if apt-get show can find the version
       // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`])
+      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`], getAptExecOptions())
       if (stdout.trim() === "") {
         return AptPackageType.NameEqualsVersion
       }
@@ -142,7 +177,7 @@ export async function aptPackageType(name: string, version: string | undefined):
   }
 
   try {
-    const { stdout: showStdout } = await execa("apt-cache", ["show", name])
+    const { stdout: showStdout } = await execa("apt-cache", ["show", name], getAptExecOptions())
     if (showStdout.trim() !== "") {
       return AptPackageType.Name
     }
@@ -174,29 +209,23 @@ async function getAptArg(name: string, version: string | undefined) {
   }
 }
 
-export function hasNala() {
-  return which.sync("nala", { nothrow: true }) !== null
-}
-
-export function getApt() {
-  let apt: string
-  if (hasNala()) {
-    apt = "nala"
-  } else {
-    apt = "apt-get"
-  }
-  return apt
-}
-
 function updateRepos(apt: string) {
-  execRootSync(apt, apt !== "nala" ? ["update", "-y", "-o", aptTimeout] : ["update", "-o", aptTimeout])
+  execRootSync(
+    apt,
+    apt !== "nala" ? ["update", "-y", "-o", aptTimeout] : ["update", "-o", aptTimeout],
+    getAptExecOptions(apt),
+  )
 }
 
 async function installAddAptRepo(apt: string) {
   if (await isPackageInstalled("software-properties-common")) {
     return
   }
-  execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, "software-properties-common"])
+  execRootSync(
+    apt,
+    ["install", "-y", "--fix-broken", "-o", aptTimeout, "software-properties-common"],
+    getAptExecOptions(apt),
+  )
 }
 
 /** Install gnupg and certificates (usually missing from docker containers) */
@@ -214,20 +243,13 @@ async function initApt(apt: string) {
   ])
 
   if (toInstall.length !== 0) {
-    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall])
+    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall], getAptExecOptions(apt))
   }
 
   const promises: Promise<string | void>[] = [
     addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg"),
     addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
   ]
-  if (apt === "nala") {
-    // If LANGE/LC_ALL is not set, enable utf8 otherwise nala fails because of ASCII encoding
-    promises.push(
-      addEnv("LANG", "C.UTF-8", { overwrite: false, ...rcOptions }),
-      addEnv("LC_ALL", "C.UTF-8", { overwrite: false, ...rcOptions }),
-    )
-  }
   await Promise.all(promises)
 }
 
@@ -290,7 +312,7 @@ export async function updateAptAlternatives(name: string, path: string, rcPath: 
 export async function isPackageInstalled(pack: string) {
   try {
     // check if a package is installed
-    const { stdout } = await execa("dpkg", ["-s", pack])
+    const { stdout } = await execa("dpkg", ["-s", pack], getAptExecOptions())
     if (typeof stdout !== "string") {
       return false
     }
@@ -305,7 +327,7 @@ export async function isPackageInstalled(pack: string) {
 export async function isPackageRegexInstalled(regexp: string) {
   try {
     // check if a package matching the regexp is installed
-    const { stdout } = await execa("dpkg", ["-l", regexp])
+    const { stdout } = await execa("dpkg", ["-l", regexp], getAptExecOptions())
     if (typeof stdout !== "string") {
       return false
     }
