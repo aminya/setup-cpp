@@ -19,76 +19,130 @@ npm install --save setup-apt
 
 <!-- INSERT GENERATED DOCS START -->
 
-### `InstallationInfo` (type)
-
-### `aptTimeout` (variable)
-
-### `AptPackage` (type)
-
-### `installAptPack` (function)
-
-A function that installs a package using apt
-
-**Parameters:**
-
-- packages (`AptPackage[]`)
-- update (`boolean`)
-
-**returns:** Promise<InstallationInfo>
-
-### `hasNala` (function)
-
-**returns:** boolean
-
-### `getApt` (function)
-
-**returns:** string
-
-### `addAptKeyViaServer` (function)
-
-**Parameters:**
-
-- keys (`string[]`)
-- name (`string`)
-- server (`string`)
-
-**returns:** Promise<string>
-
-### `addAptKeyViaDownload` (function)
-
-**Parameters:**
-
-- name (`string`)
-- url (`string`)
-
-**returns:** Promise<string>
-
 ### `updateAptAlternatives` (function)
 
+Update the alternatives for a package
+
 **Parameters:**
 
-- name (`string`)
-- path (`string`)
-- rcOptions (`RcOptions`)
-- priority (`number`)
+- name (`string`) - The name of the package
+- path (`string`) - The path to the binary
+- priority (`number`) - The priority of the alternative (Defaults to `40`)
+
+**returns:** Promise<void>
+
+### `addUpdateAlternativesToRc` (function)
+
+Add the update-alternatives command to the rc file
+
+**Parameters:**
+
+- name (`string`) - The name of the package
+- path (`string`) - The path to the binary
+- rcOptions (`RcOptions`) - The options for the rc file to add the update-alternatives command to
+- priority (`number`) - The priority of the alternative (Defaults to `40`)
 
 **returns:** Promise<void>
 
 ### `isAptPackInstalled` (function)
 
+Check if a package is installed
+
 **Parameters:**
 
-- pack (`string`)
+- pack (`string`) - The package to check
 
 **returns:** Promise<boolean>
 
 ### `isAptPackRegexInstalled` (function)
 
+Check if a package matching a regexp is installed
+
 **Parameters:**
 
-- regexp (`string`)
+- regexp (`string`) - The regexp to check
 
 **returns:** Promise<boolean>
+
+### `updateRepos` (function)
+
+Update the apt repositories
+
+**Parameters:**
+
+- apt (`string`) - The apt command to use (optional)
+
+**returns:** void
+
+### `InstallationInfo` (type)
+
+The information about an installation result
+
+### `aptTimeout` (variable)
+
+The timeout to use for apt commands
+Wait up to 300 seconds if the apt-get lock is held
+
+### `AptPackage` (type)
+
+The information about an apt package
+
+### `installAptPack` (function)
+
+Install a package using apt
+
+**Parameters:**
+
+- packages (`AptPackage[]`) - The packages to install (name, and optional info like version and repositories)
+- update (`boolean`) - Whether to update the package list before installing (Defaults to `false`)
+
+**returns:** Promise<InstallationInfo>
+
+### `hasNala` (function)
+
+Check if nala is installed
+
+**returns:** boolean
+
+### `getApt` (function)
+
+Get the apt command to use
+If nala is installed, use that, otherwise use apt-get
+
+**returns:** string
+
+### `getEnv` (function)
+
+Get the environment variables to use for the apt command
+
+**Parameters:**
+
+- apt (`string`) - The apt command to use
+
+**returns:** ProcessEnv
+
+### `addAptKeyViaServer` (function)
+
+Add an apt key via a keyserver
+
+**Parameters:**
+
+- keys (`string[]`) - The keys to add
+- name (`string`) - The name of the key
+- server (`string`) - The keyserver to use (Defaults to `keyserver.ubuntu.com`)
+
+**returns:** Promise<string>
+
+### `addAptKeyViaDownload` (function)
+
+Add an apt key via a download
+
+**Parameters:**
+
+- name (`string`) - The name of the key
+- url (`string`) - The URL of the key
+
+**returns:** Promise<string>
 
 <!-- INSERT GENERATED DOCS END -->
 

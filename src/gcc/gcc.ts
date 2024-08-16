@@ -7,7 +7,7 @@ import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
-import { installAptPack, updateAptAlternatives } from "setup-apt"
+import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
@@ -231,10 +231,10 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
+          addUpdateAlternativesToRc("cc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
+          addUpdateAlternativesToRc("cxx", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
+          addUpdateAlternativesToRc("gcc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
+          addUpdateAlternativesToRc("g++", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
         )
       }
     } else {
@@ -245,10 +245,10 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
 
       if (isUbuntu()) {
         promises.push(
-          updateAptAlternatives("cc", `${binDir}/gcc-${version}`, rcOptions, priority),
-          updateAptAlternatives("cxx", `${binDir}/g++-${version}`, rcOptions, priority),
-          updateAptAlternatives("gcc", `${binDir}/gcc-${version}`, rcOptions, priority),
-          updateAptAlternatives("g++", `${binDir}/g++-${version}`, rcOptions, priority),
+          addUpdateAlternativesToRc("cc", `${binDir}/gcc-${version}`, rcOptions, priority),
+          addUpdateAlternativesToRc("cxx", `${binDir}/g++-${version}`, rcOptions, priority),
+          addUpdateAlternativesToRc("gcc", `${binDir}/gcc-${version}`, rcOptions, priority),
+          addUpdateAlternativesToRc("g++", `${binDir}/g++-${version}`, rcOptions, priority),
         )
       }
     }

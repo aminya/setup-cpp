@@ -5,7 +5,7 @@ import memoize from "micro-memoize"
 import { addEnv } from "os-env"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
-import { installAptPack, updateAptAlternatives } from "setup-apt"
+import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { setupGcc } from "../gcc/gcc.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
@@ -131,13 +131,13 @@ export async function activateLLVM(directory: string) {
   if (isUbuntu()) {
     const priority = 60
     actPromises.push(
-      updateAptAlternatives("cc", `${directory}/bin/clang`, rcOptions, priority),
-      updateAptAlternatives("cxx", `${directory}/bin/clang++`, rcOptions, priority),
-      updateAptAlternatives("clang", `${directory}/bin/clang`, rcOptions),
-      updateAptAlternatives("clang++", `${directory}/bin/clang++`, rcOptions),
-      updateAptAlternatives("lld", `${directory}/bin/lld`, rcOptions),
-      updateAptAlternatives("ld.lld", `${directory}/bin/ld.lld`, rcOptions),
-      updateAptAlternatives("llvm-ar", `${directory}/bin/llvm-ar`, rcOptions),
+      addUpdateAlternativesToRc("cc", `${directory}/bin/clang`, rcOptions, priority),
+      addUpdateAlternativesToRc("cxx", `${directory}/bin/clang++`, rcOptions, priority),
+      addUpdateAlternativesToRc("clang", `${directory}/bin/clang`, rcOptions),
+      addUpdateAlternativesToRc("clang++", `${directory}/bin/clang++`, rcOptions),
+      addUpdateAlternativesToRc("lld", `${directory}/bin/lld`, rcOptions),
+      addUpdateAlternativesToRc("ld.lld", `${directory}/bin/ld.lld`, rcOptions),
+      addUpdateAlternativesToRc("llvm-ar", `${directory}/bin/llvm-ar`, rcOptions),
     )
   }
 
