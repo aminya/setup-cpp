@@ -1,4 +1,4 @@
-import { addEnv } from "os-env"
+import { addEnv } from "envosman"
 import semverMajor from "semver/functions/major"
 import semverValid from "semver/functions/valid"
 import { rcOptions } from "../cli-options.js"

@@ -1,7 +1,7 @@
 /* eslint-disable require-atomic-updates */
 import { info } from "ci-log"
+import { addPath } from "envosman"
 import { execaSync } from "execa"
-import { addPath } from "os-env"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey.js"
 import { rcOptions } from "../../cli-options.js"

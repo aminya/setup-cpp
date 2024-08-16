@@ -1,4 +1,4 @@
-import { addPath } from "os-env"
+import { addPath } from "envosman"
 import { rcOptions } from "../cli-options.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 

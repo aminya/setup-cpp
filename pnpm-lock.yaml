@@ -92,6 +92,9 @@ importers:
       dprint:
         specifier: ^0.47.2
         version: 0.47.2
+      envosman:
+        specifier: workspace:*
+        version: link:packages/envosman
       escape-path-with-spaces:
         specifier: ^1.0.2
         version: 1.0.2
@@ -146,9 +149,6 @@ importers:
       numerous:
         specifier: 1.0.3
         version: 1.0.3
-      os-env:
-        specifier: workspace:*
-        version: link:packages/os-env
       p-timeout:
         specifier: ^6.1.2
         version: 6.1.2
@@ -231,23 +231,7 @@ importers:
         specifier: ^4.0.0
         version: 4.0.0
 
-  packages/exec-powershell:
-    dependencies:
-      '@types/node':
-        specifier: ^14
-        version: 14.18.63
-      execa:
-        specifier: ^7
-        version: 7.2.0
-      which:
-        specifier: ^4.0.0
-        version: 4.0.0
-    devDependencies:
-      '@types/which':
-        specifier: ^3.0.0
-        version: 3.0.3
-
-  packages/os-env:
+  packages/envosman:
     dependencies:
       '@actions/core':
         specifier: ^1.10.1
@@ -283,6 +267,22 @@ importers:
         specifier: workspace:*
         version: link:../untildify-user
 
+  packages/exec-powershell:
+    dependencies:
+      '@types/node':
+        specifier: ^14
+        version: 14.18.63
+      execa:
+        specifier: ^7
+        version: 7.2.0
+      which:
+        specifier: ^4.0.0
+        version: 4.0.0
+    devDependencies:
+      '@types/which':
+        specifier: ^3.0.0
+        version: 3.0.3
+
   packages/setup-apt:
     dependencies:
       '@types/node':
@@ -297,15 +297,15 @@ importers:
       ci-log:
         specifier: workspace:*
         version: link:../ci-log
+      envosman:
+        specifier: workspace:*
+        version: link:../envosman
       escape-string-regexp:
         specifier: ^5.0.0
         version: 5.0.0
       execa:
         specifier: ^7.2.0
         version: 7.2.0
-      os-env:
-        specifier: workspace:*
-        version: link:../os-env
       path-exists:
         specifier: ^5.0.0
         version: 5.0.0

@@ -1,4 +1,4 @@
-<h1 align="center">os-env</h1>
+<h1 align="center">envosman</h1>
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
   <img src="https://img.shields.io/badge/node-%3E%3D12-blue.svg" />
@@ -12,7 +12,7 @@
 ## Install
 
 ```sh
-npm install --save os-env
+npm install --save envosman
 ```
 
 ## Usage

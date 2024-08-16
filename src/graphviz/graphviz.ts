@@ -1,4 +1,4 @@
-import { addPath } from "os-env"
+import { addPath } from "envosman"
 import { installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"

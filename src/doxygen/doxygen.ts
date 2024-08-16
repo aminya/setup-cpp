@@ -1,5 +1,5 @@
 import { info, notice } from "ci-log"
-import { addPath } from "os-env"
+import { addPath } from "envosman"
 import { addExeExt, join } from "patha"
 import { installAptPack } from "setup-apt"
 import { setupGraphviz } from "../graphviz/graphviz.js"

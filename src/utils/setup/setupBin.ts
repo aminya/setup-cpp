@@ -1,6 +1,6 @@
 import { cacheDir, downloadTool, find } from "@actions/tool-cache"
 import { info } from "ci-log"
-import { addPath } from "os-env"
+import { addPath } from "envosman"
 import { join } from "patha"
 
 import { tmpdir } from "os"

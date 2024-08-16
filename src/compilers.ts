@@ -1,7 +1,7 @@
 import { join } from "path"
 import { endGroup, notice, startGroup } from "@actions/core"
 import { error, info } from "ci-log"
-import { addEnv } from "os-env"
+import { addEnv } from "envosman"
 import semverValid from "semver/functions/valid"
 import { getSuccessMessage, rcOptions } from "./cli-options.js"
 import { setupGcc, setupMingw } from "./gcc/gcc.js"

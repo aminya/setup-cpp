@@ -1,9 +1,9 @@
 {
-  "name": "os-env",
+  "name": "envosman",
   "version": "1.0.0",
   "description": "Manage environment variables, PATH, and rc files",
   "repository": "https://github.com/aminya/setup-cpp",
-  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/os-env",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/envosman",
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "main": "./dist/index.js",

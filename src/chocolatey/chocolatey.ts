@@ -1,5 +1,5 @@
+import { addPath } from "envosman"
 import { execaSync } from "execa"
-import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { dirname } from "patha"
 import which from "which"

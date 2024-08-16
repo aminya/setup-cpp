@@ -3,9 +3,9 @@
 
 import { GITHUB_ACTIONS, isCI } from "ci-info"
 import { error, info, success, warning } from "ci-log"
+import { finalizeRC } from "envosman"
 import * as numerous from "numerous"
 import numerousLocale from "numerous/locales/en.js"
-import { finalizeRC } from "os-env"
 import * as timeDelta from "time-delta"
 import timeDeltaLocale from "time-delta/locales/en.js"
 import { untildifyUser } from "untildify-user"

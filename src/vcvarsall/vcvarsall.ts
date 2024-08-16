@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { info } from "ci-log"
+import { addEnv } from "envosman"
 import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
-import { addEnv } from "os-env"
 import { pathExists } from "path-exists"
 import { rcOptions } from "../cli-options.js"
 

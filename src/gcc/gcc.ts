@@ -1,4 +1,4 @@
-import { addEnv, addPath } from "os-env"
+import { addEnv, addPath } from "envosman"
 
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"

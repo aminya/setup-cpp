@@ -1,6 +1,6 @@
 import { getExecOutput } from "@actions/exec"
 import { error } from "ci-log"
-import { addEnv } from "os-env"
+import { addEnv } from "envosman"
 import { rcOptions } from "../cli-options.js"
 
 export async function setupMacOSSDK() {

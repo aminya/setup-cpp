@@ -1,7 +1,7 @@
 import { grantUserWriteAccess } from "admina"
 import { info, notice } from "ci-log"
+import { addPath } from "envosman"
 import { execaSync } from "execa"
-import { addPath } from "os-env"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix, dirname, join } from "patha"
 import { installAptPack } from "setup-apt"
