@@ -1,12 +1,12 @@
 import { tmpdir } from "os"
 import { join } from "path"
+import { HttpClient } from "@actions/http-client"
 import { addPath } from "envosman"
 import { execaSync } from "execa"
+import { writeFile } from "fs/promises"
 import { dirname } from "patha"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
-import { HttpClient } from "@actions/http-client"
-import { writeFile } from "fs/promises"
 
 /* eslint-disable require-atomic-updates */
 let binDir: string | undefined
