@@ -1,9 +1,7 @@
 import { tmpdir } from "os"
-import { join } from "path"
-import { HttpClient } from "@actions/http-client"
 import { addPath } from "envosman"
 import { execaSync } from "execa"
-import { writeFile } from "fs/promises"
+import { DownloaderHelper } from "node-downloader-helper"
 import { dirname } from "patha"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
@@ -31,18 +29,16 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
   }
 
   // download the installation script
-  const installerPath = join(tmpdir(), "install-brew.sh")
-
-  const http = new HttpClient("setup-brew")
-  const response = await http.get("https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh")
-  if (response.message.statusCode !== 200) {
-    throw new Error(`Failed to download brew installation script: ${response.message.statusCode}`)
-  }
-
-  await writeFile(installerPath, await response.readBody())
+  const dl = new DownloaderHelper("https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh", tmpdir(), {
+    fileName: "install-brew.sh",
+  })
+  dl.on("error", (err) => {
+    throw new Error(`Failed to download the brew installer script: ${err}`)
+  })
+  await dl.start()
 
   // brew installation is not thread-safe
-  execaSync("/bin/bash", [installerPath], {
+  execaSync("/bin/bash", [dl.getDownloadPath()], {
     stdio: "inherit",
     env: {
       NONINTERACTIVE: "1",

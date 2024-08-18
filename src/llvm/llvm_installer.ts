@@ -1,10 +1,10 @@
 import { info } from "console"
 import { tmpdir } from "os"
 import { join } from "path"
-import { HttpClient } from "@actions/http-client"
 import { execRoot } from "admina"
 import { addPath } from "envosman"
-import { chmod, writeFile } from "fs/promises"
+import { chmod, readFile, writeFile } from "fs/promises"
+import { DownloaderHelper } from "node-downloader-helper"
 import { aptTimeout, hasNala, installAptPack, isAptPackRegexInstalled } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { DEFAULT_TIMEOUT } from "../installTool.js"
@@ -24,12 +24,12 @@ export async function setupLLVMApt(
   const installationFolder = `/usr/lib/llvm-${majorVersion}`
 
   // download the installation script
-  const http = new HttpClient("setup-llvm")
-  const response = await http.get("https://apt.llvm.org/llvm.sh")
-  if (response.message.statusCode !== 200) {
-    throw new Error(`Failed to download LLVM installation script: ${response.message.statusCode}`)
-  }
-  const installerScript = await response.readBody()
+  const dl = new DownloaderHelper("https://apt.llvm.org/llvm.sh", tmpdir(), { fileName: "llvm.sh" })
+  dl.on("error", (err) => {
+    throw new Error(`Failed to download the LLVM installer script: ${err}`)
+  })
+  await dl.start()
+  const installerScript = await readFile(dl.getDownloadPath(), "utf-8")
 
   const installerPath = join(tmpdir(), "llvm-setup-cpp.sh")
   const neededPackages = await patchAptLLVMScript(
