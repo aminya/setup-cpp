@@ -1,6 +1,7 @@
+import { tmpdir } from "os"
 import { execRoot, execRootSync } from "admina"
 import { warning } from "ci-log"
-import { execa } from "execa"
+import { DownloaderHelper } from "node-downloader-helper"
 import { pathExists } from "path-exists"
 import { installAptPack } from "./install.js"
 
@@ -53,8 +54,14 @@ export async function addAptKeyViaDownload(name: string, url: string) {
   const fileName = `/etc/apt/trusted.gpg.d/${name}`
   if (!(await pathExists(fileName))) {
     initGpg()
-    await installAptPack([{ name: "curl" }, { name: "ca-certificates" }], undefined)
-    await execa("curl", ["-s", url, "-o", `/tmp/${name}`])
+
+    await installAptPack([{ name: "ca-certificates" }])
+    const dl = new DownloaderHelper(url, tmpdir(), { fileName: name })
+    dl.on("error", (err) => {
+      throw new Error(`Failed to download ${url}: ${err}`)
+    })
+    await dl.start()
+
     execRootSync("gpg", ["--no-default-keyring", "--keyring", `gnupg-ring:${fileName}`, "--import", `/tmp/${name}`])
     execRootSync("chmod", ["644", fileName])
   }

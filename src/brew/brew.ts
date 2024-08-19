@@ -1,10 +1,9 @@
 import { tmpdir } from "os"
-import path, { join } from "path"
-import { mkdirP } from "@actions/io"
 import { addPath } from "envosman"
 import { execaSync } from "execa"
-import { readFile } from "fs/promises"
+import { DownloaderHelper } from "node-downloader-helper"
 import { dirname } from "patha"
+import { installAptPack } from "setup-apt"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
 
@@ -13,50 +12,66 @@ let binDir: string | undefined
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupBrew(_version: string, _setupDir: string, _arch: string) {
+  // brew is only available on darwin and linux
   if (!["darwin", "linux"].includes(process.platform)) {
     return undefined
   }
+
+  // check if the function has already been called
   if (typeof binDir === "string") {
     return { binDir }
   }
 
-  const maybeBinDir = which.sync("brew", { nothrow: true })
+  // check if brew is already installed
+  const maybeBinDir = await which("brew", { nothrow: true })
   if (maybeBinDir !== null) {
     binDir = dirname(maybeBinDir)
     return { binDir }
   }
 
-  // brew is not thread-safe
-  const brewTempDirectory = path.join(tmpdir(), "setup-cpp", "brew")
-  await mkdirP(brewTempDirectory)
-
-  execaSync("curl", ["-LJO", "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh"], {
-    cwd: brewTempDirectory,
+  // download the installation script
+  await installAptPack([{ name: "ca-certificates" }])
+  const dl = new DownloaderHelper("https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh", tmpdir(), {
+    fileName: "install-brew.sh",
   })
-  const installSh = join(brewTempDirectory, "install.sh")
+  dl.on("error", (err) => {
+    throw new Error(`Failed to download the brew installer script: ${err}`)
+  })
+  await dl.start()
 
-  if (process.platform === "linux") {
-    const installShContent = await readFile(installSh, "utf-8")
-    installShContent.replace("#!/bin/bash", "")
-  }
-
-  execaSync("/bin/bash", [installSh], {
+  // brew installation is not thread-safe
+  execaSync("/bin/bash", [dl.getDownloadPath()], {
     stdio: "inherit",
     env: {
       NONINTERACTIVE: "1",
     },
   })
 
+  // add the bin directory to the PATH
   binDir = getBrewPath()
   await addPath(binDir, rcOptions)
 
   return { binDir }
 }
 
+/**
+ * Get the path where brew is installed
+ * @returns {string} The path where brew is installed
+ *
+ * Based on the installation script from https://brew.sh
+ */
 export function getBrewPath() {
+  if (process.platform === "darwin") {
+    if (process.arch === "arm64") {
+      return "/opt/homebrew/bin/"
+    } else {
+      return "/usr/local/bin/"
+    }
+  }
+
   if (process.platform === "linux") {
     return "/home/linuxbrew/.linuxbrew/bin/"
-  } else {
-    return "/usr/local/bin/"
   }
+
+  throw new Error("Unsupported platform for brew")
 }

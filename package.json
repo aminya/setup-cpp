@@ -126,7 +126,8 @@
     "untildify-user": "workspace:*",
     "util.types": "^0.0.2",
     "web-streams-polyfill": "^4.0.0",
-    "which": "^4.0.0"
+    "which": "^4.0.0",
+    "node-downloader-helper": "2.1.9"
   },
   "productionDependencies": [
     "@actions/core",
@@ -148,6 +149,7 @@
     "micro-memoize",
     "mri",
     "msvc-dev-cmd",
+    "node-downloader-helper",
     "numerous",
     "envosman",
     "path-exists",

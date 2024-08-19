@@ -1,8 +1,10 @@
 import { info } from "console"
+import { tmpdir } from "os"
+import { join } from "path"
 import { execRoot } from "admina"
 import { addPath } from "envosman"
-import { execa } from "execa"
 import { chmod, readFile, writeFile } from "fs/promises"
+import { DownloaderHelper } from "node-downloader-helper"
 import { aptTimeout, hasNala, installAptPack, isAptPackRegexInstalled } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { DEFAULT_TIMEOUT } from "../installTool.js"
@@ -21,14 +23,27 @@ export async function setupLLVMApt(
   // TODO for older versions, this also includes the minor version
   const installationFolder = `/usr/lib/llvm-${majorVersion}`
 
-  await installAptPack([{ name: "curl" }])
-  await execa("curl", ["-LJO", "https://apt.llvm.org/llvm.sh"], { cwd: "/tmp" })
-  const neededPackages = await patchAptLLVMScript("/tmp/llvm.sh", "/tmp/llvm-setup-cpp.sh", majorVersion, packages)
+  // download the installation script
+  await installAptPack([{ name: "ca-certificates" }])
+  const dl = new DownloaderHelper("https://apt.llvm.org/llvm.sh", tmpdir(), { fileName: "llvm.sh" })
+  dl.on("error", (err) => {
+    throw new Error(`Failed to download the LLVM installer script: ${err}`)
+  })
+  await dl.start()
+  const installerScript = await readFile(dl.getDownloadPath(), "utf-8")
+
+  const installerPath = join(tmpdir(), "llvm-setup-cpp.sh")
+  const neededPackages = await patchAptLLVMScript(
+    installerScript,
+    installerPath,
+    majorVersion,
+    packages,
+  )
   await installAptPack(neededPackages)
-  await chmod("/tmp/llvm-setup-cpp.sh", "755")
+  await chmod(installerPath, "755")
   await execRoot(
     "bash",
-    ["/tmp/llvm-setup-cpp.sh", `${majorVersion}`, ...(packages === LLVMPackages.All ? ["all"] : [])],
+    [installerPath, `${majorVersion}`, ...(packages === LLVMPackages.All ? ["all"] : [])],
     {
       stdio: "inherit",
       shell: true,
@@ -45,10 +60,13 @@ export async function setupLLVMApt(
   }
 }
 
-async function patchAptLLVMScript(path: string, target_path: string, majorVersion: number, packages: LLVMPackages) {
-  let script = await readFile(path, "utf-8")
-
-  script = debugScript(script)
+async function patchAptLLVMScript(
+  givenScript: string,
+  target_path: string,
+  majorVersion: number,
+  packages: LLVMPackages,
+) {
+  let script = debugScript(givenScript)
   script = nonInteractiveScript(script)
   script = choosePackages(packages, script, majorVersion)
   script = await removeConflictingPackages(script)
