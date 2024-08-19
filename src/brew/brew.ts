@@ -3,6 +3,7 @@ import { addPath } from "envosman"
 import { execaSync } from "execa"
 import { DownloaderHelper } from "node-downloader-helper"
 import { dirname } from "patha"
+import { installAptPack } from "setup-apt"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
 
@@ -29,6 +30,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
   }
 
   // download the installation script
+  await installAptPack([{ name: "ca-certificates" }])
   const dl = new DownloaderHelper("https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh", tmpdir(), {
     fileName: "install-brew.sh",
   })

@@ -24,6 +24,7 @@ export async function setupLLVMApt(
   const installationFolder = `/usr/lib/llvm-${majorVersion}`
 
   // download the installation script
+  await installAptPack([{ name: "ca-certificates" }])
   const dl = new DownloaderHelper("https://apt.llvm.org/llvm.sh", tmpdir(), { fileName: "llvm.sh" })
   dl.on("error", (err) => {
     throw new Error(`Failed to download the LLVM installer script: ${err}`)

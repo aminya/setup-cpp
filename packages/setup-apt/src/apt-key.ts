@@ -3,6 +3,7 @@ import { execRoot, execRootSync } from "admina"
 import { warning } from "ci-log"
 import { DownloaderHelper } from "node-downloader-helper"
 import { pathExists } from "path-exists"
+import { installAptPack } from "./install.js"
 
 function initGpg() {
   execRootSync("gpg", ["-k"])
@@ -54,6 +55,7 @@ export async function addAptKeyViaDownload(name: string, url: string) {
   if (!(await pathExists(fileName))) {
     initGpg()
 
+    await installAptPack([{ name: "ca-certificates" }])
     const dl = new DownloaderHelper(url, tmpdir(), { fileName: name })
     dl.on("error", (err) => {
       throw new Error(`Failed to download ${url}: ${err}`)
