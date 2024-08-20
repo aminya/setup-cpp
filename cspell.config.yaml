@@ -29,6 +29,7 @@ words:
   - iarna
   - cobertura
   - copr
+  - pnpx
   - CPATH
   - Cppcheck
   - CPPFLAGS
