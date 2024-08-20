@@ -105,7 +105,7 @@
     "numerous": "1.0.3",
     "envosman": "workspace:*",
     "p-timeout": "^6.1.2",
-    "parcel": "2.12.0",
+    "parcel": "2.0.0-canary.1717",
     "path-exists": "^5.0.0",
     "patha": "^0.4.1",
     "prettier": "3.2.2",
