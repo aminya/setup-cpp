@@ -1,11 +1,11 @@
-import { cacheDir, downloadTool, find } from "@actions/tool-cache"
-import { info } from "ci-log"
-import { addPath } from "envosman"
-import { join } from "patha"
-
 import { tmpdir } from "os"
+import { cacheDir, downloadTool, find } from "@actions/tool-cache"
 import { GITHUB_ACTIONS } from "ci-info"
+import { info, warning } from "ci-log"
+import { addPath } from "envosman"
+import { chmod } from "fs/promises"
 import { pathExists } from "path-exists"
+import { join } from "patha"
 import retry from "retry-as-promised"
 import { installAptPack } from "setup-apt"
 import { maybeGetInput, rcOptions } from "../../cli-options.js"
@@ -88,39 +88,29 @@ export async function setupBin(
   const binDir = join(installDir, binRelativeDir)
   const binFile = join(binDir, binFileName)
 
+  await downloadExtractInstall(binDir, binFile, name, version, url, setupDir, extractFunction, arch)
+
+  await cacheInstallation(setupDir, name, version)
+
+  return { installDir, binDir }
+}
+
+async function downloadExtractInstall(
+  binDir: string,
+  binFile: string,
+  name: string,
+  version: string,
+  url: string,
+  setupDir: string,
+  extractFunction: ((file: string, dest: string) => Promise<unknown>) | undefined,
+  arch: string,
+) {
   // download ane extract the package into the installation directory.
   if ((await Promise.all([pathExists(binDir), pathExists(binFile)])).includes(false)) {
     try {
-      info(`Download ${name} ${version}`)
-      // try to download the package 4 times with 2 seconds delay
-      const downloaded = await retry(
-        () => {
-          return downloadTool(url)
-        },
-        { name: url, max: 4, backoffBase: 2000, report: (err) => info(err) },
-      )
+      const downloaded = await tryDownload(name, version, url)
 
-      if (!didInit) {
-        info("Installing extraction dependencies")
-        if (process.platform === "linux") {
-          if (isArch()) {
-            await Promise.all([setupPacmanPack("unzip"), setupPacmanPack("tar"), setupPacmanPack("xz")])
-          } else if (hasDnf()) {
-            await setupDnfPack([{ name: "unzip" }, { name: "tar" }, { name: "xz" }])
-          } else if (isUbuntu()) {
-            await installAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
-          }
-        }
-        // eslint-disable-next-line require-atomic-updates
-        didInit = true
-      }
-
-      info(`Extracting ${downloaded} to ${setupDir}`)
-      await extractFunction?.(downloaded, setupDir)
-      // if (typeof extractedBinDir === "string") {
-      //   binDir = extractedBinDir
-      //   installDir = extractedBinDir
-      // }
+      await extractPackage(downloaded, setupDir, extractFunction)
     } catch (err) {
       throw new Error(`Failed to download ${name} ${version} ${arch} from ${url}: ${err}`)
     }
@@ -131,12 +121,66 @@ export async function setupBin(
   info(`Add ${binDir} to PATH`)
   await addPath(binDir, rcOptions)
 
+  // Check if the binary exists after extraction
+  if (!(await pathExists(binFile))) {
+    throw new Error(`Failed to find the binary ${binFile} after extracting ${name} ${version} ${arch}`)
+  }
+
+  // make the binary executable on non-windows platforms
+  if (process.platform !== "win32") {
+    try {
+      await chmod(binFile, "755")
+    } catch (err) {
+      warning(`Failed to make ${binFile} executable: ${err}`)
+    }
+  }
+}
+
+async function tryDownload(name: string, version: string, url: string) {
+  info(`Download ${name} ${version}`)
+  // try to download the package 4 times with 2 seconds delay
+  const downloaded = await retry(
+    () => {
+      return downloadTool(url)
+    },
+    { name: url, max: 4, backoffBase: 2000, report: (err) => info(err) },
+  )
+  return downloaded
+}
+
+async function extractPackage(
+  downloaded: string,
+  setupDir: string,
+  extractFunction: ((file: string, dest: string) => Promise<unknown>) | undefined,
+) {
+  info(`Extracting ${downloaded} to ${setupDir}`)
+  await installExtractionDependencies()
+
+  await extractFunction?.(downloaded, setupDir)
+}
+
+async function installExtractionDependencies() {
+  if (!didInit) {
+    info("Installing extraction dependencies")
+    if (process.platform === "linux") {
+      if (isArch()) {
+        await Promise.all([setupPacmanPack("unzip"), setupPacmanPack("tar"), setupPacmanPack("xz")])
+      } else if (hasDnf()) {
+        await setupDnfPack([{ name: "unzip" }, { name: "tar" }, { name: "xz" }])
+      } else if (isUbuntu()) {
+        await installAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
+      }
+    }
+    // eslint-disable-next-line require-atomic-updates
+    didInit = true
+  }
+}
+
+async function cacheInstallation(setupDir: string, name: string, version: string) {
   // check if inside Github Actions. If so, cache the installation
   if (GITHUB_ACTIONS && typeof process.env.RUNNER_TOOL_CACHE === "string") {
     if (maybeGetInput("cache-tools") === "true" || process.env.CACHE_TOOLS === "true") {
       await cacheDir(setupDir, name, version)
     }
   }
-
-  return { installDir, binDir }
 }
