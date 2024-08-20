@@ -21,7 +21,7 @@ export async function setupPowershell(version: string | undefined, _setupDir: st
       return { binDir }
     }
     case "darwin": {
-      return setupBrewPack("powershell", version, ["--cask"])
+      return setupBrewPack("powershell", version, { cask: true })
     }
     case "linux": {
       if (isArch()) {

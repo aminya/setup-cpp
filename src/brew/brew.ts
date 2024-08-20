@@ -48,7 +48,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
   })
 
   // add the bin directory to the PATH
-  binDir = getBrewPath()
+  binDir = getBrewBinDir()
   await addPath(binDir, rcOptions)
 
   return { binDir }
@@ -60,7 +60,7 @@ export async function setupBrew(_version: string, _setupDir: string, _arch: stri
  *
  * Based on the installation script from https://brew.sh
  */
-export function getBrewPath() {
+export function getBrewBinDir() {
   if (process.platform === "darwin") {
     if (process.arch === "arm64") {
       return "/opt/homebrew/bin/"
