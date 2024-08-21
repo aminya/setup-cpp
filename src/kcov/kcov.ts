@@ -23,7 +23,6 @@ function getDownloadKcovPackageInfo(version: string): PackageInfo {
     extractedFolderName: "",
     binRelativeDir: "usr/local/bin",
     binFileName: addExeExt("kcov"),
-    extractFunction: extractTarByExe,
   }
 }
 

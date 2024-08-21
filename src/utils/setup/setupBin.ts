@@ -1,4 +1,5 @@
 import { tmpdir } from "os"
+import { basename } from "path"
 import { cacheDir, downloadTool, find } from "@actions/tool-cache"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
@@ -8,6 +9,7 @@ import { pathExists } from "path-exists"
 import { join } from "patha"
 import retry from "retry-as-promised"
 import { maybeGetInput, rcOptions } from "../../cli-options.js"
+import { getArchiveType, getExtractFunction } from "./extract.js"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -94,7 +96,7 @@ async function downloadExtractInstall(
   version: string,
   url: string,
   setupDir: string,
-  extractFunction: PackageInfo["extractFunction"],
+  givenExtractFunction: PackageInfo["extractFunction"],
   arch: string,
 ) {
   // download ane extract the package into the installation directory.
@@ -102,7 +104,10 @@ async function downloadExtractInstall(
     try {
       const downloaded = await tryDownload(name, version, url)
 
-      await extractPackage(downloaded, setupDir, extractFunction)
+      info(`Extracting ${downloaded} to ${setupDir}`)
+
+      const extractFunction = givenExtractFunction ?? getExtractFunction(getArchiveType(url))
+      await extractFunction(downloaded, setupDir)
     } catch (err) {
       throw new Error(`Failed to download ${name} ${version} ${arch} from ${url}: ${err}`)
     }
@@ -132,22 +137,14 @@ async function tryDownload(name: string, version: string, url: string) {
   info(`Download ${name} ${version}`)
   // try to download the package 4 times with 2 seconds delay
   const downloaded = await retry(
-    () => {
-      return downloadTool(url)
+    async () => {
+      const downloadedFilePath = join(process.env.RUNNER_TEMP ?? tmpdir(), `${Date.now()}-${basename(url)}`)
+
+      return downloadTool(url, downloadedFilePath)
     },
     { name: url, max: 4, backoffBase: 2000, report: (err) => info(err) },
   )
   return downloaded
-}
-
-async function extractPackage(
-  downloaded: string,
-  setupDir: string,
-  extractFunction: ((file: string, dest: string) => Promise<unknown>) | undefined,
-) {
-  info(`Extracting ${downloaded} to ${setupDir}`)
-
-  await extractFunction?.(downloaded, setupDir)
 }
 
 async function cacheInstallation(setupDir: string, name: string, version: string) {

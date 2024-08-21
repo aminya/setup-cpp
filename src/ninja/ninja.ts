@@ -1,5 +1,4 @@
 import { addExeExt } from "patha"
-import { extractZip } from "../utils/setup/extract.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 
 /** Get the platform name Ninja uses in their download links */
@@ -24,7 +23,6 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform, _arch: 
     binRelativeDir: "",
     binFileName: addExeExt("ninja"),
     extractedFolderName: "",
-    extractFunction: extractZip,
     url: `https://github.com/ninja-build/ninja/releases/download/v${version}/ninja-${ninjaPlatform}.zip`,
   }
 }

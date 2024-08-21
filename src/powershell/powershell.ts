@@ -8,7 +8,6 @@ import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
-import { extractTarByExe, extractZip } from "../utils/setup/extract.js"
 import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
@@ -17,34 +16,31 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 /** Get the platform data for cmake */
 function getPowerShellPackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {
-  const binFileName = addExeExt("pwsh")
+  return {
+    url: getPowershellUrl(platform, arch, version),
+    binRelativeDir: "",
+    binFileName: addExeExt("pwsh"),
+    extractedFolderName: "",
+  }
+}
 
+function getPowershellUrl(
+  platform: string,
+  arch: string,
+  version: string,
+) {
   switch (platform) {
     case "win32": {
       const osArchStr = (["ia32", "x86", "i386", "x32"].includes(arch))
         ? "win-x86"
         : "win-x64"
 
-      return {
-        binRelativeDir: "",
-        binFileName,
-        extractedFolderName: "",
-        extractFunction: extractZip,
-        url:
-          `https://github.com/PowerShell/PowerShell/releases/download/v${version}/PowerShell-${version}-${osArchStr}.zip`,
-      }
+      return `https://github.com/PowerShell/PowerShell/releases/download/v${version}/PowerShell-${version}-${osArchStr}.zip`
     }
     case "darwin": {
       const osArchStr = ["arm", "arm64"].includes(arch) ? "osx-arm64" : "osx-x64"
 
-      return {
-        binRelativeDir: "",
-        binFileName,
-        extractedFolderName: "",
-        extractFunction: extractTarByExe,
-        url:
-          `https://github.com/PowerShell/PowerShell/releases/download/v${version}/powershell-${version}-${osArchStr}.tar.gz`,
-      }
+      return `https://github.com/PowerShell/PowerShell/releases/download/v${version}/powershell-${version}-${osArchStr}.tar.gz`
     }
     case "linux": {
       const archMap = {
@@ -56,15 +52,7 @@ function getPowerShellPackageInfo(version: string, platform: NodeJS.Platform, ar
       } as Record<string, string | undefined>
       const osArchStr = archMap[arch] ?? "linux-x64"
       // TODO support musl
-
-      return {
-        binRelativeDir: "",
-        binFileName,
-        extractedFolderName: "",
-        extractFunction: extractTarByExe,
-        url:
-          `https://github.com/PowerShell/PowerShell/releases/download/v${version}/powershell-${version}-${osArchStr}.tar.gz`,
-      }
+      return `https://github.com/PowerShell/PowerShell/releases/download/v${version}/powershell-${version}-${osArchStr}.tar.gz`
     }
     default:
       throw new Error(`Unsupported platform '${platform}'`)

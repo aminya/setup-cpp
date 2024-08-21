@@ -1,5 +1,4 @@
 import { addExeExt } from "patha"
-import { extractTarByExe, extractZip } from "../utils/setup/extract.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 
 /** Get the platform name task uses in their download links */
@@ -31,13 +30,11 @@ function getTaskArch(arch: string) {
 function getTaskPackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {
   const taskPlatform = getTaskPlatform(platform)
   const taskArch = getTaskArch(arch)
-  const isZip = platform === "win32"
-  const extension = isZip ? "zip" : "tar.gz"
+  const extension = platform === "win32" ? "zip" : "tar.gz"
   return {
     binRelativeDir: "",
     binFileName: addExeExt("task"),
     extractedFolderName: "",
-    extractFunction: isZip ? extractZip : extractTarByExe,
     url: `https://github.com/go-task/task/releases/download/v${version}/task_${taskPlatform}_${taskArch}.${extension}`,
   }
 }
