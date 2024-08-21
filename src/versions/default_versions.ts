@@ -32,6 +32,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
   doxygen: isArch() ? "1.11.0-4" : "1.11.0", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: isArch() ? "13.2.1-3" : "13", // https://github.com/brechtsanders/winlibs_mingw/releases and // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=gcc
   // mingw: isArch() ? "12.2.0-1" : "8", // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=mingw-w64 // https://archlinux.org/packages/extra/x86_64/mingw-w64-gcc/
+  powershell: "7.4.5", // https://github.com/PowerShell/PowerShell/releases/tag/v7.4.5
 }
 
 export const MinVersions: Record<string, string | undefined> = {

@@ -84,7 +84,7 @@ jobs:
           - windows-2022
           - ubuntu-24.04
           - macos-13
-          - macos-12
+          # - macos-12
         node:
           - 22
         pnpm:

@@ -3,7 +3,6 @@ import { addPath } from "envosman"
 import { addExeExt, join } from "patha"
 import { installAptPack } from "setup-apt"
 import { setupGraphviz } from "../graphviz/graphviz.js"
-import { extractTar, extractZip } from "../utils/setup/extract.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
@@ -31,7 +30,6 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
         binRelativeDir: "bin/",
         binFileName: addExeExt("doxygen"),
         extractedFolderName: folderName,
-        extractFunction: extractTar,
         url: `https://www.doxygen.nl/files/${folderName}.linux.bin.tar.gz`,
       }
     }
@@ -41,7 +39,6 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
         binRelativeDir: "",
         binFileName: addExeExt("doxygen"),
         extractedFolderName: folderName,
-        extractFunction: extractZip,
         url: `https://www.doxygen.nl/files/${folderName}.windows.x64.bin.zip`,
       }
     }
