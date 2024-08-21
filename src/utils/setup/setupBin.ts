@@ -137,7 +137,7 @@ async function tryDownload(name: string, version: string, url: string) {
   info(`Download ${name} ${version}`)
   // try to download the package 4 times with 2 seconds delay
   const downloaded = await retry(
-    async () => {
+    () => {
       const downloadedFilePath = join(process.env.RUNNER_TEMP ?? tmpdir(), `${Date.now()}-${basename(url)}`)
 
       return downloadTool(url, downloadedFilePath)
