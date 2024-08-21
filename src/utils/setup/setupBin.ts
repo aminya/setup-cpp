@@ -7,13 +7,7 @@ import { chmod } from "fs/promises"
 import { pathExists } from "path-exists"
 import { join } from "patha"
 import retry from "retry-as-promised"
-import { installAptPack } from "setup-apt"
 import { maybeGetInput, rcOptions } from "../../cli-options.js"
-import { hasDnf } from "../env/hasDnf.js"
-import { isArch } from "../env/isArch.js"
-import { isUbuntu } from "../env/isUbuntu.js"
-import { setupDnfPack } from "./setupDnfPack.js"
-import { setupPacmanPack } from "./setupPacmanPack.js"
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -35,8 +29,6 @@ export type InstallationInfo = {
   binDir: string
   bin?: string
 }
-
-let didInit: boolean = false
 
 /**
  * A function that:
@@ -102,7 +94,7 @@ async function downloadExtractInstall(
   version: string,
   url: string,
   setupDir: string,
-  extractFunction: ((file: string, dest: string) => Promise<unknown>) | undefined,
+  extractFunction: PackageInfo["extractFunction"],
   arch: string,
 ) {
   // download ane extract the package into the installation directory.
@@ -154,26 +146,8 @@ async function extractPackage(
   extractFunction: ((file: string, dest: string) => Promise<unknown>) | undefined,
 ) {
   info(`Extracting ${downloaded} to ${setupDir}`)
-  await installExtractionDependencies()
 
   await extractFunction?.(downloaded, setupDir)
-}
-
-async function installExtractionDependencies() {
-  if (!didInit) {
-    info("Installing extraction dependencies")
-    if (process.platform === "linux") {
-      if (isArch()) {
-        await Promise.all([setupPacmanPack("unzip"), setupPacmanPack("tar"), setupPacmanPack("xz")])
-      } else if (hasDnf()) {
-        await setupDnfPack([{ name: "unzip" }, { name: "tar" }, { name: "xz" }])
-      } else if (isUbuntu()) {
-        await installAptPack([{ name: "unzip" }, { name: "tar" }, { name: "xz-utils" }])
-      }
-    }
-    // eslint-disable-next-line require-atomic-updates
-    didInit = true
-  }
 }
 
 async function cacheInstallation(setupDir: string, name: string, version: string) {
