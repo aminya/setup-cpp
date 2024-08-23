@@ -3,13 +3,13 @@ import { error } from "ci-log"
 import { addPath } from "envosman"
 import { addExeExt } from "patha"
 import { installAptPack } from "setup-apt"
+import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -79,7 +79,7 @@ export async function setupPowershellSystem(version: string | undefined, _setupD
       return { binDir }
     }
     case "darwin": {
-      return setupBrewPack("powershell", version, { cask: true, overwrite: false })
+      return installBrewPack("powershell", version, { cask: true, overwrite: false })
     }
     case "linux": {
       if (isArch()) {

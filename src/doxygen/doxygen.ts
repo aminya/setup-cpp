@@ -2,9 +2,9 @@ import { info, notice } from "ci-log"
 import { addPath } from "envosman"
 import { addExeExt, join } from "patha"
 import { installAptPack } from "setup-apt"
+import { installBrewPack } from "setup-brew"
 import { setupGraphviz } from "../graphviz/graphviz.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { getVersion } from "../versions/versions.js"
@@ -77,7 +77,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       // try {
       //   installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
       // } catch {
-      const installationInfo = await setupBrewPack("doxygen", undefined)
+      const installationInfo = await installBrewPack("doxygen", undefined)
       // }
 
       // only install graphviz if the macOS version is greater than 11

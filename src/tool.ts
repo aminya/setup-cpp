@@ -1,5 +1,5 @@
+import { setupBrew } from "setup-brew"
 import { setupBazel } from "./bazel/bazel.js"
-import { setupBrew } from "./brew/brew.js"
 import { setupCcache } from "./ccache/ccache.js"
 import { setupChocolatey } from "./chocolatey/chocolatey.js"
 import { setupCmake } from "./cmake/cmake.js"
@@ -65,5 +65,5 @@ export const tools = Object.keys(setups) as Array<ToolName>
 /** The possible inputs to the program */
 export type Inputs = keyof typeof setups | "compiler" | "architecture" | "timeout"
 
-/** ‌ an array of possible inputs */
+/** An array of possible inputs */
 export const inputs: Array<Inputs> = ["compiler", "architecture", "timeout", ...tools]

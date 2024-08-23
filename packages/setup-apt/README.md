@@ -1,6 +1,8 @@
 <h1 align="center">setup-apt</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://www.npmjs.com/package/setup-apt" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/setup-apt.svg">
+  </a>
   <img src="https://img.shields.io/badge/node-%3E%3D12-blue.svg" />
   <a href="#" target="_blank">
     <img alt="License: Apache--2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />

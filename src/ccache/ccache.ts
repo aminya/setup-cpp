@@ -1,8 +1,8 @@
 import { installAptPack } from "setup-apt"
+import { installBrewPack } from "setup-brew"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -14,7 +14,7 @@ export function setupCcache(version: string, _setupDir: string, _arch: string) {
       return setupChocoPack("ccache", version)
     }
     case "darwin": {
-      return setupBrewPack("ccache", version)
+      return installBrewPack("ccache", version)
     }
     case "linux": {
       if (isArch()) {

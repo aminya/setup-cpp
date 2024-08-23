@@ -6,6 +6,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/"]
     },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
     "lint.tsc": {
       "dependsOn": ["build", "^lint.tsc"]
     },

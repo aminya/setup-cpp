@@ -1,4 +1,4 @@
-import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
+import { installBrewPack } from "setup-brew"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -9,7 +9,7 @@ export function setupSccache(version: string, _setupDir: string, _arch: string) 
     }
     case "linux":
     case "darwin": {
-      return setupBrewPack("sccache", version)
+      return installBrewPack("sccache", version)
     }
     default: {
       throw new Error("Unsupported platform")

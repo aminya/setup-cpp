@@ -2,7 +2,8 @@ import { endGroup, startGroup } from "@actions/core"
 import { error } from "ci-log"
 import pTimeout from "p-timeout"
 import { join } from "patha"
-import { getSuccessMessage } from "./cli-options.js"
+import { setupBrew } from "setup-brew"
+import { getSuccessMessage, rcOptions } from "./cli-options.js"
 import { type ToolName, setups } from "./tool.js"
 import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
@@ -54,15 +55,20 @@ async function installToolImpl(
   if (tool === "vcvarsall") {
     // eslint-disable-next-line no-await-in-loop
     await setupVCVarsall(getVersion(tool, version, osVersion), undefined, arch, undefined, undefined, false, false)
+  } else if (tool === "brew") {
+    // eslint-disable no-await-in-loop
+    installationInfo = await setupBrew({ rcOptions })
   } else {
-    // get the setup function
-    const setupFunction = setups[tool]
-
     // the tool installation directory (for the functions that ue it)
     const setupDir = join(setupCppDir, hasLLVM ? "llvm" : tool)
 
-    // eslint-disable-next-line no-await-in-loop
-    installationInfo = await setupFunction(getVersion(tool, version, osVersion), setupDir, arch)
+    const setupVersion = getVersion(tool, version, osVersion)
+
+    // get the setup function
+    const setupFunction = setups[tool]
+
+    // eslint-disable no-await-in-loop
+    installationInfo = await setupFunction(setupVersion, setupDir, arch)
   }
   // preparing a report string
   successMessages.push(getSuccessMessage(tool, installationInfo))
