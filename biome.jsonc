@@ -8,6 +8,7 @@
       "dev/cpp_vcpkg_project/**/*",
       "**/.venv/",
       "**/.*cache/",
+      "coverage/",
       "**/coverage/"
     ],
     "ignoreUnknown": true

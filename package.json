@@ -32,7 +32,7 @@
     "build.babel": "babel ./dist --out-dir dist --plugins @upleveled/babel-plugin-remove-node-prefix --plugins @babel/plugin-transform-private-methods --compact --no-babelrc --source-maps true",
     "build.modern": "shx cp -r ./dist/actions/* ./dist/modern",
     "bump": "ncu -u -x numerous,execa,prettier,@types/node,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
-    "clean": "shx rm -rf ./dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/actions ./dist/modern ",
+    "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/actions ./dist/modern ",
     "copy.matchers": "run-p copy.matchers.legacy copy.matchers.actions",
     "copy.matchers.legacy": "shx cp ./src/gcc/gcc_matcher.json ./dist/legacy/ && shx cp ./src/msvc/msvc_matcher.json ./dist/legacy/ && shx cp ./src/python/python_matcher.json ./dist/legacy/ && shx cp ./src/llvm/llvm_matcher.json ./dist/legacy/",
     "copy.matchers.actions": "shx cp ./src/gcc/gcc_matcher.json ./dist/actions/ && shx cp ./src/msvc/msvc_matcher.json ./dist/actions/ && shx cp ./src/python/python_matcher.json ./dist/actions/ && shx cp ./src/llvm/llvm_matcher.json ./dist/actions/",
@@ -54,7 +54,7 @@
     "test.lint.root.eslint": "eslint ./{src,dev}/**/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/",
     "test.lint.biome": "biome check",
     "test.lint.dprint": "dprint check",
-    "test": "jest --runInBand --forceExit --coverage",
+    "test": "turbo test && jest --runInBand --forceExit --coverage",
     "build.docker-ci": "node ./dev/docker/ci/docker-ci.mjs"
   },
   "devDependencies": {

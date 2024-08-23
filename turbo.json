@@ -18,6 +18,9 @@
     },
     "lint": {
       "dependsOn": ["lint.tsc", "lint.eslint"]
+    },
+    "test": {
+      "dependsOn": ["build", "^test"]
     }
   },
   "ui": "stream"

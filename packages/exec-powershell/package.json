@@ -8,6 +8,7 @@
   "author": "Amin Yahyaabadi",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
+  "type": "module",
   "scripts": {
     "build": "tsc --pretty",
     "dev": "tsc --watch --pretty",
