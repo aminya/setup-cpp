@@ -10,7 +10,7 @@ const { appendFile } = promises
 /**
  * The options for adding a PATH variable
  */
-type AddPathOptions = {
+export type AddPathOptions = {
   /**
    * The path to the RC file that the PATH variables should be added to.
    */

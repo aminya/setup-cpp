@@ -1,6 +1,8 @@
 <h1 align="center">ci-log</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://www.npmjs.com/package/ci-log" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/ci-log.svg">
+  </a>
   <a href="#" target="_blank">
     <img alt="License: Apache--2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
   </a>

@@ -182,6 +182,9 @@ importers:
       setup-apt:
         specifier: workspace:*
         version: link:packages/setup-apt
+      setup-brew:
+        specifier: workspace:*
+        version: link:packages/setup-brew
       setup-python:
         specifier: github:aminya/setup-python#a783db655c6e40317e2c0c96f9d162d9c9f4a751
         version: https://codeload.github.com/aminya/setup-python/tar.gz/a783db655c6e40317e2c0c96f9d162d9c9f4a751(encoding@0.1.13)
@@ -318,6 +321,37 @@ importers:
       which:
         specifier: 4.0.0
         version: 4.0.0
+
+  packages/setup-brew:
+    dependencies:
+      '@types/node':
+        specifier: ^12
+        version: 12.20.55
+      ci-log:
+        specifier: workspace:*
+        version: link:../ci-log
+      envosman:
+        specifier: workspace:*
+        version: link:../envosman
+      execa:
+        specifier: ^7.2.0
+        version: 7.2.0
+      node-downloader-helper:
+        specifier: 2.1.9
+        version: 2.1.9
+      setup-apt:
+        specifier: workspace:*
+        version: link:../setup-apt
+      which:
+        specifier: 4.0.0
+        version: 4.0.0
+    devDependencies:
+      path-exists:
+        specifier: 5.0.0
+        version: 5.0.0
+      patha:
+        specifier: 0.4.1
+        version: 0.4.1
 
   packages/untildify-user:
     dependencies:

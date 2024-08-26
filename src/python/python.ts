@@ -11,13 +11,13 @@ import memoize from "micro-memoize"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import { installAptPack } from "setup-apt"
+import { installBrewPack } from "setup-brew"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
-import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -140,7 +140,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       break
     }
     case "darwin": {
-      installInfo = await setupBrewPack("python3", version)
+      installInfo = await installBrewPack("python3", version)
       // add the python and pip binaries to the path
       const brewPythonPrefix: {
         stdout: string

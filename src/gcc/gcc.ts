@@ -8,6 +8,7 @@ import { addExeExt, join } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
 import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
+import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
@@ -15,7 +16,6 @@ import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { extract7Zip } from "../utils/setup/extract.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -96,7 +96,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
       break
     }
     case "darwin": {
-      installationInfo = await setupBrewPack("gcc", version)
+      installationInfo = await installBrewPack("gcc", version)
       break
     }
     case "linux": {

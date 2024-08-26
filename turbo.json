@@ -6,6 +6,10 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/"]
     },
+    "dev": {
+      "persistent": true,
+      "cache": false
+    },
     "lint.tsc": {
       "dependsOn": ["build", "^lint.tsc"]
     },
@@ -14,6 +18,9 @@
     },
     "lint": {
       "dependsOn": ["lint.tsc", "lint.eslint"]
+    },
+    "test": {
+      "dependsOn": ["build", "^test"]
     }
   },
   "ui": "stream"

@@ -1,9 +1,9 @@
 import { execRootSync } from "admina"
 import { addAptKeyViaDownload, installAptPack } from "setup-apt"
+import { installBrewPack } from "setup-brew"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { setupBrewPack } from "../utils/setup/setupBrewPack.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 
@@ -16,7 +16,7 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
     }
     case "darwin": {
       // install bazelisk because it contains both
-      return setupBrewPack("bazelisk", version)
+      return installBrewPack("bazelisk", version)
     }
     case "linux": {
       if (isArch()) {

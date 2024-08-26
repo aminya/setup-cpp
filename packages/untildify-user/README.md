@@ -1,6 +1,8 @@
 <h1 align="center">untildify-user</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://www.npmjs.com/package/untildify-user" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/untildify-user.svg">
+  </a>
   <a href="#" target="_blank">
     <img alt="License: Apache--2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
   </a>
