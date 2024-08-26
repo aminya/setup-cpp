@@ -1,6 +1,6 @@
 {
   "name": "exec-powershell",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Run a powershell command.",
   "repository": "https://github.com/aminya/setup-cpp",
   "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/exec-powershell",

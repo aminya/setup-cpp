@@ -1,6 +1,6 @@
 {
   "name": "ci-log",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Colorful logging and print for any environment including GitHub Actions",
   "repository": "https://github.com/aminya/setup-cpp",
   "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/ci-log",
