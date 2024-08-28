@@ -2,13 +2,19 @@ import { defaultExecOptions, execRootSync } from "admina"
 import { getAptEnv } from "./apt-env.js"
 import { aptTimeout } from "./apt-timeout.js"
 import { getApt } from "./get-apt.js"
+import { initAptMemoized } from "./init-apt.js"
 import { isAptPackInstalled } from "./is-installed.js"
-import { updateAptRepos } from "./update.js"
+import { updateAptReposMemoized } from "./update.js"
 
 export async function addAptRepository(repo: string, apt = getApt()) {
+  await initAptMemoized(apt)
   await installAddAptRepo(apt)
   execRootSync("add-apt-repository", ["-y", "--no-update", repo], { ...defaultExecOptions, env: getAptEnv(apt) })
-  updateAptRepos(apt)
+
+  // clear the cache
+  updateAptReposMemoized.cache.keys = []
+  updateAptReposMemoized.cache.values = []
+  updateAptReposMemoized(apt)
 }
 
 export async function installAddAptRepo(apt: string) {

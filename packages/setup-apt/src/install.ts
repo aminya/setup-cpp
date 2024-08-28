@@ -6,9 +6,9 @@ import { type AddAptKeyOptions, addAptKey } from "./apt-key.js"
 import { addAptRepository } from "./apt-repository.js"
 import { aptTimeout } from "./apt-timeout.js"
 import { getApt } from "./get-apt.js"
-import { initApt } from "./init-apt.js"
+import { initAptMemoized } from "./init-apt.js"
 import { filterAndQualifyAptPackages } from "./qualify-install.js"
-import { updateAptRepos } from "./update.js"
+import { updateAptReposMemoized } from "./update.js"
 
 /**
  * The information about an installation result
@@ -21,10 +21,6 @@ export type InstallationInfo = {
   /** The bin path of the package (Defaults to `undefined`) */
   bin?: string
 }
-
-/* eslint-disable require-atomic-updates */
-export let didUpdate: boolean = false
-let didInit: boolean = false
 
 /**
  * The information about an apt package
@@ -80,8 +76,7 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
 
   // Update the repos if needed
   if (update) {
-    updateAptRepos(apt)
-    didUpdate = true
+    updateAptReposMemoized(apt)
   }
 
   // Add the repos if needed
@@ -95,10 +90,7 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
   }
 
   // Initialize apt if needed
-  if (!didInit) {
-    await initApt(apt)
-    didInit = true
-  }
+  await initAptMemoized(apt)
 
   try {
     // Add the keys if needed

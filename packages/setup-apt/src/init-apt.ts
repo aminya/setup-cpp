@@ -1,13 +1,14 @@
 import { defaultExecOptions, execRootSync } from "admina"
+import memoize from "micro-memoize"
 import { getAptEnv } from "./apt-env.js"
 import { aptTimeout } from "./apt-timeout.js"
 import { filterAndQualifyAptPackages } from "./qualify-install.js"
-import { updateAptRepos } from "./update.js"
+import { updateAptReposMemoized } from "./update.js"
 
 /** Install gnupg and certificates (usually missing from docker containers) */
 export async function initApt(apt: string) {
   // Update the repos
-  updateAptRepos(apt)
+  updateAptReposMemoized(apt)
 
   const toInstall = await filterAndQualifyAptPackages(apt, [
     { name: "ca-certificates" },
@@ -22,3 +23,6 @@ export async function initApt(apt: string) {
     })
   }
 }
+
+/** Install gnupg and certificates (usually missing from docker containers) (memoized) */
+export const initAptMemoized = memoize(initApt, { isPromise: true })

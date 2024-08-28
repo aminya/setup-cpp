@@ -2,10 +2,9 @@ import { warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
 import { execa } from "execa"
 import { getAptEnv } from "./apt-env.js"
-import { getApt } from "./get-apt.js"
-import { type AptPackage, didUpdate } from "./install.js"
+import type { AptPackage } from "./install.js"
 import { isAptPackInstalled } from "./is-installed.js"
-import { updateAptRepos } from "./update.js"
+import { updateAptReposMemoized } from "./update.js"
 
 /**
  * The type of apt package to install
@@ -65,8 +64,8 @@ async function aptPackageType(apt: string, name: string, version: string | undef
   }
 
   // If apt-cache fails, update the repos and try again
-  if (!didUpdate) {
-    updateAptRepos(getApt())
+  if (!updateAptReposMemoized.cache.keys.includes([apt])) {
+    updateAptReposMemoized(apt)
     return aptPackageType(apt, name, version)
   }
 

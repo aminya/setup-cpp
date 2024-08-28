@@ -1,4 +1,5 @@
 import { defaultExecOptions, execRootSync } from "admina"
+import memoize from "micro-memoize"
 import { getAptEnv } from "./apt-env.js"
 import { aptTimeout } from "./apt-timeout.js"
 import { getApt } from "./get-apt.js"
@@ -14,3 +15,9 @@ export function updateAptRepos(apt: string = getApt()) {
     { ...defaultExecOptions, env: getAptEnv(apt) },
   )
 }
+
+/**
+ * Update the apt repositories (memoized)
+ * @param apt The apt command to use (optional)
+ */
+export const updateAptReposMemoized = memoize(updateAptRepos)
