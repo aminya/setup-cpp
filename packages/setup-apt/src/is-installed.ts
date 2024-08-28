@@ -1,5 +1,5 @@
 import { execa } from "execa"
-import { getAptEnv } from "./install.js"
+import { getAptEnv } from "./apt-env.js"
 
 /**
  * Check if a package is installed

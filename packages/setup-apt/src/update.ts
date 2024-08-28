@@ -1,5 +1,7 @@
 import { defaultExecOptions, execRootSync } from "admina"
-import { aptTimeout, getApt, getAptEnv } from "./install.js"
+import { getAptEnv } from "./apt-env.js"
+import { aptTimeout } from "./apt-timeout.js"
+import { getApt } from "./get-apt.js"
 
 /**
  * Update the apt repositories
