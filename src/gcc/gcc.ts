@@ -114,14 +114,14 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
             {
               name: "gcc",
               version,
-              repositories: ["ppa:ubuntu-toolchain-r/test"],
-              addAptKey: [{ keys: ["1E9377A2BA9EF27F"], fileName: "ubuntu-toolchain-r-test.gpg" }],
+              repository: "ppa:ubuntu-toolchain-r/test",
+              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
             },
             {
               name: "g++",
               version,
-              repositories: ["ppa:ubuntu-toolchain-r/test"],
-              addAptKey: [{ keys: ["1E9377A2BA9EF27F"], fileName: "ubuntu-toolchain-r-test.gpg" }],
+              repository: "ppa:ubuntu-toolchain-r/test",
+              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
             },
           ])
         }
@@ -133,8 +133,8 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
           await installAptPack([{
             name: "gcc-multilib",
             version,
-            repositories: ["ppa:ubuntu-toolchain-r/test"],
-            addAptKey: [{ keys: ["1E9377A2BA9EF27F"], fileName: "ubuntu-toolchain-r-test.gpg" }],
+            repository: "ppa:ubuntu-toolchain-r/test",
+            key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
           }])
         }
       }
@@ -180,8 +180,8 @@ export async function setupMingw(version: string, setupDir: string, arch: string
           {
             name: "mingw-w64",
             version,
-            repositories: ["ppa:ubuntu-toolchain-r/test"],
-            addAptKey: [{ keys: ["1E9377A2BA9EF27F"], fileName: "ubuntu-toolchain-r-test.gpg" }],
+            repository: "ppa:ubuntu-toolchain-r/test",
+            key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
           },
         ])
       }

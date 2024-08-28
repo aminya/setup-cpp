@@ -109,10 +109,8 @@ await installAptPack([
   {
     name: "gcc",
     version,
-    repositories: ["ppa:ubuntu-toolchain-r/test"],
-    addAptKey: [
-      { keys: ["1E9377A2BA9EF27F"], fileName: "ubuntu-toolchain-r-test.gpg" },
-    ],
+    repository: "ppa:ubuntu-toolchain-r/test",
+    key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
   },
 ])
 ```
@@ -154,7 +152,7 @@ Add an apt key
 
 ```ts
 await addAptKey({
-  keys: ["3B4FE6ACC0B21F32", "40976EAF437D05B5"],
+  key: "3B4FE6ACC0B21F32"
   fileName: "bazel-archive-keyring.gpg",
 })
 ```
@@ -178,7 +176,7 @@ Add an apt key via a keyserver
 
 **Parameters:**
 
-- { keys, keyServer = defaultKeyServer, fileName, keyStorePath = defaultKeyServer } (`KeyServerOptions`)
+- { key, keyServer = defaultKeyServer, fileName, keyStorePath = defaultKeyServer } (`KeyServerOptions`)
 
 **returns:** Promise<string>
 

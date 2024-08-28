@@ -38,10 +38,10 @@ export type AptPackage = {
   name: string
   /** The version of the package (optional) */
   version?: string
-  /** The repositories to add before installing the package (optional) */
-  repositories?: string[]
-  /** The keys to add before installing the package (optional) */
-  addAptKey?: AddAptKeyOptions[]
+  /** The repository to add before installing the package (optional) */
+  repository?: string
+  /** The key to add before installing the package (optional) */
+  key?: AddAptKeyOptions
 }
 
 const retryErrors = [
@@ -69,8 +69,8 @@ const retryErrors = [
     {
       name: "gcc",
       version,
-      repositories: ["ppa:ubuntu-toolchain-r/test"],
-      addAptKey: [{ keys: ["1E9377A2BA9EF27F"], fileName: "ubuntu-toolchain-r-test.gpg" }],
+      repository: "ppa:ubuntu-toolchain-r/test",
+      key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
     },
   ])
  * ```
@@ -133,8 +133,8 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
 
 async function addAptKeys(packages: AptPackage[]) {
   await Promise.all(packages.map(async (pack) => {
-    if (pack.addAptKey !== undefined) {
-      await Promise.all(pack.addAptKey.map(addAptKey))
+    if (pack.key !== undefined) {
+      await addAptKey(pack.key)
     }
   }))
 }
@@ -211,7 +211,7 @@ async function qualifiedNeededAptPackage(apt: string, pack: AptPackage) {
 }
 
 async function addRepositories(apt: string, packages: AptPackage[]) {
-  const allRepositories = [...new Set(packages.flatMap((pack) => pack.repositories ?? []))]
+  const allRepositories = [...new Set(packages.flatMap((pack) => pack.repository ?? []))]
   if (allRepositories.length !== 0) {
     if (!didInit) {
       await initApt(apt)

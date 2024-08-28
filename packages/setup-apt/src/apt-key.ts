@@ -15,7 +15,7 @@ export type AddAptKeyOptions = KeyServerOptions | KeyUrl
  *
  * @example
  * ```ts
- * await addAptKey({ keys: ["3B4FE6ACC0B21F32", "40976EAF437D05B5"], fileName: "bazel-archive-keyring.gpg"})
+ * await addAptKey({ key: "3B4FE6ACC0B21F32" fileName: "bazel-archive-keyring.gpg"})
  * ```
  *
  * @example
@@ -46,14 +46,14 @@ export const defaultKeyStorePath = "/etc/apt/trusted.gpg.d"
 
 export type KeyServerOptions = {
   /**
-   * The keys to add
+   * The key to add
    *
    * @example
    * ```ts
-   * ["3B4FE6ACC0B21F32", "40976EAF437D05B5"]
+   * "3B4FE6ACC0B21F32"
    * ```
    */
-  keys: string[]
+  key: string
   /**
    * The keyserver to use (Defaults to `keyserver.ubuntu.com`)
    */
@@ -67,7 +67,7 @@ export const defaultKeyServer = "keyserver.ubuntu.com"
  * @returns The file name of the key that was added or `undefined` if it failed
  */
 export async function addAptKeyViaServer(
-  { keys, keyServer = defaultKeyServer, fileName, keyStorePath = defaultKeyServer }: KeyServerOptions,
+  { key, keyServer = defaultKeyServer, fileName, keyStorePath = defaultKeyServer }: KeyServerOptions,
 ) {
   try {
     assertGpgFileName(fileName)
@@ -75,20 +75,16 @@ export async function addAptKeyViaServer(
     if (!(await pathExists(filePath))) {
       initGpg()
 
-      await Promise.all(
-        keys.map(async (key) => {
-          await execRoot("gpg", [
-            "--no-default-keyring",
-            "--keyring",
-            `gnupg-ring:${filePath}`,
-            "--keyserver",
-            keyServer,
-            "--recv-keys",
-            key,
-          ])
-          await execRoot("chmod", ["644", filePath])
-        }),
-      )
+      await execRoot("gpg", [
+        "--no-default-keyring",
+        "--keyring",
+        `gnupg-ring:${filePath}`,
+        "--keyserver",
+        keyServer,
+        "--recv-keys",
+        key,
+      ])
+      await execRoot("chmod", ["644", filePath])
     }
     return filePath
   } catch (err) {
