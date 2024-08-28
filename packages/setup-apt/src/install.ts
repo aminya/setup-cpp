@@ -55,6 +55,25 @@ const retryErrors = [
  *
  * @param packages The packages to install (name, and optional info like version and repositories)
  * @param update Whether to update the package list before installing (Defaults to `false`)
+ *
+ * @returns The installation information
+ *
+ * @example
+ * ```ts
+ * await installAptPack([{ name: "ca-certificates" }, { name: "gnupg" }])
+ * ```
+ *
+ * @example
+ * ```ts
+  await installAptPack([
+    {
+      name: "gcc",
+      version,
+      repositories: ["ppa:ubuntu-toolchain-r/test"],
+      addAptKey: [{ keys: ["1E9377A2BA9EF27F"], fileName: "ubuntu-toolchain-r-test.gpg" }],
+    },
+  ])
+ * ```
  */
 export async function installAptPack(packages: AptPackage[], update = false): Promise<InstallationInfo> {
   const apt: string = getApt()

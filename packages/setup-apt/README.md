@@ -100,6 +100,23 @@ Install a package using apt
 
 **returns:** Promise<InstallationInfo>
 
+```ts
+await installAptPack([{ name: "ca-certificates" }, { name: "gnupg" }])
+```
+
+```ts
+await installAptPack([
+  {
+    name: "gcc",
+    version,
+    repositories: ["ppa:ubuntu-toolchain-r/test"],
+    addAptKey: [
+      { keys: ["1E9377A2BA9EF27F"], fileName: "ubuntu-toolchain-r-test.gpg" },
+    ],
+  },
+])
+```
+
 ### `hasNala` (function)
 
 Check if nala is installed
@@ -123,17 +140,49 @@ Get the environment variables to use for the apt command
 
 **returns:** ProcessEnv
 
+### `AddAptKeyOptions` (type)
+
+### `addAptKey` (function)
+
+Add an apt key
+
+**Parameters:**
+
+- options (`AddAptKeyOptions`) - The options for adding the key
+
+**returns:** Promise<string>
+
+```ts
+await addAptKey({
+  keys: ["3B4FE6ACC0B21F32", "40976EAF437D05B5"],
+  fileName: "bazel-archive-keyring.gpg",
+})
+```
+
+```ts
+await addAptKey({
+  keyUrl: "https://bazel.build/bazel-release.pub.gpg",
+  fileName: "bazel-archive-keyring.gpg",
+})
+```
+
+### `defaultKeyStorePath` (variable)
+
+### `KeyServerOptions` (type)
+
+### `defaultKeyServer` (variable)
+
 ### `addAptKeyViaServer` (function)
 
 Add an apt key via a keyserver
 
 **Parameters:**
 
-- keys (`string[]`) - The keys to add
-- name (`string`) - The name of the key
-- server (`string`) - The keyserver to use (Defaults to `keyserver.ubuntu.com`)
+- { keys, keyServer = defaultKeyServer, fileName, keyStorePath = defaultKeyServer } (`KeyServerOptions`)
 
 **returns:** Promise<string>
+
+### `KeyUrl` (type)
 
 ### `addAptKeyViaURL` (function)
 
@@ -141,8 +190,8 @@ Add an apt key via a download
 
 **Parameters:**
 
-- name (`string`) - The name of the key
-- url (`string`) - The URL of the key
+- options - The options for adding the key
+- { keyUrl, fileName, keyStorePath = defaultKeyStorePath } (`KeyUrl`)
 
 **returns:** Promise<string>
 

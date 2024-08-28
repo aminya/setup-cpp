@@ -17,7 +17,14 @@ export type BrewPackOptions = {
   args?: string[]
 }
 
-/** A function that installs a package using brew */
+/** A function that installs a package using brew
+ *
+ * @param name The name of the package
+ * @param version The version of the package (optional)
+ * @param options The options for installing the package
+ *
+ * @returns The installation information
+ */
 export async function installBrewPack(
   name: string,
   version?: string,
