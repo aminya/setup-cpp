@@ -346,6 +346,9 @@ importers:
         specifier: 4.0.0
         version: 4.0.0
     devDependencies:
+      cross-spawn:
+        specifier: 7.0.3
+        version: 7.0.3
       path-exists:
         specifier: 5.0.0
         version: 5.0.0

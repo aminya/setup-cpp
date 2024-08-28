@@ -28,7 +28,8 @@
   },
   "devDependencies": {
     "path-exists": "5.0.0",
-    "patha": "0.4.1"
+    "patha": "0.4.1",
+    "cross-spawn": "7.0.3"
   },
   "engines": {
     "node": ">=12"

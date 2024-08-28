@@ -135,7 +135,7 @@ Add an apt key via a keyserver
 
 **returns:** Promise<string>
 
-### `addAptKeyViaDownload` (function)
+### `addAptKeyViaURL` (function)
 
 Add an apt key via a download
 

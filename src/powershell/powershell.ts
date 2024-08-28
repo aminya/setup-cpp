@@ -103,7 +103,7 @@ export async function setupPowershellSystem(version: string | undefined, _setupD
         execRootSync("dpkg", ["-i", "packages-microsoft-prod.deb"])
 
         // TODO Debian
-        // const keyFileName = await addAptKeyViaDownload(
+        // const keyFileName = await addAptKeyViaURL(
         //   "microsoft.asc",
         //   "https://packages.microsoft.com/keys/microsoft.asc"
         // )

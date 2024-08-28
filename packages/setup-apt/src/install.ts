@@ -3,7 +3,7 @@ import { info, warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
 import { type ExecaError, execa } from "execa"
 import which from "which"
-import { addAptKeyViaServer } from "./apt-key.js"
+import { type AddAptKeyOptions, addAptKey } from "./apt-key.js"
 import { isAptPackInstalled } from "./is-installed.js"
 import { updateAptRepos } from "./update.js"
 
@@ -40,6 +40,8 @@ export type AptPackage = {
   version?: string
   /** The repositories to add before installing the package (optional) */
   repositories?: string[]
+  /** The keys to add before installing the package (optional) */
+  addAptKey?: AddAptKeyOptions[]
 }
 
 const retryErrors = [
@@ -83,8 +85,11 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
     didInit = true
   }
 
-  // Install
   try {
+    // Add the keys if needed
+    await addAptKeys(packages)
+
+    // Install
     execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], {
       ...defaultExecOptions,
       env: getAptEnv(apt),
@@ -105,6 +110,14 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
   }
 
   return { binDir: "/usr/bin/" }
+}
+
+async function addAptKeys(packages: AptPackage[]) {
+  await Promise.all(packages.map(async (pack) => {
+    if (pack.addAptKey !== undefined) {
+      await Promise.all(pack.addAptKey.map(addAptKey))
+    }
+  }))
 }
 
 function isExecaError(err: unknown): err is ExecaError {
@@ -285,9 +298,4 @@ async function initApt(apt: string) {
       env: getAptEnv(apt),
     })
   }
-
-  await Promise.all([
-    addAptKeyViaServer(["3B4FE6ACC0B21F32", "40976EAF437D05B5"], "setup-cpp-ubuntu-archive.gpg"),
-    addAptKeyViaServer(["1E9377A2BA9EF27F"], "launchpad-toolchain.gpg"),
-  ])
 }

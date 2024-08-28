@@ -76,7 +76,7 @@ async function setupWheel(foundPython: string) {
   }
 }
 
-async function findOrSetupPython(version: string, setupDir: string, arch: string) {
+async function findOrSetupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   let installInfo: InstallationInfo | undefined
   let foundPython = await findPython(setupDir)
 
@@ -108,12 +108,12 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
     }
   }
 
-  if (foundPython === undefined || installInfo.bin === undefined) {
+  if (foundPython === undefined || installInfo?.bin === undefined) {
     foundPython = await findPython(setupDir)
     if (foundPython === undefined) {
       throw new Error("Python binary could not be found")
     }
-    installInfo.bin = foundPython
+    installInfo = { bin: foundPython, installDir: dirname(foundPython), binDir: dirname(foundPython) }
   }
 
   return installInfo
