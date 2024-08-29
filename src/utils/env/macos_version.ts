@@ -1,5 +1,5 @@
 import macosRelease from "macos-release"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 
 /**
  * Get macOS version

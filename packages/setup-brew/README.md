@@ -1,6 +1,8 @@
 <h1 align="center">setup-brew</h1>
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-1.0.0-blue.svg?cacheSeconds=2592000" />
+  <a href="https://www.npmjs.com/package/setup-brew" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/setup-brew.svg">
+  </a>
   <img src="https://img.shields.io/badge/node-%3E%3D12-blue.svg" />
   <a href="#" target="_blank">
     <img alt="License: Apache--2.0" src="https://img.shields.io/badge/License-Apache--2.0-yellow.svg" />
@@ -47,8 +49,9 @@ A function that installs a package using brew
 
 **Parameters:**
 
-- name (`string`)
-- version (`string`)
+- name (`string`) - The name of the package
+- version (`string`) - The version of the package (optional)
+- options - The options for installing the package
 - givenOptions (`BrewPackOptions`)
 
 **returns:** Promise<InstallationInfo>

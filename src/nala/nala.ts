@@ -1,6 +1,6 @@
 import { execRootSync } from "admina"
 import { dirname } from "patha"
-import { addAptKeyViaDownload, hasNala, installAptPack } from "setup-apt"
+import { addAptKeyViaURL, hasNala, installAptPack } from "setup-apt"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 
@@ -24,10 +24,10 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
   await installAptPack([{ name: "python3-apt" }])
 
   // https://gitlab.com/volian/nala/-/wikis/Installation
-  const keyFileName = await addAptKeyViaDownload(
-    "volian-archive-nala.gpg",
-    "https://deb.volian.org/volian/nala.key",
-  )
+  const keyFileName = await addAptKeyViaURL({
+    fileName: "volian-archive-nala.gpg",
+    keyUrl: "https://deb.volian.org/volian/nala.key",
+  })
   execRootSync("/bin/bash", [
     "-c",
     `echo "deb [signed-by=${keyFileName}] http://deb.volian.org/volian/ nala main" | tee /etc/apt/sources.list.d/volian-archive-nala.list`,

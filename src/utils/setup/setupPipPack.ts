@@ -1,7 +1,7 @@
 import { info } from "@actions/core"
 import { addPath } from "envosman"
 import { execa, execaSync } from "execa"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 import { mkdirp } from "mkdirp"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
@@ -128,7 +128,7 @@ async function getPipxHome_raw() {
   await mkdirp(join(pipxHome, "venv"))
   return pipxHome
 }
-const getPipxHome = memoize(getPipxHome_raw, { isPromise: true })
+const getPipxHome = memoize(getPipxHome_raw, { promise: true })
 
 async function getPipxBinDir_raw() {
   if (process.env.PIPX_BIN_DIR !== undefined) {
@@ -140,7 +140,7 @@ async function getPipxBinDir_raw() {
   await mkdirp(pipxBinDir)
   return pipxBinDir
 }
-const getPipxBinDir = memoize(getPipxBinDir_raw, { isPromise: true })
+const getPipxBinDir = memoize(getPipxBinDir_raw, { promise: true })
 
 async function getPython_raw(): Promise<string> {
   const pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin
@@ -149,7 +149,7 @@ async function getPython_raw(): Promise<string> {
   }
   return pythonBin
 }
-const getPython = memoize(getPython_raw, { isPromise: true })
+const getPython = memoize(getPython_raw, { promise: true })
 
 async function pipHasPackage(python: string, name: string) {
   const result = await execa(python, ["-m", "pip", "-qq", "index", "versions", name], {

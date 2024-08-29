@@ -23,7 +23,7 @@
     "ci-info": "^4.0.0",
     "escape-path-with-spaces": "^1.0.2",
     "escape-quotes": "^1.0.2",
-    "micro-memoize": "^4.1.2",
+    "memoizee": "^0.4.17",
     "path-exists": "^5.0.0",
     "ci-log": "workspace:*",
     "exec-powershell": "workspace:*",
@@ -45,5 +45,7 @@
     "unix",
     "macos"
   ],
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/memoizee": "0.4.11"
+  }
 }

@@ -2,7 +2,7 @@ import { delimiter } from "path"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import { addEnv } from "envosman"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
@@ -35,7 +35,7 @@ async function setupLLVMWithoutActivation_raw(version: string, setupDir: string,
 
   return installationInfo
 }
-const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_raw, { isPromise: true })
+const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_raw, { promise: true })
 
 /**
  * Setup clang-format
@@ -81,7 +81,7 @@ async function llvmBinaryDeps_raw(majorVersion: number) {
     }
   }
 }
-const llvmBinaryDeps = memoize(llvmBinaryDeps_raw, { isPromise: true })
+const llvmBinaryDeps = memoize(llvmBinaryDeps_raw, { promise: true })
 
 async function setupLLVMDeps_raw(arch: string) {
   if (process.platform === "linux") {
@@ -90,7 +90,7 @@ async function setupLLVMDeps_raw(arch: string) {
     await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch, 40)
   }
 }
-const setupLLVMDeps = memoize(setupLLVMDeps_raw, { isPromise: true })
+const setupLLVMDeps = memoize(setupLLVMDeps_raw, { promise: true })
 
 export async function activateLLVM(directory: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""

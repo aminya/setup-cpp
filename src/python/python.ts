@@ -7,7 +7,7 @@ import { info, warning } from "ci-log"
 import { addPath } from "envosman"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import { installAptPack } from "setup-apt"
@@ -76,7 +76,7 @@ async function setupWheel(foundPython: string) {
   }
 }
 
-async function findOrSetupPython(version: string, setupDir: string, arch: string) {
+async function findOrSetupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   let installInfo: InstallationInfo | undefined
   let foundPython = await findPython(setupDir)
 
@@ -113,7 +113,7 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
     if (foundPython === undefined) {
       throw new Error("Python binary could not be found")
     }
-    installInfo.bin = foundPython
+    installInfo = { bin: foundPython, installDir: dirname(foundPython), binDir: dirname(foundPython) }
   }
 
   return installInfo
@@ -317,4 +317,4 @@ async function addPythonBaseExecPrefix_raw(python: string) {
  *
  * The answer is cached for subsequent calls
  */
-export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_raw, { isPromise: true })
+export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_raw, { promise: true })

@@ -111,8 +111,18 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
           ])
         } else if (isUbuntu()) {
           installationInfo = await installAptPack([
-            { name: "gcc", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
-            { name: "g++", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
+            {
+              name: "gcc",
+              version,
+              repository: "ppa:ubuntu-toolchain-r/test",
+              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+            },
+            {
+              name: "g++",
+              version,
+              repository: "ppa:ubuntu-toolchain-r/test",
+              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+            },
           ])
         }
       } else {
@@ -120,7 +130,12 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
         if (isArch()) {
           await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
-          await installAptPack([{ name: "gcc-multilib", version, repositories: ["ppa:ubuntu-toolchain-r/test"] }])
+          await installAptPack([{
+            name: "gcc-multilib",
+            version,
+            repository: "ppa:ubuntu-toolchain-r/test",
+            key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+          }])
         }
       }
       break
@@ -162,7 +177,12 @@ export async function setupMingw(version: string, setupDir: string, arch: string
         installationInfo = await setupDnfPack([{ name: "mingw64-gcc", version }])
       } else if (isUbuntu()) {
         installationInfo = await installAptPack([
-          { name: "mingw-w64", version, repositories: ["ppa:ubuntu-toolchain-r/test"] },
+          {
+            name: "mingw-w64",
+            version,
+            repository: "ppa:ubuntu-toolchain-r/test",
+            key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+          },
         ])
       }
       break

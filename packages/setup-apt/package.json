@@ -1,6 +1,6 @@
 {
   "name": "setup-apt",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Setup apt packages and repositories in Debian/Ubuntu-based distributions",
   "repository": "https://github.com/aminya/setup-cpp",
   "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-apt",
@@ -26,7 +26,8 @@
     "which": "4.0.0",
     "execa": "^7.2.0",
     "escape-string-regexp": "^5.0.0",
-    "node-downloader-helper": "2.1.9"
+    "node-downloader-helper": "2.1.9",
+    "memoizee": "^0.4.17"
   },
   "engines": {
     "node": ">=12"
@@ -48,5 +49,7 @@
     "package",
     "apt-key"
   ],
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/memoizee": "0.4.11"
+  }
 }
