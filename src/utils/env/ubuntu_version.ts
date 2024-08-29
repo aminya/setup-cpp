@@ -1,6 +1,6 @@
 import os from "os"
 import { warning } from "ci-log"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 import { installAptPack } from "setup-apt"
 import { getUbuntuVersion } from "ubuntu-version"
 import which from "which"
@@ -34,7 +34,7 @@ async function ubuntuVersion_raw(): Promise<number[] | null> {
 }
 
 /** Detect Ubuntu version */
-export const ubuntuVersion = memoize(ubuntuVersion_raw, { isPromise: true })
+export const ubuntuVersion = memoize(ubuntuVersion_raw, { promise: true })
 
 /** Detect Ubuntu version using os.version() for Ubuntu based distros */
 function detectUsingOsVersion() {

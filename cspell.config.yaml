@@ -12,24 +12,20 @@ ignorePaths:
   - .vscode/extensions.json
 words:
   - aarch
-  - hadolint
   - aminya
-  - envosman
   - applellvm
-  - biome
-  - biomejs
   - bazel
   - bazelisk
+  - biome
+  - biomejs
   - buildtools
   - caxa
   - ccache
   - choco
   - clangd
   - cmake
-  - iarna
   - cobertura
   - copr
-  - pnpx
   - CPATH
   - Cppcheck
   - CPPFLAGS
@@ -43,6 +39,7 @@ words:
   - DVCPKG
   - dyld
   - eabi
+  - envosman
   - esmodule
   - execa
   - ftxui
@@ -50,6 +47,8 @@ words:
   - gcovr
   - ghes
   - Graphviz
+  - hadolint
+  - iarna
   - inja
   - isci
   - isroot
@@ -61,6 +60,7 @@ words:
   - libdw
   - libstdc
   - libtinfo
+  - memoizee
   - msbuild
   - msvc
   - msvcrt
@@ -79,6 +79,7 @@ words:
   - patha
   - pipx
   - pnpm
+  - pnpx
   - pwsh
   - pygments
   - pypy

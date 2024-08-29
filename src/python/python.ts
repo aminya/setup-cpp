@@ -7,7 +7,7 @@ import { info, warning } from "ci-log"
 import { addPath } from "envosman"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 import { pathExists } from "path-exists"
 import { addExeExt, dirname, join } from "patha"
 import { installAptPack } from "setup-apt"
@@ -108,7 +108,7 @@ async function findOrSetupPython(version: string, setupDir: string, arch: string
     }
   }
 
-  if (foundPython === undefined || installInfo?.bin === undefined) {
+  if (foundPython === undefined || installInfo.bin === undefined) {
     foundPython = await findPython(setupDir)
     if (foundPython === undefined) {
       throw new Error("Python binary could not be found")
@@ -317,4 +317,4 @@ async function addPythonBaseExecPrefix_raw(python: string) {
  *
  * The answer is cached for subsequent calls
  */
-export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_raw, { isPromise: true })
+export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_raw, { promise: true })

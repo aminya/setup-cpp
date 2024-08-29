@@ -4,7 +4,7 @@ import { execa } from "execa"
 import { getAptEnv } from "./apt-env.js"
 import type { AptPackage } from "./install.js"
 import { isAptPackInstalled } from "./is-installed.js"
-import { updateAptReposMemoized } from "./update.js"
+import { updateAptReposMemoized, updatedRepos } from "./update.js"
 
 /**
  * The type of apt package to install
@@ -64,7 +64,7 @@ async function aptPackageType(apt: string, name: string, version: string | undef
   }
 
   // If apt-cache fails, update the repos and try again
-  if (!updateAptReposMemoized.cache.keys.includes([apt])) {
+  if (!updatedRepos) {
     updateAptReposMemoized(apt)
     return aptPackageType(apt, name, version)
   }

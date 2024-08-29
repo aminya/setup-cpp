@@ -1,5 +1,5 @@
 import { defaultExecOptions, execRootSync } from "admina"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 import { getAptEnv } from "./apt-env.js"
 import { aptTimeout } from "./apt-timeout.js"
 import { filterAndQualifyAptPackages } from "./qualify-install.js"
@@ -25,4 +25,4 @@ export async function initApt(apt: string) {
 }
 
 /** Install gnupg and certificates (usually missing from docker containers) (memoized) */
-export const initAptMemoized = memoize(initApt, { isPromise: true })
+export const initAptMemoized = memoize(initApt, { promise: true })

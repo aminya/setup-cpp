@@ -1,7 +1,7 @@
 import { promises } from "fs"
 import { grantUserWriteAccess } from "admina"
 import { info, warning } from "ci-log"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 import { pathExists } from "path-exists"
 import { untildifyUser } from "untildify-user"
 const { appendFile, readFile, writeFile } = promises
@@ -38,7 +38,7 @@ async function sourceRCInRc_(options: RcOptions) {
 /**
  * handles adding conditions to source rc file from .bashrc and .profile
  */
-export const sourceRCInRc = memoize(sourceRCInRc_, { isPromise: true })
+export const sourceRCInRc = memoize(sourceRCInRc_, { promise: true })
 
 async function addRCHeader(options: RcOptions) {
   // a variable that prevents source rc from being called from .bashrc and .profile

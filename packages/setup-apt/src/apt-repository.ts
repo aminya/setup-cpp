@@ -11,9 +11,8 @@ export async function addAptRepository(repo: string, apt = getApt()) {
   await installAddAptRepo(apt)
   execRootSync("add-apt-repository", ["-y", "--no-update", repo], { ...defaultExecOptions, env: getAptEnv(apt) })
 
-  // clear the cache
-  updateAptReposMemoized.cache.keys = []
-  updateAptReposMemoized.cache.values = []
+  // Update the repos
+  updateAptReposMemoized.clear() // ensure update is called
   updateAptReposMemoized(apt)
 }
 

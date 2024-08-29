@@ -1,8 +1,10 @@
 import { defaultExecOptions, execRootSync } from "admina"
-import memoize from "micro-memoize"
+import memoize from "memoizee"
 import { getAptEnv } from "./apt-env.js"
 import { aptTimeout } from "./apt-timeout.js"
 import { getApt } from "./get-apt.js"
+
+export let updatedRepos = false // eslint-disable-line import/no-mutable-exports
 
 /**
  * Update the apt repositories
@@ -14,6 +16,8 @@ export function updateAptRepos(apt: string = getApt()) {
     apt !== "nala" ? ["update", "-y", "-o", aptTimeout] : ["update", "-o", aptTimeout],
     { ...defaultExecOptions, env: getAptEnv(apt) },
   )
+
+  updatedRepos = true
 }
 
 /**
