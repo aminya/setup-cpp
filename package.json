@@ -226,5 +226,10 @@
       "optimize": true,
       "outputFormat": "commonjs"
     }
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "@actions/http-client@2.2.1": "patches/@actions__http-client@2.2.1.patch"
+    }
   }
 }
