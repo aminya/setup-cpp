@@ -26,9 +26,10 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "turbo build && run-p copy.matchers lint.root.tsc build.parcel && run-s build.babel.legacy",
+    "build": "turbo build && run-p copy.matchers lint.root.tsc build.parcel && run-p build.babel.legacy build.package.modern",
     "build.parcel": "cross-env NODE_ENV=production parcel build",
     "build.babel.legacy": "babel ./dist/legacy --out-dir ./dist/legacy --plugins @upleveled/babel-plugin-remove-node-prefix --plugins @babel/plugin-transform-private-methods --compact --no-babelrc --source-maps true",
+    "build.package.modern": "echo '{\"type\": \"module\"}' > ./dist/modern/package.json",
     "bump": "ncu -u -x numerous,execa,prettier,@types/node,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
     "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/actions ./dist/modern",
     "copy.matchers": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern",
