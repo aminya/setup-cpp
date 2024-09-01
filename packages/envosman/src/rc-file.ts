@@ -38,7 +38,7 @@ async function sourceRCInRc_(options: RcOptions) {
 /**
  * handles adding conditions to source rc file from .bashrc and .profile
  */
-export const sourceRCInRc = memoize(sourceRCInRc_, { promise: true })
+export const sourceRCInRc = await memoize(sourceRCInRc_, { promise: true })
 
 async function addRCHeader(options: RcOptions) {
   // a variable that prevents source rc from being called from .bashrc and .profile

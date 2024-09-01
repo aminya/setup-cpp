@@ -14,4 +14,4 @@ function macosVersion_raw() {
   const { version } = macosRelease()
   return version.split(".").map((v) => Number.parseInt(v, 10))
 }
-export const macosVersion = memoize(macosVersion_raw)
+export const macosVersion = await memoize(macosVersion_raw)

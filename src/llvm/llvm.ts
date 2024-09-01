@@ -38,7 +38,7 @@ async function setupLLVMWithoutActivation_raw(version: string, setupDir: string,
 
   return installationInfo
 }
-const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_raw, { promise: true })
+const setupLLVMWithoutActivation = await memoize(setupLLVMWithoutActivation_raw, { promise: true })
 
 /**
  * Setup clang-format
@@ -84,7 +84,7 @@ async function llvmBinaryDeps_raw(majorVersion: number) {
     }
   }
 }
-const llvmBinaryDeps = memoize(llvmBinaryDeps_raw, { promise: true })
+const llvmBinaryDeps = await memoize(llvmBinaryDeps_raw, { promise: true })
 
 async function setupLLVMDeps_raw(arch: string) {
   if (process.platform === "linux") {
@@ -93,7 +93,7 @@ async function setupLLVMDeps_raw(arch: string) {
     await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch, 40)
   }
 }
-const setupLLVMDeps = memoize(setupLLVMDeps_raw, { promise: true })
+const setupLLVMDeps = await memoize(setupLLVMDeps_raw, { promise: true })
 
 export async function activateLLVM(directory: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""
