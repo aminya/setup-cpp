@@ -2,6 +2,7 @@ import { warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
 import { execa } from "execa"
 import { getAptEnv } from "./apt-env.js"
+import { getApt } from "./get-apt.js"
 import type { AptPackage } from "./install.js"
 import { isAptPackInstalled } from "./is-installed.js"
 import { updateAptReposMemoized, updatedRepos } from "./update.js"
@@ -19,15 +20,20 @@ export enum AptPackageType {
 /**
  * Filter out the packages that are already installed and qualify the packages into a full package name/version
  */
-export async function filterAndQualifyAptPackages(apt: string, packages: AptPackage[]) {
-  return (await Promise.all(packages.map((pack) => qualifiedNeededAptPackage(apt, pack))))
+export async function filterAndQualifyAptPackages(packages: AptPackage[], apt: string = getApt()) {
+  return (await Promise.all(packages.map((pack) => qualifiedNeededAptPackage(pack, apt))))
     .filter((pack) => pack !== undefined)
 }
 
-async function qualifiedNeededAptPackage(apt: string, pack: AptPackage) {
-  // Qualify the packages into full package name/version
+/**
+ * Qualify the package into full package name/version.
+ * If the package is not installed, return the full package name/version.
+ * If the package is already installed, return undefined
+ */
+export async function qualifiedNeededAptPackage(pack: AptPackage, apt: string = getApt()) {
+  // Qualify the package into full package name/version
   const qualified = await getAptArg(apt, pack.name, pack.version)
-  // filter out the packages that are already installed
+  // filter out the package that are already installed
   return (await isAptPackInstalled(qualified)) ? undefined : qualified
 }
 

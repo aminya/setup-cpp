@@ -46,6 +46,34 @@ Add the update-alternatives command to the rc file
 
 **returns:** Promise<void>
 
+### `getAptEnv` (function)
+
+Get the environment variables to use for the apt command
+
+**Parameters:**
+
+- apt (`string`) - The apt command to use
+
+**returns:** ProcessEnv
+
+### `aptTimeout` (variable)
+
+The timeout to use for apt commands
+Wait up to 300 seconds if the apt-get lock is held
+
+### `hasNala` (function)
+
+Check if nala is installed
+
+**returns:** boolean
+
+### `getApt` (function)
+
+Get the apt command to use
+If nala is installed, use that, otherwise use apt-get
+
+**returns:** string
+
 ### `isAptPackInstalled` (function)
 
 Check if a package is installed
@@ -66,6 +94,8 @@ Check if a package matching a regexp is installed
 
 **returns:** Promise<boolean>
 
+### `updatedRepos` (variable)
+
 ### `updateAptRepos` (function)
 
 Update the apt repositories
@@ -76,14 +106,72 @@ Update the apt repositories
 
 **returns:** void
 
+### `updateAptReposMemoized` (variable)
+
+Update the apt repositories (memoized)
+
+**Parameters:**
+
+- apt - The apt command to use (optional)
+
+### `filterAndQualifyAptPackages` (function)
+
+Filter out the packages that are already installed and qualify the packages into a full package name/version
+
+**Parameters:**
+
+- packages (`AptPackage[]`)
+- apt (`string`)
+
+**returns:** Promise<string[]>
+
+### `qualifiedNeededAptPackage` (function)
+
+Qualify the package into full package name/version.
+If the package is not installed, return the full package name/version.
+If the package is already installed, return undefined
+
+**Parameters:**
+
+- pack (`AptPackage`)
+- apt (`string`)
+
+**returns:** Promise<string>
+
+### `initApt` (function)
+
+Install gnupg and certificates (usually missing from docker containers)
+
+**Parameters:**
+
+- apt (`string`)
+
+**returns:** Promise<void>
+
+### `initAptMemoized` (variable)
+
+Install gnupg and certificates (usually missing from docker containers) (memoized)
+
+### `addAptRepository` (function)
+
+**Parameters:**
+
+- repo (`string`)
+- apt (`string`)
+
+**returns:** Promise<void>
+
+### `installAddAptRepo` (function)
+
+**Parameters:**
+
+- apt (`string`)
+
+**returns:** Promise<void>
+
 ### `InstallationInfo` (type)
 
 The information about an installation result
-
-### `aptTimeout` (variable)
-
-The timeout to use for apt commands
-Wait up to 300 seconds if the apt-get lock is held
 
 ### `AptPackage` (type)
 
@@ -115,29 +203,6 @@ await installAptPack([
 ])
 ```
 
-### `hasNala` (function)
-
-Check if nala is installed
-
-**returns:** boolean
-
-### `getApt` (function)
-
-Get the apt command to use
-If nala is installed, use that, otherwise use apt-get
-
-**returns:** string
-
-### `getAptEnv` (function)
-
-Get the environment variables to use for the apt command
-
-**Parameters:**
-
-- apt (`string`) - The apt command to use
-
-**returns:** ProcessEnv
-
 ### `AddAptKeyOptions` (type)
 
 ### `addAptKey` (function)
@@ -151,10 +216,7 @@ Add an apt key
 **returns:** Promise<string>
 
 ```ts
-await addAptKey({
-  key: "3B4FE6ACC0B21F32"
-  fileName: "bazel-archive-keyring.gpg",
-})
+await addAptKey({ key: "3B4FE6ACC0B21F32" fileName: "bazel-archive-keyring.gpg"})
 ```
 
 ```ts

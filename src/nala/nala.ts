@@ -1,6 +1,9 @@
+import { tmpdir } from "os"
 import { execRootSync } from "admina"
-import { dirname } from "patha"
-import { addAptKeyViaURL, hasNala, installAptPack } from "setup-apt"
+import { readFile, writeFile } from "fs/promises"
+import { DownloaderHelper } from "node-downloader-helper"
+import { dirname, join } from "patha"
+import { hasNala, installAptPack, qualifiedNeededAptPackage } from "setup-apt"
 import which from "which"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 
@@ -23,29 +26,47 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
 
   await installAptPack([{ name: "python3-apt" }])
 
-  // https://gitlab.com/volian/nala/-/wikis/Installation
-  const keyFileName = await addAptKeyViaURL({
-    fileName: "volian-archive-nala.gpg",
-    keyUrl: "https://deb.volian.org/volian/nala.key",
-  })
-  execRootSync("/bin/bash", [
-    "-c",
-    `echo "deb [signed-by=${keyFileName}] http://deb.volian.org/volian/ nala main" | tee /etc/apt/sources.list.d/volian-archive-nala.list`,
-  ])
-
-  try {
-    if (version !== "legacy") {
-      await installAptPack([{ name: "nala" }], true)
-    } else {
-      await installAptPack([{ name: "nala-legacy" }], true)
-    }
-  } catch (err) {
-    await installAptPack([{ name: "nala-legacy" }], true)
-  }
-
   binDir = "/usr/bin" // eslint-disable-line require-atomic-updates
 
+  // If nala is available in the default repositories, install it
+  const nalaPack = await qualifiedNeededAptPackage({ name: "nala", version })
+  if (nalaPack !== undefined) {
+    await installAptPack([{ name: nalaPack }])
+    return { binDir }
+  }
+
+  // Nala is not available in the default repositories
+  // Check if the legacy version is available
+  const nalaLegacyPack = await qualifiedNeededAptPackage({ name: "nala-legacy" })
+  if (nalaLegacyPack !== undefined) {
+    await installAptPack([{ name: nalaLegacyPack }], true)
+    return { binDir }
+  }
+
+  // Install via the installer script
+  await setupNalaViaInstaller()
+
   return { binDir }
+}
+
+async function setupNalaViaInstaller() {
+  const installer = new DownloaderHelper(
+    "https://gitlab.com/volian/volian-archive/-/raw/main/install-nala.sh",
+    tmpdir(),
+    { fileName: "install-nala.sh" },
+  )
+  installer.on("error", (err) => {
+    throw new Error(`Failed to download install-nala.sh: ${err}`)
+  })
+  await installer.start()
+
+  const installerPath = join(tmpdir(), "install-nala.sh")
+
+  // Patch the installer script to not use sudo explicitly
+  const script = await readFile(installerPath, "utf8")
+  await writeFile(installerPath, script.replace(/sudo/g, ""))
+
+  execRootSync("bash", [installerPath])
 }
 
 export function bashWithNala(script: string) {
