@@ -14,64 +14,34 @@ import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { loadGitHubAssetList, matchAsset } from "../utils/github/load-assets.js"
 import { extract7Zip } from "../utils/setup/extract.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
-interface MingwInfo {
-  releaseName: string
-  fileSuffix: string
-}
-
-// https://github.com/brechtsanders/winlibs_mingw/releases
-const GccToMingwInfo = {
-  "13": { releaseName: "13.2.0-16.0.6-11.0.0-ucrt-r1", fileSuffix: "13.2.0-mingw-w64ucrt-11.0.0-r1" },
-  "13.2-ucrt": { releaseName: "13.2.0-16.0.6-11.0.0-ucrt-r1", fileSuffix: "13.2.0-mingw-w64ucrt-11.0.0-r1" },
-  "13.2-ucrt-mcf": { releaseName: "13.2.0mcf-16.0.6-11.0.1-ucrt-r2", fileSuffix: "13.2.0-mingw-w64ucrt-11.0.1-r2" },
-  "13.2-msvcrt": { releaseName: "13.2.0-16.0.6-11.0.1-msvcrt-r1", fileSuffix: "13.2.0-mingw-w64msvcrt-11.0.1-r1" },
-  "13.1-ucrt": { releaseName: "13.1.0posix-16.0.3-11.0.0-ucrt-r1", fileSuffix: "13.1.0-mingw-w64ucrt-11.0.0-r1" },
-  "13.1-msvcrt": { releaseName: "13.1.0posix-16.0.3-11.0.0-msvcrt-r1", fileSuffix: "13.1.0-mingw-w64msvcrt-11.0.0-r1" },
-  "12": { releaseName: "12.3.0-16.0.4-11.0.0-ucrt-r1", fileSuffix: "12.3.0-mingw-w64ucrt-11.0.0-r1" },
-  "12.3.0-ucrt": { releaseName: "12.3.0-16.0.4-11.0.0-ucrt-r1", fileSuffix: "12.3.0-mingw-w64ucrt-11.0.0-r1" },
-  "12.3.0-msvcrt": { releaseName: "12.3.0-16.0.4-11.0.0-msvcrt-r1", fileSuffix: "12.3.0-mingw-w64msvcrt-11.0.0-r1" },
-  "12.2.0-ucrt": { releaseName: "12.2.0-14.0.6-10.0.0-ucrt-r2", fileSuffix: "12.2.0-mingw-w64ucrt-10.0.0-r2" },
-  "12.2.0-msvcrt": { releaseName: "12.2.0-14.0.6-10.0.0-msvcrt-r2", fileSuffix: "12.2.0-mingw-w64msvcrt-10.0.0-r2" },
-  "12.1.0-ucrt": { releaseName: "12.1.0-14.0.4-10.0.0-ucrt-r2", fileSuffix: "12.1.0-mingw-w64ucrt-10.0.0-r2" },
-  "12.1.0-msvcrt": {
-    releaseName: "12.1.0-14.0.6-10.0.0-msvcrt-r3",
-    fileSuffix: "12.1.0-llvm-14.0.6-mingw-w64msvcrt-10.0.0-r3",
-  },
-  "11": { releaseName: "11.3.0-14.0.3-10.0.0-ucrt-r3", fileSuffix: "11.3.0-mingw-w64ucrt-10.0.0-r3" },
-  "11.3.0-ucrt": { releaseName: "11.3.0-14.0.3-10.0.0-ucrt-r3", fileSuffix: "11.3.0-mingw-w64ucrt-10.0.0-r3" },
-  "11.3.0-msvcrt": { releaseName: "11.3.0-14.0.3-10.0.0-msvcrt-r3", fileSuffix: "11.3.0-mingw-w64msvcrt-10.0.0-r3" },
-  "11.2.0-ucrt": { releaseName: "11.2.0-9.0.0-ucrt-r5", fileSuffix: "11.2.0-mingw-w64ucrt-9.0.0-r5" },
-  "11.2.0-msvcrt": { releaseName: "11.2.0-9.0.0-msvcrt-r5", fileSuffix: "11.2.0-mingw-w64msvcrt-9.0.0-r5" },
-  "10": { releaseName: "10.5.0-11.0.1-msvcrt-r1", fileSuffix: "10.5.0-mingw-w64msvcrt-11.0.1-r1" },
-  "10.5.0-msvcrt": { releaseName: "10.5.0-11.0.1-msvcrt-r1", fileSuffix: "10.5.0-mingw-w64msvcrt-11.0.1-r1" },
-  "10.3.0": { releaseName: "10.3.0-12.0.0-9.0.0-r2", fileSuffix: "10.3.0-llvm-12.0.0-mingw-w64-9.0.0-r2" },
-  "10.2.0": { releaseName: "10.2.0-7.0.0-r4", fileSuffix: "10.2.0-llvm-10.0.1-mingw-w64-7.0.0-r4" },
-  "9": { releaseName: "9.4.0-9.0.0-r1", fileSuffix: "9.4.0-mingw-w64-9.0.0-r1" },
-  "9.4.0": { releaseName: "9.4.0-9.0.0-r1", fileSuffix: "9.4.0-mingw-w64-9.0.0-r1" },
-} as Record<string, MingwInfo | undefined>
-
-function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {
+async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): Promise<PackageInfo> {
   switch (platform) {
     case "win32": {
-      const mingwInfo = GccToMingwInfo[version]
-      if (mingwInfo === undefined) {
-        throw new Error(`mingw version ${version} is not supported`)
-      }
-      const mingwArch = arch === "ia32" ? "i686" : "x86_64"
-      const exceptionModel: "seh" | "dwarf" = "seh" // SEH is native windows exception model https://github.com/brechtsanders/winlibs_mingw/issues/4#issuecomment-599296483
+      const mingwAssets = await loadGitHubAssetList(
+        join(__dirname, "github_brechtsanders_winlibs_mingw.json"),
+      )
+      const asset = matchAsset(
+        mingwAssets,
+        {
+          version,
+          arch,
+          filterName: (name) => name.endsWith(".7z"),
+        },
+      )
+
       return {
         binRelativeDir: "bin/",
         binFileName: addExeExt("g++"),
         extractedFolderName: "mingw64",
         extractFunction: extract7Zip,
-        url:
-          `https://github.com/brechtsanders/winlibs_mingw/releases/download/${mingwInfo.releaseName}/winlibs-${mingwArch}-posix-${exceptionModel}-gcc-${mingwInfo.fileSuffix}.7z`,
+        url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${asset.tag}/${asset.name}`,
       }
     }
     default:
@@ -110,7 +80,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
             { name: "libstdc++-devel" },
           ])
         } else if (isUbuntu()) {
-          if (version === undefined) {
+          if (version === "") {
             // the default version
             installationInfo = await installAptPack([{ name: "gcc" }, { name: "g++" }])
           } else {
@@ -136,7 +106,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
         if (isArch()) {
           await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
-          if (version === undefined) {
+          if (version === "") {
             // the default version
             await installAptPack([{ name: "gcc-multilib" }])
           } else {

@@ -37,6 +37,7 @@
     "./.cache/",
     "**/build",
     "**/dist",
+    "**/github_brechtsanders_winlibs_mingw.json",
     "dev/cpp_vcpkg_project"
   ],
   "plugins": [

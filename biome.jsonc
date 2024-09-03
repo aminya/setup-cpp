@@ -9,7 +9,8 @@
       "**/.venv/",
       "**/.*cache/",
       "coverage/",
-      "**/coverage/"
+      "**/coverage/",
+      "**/github_brechtsanders_winlibs_mingw.json"
     ],
     "ignoreUnknown": true
   },
