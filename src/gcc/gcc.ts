@@ -110,32 +110,44 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
             { name: "libstdc++-devel" },
           ])
         } else if (isUbuntu()) {
-          installationInfo = await installAptPack([
-            {
-              name: "gcc",
-              version,
-              repository: "ppa:ubuntu-toolchain-r/test",
-              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-            },
-            {
-              name: "g++",
-              version,
-              repository: "ppa:ubuntu-toolchain-r/test",
-              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-            },
-          ])
+          if (version === undefined) {
+            // the default version
+            installationInfo = await installAptPack([{ name: "gcc" }, { name: "g++" }])
+          } else {
+            // add the PPA for access to more versions
+            installationInfo = await installAptPack([
+              {
+                name: "gcc",
+                version,
+                repository: "ppa:ubuntu-toolchain-r/test",
+                key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+              },
+              {
+                name: "g++",
+                version,
+                repository: "ppa:ubuntu-toolchain-r/test",
+                key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+              },
+            ])
+          }
         }
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         if (isArch()) {
           await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
-          await installAptPack([{
-            name: "gcc-multilib",
-            version,
-            repository: "ppa:ubuntu-toolchain-r/test",
-            key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-          }])
+          if (version === undefined) {
+            // the default version
+            await installAptPack([{ name: "gcc-multilib" }])
+          } else {
+            // add the PPA for access to more versions
+            await installAptPack([{
+              name: "gcc-multilib",
+              version,
+              repository: "ppa:ubuntu-toolchain-r/test",
+              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+            }])
+          }
         }
       }
       break
