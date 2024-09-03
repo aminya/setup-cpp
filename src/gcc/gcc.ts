@@ -1,7 +1,7 @@
 import { addEnv, addPath } from "envosman"
 
 import { GITHUB_ACTIONS } from "ci-info"
-import { info, warning } from "ci-log"
+import { error, info, warning } from "ci-log"
 import { type ExecaReturnValue, execa } from "execa"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
@@ -53,7 +53,6 @@ async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arc
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGcc(version: string, setupDir: string, arch: string, priority: number = 40) {
   let installationInfo: InstallationInfo | undefined
   switch (process.platform) {
@@ -108,14 +107,14 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
       } else {
         info(`Install g++-multilib because gcc for ${arch} was requested`)
         if (isArch()) {
-          await setupPacmanPack("gcc-multilib", version)
+          installationInfo = await setupPacmanPack("gcc-multilib", version)
         } else if (isUbuntu()) {
           if (version === "") {
             // the default version
-            await installAptPack([{ name: "gcc-multilib" }])
+            installationInfo = await installAptPack([{ name: "gcc-multilib" }])
           } else {
             // add the PPA for access to more versions
-            await installAptPack([{
+            installationInfo = await installAptPack([{
               name: "gcc-multilib",
               version,
               repository: "ppa:ubuntu-toolchain-r/test",
@@ -277,11 +276,19 @@ async function activateGcc(givenVersion: string, binDir: string, priority: numbe
 }
 
 async function getGccCmdVersion(binDir: string, givenVersion: string) {
-  const { stdout: versionStdout } = await execa(`${binDir}/gcc`, ["--version"], { stdio: "pipe" })
+  // TODO get the version from the package manager
+  try {
+    const gccExe = await pathExists(`${binDir}/gcc`) ? `${binDir}/gcc` : "gcc"
 
-  const versionMatch = (versionStdout as string).match(/gcc \(.*\) ([\d.]+)/)
+    const { stdout: versionStdout } = await execa(gccExe, ["--version"], { stdio: "pipe" })
 
-  return versionMatch !== null ? versionMatch[1] : givenVersion
+    const versionMatch = (versionStdout as string).match(/gcc \(.*\) ([\d.]+)/)
+
+    return versionMatch !== null ? versionMatch[1] : givenVersion
+  } catch (err) {
+    error(`Failed to get gcc version: ${err}`)
+    return givenVersion
+  }
 }
 
 async function addGccLoggingMatcher() {

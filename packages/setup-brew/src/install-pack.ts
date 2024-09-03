@@ -1,11 +1,11 @@
 import { join } from "path"
 import { info } from "ci-log"
-/* eslint-disable require-atomic-updates */
 import { execaSync } from "execa"
 import which from "which"
 import type { InstallationInfo } from "./InstallationInfo.js"
 import { getBrewBinDir, setupBrew } from "./install.js"
 
+/* eslint-disable require-atomic-updates */
 let hasBrew = false
 
 export type BrewPackOptions = {
