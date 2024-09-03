@@ -7,7 +7,7 @@ export function getVersion(name: string, version: string | undefined, osVersion:
   if (isVersionDefault(version) && process.platform === "linux" && osVersion !== null && name in DefaultLinuxVersion) {
     return getDefaultLinuxVersion(osVersion, DefaultLinuxVersion[name]!)
   } else if (isVersionDefault(version) && name in DefaultVersions) {
-    return DefaultVersions[name]!
+    return DefaultVersions[name] ?? ""
   } else if (version === "true") {
     return ""
   }
