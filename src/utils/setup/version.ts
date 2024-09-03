@@ -147,3 +147,15 @@ export function addVPrefix(version: string) {
   }
   return version
 }
+
+export function compareVersion(tag1: string, tag2: string) {
+  const v1 = semverCoerce(tag1)
+  const v2 = semverCoerce(tag2)
+  if (v1 !== null && v2 !== null) {
+    // put the latest version first
+    return v2.compare(v1)
+  }
+
+  // if the tags are not semver, compare them as strings, putting the latest tag first
+  return tag2.localeCompare(tag1)
+}

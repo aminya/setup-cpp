@@ -1,5 +1,4 @@
 import { readFile } from "fs/promises"
-import coerce from "semver/functions/coerce.js"
 
 /**
  * The list of assets of a GitHub release
@@ -7,18 +6,6 @@ import coerce from "semver/functions/coerce.js"
  * @value assets The names of the assets of the release
  */
 export type Assets = Record<string, string[]>
-
-export function compareTag(tag1: string, tag2: string) {
-  const v1 = coerce(tag1)
-  const v2 = coerce(tag2)
-  if (v1 !== null && v2 !== null) {
-    // put the latest version first
-    return v2.compare(v1)
-  }
-
-  // if the tags are not semver, compare them as strings, putting the latest tag first
-  return tag2.localeCompare(tag1)
-}
 
 export async function loadGitHubAssetList(path: string): Promise<Assets> {
   const data = await readFile(path, "utf-8")

@@ -21,6 +21,7 @@ import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setu
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { compareVersion } from "../utils/setup/version.js"
 
 async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): Promise<PackageInfo> {
   switch (platform) {
@@ -284,7 +285,13 @@ async function getGccCmdVersion(binDir: string, givenVersion: string) {
       gccExe = `${binDir}/gcc`
     } else {
       // try to find the gcc exe in the bin dir
-      const files = await readdir(binDir)
+      const files = (await readdir(binDir)).sort(
+        (exe1, exe2) => {
+          const version1 = exe1.match(/^gcc-?(.*)(\.exe)?$/)?.[1] || ""
+          const version2 = exe2.match(/^gcc-?(.*)(\.exe)?$/)?.[1] || ""
+          return compareVersion(version1, version2)
+        },
+      )
       for (const file of files) {
         if (file.startsWith("gcc")) {
           gccExe = `${binDir}/${file}`
@@ -295,7 +302,11 @@ async function getGccCmdVersion(binDir: string, givenVersion: string) {
 
     const { stdout: versionStdout } = await execa(gccExe, ["--version"], { stdio: "pipe" })
 
-    const versionMatch = (versionStdout as string).match(/gcc \(.*\) ([\d.]+)/)
+    // gcc-11 (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
+    // gcc-12 (Homebrew GCC 12.4.0) 12.4.0
+    // gcc (Ubuntu 13.1.0-8ubuntu1~22.04) 13.1.0
+
+    const versionMatch = (versionStdout as string).match(/gcc.* \(.*\) ([\d.]+)/)
 
     if (versionMatch !== null) {
       return versionMatch[1]

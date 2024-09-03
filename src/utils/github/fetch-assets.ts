@@ -1,7 +1,8 @@
 import { Octokit } from "@octokit/rest"
 import { writeFile } from "fs/promises"
 import JsonStringify from "safe-stable-stringify"
-import { type Assets, compareTag } from "./load-assets.ts"
+import { compareVersion } from "../setup/version.ts"
+import type { Assets } from "./load-assets.ts"
 
 /**
  * Get the list of all releases of a GitHub repository
@@ -70,7 +71,7 @@ export async function saveGitHubAssetList(
   const assets = await fetchGitHubAssetList(owner, repo)
 
   const jsonStringify = JsonStringify.configure({
-    deterministic: compareTag,
+    deterministic: compareVersion,
   })
   const data = jsonStringify(assets)
 
