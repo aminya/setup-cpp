@@ -32,7 +32,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
   doxygen: isArch() ? "1.11.0-4" : "1.11.0", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: process.platform === "win32"
     ? "14.2.0posix-18.1.8-12.0.0-ucrt-r1"
-    : undefined, // use the default version on Ubuntu, Fedora, Arch, macOS, etc.
+    : "", // use the default version on Ubuntu, Fedora, Arch, macOS, etc.
   // mingw: isArch() ? "12.2.0-1" : "8", // https://archlinux.org/packages/extra/x86_64/mingw-w64-gcc/
   powershell: "7.4.5", // https://github.com/PowerShell/PowerShell/releases/tag/v7.4.5
 }

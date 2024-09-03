@@ -31,7 +31,11 @@ async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arc
         mingwAssets,
         {
           version,
-          arch,
+          arch: arch === "x64"
+            ? "x86_64"
+            : arch === "ia32"
+            ? "i386"
+            : arch,
           filterName: (name) => name.endsWith(".7z"),
         },
       )
