@@ -10,11 +10,11 @@ export async function initApt(apt: string) {
   // Update the repos
   updateAptReposMemoized(apt)
 
-  const toInstall = await filterAndQualifyAptPackages(apt, [
+  const toInstall = await filterAndQualifyAptPackages([
     { name: "ca-certificates" },
     { name: "gnupg" },
     { name: "apt-utils" },
-  ])
+  ], apt)
 
   if (toInstall.length !== 0) {
     execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall], {

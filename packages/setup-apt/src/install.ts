@@ -82,7 +82,7 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
   // Add the repos if needed
   await addRepositories(apt, packages)
 
-  const needToInstall = await filterAndQualifyAptPackages(apt, packages)
+  const needToInstall = await filterAndQualifyAptPackages(packages, apt)
 
   if (needToInstall.length === 0) {
     info("All packages are already installed")
