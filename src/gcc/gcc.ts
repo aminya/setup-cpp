@@ -2,7 +2,7 @@ import { addEnv, addPath } from "envosman"
 
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
-import type { ExecaReturnValue } from "execa"
+import { type ExecaReturnValue, execa } from "execa"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import semverCoerce from "semver/functions/coerce"
@@ -207,7 +207,7 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
   return undefined
 }
 
-async function activateGcc(version: string, binDir: string, priority: number = 40) {
+async function activateGcc(givenVersion: string, binDir: string, priority: number = 40) {
   const promises: Promise<void | ExecaReturnValue<string>>[] = []
   // Setup gcc as the compiler
 
@@ -228,6 +228,13 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
       addEnv("CXX", addExeExt(`${binDir}/g++`), rcOptions),
     )
   } else {
+    // if version is empty, get the version from the gcc command
+    let version = givenVersion
+    if (givenVersion === "") {
+      version = await getGccCmdVersion(binDir, version)
+      info(`Using gcc version ${version}`)
+    }
+
     const majorVersion = semverMajor(semverCoerce(version) ?? version)
     if (majorVersion >= 5) {
       promises.push(
@@ -267,6 +274,14 @@ async function activateGcc(version: string, binDir: string, priority: number = 4
   }
 
   await Promise.all(promises)
+}
+
+async function getGccCmdVersion(binDir: string, givenVersion: string) {
+  const { stdout: versionStdout } = await execa(`${binDir}/gcc`, ["--version"], { stdio: "pipe" })
+
+  const versionMatch = (versionStdout as string).match(/gcc \(.*\) ([\d.]+)/)
+
+  return versionMatch !== null ? versionMatch[1] : givenVersion
 }
 
 async function addGccLoggingMatcher() {
