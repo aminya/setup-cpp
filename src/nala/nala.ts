@@ -1,5 +1,6 @@
 import { tmpdir } from "os"
 import { execRootSync } from "admina"
+import { error, info } from "ci-log"
 import { readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
 import { dirname, join } from "patha"
@@ -29,18 +30,28 @@ export async function setupNala(version: string, _setupDir: string, _arch: strin
   binDir = "/usr/bin" // eslint-disable-line require-atomic-updates
 
   // If nala is available in the default repositories, install it
-  const nalaPack = await qualifiedNeededAptPackage({ name: "nala", version })
-  if (nalaPack !== undefined) {
-    await installAptPack([{ name: nalaPack }])
-    return { binDir }
+  try {
+    const nalaPack = await qualifiedNeededAptPackage({ name: "nala", version })
+    if (nalaPack !== undefined) {
+      await installAptPack([{ name: nalaPack }])
+      return { binDir }
+    }
+  } catch (err) {
+    // ignore
+    info(`Failed to install nala: ${err}`)
   }
 
   // Nala is not available in the default repositories
   // Check if the legacy version is available
-  const nalaLegacyPack = await qualifiedNeededAptPackage({ name: "nala-legacy" })
-  if (nalaLegacyPack !== undefined) {
-    await installAptPack([{ name: nalaLegacyPack }], true)
-    return { binDir }
+  try {
+    const nalaLegacyPack = await qualifiedNeededAptPackage({ name: "nala-legacy" })
+    if (nalaLegacyPack !== undefined) {
+      await installAptPack([{ name: nalaLegacyPack }], true)
+      return { binDir }
+    }
+  } catch (err) {
+    // ignore
+    info(`Failed to install nala-legacy: ${err}`)
   }
 
   // Install via the installer script
@@ -66,7 +77,14 @@ async function setupNalaViaInstaller() {
   const script = await readFile(installerPath, "utf8")
   await writeFile(installerPath, script.replace(/sudo/g, ""))
 
-  execRootSync("bash", [installerPath])
+  await installAptPack([{ name: "wget" }])
+
+  try {
+    execRootSync("bash", [installerPath])
+  } catch (err) {
+    error(`Failed to install nala via installer: ${err}`)
+    execRootSync("apt", ["install", "-y", "-t", "nala", "nala"])
+  }
 }
 
 export function bashWithNala(script: string) {
