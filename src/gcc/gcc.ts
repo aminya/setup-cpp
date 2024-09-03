@@ -3,6 +3,7 @@ import { addEnv, addPath } from "envosman"
 import { GITHUB_ACTIONS } from "ci-info"
 import { error, info, warning } from "ci-log"
 import { type ExecaReturnValue, execa } from "execa"
+import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
 import { addExeExt, join } from "patha"
 import semverCoerce from "semver/functions/coerce"
@@ -278,13 +279,30 @@ async function activateGcc(givenVersion: string, binDir: string, priority: numbe
 async function getGccCmdVersion(binDir: string, givenVersion: string) {
   // TODO get the version from the package manager
   try {
-    const gccExe = await pathExists(`${binDir}/gcc`) ? `${binDir}/gcc` : "gcc"
+    let gccExe = "gcc"
+    if (await pathExists(`${binDir}/gcc`)) {
+      gccExe = `${binDir}/gcc`
+    } else {
+      // try to find the gcc exe in the bin dir
+      const files = await readdir(binDir)
+      for (const file of files) {
+        if (file.startsWith("gcc")) {
+          gccExe = `${binDir}/${file}`
+          break
+        }
+      }
+    }
 
     const { stdout: versionStdout } = await execa(gccExe, ["--version"], { stdio: "pipe" })
 
     const versionMatch = (versionStdout as string).match(/gcc \(.*\) ([\d.]+)/)
 
-    return versionMatch !== null ? versionMatch[1] : givenVersion
+    if (versionMatch !== null) {
+      return versionMatch[1]
+    }
+
+    warning(`Failed to parse gcc version from: ${versionStdout}`)
+    return givenVersion
   } catch (err) {
     error(`Failed to get gcc version: ${err}`)
     return givenVersion
