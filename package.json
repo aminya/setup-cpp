@@ -6,7 +6,6 @@
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "main": "dist/legacy/setup-cpp.js",
-  "actions": "./dist/actions/setup-cpp.js",
   "modern": "./dist/modern/setup-cpp.js",
   "source": "./src/main.ts",
   "bin": {
@@ -27,13 +26,12 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "turbo build && run-p lint.root.tsc build.parcel copy.matchers && run-s build.babel build.modern",
+    "build": "turbo build && run-p lint.root.tsc build.parcel copy.matchers && run-s build.babel",
     "build.parcel": "cross-env NODE_ENV=production parcel build",
     "build.babel": "babel ./dist --out-dir dist --plugins @upleveled/babel-plugin-remove-node-prefix --plugins @babel/plugin-transform-private-methods --compact --no-babelrc --source-maps true",
-    "build.modern": "shx cp -r ./dist/actions/* ./dist/modern",
     "bump": "ncu -u -x numerous,execa,prettier,@types/node,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
-    "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/actions ./dist/modern ",
-    "copy.matchers": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/actions",
+    "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/modern ./dist/modern ",
+    "copy.matchers": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern",
     "dev.parcel": "cross-env NODE_ENV=development parcel watch",
     "dev.packages": "turbo dev",
     "dev": "run-p dev.packages dev.parcel",
@@ -222,7 +220,7 @@
       "optimize": true,
       "outputFormat": "commonjs"
     },
-    "actions": {
+    "modern": {
       "context": "node",
       "engines": {
         "node": ">=20.x"
