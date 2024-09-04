@@ -11,7 +11,12 @@ import type { Assets } from "./load-assets.ts"
  * @param prerelease Whether to include prereleases
  */
 
-async function fetchGitHubAssetList(owner: string, repo: string, prerelease = false) {
+async function fetchGitHubAssetList(
+  owner: string,
+  repo: string,
+  filterAssets?: (asset: string) => boolean,
+  prerelease = false,
+) {
   const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN,
   })
@@ -47,7 +52,11 @@ async function fetchGitHubAssetList(owner: string, repo: string, prerelease = fa
         }
 
         const assets_ref = assets[release.tag_name]
+
         for (const asset of release.assets) {
+          if (filterAssets !== undefined && !filterAssets(asset.name)) {
+            continue
+          }
           assets_ref.push(asset.name)
         }
       }
@@ -67,8 +76,9 @@ export async function saveGitHubAssetList(
   owner: string,
   repo: string,
   path: string,
+  filterAssets?: (asset: string) => boolean,
 ) {
-  const assets = await fetchGitHubAssetList(owner, repo)
+  const assets = await fetchGitHubAssetList(owner, repo, filterAssets, false)
 
   const jsonStringify = JsonStringify.configure({
     deterministic: compareVersion,

@@ -41,7 +41,6 @@ async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arc
             : arch === "ia32"
             ? "i386"
             : arch,
-          filterName: (name) => name.endsWith(".7z"),
         },
       )
 
