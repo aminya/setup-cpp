@@ -26,16 +26,16 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "turbo build && run-p lint.root.tsc build.parcel build.vite && run-p build.babel copy.json",
-    "build.parcel": "cross-env NODE_ENV=production parcel build",
+    "build": "turbo build && run-p lint.root.tsc build.vite build.vite.legacy && run-p build.babel copy.json",
     "build.vite": "cross-env NODE_ENV=production vite build",
     "build.babel": "babel ./dist/legacy --out-dir ./dist/legacy --plugins @upleveled/babel-plugin-remove-node-prefix --plugins @babel/plugin-transform-private-methods --compact --no-babelrc --source-maps true",
+    "build.vite.legacy": "cross-env NODE_ENV=production TARGET=legacy vite build",
     "bump": "ncu -u -x numerous,execa,prettier,@types/node,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
     "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/modern ./dist/modern ",
     "copy.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern",
-    "dev.parcel": "cross-env NODE_ENV=development parcel watch",
+    "dev.vite": "cross-env NODE_ENV=development vite build --watch",
     "dev.packages": "turbo dev",
-    "dev": "run-p dev.packages dev.parcel",
+    "dev": "run-p dev.packages dev.vite",
     "docs": "shx rm -rf packages/*/README.md && pnpm -r exec readme --path ../../dev/readme/template.md -y && pnpm -r exec ts-readme",
     "format": "run-s lint.dprint",
     "lint": "turbo lint && run-p --aggregate-output --continue-on-error lint.**",
@@ -112,7 +112,6 @@
     "npm-run-all2": "^6.2.2",
     "numerous": "1.0.3",
     "p-timeout": "^6.1.2",
-    "parcel": "2.12.0",
     "path-exists": "^5.0.0",
     "patha": "^0.4.1",
     "prettier": "3.2.2",
@@ -138,7 +137,6 @@
     "untildify-user": "workspace:*",
     "util.types": "^0.0.2",
     "vite": "^5.4.3",
-    "vite-plugin-node": "^3.1.0",
     "web-streams-polyfill": "^4.0.0",
     "which": "^4.0.0"
   },
@@ -206,27 +204,6 @@
     "ninja",
     "meson"
   ],
-  "alias": {
-    "electron": false,
-    "patha": "patha/dist/index.node.mjs",
-    "admina": "admina/dist/index.mjs",
-    "fs/promises": "./src/utils/compat/fs/promises.ts",
-    "stream/promises": "./src/utils/compat/stream/promises.ts",
-    "stream/web": "web-streams-polyfill/dist/ponyfill.mjs",
-    "util/types": "util.types/index.js",
-    "diagnostics_channel": "diagnostics_channel/index.js"
-  },
-  "targets": {
-    "main": {
-      "context": "node",
-      "engines": {
-        "node": ">=12.x"
-      },
-      "includeNodeModules": true,
-      "optimize": true,
-      "outputFormat": "commonjs"
-    }
-  },
   "pnpm": {
     "patchedDependencies": {
       "@actions/http-client@2.2.3": "patches/@actions__http-client@2.2.3.patch"
