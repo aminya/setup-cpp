@@ -1,3 +1,5 @@
+import path from "path"
+import { fileURLToPath } from "url"
 import { info } from "ci-log"
 import { execa } from "execa"
 import { addExeExt, join } from "patha"
@@ -16,6 +18,8 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { addVPrefix, removeVPrefix } from "../utils/setup/version.js"
 import { getVersion } from "../versions/versions.js"
+
+const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 function getDownloadKcovPackageInfo(version: string): PackageInfo {
   return {
@@ -55,7 +59,7 @@ async function buildKcov(file: string, dest: string) {
   // apply gcc13.patch
   try {
     if (which.sync("patch", { nothrow: true }) !== null) {
-      const patch = join(__dirname, "gcc13.patch")
+      const patch = join(dirname, "gcc13.patch")
       await execa("patch", ["-N", "-p1", "-i", patch], { cwd: out, stdio: "inherit" })
     } else {
       info("`patch` not found, skipping gcc13.patch, kcov may not build on gcc 13")

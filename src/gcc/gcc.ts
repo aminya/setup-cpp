@@ -1,7 +1,8 @@
-import { addEnv, addPath } from "envosman"
-
+import path from "path"
+import { fileURLToPath } from "url"
 import { GITHUB_ACTIONS } from "ci-info"
 import { error, info, warning } from "ci-log"
+import { addEnv, addPath } from "envosman"
 import { type ExecaReturnValue, execa } from "execa"
 import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
@@ -23,11 +24,13 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { compareVersion } from "../utils/setup/version.js"
 
+const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
+
 async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): Promise<PackageInfo> {
   switch (platform) {
     case "win32": {
       const mingwAssets = await loadGitHubAssetList(
-        join(__dirname, "github_brechtsanders_winlibs_mingw.json"),
+        join(dirname, "github_brechtsanders_winlibs_mingw.json"),
       )
       const asset = matchAsset(
         mingwAssets,
@@ -321,7 +324,7 @@ async function getGccCmdVersion(binDir: string, givenVersion: string) {
 }
 
 async function addGccLoggingMatcher() {
-  const matcherPath = join(__dirname, "gcc_matcher.json")
+  const matcherPath = join(dirname, "gcc_matcher.json")
   if (!(await pathExists(matcherPath))) {
     return warning("the gcc_matcher.json file does not exist in the same folder as setup-cpp.js")
   }

@@ -1,3 +1,5 @@
+import path from "path"
+import { fileURLToPath } from "url"
 import * as io from "@actions/io"
 import { execaSync } from "execa"
 import { chmod } from "fs/promises"
@@ -9,6 +11,8 @@ import { setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
 import { getVersion } from "../../versions/versions.js"
 import { setupClangFormat, setupClangTools, setupLLVM } from "../llvm.js"
 import { VERSIONS, getLinuxUrl, getUrl } from "../llvm_url.js"
+
+const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 jest.setTimeout(400000)
 async function testUrl(version: string) {
@@ -98,13 +102,13 @@ describe("setup-llvm", () => {
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
 
     // test compilation
-    const file = join(__dirname, "main.cpp")
-    const main_exe = join(__dirname, addExeExt("main"))
-    execaSync("clang++", [file, "-o", main_exe], { cwd: __dirname })
+    const file = join(dirname, "main.cpp")
+    const main_exe = join(dirname, addExeExt("main"))
+    execaSync("clang++", [file, "-o", main_exe], { cwd: dirname })
     if (process.platform !== "win32") {
       await chmod(main_exe, "755")
     }
-    execaSync(main_exe, { cwd: __dirname, stdio: "inherit" })
+    execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
   })
 
   it("should setup clang-format", async () => {

@@ -1,13 +1,16 @@
+import path from "path"
+import { fileURLToPath } from "url"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { GITHUB_ACTIONS } from "ci-info"
+import { error, info, warning } from "ci-log"
 import { findVcvarsall, vsversion_to_versionnumber } from "msvc-dev-cmd/lib.js"
+import { pathExists } from "path-exists"
 import { join } from "patha"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall.js"
 
-import { error, info, warning } from "ci-log"
-import { pathExists } from "path-exists"
+const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 type MSVCVersion = "2022" | "17.0" | "2019" | "16.0" | "2017" | "15.0" | "2015" | "14.0" | "2013" | "12.0" | string
 
@@ -72,7 +75,7 @@ export async function setupMSVC(
 }
 
 async function addMSVCLoggingMatcher() {
-  const matcherPath = join(__dirname, "msvc_matcher.json")
+  const matcherPath = join(dirname, "msvc_matcher.json")
   if (!(await pathExists(matcherPath))) {
     return warning("the msvc_matcher.json file does not exist in the same folder as setup-cpp.js")
   }

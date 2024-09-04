@@ -1,12 +1,15 @@
-import { findPyPyVersion } from "setup-python/src/find-pypy.js"
-import { useCpythonVersion } from "setup-python/src/find-python.js"
-
+import path from "path"
+import { fileURLToPath } from "url"
 import { debug } from "@actions/core"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import { pathExists } from "path-exists"
 import { join } from "patha"
+import { findPyPyVersion } from "setup-python/src/find-pypy.js"
+import { useCpythonVersion } from "setup-python/src/find-python.js"
 import { IS_MAC } from "setup-python/src/utils.js"
+
+const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 function isPyPyVersion(versionSpec: string) {
   return versionSpec.startsWith("pypy")
@@ -53,7 +56,7 @@ export async function setupActionsPython(version: string, _setupDir: string, arc
 }
 
 async function addPythonLoggingMatcher() {
-  const matcherPath = join(__dirname, "python_matcher.json")
+  const matcherPath = join(dirname, "python_matcher.json")
   if (!(await pathExists(matcherPath))) {
     return warning("the python_matcher.json file does not exist in the same folder as setup-cpp.js")
   }

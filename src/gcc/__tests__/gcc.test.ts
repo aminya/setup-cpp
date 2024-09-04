@@ -1,3 +1,5 @@
+import path from "path"
+import { fileURLToPath } from "url"
 import { execaSync } from "execa"
 import { chmod } from "fs/promises"
 import { addExeExt, join } from "patha"
@@ -6,6 +8,8 @@ import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
 import { getVersion } from "../../versions/versions.js"
 import { setupGcc } from "../gcc.js"
+
+const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 jest.setTimeout(3000000)
 describe("setup-gcc", () => {
@@ -55,13 +59,13 @@ describe("setup-gcc", () => {
     expect(process.env.CXX?.includes("g++")).toBeTruthy()
 
     // test compilation
-    const file = join(__dirname, "main.cpp")
-    const main_exe = join(__dirname, addExeExt("main"))
-    execaSync("g++", [file, "-o", main_exe], { cwd: __dirname })
+    const file = join(dirname, "main.cpp")
+    const main_exe = join(dirname, addExeExt("main"))
+    execaSync("g++", [file, "-o", main_exe], { cwd: dirname })
     if (process.platform !== "win32") {
       await chmod(main_exe, "755")
     }
-    execaSync(main_exe, { cwd: __dirname, stdio: "inherit" })
+    execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
   })
 
   afterAll(async () => {

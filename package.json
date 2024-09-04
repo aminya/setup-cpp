@@ -103,7 +103,6 @@
     "jest": "^29.7.0",
     "lefthook": "^1.7.15",
     "macos-release": "^3.3.0",
-    "magic-string": "^0.30.11",
     "memoizee": "^0.4.17",
     "mkdirp": "^3.0.1",
     "mri": "^1.2.0",
