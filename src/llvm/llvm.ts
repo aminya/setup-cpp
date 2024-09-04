@@ -1,4 +1,5 @@
-import { delimiter } from "path"
+import path, { delimiter } from "path"
+import { fileURLToPath } from "url"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import { addEnv } from "envosman"
@@ -16,6 +17,8 @@ import { semverCoerceIfInvalid } from "../utils/setup/version.js"
 import { getVersion } from "../versions/versions.js"
 import { LLVMPackages, setupLLVMApt } from "./llvm_installer.js"
 import { getLLVMPackageInfo } from "./llvm_url.js"
+
+const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
@@ -146,7 +149,7 @@ export async function activateLLVM(directory: string) {
 
 async function addLLVMLoggingMatcher() {
   if (GITHUB_ACTIONS) {
-    const matcherPath = join(__dirname, "llvm_matcher.json")
+    const matcherPath = join(dirname, "llvm_matcher.json")
     if (!(await pathExists(matcherPath))) {
       return warning("the llvm_matcher.json file does not exist in the same folder as setup-cpp.js")
     }

@@ -13,6 +13,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
+env:
+  NODE_OPTIONS: --enable-source-maps
+
 jobs:
   Build:
     runs-on: ${{ matrix.os }}
@@ -200,6 +203,14 @@ jobs:
         env:
           RUNNER_OS_NAME: ${{ matrix.os }}
 
+      - name: Modern Integration Tests
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
+        run: |
+          node ./dist/modern/setup-cpp.mjs --help
+          node ./dist/modern/setup-cpp.mjs --gcc true --cmake true
+        env:
+          RUNNER_OS_NAME: ${{ matrix.os }}
+
       - name: Setup Node 12
         uses: actions/setup-node@v4
         with:
@@ -214,7 +225,7 @@ jobs:
           node-version: 16
       - name: Smoke Test Node 16
         run: |
-          node ./dist/modern/setup-cpp.js --help
+          node ./dist/modern/setup-cpp.mjs --help
 
   Docker:
     name: Docker-${{ matrix.container.image }}
