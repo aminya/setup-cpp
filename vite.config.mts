@@ -1,6 +1,8 @@
 import module from "module"
 import { type TerserOptions, defineConfig } from "vite"
+import babel from "vite-plugin-babel"
 import terserRc from "./.terserrc.mjs"
+import babelConfig from "./babel.config.mts"
 
 const isLegacy = process.env.TARGET === "legacy"
 
@@ -38,6 +40,13 @@ const viteConfig = defineConfig({
     noExternal: true,
     external: module.builtinModules,
   },
+  plugins: isLegacy
+    ? [
+      babel({
+        babelConfig,
+      }),
+    ]
+    : [],
 })
 
 export default viteConfig
