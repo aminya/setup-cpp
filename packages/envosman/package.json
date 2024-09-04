@@ -46,6 +46,7 @@
     "macos"
   ],
   "devDependencies": {
+    "@types/escape-quotes": "~1.0.0",
     "@types/memoizee": "0.4.11"
   }
 }

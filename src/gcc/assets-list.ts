@@ -5,7 +5,12 @@ import { saveGitHubAssetList } from "../utils/github/fetch-assets.ts"
  */
 async function main() {
   // https://github.com/brechtsanders/winlibs_mingw/releases
-  await saveGitHubAssetList("brechtsanders", "winlibs_mingw", "./src/gcc/github_brechtsanders_winlibs_mingw.json")
+  await saveGitHubAssetList(
+    "brechtsanders",
+    "winlibs_mingw",
+    "./src/gcc/github_brechtsanders_winlibs_mingw.json",
+    (asset) => asset.endsWith(".7z"),
+  )
 }
 
 main().catch((err) => {

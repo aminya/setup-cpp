@@ -26,16 +26,15 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "turbo build && run-p lint.root.tsc build.parcel build.vite && run-p build.babel copy.json",
-    "build.parcel": "cross-env NODE_ENV=production parcel build",
+    "build": "turbo build && run-p lint.root.tsc build.vite build.vite.legacy && run-p copy.json",
     "build.vite": "cross-env NODE_ENV=production vite build",
-    "build.babel": "babel ./dist/legacy --out-dir ./dist/legacy --plugins @upleveled/babel-plugin-remove-node-prefix --plugins @babel/plugin-transform-private-methods --compact --no-babelrc --source-maps true",
+    "build.vite.legacy": "cross-env NODE_ENV=production TARGET=legacy vite build",
     "bump": "ncu -u -x numerous,execa,prettier,@types/node,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
     "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/modern ./dist/modern ",
     "copy.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern",
-    "dev.parcel": "cross-env NODE_ENV=development parcel watch",
+    "dev.vite": "cross-env NODE_ENV=development vite build --watch",
     "dev.packages": "turbo dev",
-    "dev": "run-p dev.packages dev.parcel",
+    "dev": "run-p dev.packages dev.vite",
     "docs": "shx rm -rf packages/*/README.md && pnpm -r exec readme --path ../../dev/readme/template.md -y && pnpm -r exec ts-readme",
     "format": "run-s lint.dprint",
     "lint": "turbo lint && run-p --aggregate-output --continue-on-error lint.**",
@@ -60,8 +59,7 @@
     "@actions/http-client": "^2.2.3",
     "@actions/io": "^1.1.3",
     "@actions/tool-cache": "^2.0.1",
-    "@babel/cli": "^7.25.6",
-    "@babel/plugin-transform-private-methods": "^7.25.4",
+    "@babel/core": "^7.25.2",
     "@biomejs/biome": "^1.8.3",
     "@iarna/toml": "^2.2.5",
     "@liuli-util/vite-plugin-node": "^0.9.0",
@@ -73,7 +71,9 @@
     "@octokit/types": "^13.5.0",
     "@shockpkg/archive-files": "github:aminya/archive-files#54ec59fad46aca736ac6feb6c7bb526528141b9d",
     "@swc/jest": "^0.2.36",
+    "@types/babel__core": "~7.20.5",
     "@types/cross-spawn": "^6.0.6",
+    "@types/escape-quotes": "~1.0.0",
     "@types/eslint": "^8.56.12",
     "@types/iarna__toml": "~2.0.5",
     "@types/jest": "^29.5.12",
@@ -112,7 +112,6 @@
     "npm-run-all2": "^6.2.2",
     "numerous": "1.0.3",
     "p-timeout": "^6.1.2",
-    "parcel": "2.12.0",
     "path-exists": "^5.0.0",
     "patha": "^0.4.1",
     "prettier": "3.2.2",
@@ -138,7 +137,7 @@
     "untildify-user": "workspace:*",
     "util.types": "^0.0.2",
     "vite": "^5.4.3",
-    "vite-plugin-node": "^3.1.0",
+    "vite-plugin-babel": "^1.2.0",
     "web-streams-polyfill": "^4.0.0",
     "which": "^4.0.0"
   },
@@ -206,27 +205,6 @@
     "ninja",
     "meson"
   ],
-  "alias": {
-    "electron": false,
-    "patha": "patha/dist/index.node.mjs",
-    "admina": "admina/dist/index.mjs",
-    "fs/promises": "./src/utils/compat/fs/promises.ts",
-    "stream/promises": "./src/utils/compat/stream/promises.ts",
-    "stream/web": "web-streams-polyfill/dist/ponyfill.mjs",
-    "util/types": "util.types/index.js",
-    "diagnostics_channel": "diagnostics_channel/index.js"
-  },
-  "targets": {
-    "main": {
-      "context": "node",
-      "engines": {
-        "node": ">=12.x"
-      },
-      "includeNodeModules": true,
-      "optimize": true,
-      "outputFormat": "commonjs"
-    }
-  },
   "pnpm": {
     "patchedDependencies": {
       "@actions/http-client@2.2.3": "patches/@actions__http-client@2.2.3.patch"

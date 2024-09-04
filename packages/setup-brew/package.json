@@ -27,9 +27,11 @@
     "node-downloader-helper": "2.1.9"
   },
   "devDependencies": {
+    "@types/cross-spawn": "~6.0.6",
+    "@types/which": "~3.0.4",
+    "cross-spawn": "7.0.3",
     "path-exists": "5.0.0",
-    "patha": "0.4.1",
-    "cross-spawn": "7.0.3"
+    "patha": "0.4.1"
   },
   "engines": {
     "node": ">=12"

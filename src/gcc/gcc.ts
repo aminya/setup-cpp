@@ -1,4 +1,4 @@
-import path from "path"
+import path, { join } from "path"
 import { fileURLToPath } from "url"
 import { GITHUB_ACTIONS } from "ci-info"
 import { error, info, warning } from "ci-log"
@@ -6,7 +6,7 @@ import { addEnv, addPath } from "envosman"
 import { type ExecaReturnValue, execa } from "execa"
 import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
-import { addExeExt, join } from "patha"
+import { addExeExt } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
 import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
@@ -41,7 +41,6 @@ async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arc
             : arch === "ia32"
             ? "i386"
             : arch,
-          filterName: (name) => name.endsWith(".7z"),
         },
       )
 

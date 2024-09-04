@@ -1,7 +1,7 @@
+import { join } from "path"
 import { endGroup, startGroup } from "@actions/core"
 import { error } from "ci-log"
 import pTimeout from "p-timeout"
-import { join } from "patha"
 import { setupBrew } from "setup-brew"
 import { getSuccessMessage, rcOptions } from "./cli-options.js"
 import { type ToolName, setups } from "./tool.js"
