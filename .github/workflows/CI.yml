@@ -200,6 +200,14 @@ jobs:
         env:
           RUNNER_OS_NAME: ${{ matrix.os }}
 
+      - name: Modern Integration Tests
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
+        run: |
+          node ./dist/modern/setup-cpp.mjs --help
+          node ./dist/modern/setup-cpp.mjs --gcc true --cmake true
+        env:
+          RUNNER_OS_NAME: ${{ matrix.os }}
+
       - name: Setup Node 12
         uses: actions/setup-node@v4
         with:
