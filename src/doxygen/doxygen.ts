@@ -1,6 +1,7 @@
+import { join } from "path"
 import { info, notice } from "ci-log"
 import { addPath } from "envosman"
-import { addExeExt, join } from "patha"
+import { addExeExt } from "patha"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { setupGraphviz } from "../graphviz/graphviz.js"

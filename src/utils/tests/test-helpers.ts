@@ -1,8 +1,9 @@
 import { tmpdir } from "os"
+import * as path from "path"
+import { join } from "path"
 import * as io from "@actions/io"
 import spawn from "cross-spawn"
-import * as path from "patha"
-import { addExeExt, join } from "patha"
+import { addExeExt } from "patha"
 
 import { pathExists } from "path-exists"
 

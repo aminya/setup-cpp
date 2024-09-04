@@ -1,7 +1,7 @@
+import { dirname } from "path"
 import { addPath } from "envosman"
 import { execaSync } from "execa"
 import { pathExists } from "path-exists"
-import { dirname } from "patha"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"

@@ -1,4 +1,4 @@
-import path from "path"
+import path, { join } from "path"
 import { fileURLToPath } from "url"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -6,7 +6,6 @@ import { GITHUB_ACTIONS } from "ci-info"
 import { error, info, warning } from "ci-log"
 import { findVcvarsall, vsversion_to_versionnumber } from "msvc-dev-cmd/lib.js"
 import { pathExists } from "path-exists"
-import { join } from "patha"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall.js"
 
