@@ -1,3 +1,1051 @@
+diff --git a/lib/esnext/auth.d.ts b/lib/esnext/auth.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..8cc9fc3d872704e3f2813845568a1b620e7d0513
+--- /dev/null
++++ b/lib/esnext/auth.d.ts
+@@ -0,0 +1,26 @@
++/// <reference types="node" />
++import * as http from 'http';
++import * as ifm from './interfaces';
++import { HttpClientResponse } from './index';
++export declare class BasicCredentialHandler implements ifm.RequestHandler {
++    username: string;
++    password: string;
++    constructor(username: string, password: string);
++    prepareRequest(options: http.RequestOptions): void;
++    canHandleAuthentication(): boolean;
++    handleAuthentication(): Promise<HttpClientResponse>;
++}
++export declare class BearerCredentialHandler implements ifm.RequestHandler {
++    token: string;
++    constructor(token: string);
++    prepareRequest(options: http.RequestOptions): void;
++    canHandleAuthentication(): boolean;
++    handleAuthentication(): Promise<HttpClientResponse>;
++}
++export declare class PersonalAccessTokenCredentialHandler implements ifm.RequestHandler {
++    token: string;
++    constructor(token: string);
++    prepareRequest(options: http.RequestOptions): void;
++    canHandleAuthentication(): boolean;
++    handleAuthentication(): Promise<HttpClientResponse>;
++}
+diff --git a/lib/esnext/auth.js b/lib/esnext/auth.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..e6462aa36d45a45eea1b81da19e3f1321fdd39b7
+--- /dev/null
++++ b/lib/esnext/auth.js
+@@ -0,0 +1,64 @@
++export class BasicCredentialHandler {
++    username;
++    password;
++    constructor(username, password) {
++        this.username = username;
++        this.password = password;
++    }
++    prepareRequest(options) {
++        if (!options.headers) {
++            throw Error('The request has no headers');
++        }
++        options.headers['Authorization'] = `Basic ${Buffer.from(`${this.username}:${this.password}`).toString('base64')}`;
++    }
++    // This handler cannot handle 401
++    canHandleAuthentication() {
++        return false;
++    }
++    async handleAuthentication() {
++        throw new Error('not implemented');
++    }
++}
++export class BearerCredentialHandler {
++    token;
++    constructor(token) {
++        this.token = token;
++    }
++    // currently implements pre-authorization
++    // TODO: support preAuth = false where it hooks on 401
++    prepareRequest(options) {
++        if (!options.headers) {
++            throw Error('The request has no headers');
++        }
++        options.headers['Authorization'] = `Bearer ${this.token}`;
++    }
++    // This handler cannot handle 401
++    canHandleAuthentication() {
++        return false;
++    }
++    async handleAuthentication() {
++        throw new Error('not implemented');
++    }
++}
++export class PersonalAccessTokenCredentialHandler {
++    token;
++    constructor(token) {
++        this.token = token;
++    }
++    // currently implements pre-authorization
++    // TODO: support preAuth = false where it hooks on 401
++    prepareRequest(options) {
++        if (!options.headers) {
++            throw Error('The request has no headers');
++        }
++        options.headers['Authorization'] = `Basic ${Buffer.from(`PAT:${this.token}`).toString('base64')}`;
++    }
++    // This handler cannot handle 401
++    canHandleAuthentication() {
++        return false;
++    }
++    async handleAuthentication() {
++        throw new Error('not implemented');
++    }
++}
++//# sourceMappingURL=auth.js.map
+\ No newline at end of file
+diff --git a/lib/esnext/auth.js.map b/lib/esnext/auth.js.map
+new file mode 100644
+index 0000000000000000000000000000000000000000..59d82192ac306cec208bb4ded448cfe28f049a04
+--- /dev/null
++++ b/lib/esnext/auth.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"auth.js","sourceRoot":"","sources":["../../src/auth.ts"],"names":[],"mappings":"AAIA,MAAM,OAAO,sBAAsB;IACjC,QAAQ,CAAQ;IAChB,QAAQ,CAAQ;IAEhB,YAAY,QAAgB,EAAE,QAAgB;QAC5C,IAAI,CAAC,QAAQ,GAAG,QAAQ,CAAA;QACxB,IAAI,CAAC,QAAQ,GAAG,QAAQ,CAAA;IAC1B,CAAC;IAED,cAAc,CAAC,OAA4B;QACzC,IAAI,CAAC,OAAO,CAAC,OAAO,EAAE;YACpB,MAAM,KAAK,CAAC,4BAA4B,CAAC,CAAA;SAC1C;QACD,OAAO,CAAC,OAAO,CAAC,eAAe,CAAC,GAAG,SAAS,MAAM,CAAC,IAAI,CACrD,GAAG,IAAI,CAAC,QAAQ,IAAI,IAAI,CAAC,QAAQ,EAAE,CACpC,CAAC,QAAQ,CAAC,QAAQ,CAAC,EAAE,CAAA;IACxB,CAAC;IAED,iCAAiC;IACjC,uBAAuB;QACrB,OAAO,KAAK,CAAA;IACd,CAAC;IAED,KAAK,CAAC,oBAAoB;QACxB,MAAM,IAAI,KAAK,CAAC,iBAAiB,CAAC,CAAA;IACpC,CAAC;CACF;AAED,MAAM,OAAO,uBAAuB;IAClC,KAAK,CAAQ;IAEb,YAAY,KAAa;QACvB,IAAI,CAAC,KAAK,GAAG,KAAK,CAAA;IACpB,CAAC;IAED,yCAAyC;IACzC,sDAAsD;IACtD,cAAc,CAAC,OAA4B;QACzC,IAAI,CAAC,OAAO,CAAC,OAAO,EAAE;YACpB,MAAM,KAAK,CAAC,4BAA4B,CAAC,CAAA;SAC1C;QACD,OAAO,CAAC,OAAO,CAAC,eAAe,CAAC,GAAG,UAAU,IAAI,CAAC,KAAK,EAAE,CAAA;IAC3D,CAAC;IAED,iCAAiC;IACjC,uBAAuB;QACrB,OAAO,KAAK,CAAA;IACd,CAAC;IAED,KAAK,CAAC,oBAAoB;QACxB,MAAM,IAAI,KAAK,CAAC,iBAAiB,CAAC,CAAA;IACpC,CAAC;CACF;AAED,MAAM,OAAO,oCAAoC;IAG/C,KAAK,CAAQ;IAEb,YAAY,KAAa;QACvB,IAAI,CAAC,KAAK,GAAG,KAAK,CAAA;IACpB,CAAC;IAED,yCAAyC;IACzC,sDAAsD;IACtD,cAAc,CAAC,OAA4B;QACzC,IAAI,CAAC,OAAO,CAAC,OAAO,EAAE;YACpB,MAAM,KAAK,CAAC,4BAA4B,CAAC,CAAA;SAC1C;QACD,OAAO,CAAC,OAAO,CAAC,eAAe,CAAC,GAAG,SAAS,MAAM,CAAC,IAAI,CACrD,OAAO,IAAI,CAAC,KAAK,EAAE,CACpB,CAAC,QAAQ,CAAC,QAAQ,CAAC,EAAE,CAAA;IACxB,CAAC;IAED,iCAAiC;IACjC,uBAAuB;QACrB,OAAO,KAAK,CAAA;IACd,CAAC;IAED,KAAK,CAAC,oBAAoB;QACxB,MAAM,IAAI,KAAK,CAAC,iBAAiB,CAAC,CAAA;IACpC,CAAC;CACF"}
+\ No newline at end of file
+diff --git a/lib/esnext/index.d.ts b/lib/esnext/index.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..9caa09694850d35d371beda2586c32bc65690dba
+--- /dev/null
++++ b/lib/esnext/index.d.ts
+@@ -0,0 +1,130 @@
++/// <reference types="node" />
++/// <reference types="node" />
++/// <reference types="node" />
++import * as http from 'http';
++import * as ifm from './interfaces';
++import type ProxyAgent from 'undici/types/proxy-agent';
++export declare enum HttpCodes {
++    OK = 200,
++    MultipleChoices = 300,
++    MovedPermanently = 301,
++    ResourceMoved = 302,
++    SeeOther = 303,
++    NotModified = 304,
++    UseProxy = 305,
++    SwitchProxy = 306,
++    TemporaryRedirect = 307,
++    PermanentRedirect = 308,
++    BadRequest = 400,
++    Unauthorized = 401,
++    PaymentRequired = 402,
++    Forbidden = 403,
++    NotFound = 404,
++    MethodNotAllowed = 405,
++    NotAcceptable = 406,
++    ProxyAuthenticationRequired = 407,
++    RequestTimeout = 408,
++    Conflict = 409,
++    Gone = 410,
++    TooManyRequests = 429,
++    InternalServerError = 500,
++    NotImplemented = 501,
++    BadGateway = 502,
++    ServiceUnavailable = 503,
++    GatewayTimeout = 504
++}
++export declare enum Headers {
++    Accept = "accept",
++    ContentType = "content-type"
++}
++export declare enum MediaTypes {
++    ApplicationJson = "application/json"
++}
++/**
++ * Returns the proxy URL, depending upon the supplied url and proxy environment variables.
++ * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
++ */
++export declare function getProxyUrl(serverUrl: string): string;
++export declare class HttpClientError extends Error {
++    constructor(message: string, statusCode: number);
++    statusCode: number;
++    result?: any;
++}
++export declare class HttpClientResponse {
++    constructor(message: http.IncomingMessage);
++    message: http.IncomingMessage;
++    readBody(): Promise<string>;
++    readBodyBuffer?(): Promise<Buffer>;
++}
++export declare function isHttps(requestUrl: string): boolean;
++export declare class HttpClient {
++    userAgent: string | undefined;
++    handlers: ifm.RequestHandler[];
++    requestOptions: ifm.RequestOptions | undefined;
++    private _ignoreSslError;
++    private _socketTimeout;
++    private _allowRedirects;
++    private _allowRedirectDowngrade;
++    private _maxRedirects;
++    private _allowRetries;
++    private _maxRetries;
++    private _agent;
++    private _proxyAgent;
++    private _proxyAgentDispatcher;
++    private _keepAlive;
++    private _disposed;
++    constructor(userAgent?: string, handlers?: ifm.RequestHandler[], requestOptions?: ifm.RequestOptions);
++    options(requestUrl: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    get(requestUrl: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    del(requestUrl: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    post(requestUrl: string, data: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    patch(requestUrl: string, data: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    put(requestUrl: string, data: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    head(requestUrl: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    sendStream(verb: string, requestUrl: string, stream: NodeJS.ReadableStream, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    /**
++     * Gets a typed object from an endpoint
++     * Be aware that not found returns a null.  Other errors (4xx, 5xx) reject the promise
++     */
++    getJson<T>(requestUrl: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<ifm.TypedResponse<T>>;
++    postJson<T>(requestUrl: string, obj: any, additionalHeaders?: http.OutgoingHttpHeaders): Promise<ifm.TypedResponse<T>>;
++    putJson<T>(requestUrl: string, obj: any, additionalHeaders?: http.OutgoingHttpHeaders): Promise<ifm.TypedResponse<T>>;
++    patchJson<T>(requestUrl: string, obj: any, additionalHeaders?: http.OutgoingHttpHeaders): Promise<ifm.TypedResponse<T>>;
++    /**
++     * Makes a raw http request.
++     * All other methods such as get, post, patch, and request ultimately call this.
++     * Prefer get, del, post and patch
++     */
++    request(verb: string, requestUrl: string, data: string | NodeJS.ReadableStream | null, headers?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    /**
++     * Needs to be called if keepAlive is set to true in request options.
++     */
++    dispose(): void;
++    /**
++     * Raw request.
++     * @param info
++     * @param data
++     */
++    requestRaw(info: ifm.RequestInfo, data: string | NodeJS.ReadableStream | null): Promise<HttpClientResponse>;
++    /**
++     * Raw request with callback.
++     * @param info
++     * @param data
++     * @param onResult
++     */
++    requestRawWithCallback(info: ifm.RequestInfo, data: string | NodeJS.ReadableStream | null, onResult: (err?: Error, res?: HttpClientResponse) => void): void;
++    /**
++     * Gets an http agent. This function is useful when you need an http agent that handles
++     * routing through a proxy server - depending upon the url and proxy environment variables.
++     * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
++     */
++    getAgent(serverUrl: string): http.Agent;
++    getAgentDispatcher(serverUrl: string): Promise<ProxyAgent | undefined>;
++    private _prepareRequest;
++    private _mergeHeaders;
++    private _getExistingOrDefaultHeader;
++    private _getAgent;
++    private _getProxyAgentDispatcher;
++    private _performExponentialBackoff;
++    private _processResponse;
++}
+diff --git a/lib/esnext/index.js b/lib/esnext/index.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..9086c7d6b1810d1b955a287d68cbdc1649f4ba2e
+--- /dev/null
++++ b/lib/esnext/index.js
+@@ -0,0 +1,595 @@
++/* eslint-disable @typescript-eslint/no-explicit-any */
++import * as http from 'http';
++import * as https from 'https';
++import * as pm from './proxy';
++import * as tunnel from 'tunnel';
++export var HttpCodes;
++(function (HttpCodes) {
++    HttpCodes[HttpCodes["OK"] = 200] = "OK";
++    HttpCodes[HttpCodes["MultipleChoices"] = 300] = "MultipleChoices";
++    HttpCodes[HttpCodes["MovedPermanently"] = 301] = "MovedPermanently";
++    HttpCodes[HttpCodes["ResourceMoved"] = 302] = "ResourceMoved";
++    HttpCodes[HttpCodes["SeeOther"] = 303] = "SeeOther";
++    HttpCodes[HttpCodes["NotModified"] = 304] = "NotModified";
++    HttpCodes[HttpCodes["UseProxy"] = 305] = "UseProxy";
++    HttpCodes[HttpCodes["SwitchProxy"] = 306] = "SwitchProxy";
++    HttpCodes[HttpCodes["TemporaryRedirect"] = 307] = "TemporaryRedirect";
++    HttpCodes[HttpCodes["PermanentRedirect"] = 308] = "PermanentRedirect";
++    HttpCodes[HttpCodes["BadRequest"] = 400] = "BadRequest";
++    HttpCodes[HttpCodes["Unauthorized"] = 401] = "Unauthorized";
++    HttpCodes[HttpCodes["PaymentRequired"] = 402] = "PaymentRequired";
++    HttpCodes[HttpCodes["Forbidden"] = 403] = "Forbidden";
++    HttpCodes[HttpCodes["NotFound"] = 404] = "NotFound";
++    HttpCodes[HttpCodes["MethodNotAllowed"] = 405] = "MethodNotAllowed";
++    HttpCodes[HttpCodes["NotAcceptable"] = 406] = "NotAcceptable";
++    HttpCodes[HttpCodes["ProxyAuthenticationRequired"] = 407] = "ProxyAuthenticationRequired";
++    HttpCodes[HttpCodes["RequestTimeout"] = 408] = "RequestTimeout";
++    HttpCodes[HttpCodes["Conflict"] = 409] = "Conflict";
++    HttpCodes[HttpCodes["Gone"] = 410] = "Gone";
++    HttpCodes[HttpCodes["TooManyRequests"] = 429] = "TooManyRequests";
++    HttpCodes[HttpCodes["InternalServerError"] = 500] = "InternalServerError";
++    HttpCodes[HttpCodes["NotImplemented"] = 501] = "NotImplemented";
++    HttpCodes[HttpCodes["BadGateway"] = 502] = "BadGateway";
++    HttpCodes[HttpCodes["ServiceUnavailable"] = 503] = "ServiceUnavailable";
++    HttpCodes[HttpCodes["GatewayTimeout"] = 504] = "GatewayTimeout";
++})(HttpCodes || (HttpCodes = {}));
++export var Headers;
++(function (Headers) {
++    Headers["Accept"] = "accept";
++    Headers["ContentType"] = "content-type";
++})(Headers || (Headers = {}));
++export var MediaTypes;
++(function (MediaTypes) {
++    MediaTypes["ApplicationJson"] = "application/json";
++})(MediaTypes || (MediaTypes = {}));
++/**
++ * Returns the proxy URL, depending upon the supplied url and proxy environment variables.
++ * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
++ */
++export function getProxyUrl(serverUrl) {
++    const proxyUrl = pm.getProxyUrl(new URL(serverUrl));
++    return proxyUrl ? proxyUrl.href : '';
++}
++const HttpRedirectCodes = [
++    HttpCodes.MovedPermanently,
++    HttpCodes.ResourceMoved,
++    HttpCodes.SeeOther,
++    HttpCodes.TemporaryRedirect,
++    HttpCodes.PermanentRedirect
++];
++const HttpResponseRetryCodes = [
++    HttpCodes.BadGateway,
++    HttpCodes.ServiceUnavailable,
++    HttpCodes.GatewayTimeout
++];
++const RetryableHttpVerbs = ['OPTIONS', 'GET', 'DELETE', 'HEAD'];
++const ExponentialBackoffCeiling = 10;
++const ExponentialBackoffTimeSlice = 5;
++export class HttpClientError extends Error {
++    constructor(message, statusCode) {
++        super(message);
++        this.name = 'HttpClientError';
++        this.statusCode = statusCode;
++        Object.setPrototypeOf(this, HttpClientError.prototype);
++    }
++    statusCode;
++    result;
++}
++export class HttpClientResponse {
++    constructor(message) {
++        this.message = message;
++    }
++    message;
++    async readBody() {
++        return new Promise(async (resolve) => {
++            let output = Buffer.alloc(0);
++            this.message.on('data', (chunk) => {
++                output = Buffer.concat([output, chunk]);
++            });
++            this.message.on('end', () => {
++                resolve(output.toString());
++            });
++        });
++    }
++    async readBodyBuffer() {
++        return new Promise(async (resolve) => {
++            const chunks = [];
++            this.message.on('data', (chunk) => {
++                chunks.push(chunk);
++            });
++            this.message.on('end', () => {
++                resolve(Buffer.concat(chunks));
++            });
++        });
++    }
++}
++export function isHttps(requestUrl) {
++    const parsedUrl = new URL(requestUrl);
++    return parsedUrl.protocol === 'https:';
++}
++export class HttpClient {
++    userAgent;
++    handlers;
++    requestOptions;
++    _ignoreSslError = false;
++    _socketTimeout;
++    _allowRedirects = true;
++    _allowRedirectDowngrade = false;
++    _maxRedirects = 50;
++    _allowRetries = false;
++    _maxRetries = 1;
++    _agent;
++    _proxyAgent;
++    _proxyAgentDispatcher;
++    _keepAlive = false;
++    _disposed = false;
++    constructor(userAgent, handlers, requestOptions) {
++        this.userAgent = userAgent;
++        this.handlers = handlers || [];
++        this.requestOptions = requestOptions;
++        if (requestOptions) {
++            if (requestOptions.ignoreSslError != null) {
++                this._ignoreSslError = requestOptions.ignoreSslError;
++            }
++            this._socketTimeout = requestOptions.socketTimeout;
++            if (requestOptions.allowRedirects != null) {
++                this._allowRedirects = requestOptions.allowRedirects;
++            }
++            if (requestOptions.allowRedirectDowngrade != null) {
++                this._allowRedirectDowngrade = requestOptions.allowRedirectDowngrade;
++            }
++            if (requestOptions.maxRedirects != null) {
++                this._maxRedirects = Math.max(requestOptions.maxRedirects, 0);
++            }
++            if (requestOptions.keepAlive != null) {
++                this._keepAlive = requestOptions.keepAlive;
++            }
++            if (requestOptions.allowRetries != null) {
++                this._allowRetries = requestOptions.allowRetries;
++            }
++            if (requestOptions.maxRetries != null) {
++                this._maxRetries = requestOptions.maxRetries;
++            }
++        }
++    }
++    async options(requestUrl, additionalHeaders) {
++        return this.request('OPTIONS', requestUrl, null, additionalHeaders || {});
++    }
++    async get(requestUrl, additionalHeaders) {
++        return this.request('GET', requestUrl, null, additionalHeaders || {});
++    }
++    async del(requestUrl, additionalHeaders) {
++        return this.request('DELETE', requestUrl, null, additionalHeaders || {});
++    }
++    async post(requestUrl, data, additionalHeaders) {
++        return this.request('POST', requestUrl, data, additionalHeaders || {});
++    }
++    async patch(requestUrl, data, additionalHeaders) {
++        return this.request('PATCH', requestUrl, data, additionalHeaders || {});
++    }
++    async put(requestUrl, data, additionalHeaders) {
++        return this.request('PUT', requestUrl, data, additionalHeaders || {});
++    }
++    async head(requestUrl, additionalHeaders) {
++        return this.request('HEAD', requestUrl, null, additionalHeaders || {});
++    }
++    async sendStream(verb, requestUrl, stream, additionalHeaders) {
++        return this.request(verb, requestUrl, stream, additionalHeaders);
++    }
++    /**
++     * Gets a typed object from an endpoint
++     * Be aware that not found returns a null.  Other errors (4xx, 5xx) reject the promise
++     */
++    async getJson(requestUrl, additionalHeaders = {}) {
++        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
++        const res = await this.get(requestUrl, additionalHeaders);
++        return this._processResponse(res, this.requestOptions);
++    }
++    async postJson(requestUrl, obj, additionalHeaders = {}) {
++        const data = JSON.stringify(obj, null, 2);
++        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
++        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
++        const res = await this.post(requestUrl, data, additionalHeaders);
++        return this._processResponse(res, this.requestOptions);
++    }
++    async putJson(requestUrl, obj, additionalHeaders = {}) {
++        const data = JSON.stringify(obj, null, 2);
++        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
++        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
++        const res = await this.put(requestUrl, data, additionalHeaders);
++        return this._processResponse(res, this.requestOptions);
++    }
++    async patchJson(requestUrl, obj, additionalHeaders = {}) {
++        const data = JSON.stringify(obj, null, 2);
++        additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.Accept, MediaTypes.ApplicationJson);
++        additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(additionalHeaders, Headers.ContentType, MediaTypes.ApplicationJson);
++        const res = await this.patch(requestUrl, data, additionalHeaders);
++        return this._processResponse(res, this.requestOptions);
++    }
++    /**
++     * Makes a raw http request.
++     * All other methods such as get, post, patch, and request ultimately call this.
++     * Prefer get, del, post and patch
++     */
++    async request(verb, requestUrl, data, headers) {
++        if (this._disposed) {
++            throw new Error('Client has already been disposed.');
++        }
++        const parsedUrl = new URL(requestUrl);
++        let info = this._prepareRequest(verb, parsedUrl, headers);
++        // Only perform retries on reads since writes may not be idempotent.
++        const maxTries = this._allowRetries && RetryableHttpVerbs.includes(verb)
++            ? this._maxRetries + 1
++            : 1;
++        let numTries = 0;
++        let response;
++        do {
++            response = await this.requestRaw(info, data);
++            // Check if it's an authentication challenge
++            if (response &&
++                response.message &&
++                response.message.statusCode === HttpCodes.Unauthorized) {
++                let authenticationHandler;
++                for (const handler of this.handlers) {
++                    if (handler.canHandleAuthentication(response)) {
++                        authenticationHandler = handler;
++                        break;
++                    }
++                }
++                if (authenticationHandler) {
++                    return authenticationHandler.handleAuthentication(this, info, data);
++                }
++                else {
++                    // We have received an unauthorized response but have no handlers to handle it.
++                    // Let the response return to the caller.
++                    return response;
++                }
++            }
++            let redirectsRemaining = this._maxRedirects;
++            while (response.message.statusCode &&
++                HttpRedirectCodes.includes(response.message.statusCode) &&
++                this._allowRedirects &&
++                redirectsRemaining > 0) {
++                const redirectUrl = response.message.headers['location'];
++                if (!redirectUrl) {
++                    // if there's no location to redirect to, we won't
++                    break;
++                }
++                const parsedRedirectUrl = new URL(redirectUrl);
++                if (parsedUrl.protocol === 'https:' &&
++                    parsedUrl.protocol !== parsedRedirectUrl.protocol &&
++                    !this._allowRedirectDowngrade) {
++                    throw new Error('Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.');
++                }
++                // we need to finish reading the response before reassigning response
++                // which will leak the open socket.
++                await response.readBody();
++                // strip authorization header if redirected to a different hostname
++                if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {
++                    for (const header in headers) {
++                        // header names are case insensitive
++                        if (header.toLowerCase() === 'authorization') {
++                            delete headers[header];
++                        }
++                    }
++                }
++                // let's make the request with the new redirectUrl
++                info = this._prepareRequest(verb, parsedRedirectUrl, headers);
++                response = await this.requestRaw(info, data);
++                redirectsRemaining--;
++            }
++            if (!response.message.statusCode ||
++                !HttpResponseRetryCodes.includes(response.message.statusCode)) {
++                // If not a retry code, return immediately instead of retrying
++                return response;
++            }
++            numTries += 1;
++            if (numTries < maxTries) {
++                await response.readBody();
++                await this._performExponentialBackoff(numTries);
++            }
++        } while (numTries < maxTries);
++        return response;
++    }
++    /**
++     * Needs to be called if keepAlive is set to true in request options.
++     */
++    dispose() {
++        if (this._agent) {
++            this._agent.destroy();
++        }
++        this._disposed = true;
++    }
++    /**
++     * Raw request.
++     * @param info
++     * @param data
++     */
++    async requestRaw(info, data) {
++        return new Promise((resolve, reject) => {
++            function callbackForResult(err, res) {
++                if (err) {
++                    reject(err);
++                }
++                else if (!res) {
++                    // If `err` is not passed, then `res` must be passed.
++                    reject(new Error('Unknown error'));
++                }
++                else {
++                    resolve(res);
++                }
++            }
++            this.requestRawWithCallback(info, data, callbackForResult);
++        });
++    }
++    /**
++     * Raw request with callback.
++     * @param info
++     * @param data
++     * @param onResult
++     */
++    requestRawWithCallback(info, data, onResult) {
++        if (typeof data === 'string') {
++            if (!info.options.headers) {
++                info.options.headers = {};
++            }
++            info.options.headers['Content-Length'] = Buffer.byteLength(data, 'utf8');
++        }
++        let callbackCalled = false;
++        function handleResult(err, res) {
++            if (!callbackCalled) {
++                callbackCalled = true;
++                onResult(err, res);
++            }
++        }
++        const req = info.httpModule.request(info.options, (msg) => {
++            const res = new HttpClientResponse(msg);
++            handleResult(undefined, res);
++        });
++        let socket;
++        req.on('socket', sock => {
++            socket = sock;
++        });
++        // If we ever get disconnected, we want the socket to timeout eventually
++        req.setTimeout(this._socketTimeout || 3 * 60000, () => {
++            if (socket) {
++                socket.end();
++            }
++            handleResult(new Error(`Request timeout: ${info.options.path}`));
++        });
++        req.on('error', function (err) {
++            // err has statusCode property
++            // res should have headers
++            handleResult(err);
++        });
++        if (data && typeof data === 'string') {
++            req.write(data, 'utf8');
++        }
++        if (data && typeof data !== 'string') {
++            data.on('close', function () {
++                req.end();
++            });
++            data.pipe(req);
++        }
++        else {
++            req.end();
++        }
++    }
++    /**
++     * Gets an http agent. This function is useful when you need an http agent that handles
++     * routing through a proxy server - depending upon the url and proxy environment variables.
++     * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
++     */
++    getAgent(serverUrl) {
++        const parsedUrl = new URL(serverUrl);
++        return this._getAgent(parsedUrl);
++    }
++    async getAgentDispatcher(serverUrl) {
++        const parsedUrl = new URL(serverUrl);
++        const proxyUrl = pm.getProxyUrl(parsedUrl);
++        const useProxy = proxyUrl && proxyUrl.hostname;
++        if (!useProxy) {
++            return undefined;
++        }
++        return await this._getProxyAgentDispatcher(parsedUrl, proxyUrl);
++    }
++    _prepareRequest(method, requestUrl, headers) {
++        const info = {};
++        info.parsedUrl = requestUrl;
++        const usingSsl = info.parsedUrl.protocol === 'https:';
++        info.httpModule = usingSsl ? https : http;
++        const defaultPort = usingSsl ? 443 : 80;
++        info.options = {};
++        info.options.host = info.parsedUrl.hostname;
++        info.options.port = info.parsedUrl.port
++            ? parseInt(info.parsedUrl.port)
++            : defaultPort;
++        info.options.path =
++            (info.parsedUrl.pathname || '') + (info.parsedUrl.search || '');
++        info.options.method = method;
++        info.options.headers = this._mergeHeaders(headers);
++        if (this.userAgent != null) {
++            info.options.headers['user-agent'] = this.userAgent;
++        }
++        info.options.agent = this._getAgent(info.parsedUrl);
++        // gives handlers an opportunity to participate
++        if (this.handlers) {
++            for (const handler of this.handlers) {
++                handler.prepareRequest(info.options);
++            }
++        }
++        return info;
++    }
++    _mergeHeaders(headers) {
++        if (this.requestOptions && this.requestOptions.headers) {
++            return Object.assign({}, lowercaseKeys(this.requestOptions.headers), lowercaseKeys(headers || {}));
++        }
++        return lowercaseKeys(headers || {});
++    }
++    _getExistingOrDefaultHeader(additionalHeaders, header, _default) {
++        let clientHeader;
++        if (this.requestOptions && this.requestOptions.headers) {
++            clientHeader = lowercaseKeys(this.requestOptions.headers)[header];
++        }
++        return additionalHeaders[header] || clientHeader || _default;
++    }
++    _getAgent(parsedUrl) {
++        let agent;
++        const proxyUrl = pm.getProxyUrl(parsedUrl);
++        const useProxy = proxyUrl && proxyUrl.hostname;
++        if (this._keepAlive && useProxy) {
++            agent = this._proxyAgent;
++        }
++        if (!useProxy) {
++            agent = this._agent;
++        }
++        // if agent is already assigned use that agent.
++        if (agent) {
++            return agent;
++        }
++        const usingSsl = parsedUrl.protocol === 'https:';
++        let maxSockets = 100;
++        if (this.requestOptions) {
++            maxSockets = this.requestOptions.maxSockets || http.globalAgent.maxSockets;
++        }
++        // This is `useProxy` again, but we need to check `proxyURl` directly for TypeScripts's flow analysis.
++        if (proxyUrl && proxyUrl.hostname) {
++            const agentOptions = {
++                maxSockets,
++                keepAlive: this._keepAlive,
++                proxy: {
++                    ...((proxyUrl.username || proxyUrl.password) && {
++                        proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
++                    }),
++                    host: proxyUrl.hostname,
++                    port: proxyUrl.port
++                }
++            };
++            let tunnelAgent;
++            const overHttps = proxyUrl.protocol === 'https:';
++            if (usingSsl) {
++                tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp;
++            }
++            else {
++                tunnelAgent = overHttps ? tunnel.httpOverHttps : tunnel.httpOverHttp;
++            }
++            agent = tunnelAgent(agentOptions);
++            this._proxyAgent = agent;
++        }
++        // if tunneling agent isn't assigned create a new agent
++        if (!agent) {
++            const options = { keepAlive: this._keepAlive, maxSockets };
++            agent = usingSsl ? new https.Agent(options) : new http.Agent(options);
++            this._agent = agent;
++        }
++        if (usingSsl && this._ignoreSslError) {
++            // we don't want to set NODE_TLS_REJECT_UNAUTHORIZED=0 since that will affect request for entire process
++            // http.RequestOptions doesn't expose a way to modify RequestOptions.agent.options
++            // we have to cast it to any and change it directly
++            agent.options = Object.assign(agent.options || {}, {
++                rejectUnauthorized: false
++            });
++        }
++        return agent;
++    }
++    async _getProxyAgentDispatcher(parsedUrl, proxyUrl) {
++        let proxyAgent;
++        if (this._keepAlive) {
++            proxyAgent = this._proxyAgentDispatcher;
++        }
++        // if agent is already assigned use that agent.
++        if (proxyAgent) {
++            return proxyAgent;
++        }
++        const usingSsl = parsedUrl.protocol === 'https:';
++        // Lazy load ProxyAgent to avoid bundling all the undici
++        const ProxyAgent = (await import('undici/lib/proxy-agent'));
++        proxyAgent = new ProxyAgent({
++            uri: proxyUrl.href,
++            pipelining: !this._keepAlive ? 0 : 1,
++            ...((proxyUrl.username || proxyUrl.password) && {
++                token: `Basic ${Buffer.from(`${proxyUrl.username}:${proxyUrl.password}`).toString('base64')}`
++            })
++        });
++        this._proxyAgentDispatcher = proxyAgent;
++        if (usingSsl && this._ignoreSslError) {
++            // we don't want to set NODE_TLS_REJECT_UNAUTHORIZED=0 since that will affect request for entire process
++            // http.RequestOptions doesn't expose a way to modify RequestOptions.agent.options
++            // we have to cast it to any and change it directly
++            proxyAgent.options = Object.assign(proxyAgent.options.requestTls || {}, {
++                rejectUnauthorized: false
++            });
++        }
++        return proxyAgent;
++    }
++    async _performExponentialBackoff(retryNumber) {
++        retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber);
++        const ms = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber);
++        return new Promise(resolve => setTimeout(() => resolve(), ms));
++    }
++    async _processResponse(res, options) {
++        return new Promise(async (resolve, reject) => {
++            const statusCode = res.message.statusCode || 0;
++            const response = {
++                statusCode,
++                result: null,
++                headers: {}
++            };
++            // not found leads to null obj returned
++            if (statusCode === HttpCodes.NotFound) {
++                resolve(response);
++            }
++            // get the result from the body
++            function dateTimeDeserializer(key, value) {
++                if (typeof value === 'string') {
++                    const a = new Date(value);
++                    if (!isNaN(a.valueOf())) {
++                        return a;
++                    }
++                }
++                return value;
++            }
++            let obj;
++            let contents;
++            try {
++                contents = await res.readBody();
++                if (contents && contents.length > 0) {
++                    if (options && options.deserializeDates) {
++                        obj = JSON.parse(contents, dateTimeDeserializer);
++                    }
++                    else {
++                        obj = JSON.parse(contents);
++                    }
++                    response.result = obj;
++                }
++                response.headers = res.message.headers;
++            }
++            catch (err) {
++                // Invalid resource (contents not json);  leaving result obj null
++            }
++            // note that 3xx redirects are handled by the http layer.
++            if (statusCode > 299) {
++                let msg;
++                // if exception/error in body, attempt to get better error
++                if (obj && obj.message) {
++                    msg = obj.message;
++                }
++                else if (contents && contents.length > 0) {
++                    // it may be the case that the exception is in the body message as string
++                    msg = contents;
++                }
++                else {
++                    msg = `Failed request: (${statusCode})`;
++                }
++                const err = new HttpClientError(msg, statusCode);
++                err.result = response.result;
++                reject(err);
++            }
++            else {
++                resolve(response);
++            }
++        });
++    }
++}
++const lowercaseKeys = (obj) => Object.keys(obj).reduce((c, k) => ((c[k.toLowerCase()] = obj[k]), c), {});
++//# sourceMappingURL=index.js.map
+\ No newline at end of file
+diff --git a/lib/esnext/index.js.map b/lib/esnext/index.js.map
+new file mode 100644
+index 0000000000000000000000000000000000000000..577ad008b1d0b6290c22872e6497e3f7336aac0f
+--- /dev/null
++++ b/lib/esnext/index.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"index.js","sourceRoot":"","sources":["../../src/index.ts"],"names":[],"mappings":"AAAA,uDAAuD;AAEvD,OAAO,KAAK,IAAI,MAAM,MAAM,CAAA;AAC5B,OAAO,KAAK,KAAK,MAAM,OAAO,CAAA;AAG9B,OAAO,KAAK,EAAE,MAAM,SAAS,CAAA;AAC7B,OAAO,KAAK,MAAM,MAAM,QAAQ,CAAA;AAGhC,MAAM,CAAN,IAAY,SA4BX;AA5BD,WAAY,SAAS;IACnB,uCAAQ,CAAA;IACR,iEAAqB,CAAA;IACrB,mEAAsB,CAAA;IACtB,6DAAmB,CAAA;IACnB,mDAAc,CAAA;IACd,yDAAiB,CAAA;IACjB,mDAAc,CAAA;IACd,yDAAiB,CAAA;IACjB,qEAAuB,CAAA;IACvB,qEAAuB,CAAA;IACvB,uDAAgB,CAAA;IAChB,2DAAkB,CAAA;IAClB,iEAAqB,CAAA;IACrB,qDAAe,CAAA;IACf,mDAAc,CAAA;IACd,mEAAsB,CAAA;IACtB,6DAAmB,CAAA;IACnB,yFAAiC,CAAA;IACjC,+DAAoB,CAAA;IACpB,mDAAc,CAAA;IACd,2CAAU,CAAA;IACV,iEAAqB,CAAA;IACrB,yEAAyB,CAAA;IACzB,+DAAoB,CAAA;IACpB,uDAAgB,CAAA;IAChB,uEAAwB,CAAA;IACxB,+DAAoB,CAAA;AACtB,CAAC,EA5BW,SAAS,KAAT,SAAS,QA4BpB;AAED,MAAM,CAAN,IAAY,OAGX;AAHD,WAAY,OAAO;IACjB,4BAAiB,CAAA;IACjB,uCAA4B,CAAA;AAC9B,CAAC,EAHW,OAAO,KAAP,OAAO,QAGlB;AAED,MAAM,CAAN,IAAY,UAEX;AAFD,WAAY,UAAU;IACpB,kDAAoC,CAAA;AACtC,CAAC,EAFW,UAAU,KAAV,UAAU,QAErB;AAED;;;GAGG;AACH,MAAM,UAAU,WAAW,CAAC,SAAiB;IAC3C,MAAM,QAAQ,GAAG,EAAE,CAAC,WAAW,CAAC,IAAI,GAAG,CAAC,SAAS,CAAC,CAAC,CAAA;IACnD,OAAO,QAAQ,CAAC,CAAC,CAAC,QAAQ,CAAC,IAAI,CAAC,CAAC,CAAC,EAAE,CAAA;AACtC,CAAC;AAED,MAAM,iBAAiB,GAAa;IAClC,SAAS,CAAC,gBAAgB;IAC1B,SAAS,CAAC,aAAa;IACvB,SAAS,CAAC,QAAQ;IAClB,SAAS,CAAC,iBAAiB;IAC3B,SAAS,CAAC,iBAAiB;CAC5B,CAAA;AACD,MAAM,sBAAsB,GAAa;IACvC,SAAS,CAAC,UAAU;IACpB,SAAS,CAAC,kBAAkB;IAC5B,SAAS,CAAC,cAAc;CACzB,CAAA;AACD,MAAM,kBAAkB,GAAa,CAAC,SAAS,EAAE,KAAK,EAAE,QAAQ,EAAE,MAAM,CAAC,CAAA;AACzE,MAAM,yBAAyB,GAAG,EAAE,CAAA;AACpC,MAAM,2BAA2B,GAAG,CAAC,CAAA;AAErC,MAAM,OAAO,eAAgB,SAAQ,KAAK;IACxC,YAAY,OAAe,EAAE,UAAkB;QAC7C,KAAK,CAAC,OAAO,CAAC,CAAA;QACd,IAAI,CAAC,IAAI,GAAG,iBAAiB,CAAA;QAC7B,IAAI,CAAC,UAAU,GAAG,UAAU,CAAA;QAC5B,MAAM,CAAC,cAAc,CAAC,IAAI,EAAE,eAAe,CAAC,SAAS,CAAC,CAAA;IACxD,CAAC;IAED,UAAU,CAAQ;IAClB,MAAM,CAAM;CACb;AAED,MAAM,OAAO,kBAAkB;IAC7B,YAAY,OAA6B;QACvC,IAAI,CAAC,OAAO,GAAG,OAAO,CAAA;IACxB,CAAC;IAED,OAAO,CAAsB;IAC7B,KAAK,CAAC,QAAQ;QACZ,OAAO,IAAI,OAAO,CAAS,KAAK,EAAC,OAAO,EAAC,EAAE;YACzC,IAAI,MAAM,GAAG,MAAM,CAAC,KAAK,CAAC,CAAC,CAAC,CAAA;YAE5B,IAAI,CAAC,OAAO,CAAC,EAAE,CAAC,MAAM,EAAE,CAAC,KAAa,EAAE,EAAE;gBACxC,MAAM,GAAG,MAAM,CAAC,MAAM,CAAC,CAAC,MAAM,EAAE,KAAK,CAAC,CAAC,CAAA;YACzC,CAAC,CAAC,CAAA;YAEF,IAAI,CAAC,OAAO,CAAC,EAAE,CAAC,KAAK,EAAE,GAAG,EAAE;gBAC1B,OAAO,CAAC,MAAM,CAAC,QAAQ,EAAE,CAAC,CAAA;YAC5B,CAAC,CAAC,CAAA;QACJ,CAAC,CAAC,CAAA;IACJ,CAAC;IAED,KAAK,CAAC,cAAc;QAClB,OAAO,IAAI,OAAO,CAAS,KAAK,EAAC,OAAO,EAAC,EAAE;YACzC,MAAM,MAAM,GAAa,EAAE,CAAA;YAE3B,IAAI,CAAC,OAAO,CAAC,EAAE,CAAC,MAAM,EAAE,CAAC,KAAa,EAAE,EAAE;gBACxC,MAAM,CAAC,IAAI,CAAC,KAAK,CAAC,CAAA;YACpB,CAAC,CAAC,CAAA;YAEF,IAAI,CAAC,OAAO,CAAC,EAAE,CAAC,KAAK,EAAE,GAAG,EAAE;gBAC1B,OAAO,CAAC,MAAM,CAAC,MAAM,CAAC,MAAM,CAAC,CAAC,CAAA;YAChC,CAAC,CAAC,CAAA;QACJ,CAAC,CAAC,CAAA;IACJ,CAAC;CACF;AAED,MAAM,UAAU,OAAO,CAAC,UAAkB;IACxC,MAAM,SAAS,GAAQ,IAAI,GAAG,CAAC,UAAU,CAAC,CAAA;IAC1C,OAAO,SAAS,CAAC,QAAQ,KAAK,QAAQ,CAAA;AACxC,CAAC;AAED,MAAM,OAAO,UAAU;IACrB,SAAS,CAAoB;IAC7B,QAAQ,CAAsB;IAC9B,cAAc,CAAgC;IAEtC,eAAe,GAAG,KAAK,CAAA;IACvB,cAAc,CAAoB;IAClC,eAAe,GAAG,IAAI,CAAA;IACtB,uBAAuB,GAAG,KAAK,CAAA;IAC/B,aAAa,GAAG,EAAE,CAAA;IAClB,aAAa,GAAG,KAAK,CAAA;IACrB,WAAW,GAAG,CAAC,CAAA;IACf,MAAM,CAAK;IACX,WAAW,CAAK;IAChB,qBAAqB,CAAK;IAC1B,UAAU,GAAG,KAAK,CAAA;IAClB,SAAS,GAAG,KAAK,CAAA;IAEzB,YACE,SAAkB,EAClB,QAA+B,EAC/B,cAAmC;QAEnC,IAAI,CAAC,SAAS,GAAG,SAAS,CAAA;QAC1B,IAAI,CAAC,QAAQ,GAAG,QAAQ,IAAI,EAAE,CAAA;QAC9B,IAAI,CAAC,cAAc,GAAG,cAAc,CAAA;QACpC,IAAI,cAAc,EAAE;YAClB,IAAI,cAAc,CAAC,cAAc,IAAI,IAAI,EAAE;gBACzC,IAAI,CAAC,eAAe,GAAG,cAAc,CAAC,cAAc,CAAA;aACrD;YAED,IAAI,CAAC,cAAc,GAAG,cAAc,CAAC,aAAa,CAAA;YAElD,IAAI,cAAc,CAAC,cAAc,IAAI,IAAI,EAAE;gBACzC,IAAI,CAAC,eAAe,GAAG,cAAc,CAAC,cAAc,CAAA;aACrD;YAED,IAAI,cAAc,CAAC,sBAAsB,IAAI,IAAI,EAAE;gBACjD,IAAI,CAAC,uBAAuB,GAAG,cAAc,CAAC,sBAAsB,CAAA;aACrE;YAED,IAAI,cAAc,CAAC,YAAY,IAAI,IAAI,EAAE;gBACvC,IAAI,CAAC,aAAa,GAAG,IAAI,CAAC,GAAG,CAAC,cAAc,CAAC,YAAY,EAAE,CAAC,CAAC,CAAA;aAC9D;YAED,IAAI,cAAc,CAAC,SAAS,IAAI,IAAI,EAAE;gBACpC,IAAI,CAAC,UAAU,GAAG,cAAc,CAAC,SAAS,CAAA;aAC3C;YAED,IAAI,cAAc,CAAC,YAAY,IAAI,IAAI,EAAE;gBACvC,IAAI,CAAC,aAAa,GAAG,cAAc,CAAC,YAAY,CAAA;aACjD;YAED,IAAI,cAAc,CAAC,UAAU,IAAI,IAAI,EAAE;gBACrC,IAAI,CAAC,WAAW,GAAG,cAAc,CAAC,UAAU,CAAA;aAC7C;SACF;IACH,CAAC;IAED,KAAK,CAAC,OAAO,CACX,UAAkB,EAClB,iBAA4C;QAE5C,OAAO,IAAI,CAAC,OAAO,CAAC,SAAS,EAAE,UAAU,EAAE,IAAI,EAAE,iBAAiB,IAAI,EAAE,CAAC,CAAA;IAC3E,CAAC;IAED,KAAK,CAAC,GAAG,CACP,UAAkB,EAClB,iBAA4C;QAE5C,OAAO,IAAI,CAAC,OAAO,CAAC,KAAK,EAAE,UAAU,EAAE,IAAI,EAAE,iBAAiB,IAAI,EAAE,CAAC,CAAA;IACvE,CAAC;IAED,KAAK,CAAC,GAAG,CACP,UAAkB,EAClB,iBAA4C;QAE5C,OAAO,IAAI,CAAC,OAAO,CAAC,QAAQ,EAAE,UAAU,EAAE,IAAI,EAAE,iBAAiB,IAAI,EAAE,CAAC,CAAA;IAC1E,CAAC;IAED,KAAK,CAAC,IAAI,CACR,UAAkB,EAClB,IAAY,EACZ,iBAA4C;QAE5C,OAAO,IAAI,CAAC,OAAO,CAAC,MAAM,EAAE,UAAU,EAAE,IAAI,EAAE,iBAAiB,IAAI,EAAE,CAAC,CAAA;IACxE,CAAC;IAED,KAAK,CAAC,KAAK,CACT,UAAkB,EAClB,IAAY,EACZ,iBAA4C;QAE5C,OAAO,IAAI,CAAC,OAAO,CAAC,OAAO,EAAE,UAAU,EAAE,IAAI,EAAE,iBAAiB,IAAI,EAAE,CAAC,CAAA;IACzE,CAAC;IAED,KAAK,CAAC,GAAG,CACP,UAAkB,EAClB,IAAY,EACZ,iBAA4C;QAE5C,OAAO,IAAI,CAAC,OAAO,CAAC,KAAK,EAAE,UAAU,EAAE,IAAI,EAAE,iBAAiB,IAAI,EAAE,CAAC,CAAA;IACvE,CAAC;IAED,KAAK,CAAC,IAAI,CACR,UAAkB,EAClB,iBAA4C;QAE5C,OAAO,IAAI,CAAC,OAAO,CAAC,MAAM,EAAE,UAAU,EAAE,IAAI,EAAE,iBAAiB,IAAI,EAAE,CAAC,CAAA;IACxE,CAAC;IAED,KAAK,CAAC,UAAU,CACd,IAAY,EACZ,UAAkB,EAClB,MAA6B,EAC7B,iBAA4C;QAE5C,OAAO,IAAI,CAAC,OAAO,CAAC,IAAI,EAAE,UAAU,EAAE,MAAM,EAAE,iBAAiB,CAAC,CAAA;IAClE,CAAC;IAED;;;OAGG;IACH,KAAK,CAAC,OAAO,CACX,UAAkB,EAClB,oBAA8C,EAAE;QAEhD,iBAAiB,CAAC,OAAO,CAAC,MAAM,CAAC,GAAG,IAAI,CAAC,2BAA2B,CAClE,iBAAiB,EACjB,OAAO,CAAC,MAAM,EACd,UAAU,CAAC,eAAe,CAC3B,CAAA;QACD,MAAM,GAAG,GAAuB,MAAM,IAAI,CAAC,GAAG,CAC5C,UAAU,EACV,iBAAiB,CAClB,CAAA;QACD,OAAO,IAAI,CAAC,gBAAgB,CAAI,GAAG,EAAE,IAAI,CAAC,cAAc,CAAC,CAAA;IAC3D,CAAC;IAED,KAAK,CAAC,QAAQ,CACZ,UAAkB,EAClB,GAAQ,EACR,oBAA8C,EAAE;QAEhD,MAAM,IAAI,GAAW,IAAI,CAAC,SAAS,CAAC,GAAG,EAAE,IAAI,EAAE,CAAC,CAAC,CAAA;QACjD,iBAAiB,CAAC,OAAO,CAAC,MAAM,CAAC,GAAG,IAAI,CAAC,2BAA2B,CAClE,iBAAiB,EACjB,OAAO,CAAC,MAAM,EACd,UAAU,CAAC,eAAe,CAC3B,CAAA;QACD,iBAAiB,CAAC,OAAO,CAAC,WAAW,CAAC,GAAG,IAAI,CAAC,2BAA2B,CACvE,iBAAiB,EACjB,OAAO,CAAC,WAAW,EACnB,UAAU,CAAC,eAAe,CAC3B,CAAA;QACD,MAAM,GAAG,GAAuB,MAAM,IAAI,CAAC,IAAI,CAC7C,UAAU,EACV,IAAI,EACJ,iBAAiB,CAClB,CAAA;QACD,OAAO,IAAI,CAAC,gBAAgB,CAAI,GAAG,EAAE,IAAI,CAAC,cAAc,CAAC,CAAA;IAC3D,CAAC;IAED,KAAK,CAAC,OAAO,CACX,UAAkB,EAClB,GAAQ,EACR,oBAA8C,EAAE;QAEhD,MAAM,IAAI,GAAW,IAAI,CAAC,SAAS,CAAC,GAAG,EAAE,IAAI,EAAE,CAAC,CAAC,CAAA;QACjD,iBAAiB,CAAC,OAAO,CAAC,MAAM,CAAC,GAAG,IAAI,CAAC,2BAA2B,CAClE,iBAAiB,EACjB,OAAO,CAAC,MAAM,EACd,UAAU,CAAC,eAAe,CAC3B,CAAA;QACD,iBAAiB,CAAC,OAAO,CAAC,WAAW,CAAC,GAAG,IAAI,CAAC,2BAA2B,CACvE,iBAAiB,EACjB,OAAO,CAAC,WAAW,EACnB,UAAU,CAAC,eAAe,CAC3B,CAAA;QACD,MAAM,GAAG,GAAuB,MAAM,IAAI,CAAC,GAAG,CAC5C,UAAU,EACV,IAAI,EACJ,iBAAiB,CAClB,CAAA;QACD,OAAO,IAAI,CAAC,gBAAgB,CAAI,GAAG,EAAE,IAAI,CAAC,cAAc,CAAC,CAAA;IAC3D,CAAC;IAED,KAAK,CAAC,SAAS,CACb,UAAkB,EAClB,GAAQ,EACR,oBAA8C,EAAE;QAEhD,MAAM,IAAI,GAAW,IAAI,CAAC,SAAS,CAAC,GAAG,EAAE,IAAI,EAAE,CAAC,CAAC,CAAA;QACjD,iBAAiB,CAAC,OAAO,CAAC,MAAM,CAAC,GAAG,IAAI,CAAC,2BAA2B,CAClE,iBAAiB,EACjB,OAAO,CAAC,MAAM,EACd,UAAU,CAAC,eAAe,CAC3B,CAAA;QACD,iBAAiB,CAAC,OAAO,CAAC,WAAW,CAAC,GAAG,IAAI,CAAC,2BAA2B,CACvE,iBAAiB,EACjB,OAAO,CAAC,WAAW,EACnB,UAAU,CAAC,eAAe,CAC3B,CAAA;QACD,MAAM,GAAG,GAAuB,MAAM,IAAI,CAAC,KAAK,CAC9C,UAAU,EACV,IAAI,EACJ,iBAAiB,CAClB,CAAA;QACD,OAAO,IAAI,CAAC,gBAAgB,CAAI,GAAG,EAAE,IAAI,CAAC,cAAc,CAAC,CAAA;IAC3D,CAAC;IAED;;;;OAIG;IACH,KAAK,CAAC,OAAO,CACX,IAAY,EACZ,UAAkB,EAClB,IAA2C,EAC3C,OAAkC;QAElC,IAAI,IAAI,CAAC,SAAS,EAAE;YAClB,MAAM,IAAI,KAAK,CAAC,mCAAmC,CAAC,CAAA;SACrD;QAED,MAAM,SAAS,GAAG,IAAI,GAAG,CAAC,UAAU,CAAC,CAAA;QACrC,IAAI,IAAI,GAAoB,IAAI,CAAC,eAAe,CAAC,IAAI,EAAE,SAAS,EAAE,OAAO,CAAC,CAAA;QAE1E,oEAAoE;QACpE,MAAM,QAAQ,GACZ,IAAI,CAAC,aAAa,IAAI,kBAAkB,CAAC,QAAQ,CAAC,IAAI,CAAC;YACrD,CAAC,CAAC,IAAI,CAAC,WAAW,GAAG,CAAC;YACtB,CAAC,CAAC,CAAC,CAAA;QACP,IAAI,QAAQ,GAAG,CAAC,CAAA;QAEhB,IAAI,QAAwC,CAAA;QAC5C,GAAG;YACD,QAAQ,GAAG,MAAM,IAAI,CAAC,UAAU,CAAC,IAAI,EAAE,IAAI,CAAC,CAAA;YAE5C,4CAA4C;YAC5C,IACE,QAAQ;gBACR,QAAQ,CAAC,OAAO;gBAChB,QAAQ,CAAC,OAAO,CAAC,UAAU,KAAK,SAAS,CAAC,YAAY,EACtD;gBACA,IAAI,qBAAqD,CAAA;gBAEzD,KAAK,MAAM,OAAO,IAAI,IAAI,CAAC,QAAQ,EAAE;oBACnC,IAAI,OAAO,CAAC,uBAAuB,CAAC,QAAQ,CAAC,EAAE;wBAC7C,qBAAqB,GAAG,OAAO,CAAA;wBAC/B,MAAK;qBACN;iBACF;gBAED,IAAI,qBAAqB,EAAE;oBACzB,OAAO,qBAAqB,CAAC,oBAAoB,CAAC,IAAI,EAAE,IAAI,EAAE,IAAI,CAAC,CAAA;iBACpE;qBAAM;oBACL,+EAA+E;oBAC/E,yCAAyC;oBACzC,OAAO,QAAQ,CAAA;iBAChB;aACF;YAED,IAAI,kBAAkB,GAAW,IAAI,CAAC,aAAa,CAAA;YACnD,OACE,QAAQ,CAAC,OAAO,CAAC,UAAU;gBAC3B,iBAAiB,CAAC,QAAQ,CAAC,QAAQ,CAAC,OAAO,CAAC,UAAU,CAAC;gBACvD,IAAI,CAAC,eAAe;gBACpB,kBAAkB,GAAG,CAAC,EACtB;gBACA,MAAM,WAAW,GACf,QAAQ,CAAC,OAAO,CAAC,OAAO,CAAC,UAAU,CAAC,CAAA;gBACtC,IAAI,CAAC,WAAW,EAAE;oBAChB,kDAAkD;oBAClD,MAAK;iBACN;gBACD,MAAM,iBAAiB,GAAG,IAAI,GAAG,CAAC,WAAW,CAAC,CAAA;gBAC9C,IACE,SAAS,CAAC,QAAQ,KAAK,QAAQ;oBAC/B,SAAS,CAAC,QAAQ,KAAK,iBAAiB,CAAC,QAAQ;oBACjD,CAAC,IAAI,CAAC,uBAAuB,EAC7B;oBACA,MAAM,IAAI,KAAK,CACb,8KAA8K,CAC/K,CAAA;iBACF;gBAED,qEAAqE;gBACrE,mCAAmC;gBACnC,MAAM,QAAQ,CAAC,QAAQ,EAAE,CAAA;gBAEzB,mEAAmE;gBACnE,IAAI,iBAAiB,CAAC,QAAQ,KAAK,SAAS,CAAC,QAAQ,EAAE;oBACrD,KAAK,MAAM,MAAM,IAAI,OAAO,EAAE;wBAC5B,oCAAoC;wBACpC,IAAI,MAAM,CAAC,WAAW,EAAE,KAAK,eAAe,EAAE;4BAC5C,OAAO,OAAO,CAAC,MAAM,CAAC,CAAA;yBACvB;qBACF;iBACF;gBAED,kDAAkD;gBAClD,IAAI,GAAG,IAAI,CAAC,eAAe,CAAC,IAAI,EAAE,iBAAiB,EAAE,OAAO,CAAC,CAAA;gBAC7D,QAAQ,GAAG,MAAM,IAAI,CAAC,UAAU,CAAC,IAAI,EAAE,IAAI,CAAC,CAAA;gBAC5C,kBAAkB,EAAE,CAAA;aACrB;YAED,IACE,CAAC,QAAQ,CAAC,OAAO,CAAC,UAAU;gBAC5B,CAAC,sBAAsB,CAAC,QAAQ,CAAC,QAAQ,CAAC,OAAO,CAAC,UAAU,CAAC,EAC7D;gBACA,8DAA8D;gBAC9D,OAAO,QAAQ,CAAA;aAChB;YAED,QAAQ,IAAI,CAAC,CAAA;YAEb,IAAI,QAAQ,GAAG,QAAQ,EAAE;gBACvB,MAAM,QAAQ,CAAC,QAAQ,EAAE,CAAA;gBACzB,MAAM,IAAI,CAAC,0BAA0B,CAAC,QAAQ,CAAC,CAAA;aAChD;SACF,QAAQ,QAAQ,GAAG,QAAQ,EAAC;QAE7B,OAAO,QAAQ,CAAA;IACjB,CAAC;IAED;;OAEG;IACH,OAAO;QACL,IAAI,IAAI,CAAC,MAAM,EAAE;YACf,IAAI,CAAC,MAAM,CAAC,OAAO,EAAE,CAAA;SACtB;QAED,IAAI,CAAC,SAAS,GAAG,IAAI,CAAA;IACvB,CAAC;IAED;;;;OAIG;IACH,KAAK,CAAC,UAAU,CACd,IAAqB,EACrB,IAA2C;QAE3C,OAAO,IAAI,OAAO,CAAqB,CAAC,OAAO,EAAE,MAAM,EAAE,EAAE;YACzD,SAAS,iBAAiB,CAAC,GAAW,EAAE,GAAwB;gBAC9D,IAAI,GAAG,EAAE;oBACP,MAAM,CAAC,GAAG,CAAC,CAAA;iBACZ;qBAAM,IAAI,CAAC,GAAG,EAAE;oBACf,qDAAqD;oBACrD,MAAM,CAAC,IAAI,KAAK,CAAC,eAAe,CAAC,CAAC,CAAA;iBACnC;qBAAM;oBACL,OAAO,CAAC,GAAG,CAAC,CAAA;iBACb;YACH,CAAC;YAED,IAAI,CAAC,sBAAsB,CAAC,IAAI,EAAE,IAAI,EAAE,iBAAiB,CAAC,CAAA;QAC5D,CAAC,CAAC,CAAA;IACJ,CAAC;IAED;;;;;OAKG;IACH,sBAAsB,CACpB,IAAqB,EACrB,IAA2C,EAC3C,QAAyD;QAEzD,IAAI,OAAO,IAAI,KAAK,QAAQ,EAAE;YAC5B,IAAI,CAAC,IAAI,CAAC,OAAO,CAAC,OAAO,EAAE;gBACzB,IAAI,CAAC,OAAO,CAAC,OAAO,GAAG,EAAE,CAAA;aAC1B;YACD,IAAI,CAAC,OAAO,CAAC,OAAO,CAAC,gBAAgB,CAAC,GAAG,MAAM,CAAC,UAAU,CAAC,IAAI,EAAE,MAAM,CAAC,CAAA;SACzE;QAED,IAAI,cAAc,GAAG,KAAK,CAAA;QAC1B,SAAS,YAAY,CAAC,GAAW,EAAE,GAAwB;YACzD,IAAI,CAAC,cAAc,EAAE;gBACnB,cAAc,GAAG,IAAI,CAAA;gBACrB,QAAQ,CAAC,GAAG,EAAE,GAAG,CAAC,CAAA;aACnB;QACH,CAAC;QAED,MAAM,GAAG,GAAuB,IAAI,CAAC,UAAU,CAAC,OAAO,CACrD,IAAI,CAAC,OAAO,EACZ,CAAC,GAAyB,EAAE,EAAE;YAC5B,MAAM,GAAG,GAAuB,IAAI,kBAAkB,CAAC,GAAG,CAAC,CAAA;YAC3D,YAAY,CAAC,SAAS,EAAE,GAAG,CAAC,CAAA;QAC9B,CAAC,CACF,CAAA;QAED,IAAI,MAAkB,CAAA;QACtB,GAAG,CAAC,EAAE,CAAC,QAAQ,EAAE,IAAI,CAAC,EAAE;YACtB,MAAM,GAAG,IAAI,CAAA;QACf,CAAC,CAAC,CAAA;QAEF,wEAAwE;QACxE,GAAG,CAAC,UAAU,CAAC,IAAI,CAAC,cAAc,IAAI,CAAC,GAAG,KAAK,EAAE,GAAG,EAAE;YACpD,IAAI,MAAM,EAAE;gBACV,MAAM,CAAC,GAAG,EAAE,CAAA;aACb;YACD,YAAY,CAAC,IAAI,KAAK,CAAC,oBAAoB,IAAI,CAAC,OAAO,CAAC,IAAI,EAAE,CAAC,CAAC,CAAA;QAClE,CAAC,CAAC,CAAA;QAEF,GAAG,CAAC,EAAE,CAAC,OAAO,EAAE,UAAU,GAAG;YAC3B,8BAA8B;YAC9B,0BAA0B;YAC1B,YAAY,CAAC,GAAG,CAAC,CAAA;QACnB,CAAC,CAAC,CAAA;QAEF,IAAI,IAAI,IAAI,OAAO,IAAI,KAAK,QAAQ,EAAE;YACpC,GAAG,CAAC,KAAK,CAAC,IAAI,EAAE,MAAM,CAAC,CAAA;SACxB;QAED,IAAI,IAAI,IAAI,OAAO,IAAI,KAAK,QAAQ,EAAE;YACpC,IAAI,CAAC,EAAE,CAAC,OAAO,EAAE;gBACf,GAAG,CAAC,GAAG,EAAE,CAAA;YACX,CAAC,CAAC,CAAA;YAEF,IAAI,CAAC,IAAI,CAAC,GAAG,CAAC,CAAA;SACf;aAAM;YACL,GAAG,CAAC,GAAG,EAAE,CAAA;SACV;IACH,CAAC;IAED;;;;OAIG;IACH,QAAQ,CAAC,SAAiB;QACxB,MAAM,SAAS,GAAG,IAAI,GAAG,CAAC,SAAS,CAAC,CAAA;QACpC,OAAO,IAAI,CAAC,SAAS,CAAC,SAAS,CAAC,CAAA;IAClC,CAAC;IAED,KAAK,CAAC,kBAAkB,CAAC,SAAiB;QACxC,MAAM,SAAS,GAAG,IAAI,GAAG,CAAC,SAAS,CAAC,CAAA;QACpC,MAAM,QAAQ,GAAG,EAAE,CAAC,WAAW,CAAC,SAAS,CAAC,CAAA;QAC1C,MAAM,QAAQ,GAAG,QAAQ,IAAI,QAAQ,CAAC,QAAQ,CAAA;QAC9C,IAAI,CAAC,QAAQ,EAAE;YACb,OAAO,SAAS,CAAA;SACjB;QAED,OAAO,MAAM,IAAI,CAAC,wBAAwB,CAAC,SAAS,EAAE,QAAQ,CAAC,CAAA;IACjE,CAAC;IAEO,eAAe,CACrB,MAAc,EACd,UAAe,EACf,OAAkC;QAElC,MAAM,IAAI,GAAqC,EAAE,CAAA;QAEjD,IAAI,CAAC,SAAS,GAAG,UAAU,CAAA;QAC3B,MAAM,QAAQ,GAAY,IAAI,CAAC,SAAS,CAAC,QAAQ,KAAK,QAAQ,CAAA;QAC9D,IAAI,CAAC,UAAU,GAAG,QAAQ,CAAC,CAAC,CAAC,KAAK,CAAC,CAAC,CAAC,IAAI,CAAA;QACzC,MAAM,WAAW,GAAW,QAAQ,CAAC,CAAC,CAAC,GAAG,CAAC,CAAC,CAAC,EAAE,CAAA;QAE/C,IAAI,CAAC,OAAO,GAAwB,EAAE,CAAA;QACtC,IAAI,CAAC,OAAO,CAAC,IAAI,GAAG,IAAI,CAAC,SAAS,CAAC,QAAQ,CAAA;QAC3C,IAAI,CAAC,OAAO,CAAC,IAAI,GAAG,IAAI,CAAC,SAAS,CAAC,IAAI;YACrC,CAAC,CAAC,QAAQ,CAAC,IAAI,CAAC,SAAS,CAAC,IAAI,CAAC;YAC/B,CAAC,CAAC,WAAW,CAAA;QACf,IAAI,CAAC,OAAO,CAAC,IAAI;YACf,CAAC,IAAI,CAAC,SAAS,CAAC,QAAQ,IAAI,EAAE,CAAC,GAAG,CAAC,IAAI,CAAC,SAAS,CAAC,MAAM,IAAI,EAAE,CAAC,CAAA;QACjE,IAAI,CAAC,OAAO,CAAC,MAAM,GAAG,MAAM,CAAA;QAC5B,IAAI,CAAC,OAAO,CAAC,OAAO,GAAG,IAAI,CAAC,aAAa,CAAC,OAAO,CAAC,CAAA;QAClD,IAAI,IAAI,CAAC,SAAS,IAAI,IAAI,EAAE;YAC1B,IAAI,CAAC,OAAO,CAAC,OAAO,CAAC,YAAY,CAAC,GAAG,IAAI,CAAC,SAAS,CAAA;SACpD;QAED,IAAI,CAAC,OAAO,CAAC,KAAK,GAAG,IAAI,CAAC,SAAS,CAAC,IAAI,CAAC,SAAS,CAAC,CAAA;QAEnD,+CAA+C;QAC/C,IAAI,IAAI,CAAC,QAAQ,EAAE;YACjB,KAAK,MAAM,OAAO,IAAI,IAAI,CAAC,QAAQ,EAAE;gBACnC,OAAO,CAAC,cAAc,CAAC,IAAI,CAAC,OAAO,CAAC,CAAA;aACrC;SACF;QAED,OAAO,IAAI,CAAA;IACb,CAAC;IAEO,aAAa,CACnB,OAAkC;QAElC,IAAI,IAAI,CAAC,cAAc,IAAI,IAAI,CAAC,cAAc,CAAC,OAAO,EAAE;YACtD,OAAO,MAAM,CAAC,MAAM,CAClB,EAAE,EACF,aAAa,CAAC,IAAI,CAAC,cAAc,CAAC,OAAO,CAAC,EAC1C,aAAa,CAAC,OAAO,IAAI,EAAE,CAAC,CAC7B,CAAA;SACF;QAED,OAAO,aAAa,CAAC,OAAO,IAAI,EAAE,CAAC,CAAA;IACrC,CAAC;IAEO,2BAA2B,CACjC,iBAA2C,EAC3C,MAAc,EACd,QAAgB;QAEhB,IAAI,YAAgC,CAAA;QACpC,IAAI,IAAI,CAAC,cAAc,IAAI,IAAI,CAAC,cAAc,CAAC,OAAO,EAAE;YACtD,YAAY,GAAG,aAAa,CAAC,IAAI,CAAC,cAAc,CAAC,OAAO,CAAC,CAAC,MAAM,CAAC,CAAA;SAClE;QACD,OAAO,iBAAiB,CAAC,MAAM,CAAC,IAAI,YAAY,IAAI,QAAQ,CAAA;IAC9D,CAAC;IAEO,SAAS,CAAC,SAAc;QAC9B,IAAI,KAAK,CAAA;QACT,MAAM,QAAQ,GAAG,EAAE,CAAC,WAAW,CAAC,SAAS,CAAC,CAAA;QAC1C,MAAM,QAAQ,GAAG,QAAQ,IAAI,QAAQ,CAAC,QAAQ,CAAA;QAE9C,IAAI,IAAI,CAAC,UAAU,IAAI,QAAQ,EAAE;YAC/B,KAAK,GAAG,IAAI,CAAC,WAAW,CAAA;SACzB;QAED,IAAI,CAAC,QAAQ,EAAE;YACb,KAAK,GAAG,IAAI,CAAC,MAAM,CAAA;SACpB;QAED,+CAA+C;QAC/C,IAAI,KAAK,EAAE;YACT,OAAO,KAAK,CAAA;SACb;QAED,MAAM,QAAQ,GAAG,SAAS,CAAC,QAAQ,KAAK,QAAQ,CAAA;QAChD,IAAI,UAAU,GAAG,GAAG,CAAA;QACpB,IAAI,IAAI,CAAC,cAAc,EAAE;YACvB,UAAU,GAAG,IAAI,CAAC,cAAc,CAAC,UAAU,IAAI,IAAI,CAAC,WAAW,CAAC,UAAU,CAAA;SAC3E;QAED,sGAAsG;QACtG,IAAI,QAAQ,IAAI,QAAQ,CAAC,QAAQ,EAAE;YACjC,MAAM,YAAY,GAAG;gBACnB,UAAU;gBACV,SAAS,EAAE,IAAI,CAAC,UAAU;gBAC1B,KAAK,EAAE;oBACL,GAAG,CAAC,CAAC,QAAQ,CAAC,QAAQ,IAAI,QAAQ,CAAC,QAAQ,CAAC,IAAI;wBAC9C,SAAS,EAAE,GAAG,QAAQ,CAAC,QAAQ,IAAI,QAAQ,CAAC,QAAQ,EAAE;qBACvD,CAAC;oBACF,IAAI,EAAE,QAAQ,CAAC,QAAQ;oBACvB,IAAI,EAAE,QAAQ,CAAC,IAAI;iBACpB;aACF,CAAA;YAED,IAAI,WAAqB,CAAA;YACzB,MAAM,SAAS,GAAG,QAAQ,CAAC,QAAQ,KAAK,QAAQ,CAAA;YAChD,IAAI,QAAQ,EAAE;gBACZ,WAAW,GAAG,SAAS,CAAC,CAAC,CAAC,MAAM,CAAC,cAAc,CAAC,CAAC,CAAC,MAAM,CAAC,aAAa,CAAA;aACvE;iBAAM;gBACL,WAAW,GAAG,SAAS,CAAC,CAAC,CAAC,MAAM,CAAC,aAAa,CAAC,CAAC,CAAC,MAAM,CAAC,YAAY,CAAA;aACrE;YAED,KAAK,GAAG,WAAW,CAAC,YAAY,CAAC,CAAA;YACjC,IAAI,CAAC,WAAW,GAAG,KAAK,CAAA;SACzB;QAED,uDAAuD;QACvD,IAAI,CAAC,KAAK,EAAE;YACV,MAAM,OAAO,GAAG,EAAC,SAAS,EAAE,IAAI,CAAC,UAAU,EAAE,UAAU,EAAC,CAAA;YACxD,KAAK,GAAG,QAAQ,CAAC,CAAC,CAAC,IAAI,KAAK,CAAC,KAAK,CAAC,OAAO,CAAC,CAAC,CAAC,CAAC,IAAI,IAAI,CAAC,KAAK,CAAC,OAAO,CAAC,CAAA;YACrE,IAAI,CAAC,MAAM,GAAG,KAAK,CAAA;SACpB;QAED,IAAI,QAAQ,IAAI,IAAI,CAAC,eAAe,EAAE;YACpC,wGAAwG;YACxG,kFAAkF;YAClF,mDAAmD;YACnD,KAAK,CAAC,OAAO,GAAG,MAAM,CAAC,MAAM,CAAC,KAAK,CAAC,OAAO,IAAI,EAAE,EAAE;gBACjD,kBAAkB,EAAE,KAAK;aAC1B,CAAC,CAAA;SACH;QAED,OAAO,KAAK,CAAA;IACd,CAAC;IAEO,KAAK,CAAC,wBAAwB,CACpC,SAAc,EACd,QAAa;QAEb,IAAI,UAAU,CAAA;QAEd,IAAI,IAAI,CAAC,UAAU,EAAE;YACnB,UAAU,GAAG,IAAI,CAAC,qBAAqB,CAAA;SACxC;QAED,+CAA+C;QAC/C,IAAI,UAAU,EAAE;YACd,OAAO,UAAU,CAAA;SAClB;QAED,MAAM,QAAQ,GAAG,SAAS,CAAC,QAAQ,KAAK,QAAQ,CAAA;QAEhD,wDAAwD;QACxD,MAAM,UAAU,GAAG,CAAC,MAAM,MAAM,CAC9B,wBAAwB,CACzB,CAAsD,CAAA;QAEvD,UAAU,GAAG,IAAI,UAAU,CAAC;YAC1B,GAAG,EAAE,QAAQ,CAAC,IAAI;YAClB,UAAU,EAAE,CAAC,IAAI,CAAC,UAAU,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC;YACpC,GAAG,CAAC,CAAC,QAAQ,CAAC,QAAQ,IAAI,QAAQ,CAAC,QAAQ,CAAC,IAAI;gBAC9C,KAAK,EAAE,SAAS,MAAM,CAAC,IAAI,CACzB,GAAG,QAAQ,CAAC,QAAQ,IAAI,QAAQ,CAAC,QAAQ,EAAE,CAC5C,CAAC,QAAQ,CAAC,QAAQ,CAAC,EAAE;aACvB,CAAC;SACH,CAAC,CAAA;QACF,IAAI,CAAC,qBAAqB,GAAG,UAAU,CAAA;QAEvC,IAAI,QAAQ,IAAI,IAAI,CAAC,eAAe,EAAE;YACpC,wGAAwG;YACxG,kFAAkF;YAClF,mDAAmD;YACnD,UAAU,CAAC,OAAO,GAAG,MAAM,CAAC,MAAM,CAAC,UAAU,CAAC,OAAO,CAAC,UAAU,IAAI,EAAE,EAAE;gBACtE,kBAAkB,EAAE,KAAK;aAC1B,CAAC,CAAA;SACH;QAED,OAAO,UAAU,CAAA;IACnB,CAAC;IAEO,KAAK,CAAC,0BAA0B,CAAC,WAAmB;QAC1D,WAAW,GAAG,IAAI,CAAC,GAAG,CAAC,yBAAyB,EAAE,WAAW,CAAC,CAAA;QAC9D,MAAM,EAAE,GAAW,2BAA2B,GAAG,IAAI,CAAC,GAAG,CAAC,CAAC,EAAE,WAAW,CAAC,CAAA;QACzE,OAAO,IAAI,OAAO,CAAC,OAAO,CAAC,EAAE,CAAC,UAAU,CAAC,GAAG,EAAE,CAAC,OAAO,EAAE,EAAE,EAAE,CAAC,CAAC,CAAA;IAChE,CAAC;IAEO,KAAK,CAAC,gBAAgB,CAC5B,GAAuB,EACvB,OAA4B;QAE5B,OAAO,IAAI,OAAO,CAAuB,KAAK,EAAE,OAAO,EAAE,MAAM,EAAE,EAAE;YACjE,MAAM,UAAU,GAAG,GAAG,CAAC,OAAO,CAAC,UAAU,IAAI,CAAC,CAAA;YAE9C,MAAM,QAAQ,GAAyB;gBACrC,UAAU;gBACV,MAAM,EAAE,IAAI;gBACZ,OAAO,EAAE,EAAE;aACZ,CAAA;YAED,uCAAuC;YACvC,IAAI,UAAU,KAAK,SAAS,CAAC,QAAQ,EAAE;gBACrC,OAAO,CAAC,QAAQ,CAAC,CAAA;aAClB;YAED,+BAA+B;YAE/B,SAAS,oBAAoB,CAAC,GAAQ,EAAE,KAAU;gBAChD,IAAI,OAAO,KAAK,KAAK,QAAQ,EAAE;oBAC7B,MAAM,CAAC,GAAG,IAAI,IAAI,CAAC,KAAK,CAAC,CAAA;oBACzB,IAAI,CAAC,KAAK,CAAC,CAAC,CAAC,OAAO,EAAE,CAAC,EAAE;wBACvB,OAAO,CAAC,CAAA;qBACT;iBACF;gBAED,OAAO,KAAK,CAAA;YACd,CAAC;YAED,IAAI,GAAQ,CAAA;YACZ,IAAI,QAA4B,CAAA;YAEhC,IAAI;gBACF,QAAQ,GAAG,MAAM,GAAG,CAAC,QAAQ,EAAE,CAAA;gBAC/B,IAAI,QAAQ,IAAI,QAAQ,CAAC,MAAM,GAAG,CAAC,EAAE;oBACnC,IAAI,OAAO,IAAI,OAAO,CAAC,gBAAgB,EAAE;wBACvC,GAAG,GAAG,IAAI,CAAC,KAAK,CAAC,QAAQ,EAAE,oBAAoB,CAAC,CAAA;qBACjD;yBAAM;wBACL,GAAG,GAAG,IAAI,CAAC,KAAK,CAAC,QAAQ,CAAC,CAAA;qBAC3B;oBAED,QAAQ,CAAC,MAAM,GAAG,GAAG,CAAA;iBACtB;gBAED,QAAQ,CAAC,OAAO,GAAG,GAAG,CAAC,OAAO,CAAC,OAAO,CAAA;aACvC;YAAC,OAAO,GAAG,EAAE;gBACZ,iEAAiE;aAClE;YAED,yDAAyD;YACzD,IAAI,UAAU,GAAG,GAAG,EAAE;gBACpB,IAAI,GAAW,CAAA;gBAEf,0DAA0D;gBAC1D,IAAI,GAAG,IAAI,GAAG,CAAC,OAAO,EAAE;oBACtB,GAAG,GAAG,GAAG,CAAC,OAAO,CAAA;iBAClB;qBAAM,IAAI,QAAQ,IAAI,QAAQ,CAAC,MAAM,GAAG,CAAC,EAAE;oBAC1C,yEAAyE;oBACzE,GAAG,GAAG,QAAQ,CAAA;iBACf;qBAAM;oBACL,GAAG,GAAG,oBAAoB,UAAU,GAAG,CAAA;iBACxC;gBAED,MAAM,GAAG,GAAG,IAAI,eAAe,CAAC,GAAG,EAAE,UAAU,CAAC,CAAA;gBAChD,GAAG,CAAC,MAAM,GAAG,QAAQ,CAAC,MAAM,CAAA;gBAE5B,MAAM,CAAC,GAAG,CAAC,CAAA;aACZ;iBAAM;gBACL,OAAO,CAAC,QAAQ,CAAC,CAAA;aAClB;QACH,CAAC,CAAC,CAAA;IACJ,CAAC;CACF;AAED,MAAM,aAAa,GAAG,CAAC,GAA2B,EAAO,EAAE,CACzD,MAAM,CAAC,IAAI,CAAC,GAAG,CAAC,CAAC,MAAM,CAAC,CAAC,CAAM,EAAE,CAAC,EAAE,EAAE,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,CAAC,WAAW,EAAE,CAAC,GAAG,GAAG,CAAC,CAAC,CAAC,CAAC,EAAE,CAAC,CAAC,EAAE,EAAE,CAAC,CAAA"}
+\ No newline at end of file
+diff --git a/lib/esnext/interfaces.d.ts b/lib/esnext/interfaces.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..775ced94b534bdcaa77b45a77c61b73c85b8d2e6
+--- /dev/null
++++ b/lib/esnext/interfaces.d.ts
+@@ -0,0 +1,46 @@
++/// <reference types="node" />
++/// <reference types="node" />
++/// <reference types="node" />
++import * as http from 'http';
++import * as https from 'https';
++import { HttpClientResponse } from './index';
++export interface HttpClient {
++    options(requestUrl: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    get(requestUrl: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    del(requestUrl: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    post(requestUrl: string, data: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    patch(requestUrl: string, data: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    put(requestUrl: string, data: string, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    sendStream(verb: string, requestUrl: string, stream: NodeJS.ReadableStream, additionalHeaders?: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    request(verb: string, requestUrl: string, data: string | NodeJS.ReadableStream, headers: http.OutgoingHttpHeaders): Promise<HttpClientResponse>;
++    requestRaw(info: RequestInfo, data: string | NodeJS.ReadableStream): Promise<HttpClientResponse>;
++    requestRawWithCallback(info: RequestInfo, data: string | NodeJS.ReadableStream, onResult: (err?: Error, res?: HttpClientResponse) => void): void;
++}
++export interface RequestHandler {
++    prepareRequest(options: http.RequestOptions): void;
++    canHandleAuthentication(response: HttpClientResponse): boolean;
++    handleAuthentication(httpClient: HttpClient, requestInfo: RequestInfo, data: string | NodeJS.ReadableStream | null): Promise<HttpClientResponse>;
++}
++export interface RequestInfo {
++    options: http.RequestOptions;
++    parsedUrl: URL;
++    httpModule: typeof http | typeof https;
++}
++export interface RequestOptions {
++    headers?: http.OutgoingHttpHeaders;
++    socketTimeout?: number;
++    ignoreSslError?: boolean;
++    allowRedirects?: boolean;
++    allowRedirectDowngrade?: boolean;
++    maxRedirects?: number;
++    maxSockets?: number;
++    keepAlive?: boolean;
++    deserializeDates?: boolean;
++    allowRetries?: boolean;
++    maxRetries?: number;
++}
++export interface TypedResponse<T> {
++    statusCode: number;
++    result: T | null;
++    headers: http.IncomingHttpHeaders;
++}
+diff --git a/lib/esnext/interfaces.js b/lib/esnext/interfaces.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..c30bb68c19e2cd740ca33c9a652140394cf0247e
+--- /dev/null
++++ b/lib/esnext/interfaces.js
+@@ -0,0 +1,2 @@
++export {};
++//# sourceMappingURL=interfaces.js.map
+\ No newline at end of file
+diff --git a/lib/esnext/interfaces.js.map b/lib/esnext/interfaces.js.map
+new file mode 100644
+index 0000000000000000000000000000000000000000..d5fcbe1fb69b4ca196dfd0c4f1f3f7494c6dd98d
+--- /dev/null
++++ b/lib/esnext/interfaces.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"interfaces.js","sourceRoot":"","sources":["../../src/interfaces.ts"],"names":[],"mappings":""}
+\ No newline at end of file
+diff --git a/lib/esnext/package.json b/lib/esnext/package.json
+new file mode 100644
+index 0000000000000000000000000000000000000000..6990891ff35dd464b19df096e6089004b0e31825
+--- /dev/null
++++ b/lib/esnext/package.json
+@@ -0,0 +1 @@
++{"type": "module"}
+diff --git a/lib/esnext/proxy.d.ts b/lib/esnext/proxy.d.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..4599865401c3df96253f09df0e742ac25caab193
+--- /dev/null
++++ b/lib/esnext/proxy.d.ts
+@@ -0,0 +1,2 @@
++export declare function getProxyUrl(reqUrl: URL): URL | undefined;
++export declare function checkBypass(reqUrl: URL): boolean;
+diff --git a/lib/esnext/proxy.js b/lib/esnext/proxy.js
+new file mode 100644
+index 0000000000000000000000000000000000000000..7471d9617e06bae9d298b9b84397936e5054b6f1
+--- /dev/null
++++ b/lib/esnext/proxy.js
+@@ -0,0 +1,92 @@
++export function getProxyUrl(reqUrl) {
++    const usingSsl = reqUrl.protocol === 'https:';
++    if (checkBypass(reqUrl)) {
++        return undefined;
++    }
++    const proxyVar = (() => {
++        if (usingSsl) {
++            return process.env['https_proxy'] || process.env['HTTPS_PROXY'];
++        }
++        else {
++            return process.env['http_proxy'] || process.env['HTTP_PROXY'];
++        }
++    })();
++    if (proxyVar) {
++        try {
++            return new DecodedURL(proxyVar);
++        }
++        catch {
++            if (!proxyVar.startsWith('http://') && !proxyVar.startsWith('https://'))
++                return new DecodedURL(`http://${proxyVar}`);
++        }
++    }
++    else {
++        return undefined;
++    }
++}
++export function checkBypass(reqUrl) {
++    if (!reqUrl.hostname) {
++        return false;
++    }
++    const reqHost = reqUrl.hostname;
++    if (isLoopbackAddress(reqHost)) {
++        return true;
++    }
++    const noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || '';
++    if (!noProxy) {
++        return false;
++    }
++    // Determine the request port
++    let reqPort;
++    if (reqUrl.port) {
++        reqPort = Number(reqUrl.port);
++    }
++    else if (reqUrl.protocol === 'http:') {
++        reqPort = 80;
++    }
++    else if (reqUrl.protocol === 'https:') {
++        reqPort = 443;
++    }
++    // Format the request hostname and hostname with port
++    const upperReqHosts = [reqUrl.hostname.toUpperCase()];
++    if (typeof reqPort === 'number') {
++        upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`);
++    }
++    // Compare request host against noproxy
++    for (const upperNoProxyItem of noProxy
++        .split(',')
++        .map(x => x.trim().toUpperCase())
++        .filter(x => x)) {
++        if (upperNoProxyItem === '*' ||
++            upperReqHosts.some(x => x === upperNoProxyItem ||
++                x.endsWith(`.${upperNoProxyItem}`) ||
++                (upperNoProxyItem.startsWith('.') &&
++                    x.endsWith(`${upperNoProxyItem}`)))) {
++            return true;
++        }
++    }
++    return false;
++}
++function isLoopbackAddress(host) {
++    const hostLower = host.toLowerCase();
++    return (hostLower === 'localhost' ||
++        hostLower.startsWith('127.') ||
++        hostLower.startsWith('[::1]') ||
++        hostLower.startsWith('[0:0:0:0:0:0:0:1]'));
++}
++class DecodedURL extends URL {
++    _decodedUsername;
++    _decodedPassword;
++    constructor(url, base) {
++        super(url, base);
++        this._decodedUsername = decodeURIComponent(super.username);
++        this._decodedPassword = decodeURIComponent(super.password);
++    }
++    get username() {
++        return this._decodedUsername;
++    }
++    get password() {
++        return this._decodedPassword;
++    }
++}
++//# sourceMappingURL=proxy.js.map
+\ No newline at end of file
+diff --git a/lib/esnext/proxy.js.map b/lib/esnext/proxy.js.map
+new file mode 100644
+index 0000000000000000000000000000000000000000..7b4c7f1882399b030e84b3a4fdb69d80776fd00a
+--- /dev/null
++++ b/lib/esnext/proxy.js.map
+@@ -0,0 +1 @@
++{"version":3,"file":"proxy.js","sourceRoot":"","sources":["../../src/proxy.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
 diff --git a/lib/index.d.ts b/lib/index.d.ts
 index 38db7000a6214549a9305331ea2d33bbceca9d5d..9caa09694850d35d371beda2586c32bc65690dba 100644
 --- a/lib/index.d.ts
@@ -117,3 +1165,1189 @@ index 2a0d1a8251955b2f974b44741f3626a1021dd2ce..4201700dc88195930ce79ed5d206da73
 -{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":"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"}
 \ No newline at end of file
 +{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/package.json b/package.json
+index 3960a83a5f7dec81a8dfa644663d611f81f3c358..c4d3926a767d21f6fbc0d456732fdaa8566080cd 100644
+--- a/package.json
++++ b/package.json
+@@ -10,6 +10,7 @@
+   "homepage": "https://github.com/actions/toolkit/tree/main/packages/http-client",
+   "license": "MIT",
+   "main": "lib/index.js",
++  "module": "lib/esnext/index.js",
+   "types": "lib/index.d.ts",
+   "directories": {
+     "lib": "lib",
+@@ -17,6 +18,7 @@
+   },
+   "files": [
+     "lib",
++    "src",
+     "!.DS_Store"
+   ],
+   "publishConfig": {
+@@ -30,10 +32,12 @@
+   "scripts": {
+     "audit-moderate": "npm install && npm audit --json --audit-level=moderate > audit.json",
+     "test": "echo \"Error: run tests from root\" && exit 1",
+-    "build": "tsc",
++    "build": "npm run tsc",
+     "format": "prettier --write **/*.ts",
+     "format-check": "prettier --check **/*.ts",
+-    "tsc": "tsc"
++    "tsc-esnext": "tsc -p ./tsconfig.esnext.json && echo '{\"type\": \"module\"}' > ./lib/esnext/package.json",
++    "tsc-cjs": "tsc && npm run tsc-esnext",
++    "tsc": "npm run tsc-cjs && npm run tsc-esnext"
+   },
+   "bugs": {
+     "url": "https://github.com/actions/toolkit/issues"
+diff --git a/src/auth.ts b/src/auth.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..58938ac4c50b0ea1ad6e06d33c0a6b82f90bb157
+--- /dev/null
++++ b/src/auth.ts
+@@ -0,0 +1,87 @@
++import * as http from 'http'
++import * as ifm from './interfaces'
++import {HttpClientResponse} from './index'
++
++export class BasicCredentialHandler implements ifm.RequestHandler {
++  username: string
++  password: string
++
++  constructor(username: string, password: string) {
++    this.username = username
++    this.password = password
++  }
++
++  prepareRequest(options: http.RequestOptions): void {
++    if (!options.headers) {
++      throw Error('The request has no headers')
++    }
++    options.headers['Authorization'] = `Basic ${Buffer.from(
++      `${this.username}:${this.password}`
++    ).toString('base64')}`
++  }
++
++  // This handler cannot handle 401
++  canHandleAuthentication(): boolean {
++    return false
++  }
++
++  async handleAuthentication(): Promise<HttpClientResponse> {
++    throw new Error('not implemented')
++  }
++}
++
++export class BearerCredentialHandler implements ifm.RequestHandler {
++  token: string
++
++  constructor(token: string) {
++    this.token = token
++  }
++
++  // currently implements pre-authorization
++  // TODO: support preAuth = false where it hooks on 401
++  prepareRequest(options: http.RequestOptions): void {
++    if (!options.headers) {
++      throw Error('The request has no headers')
++    }
++    options.headers['Authorization'] = `Bearer ${this.token}`
++  }
++
++  // This handler cannot handle 401
++  canHandleAuthentication(): boolean {
++    return false
++  }
++
++  async handleAuthentication(): Promise<HttpClientResponse> {
++    throw new Error('not implemented')
++  }
++}
++
++export class PersonalAccessTokenCredentialHandler
++  implements ifm.RequestHandler
++{
++  token: string
++
++  constructor(token: string) {
++    this.token = token
++  }
++
++  // currently implements pre-authorization
++  // TODO: support preAuth = false where it hooks on 401
++  prepareRequest(options: http.RequestOptions): void {
++    if (!options.headers) {
++      throw Error('The request has no headers')
++    }
++    options.headers['Authorization'] = `Basic ${Buffer.from(
++      `PAT:${this.token}`
++    ).toString('base64')}`
++  }
++
++  // This handler cannot handle 401
++  canHandleAuthentication(): boolean {
++    return false
++  }
++
++  async handleAuthentication(): Promise<HttpClientResponse> {
++    throw new Error('not implemented')
++  }
++}
+diff --git a/src/index.ts b/src/index.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..b46111b8d5112b7e7d5ada3dbfde61b57ec99f37
+--- /dev/null
++++ b/src/index.ts
+@@ -0,0 +1,840 @@
++/* eslint-disable @typescript-eslint/no-explicit-any */
++
++import * as http from 'http'
++import * as https from 'https'
++import * as ifm from './interfaces'
++import * as net from 'net'
++import * as pm from './proxy'
++import * as tunnel from 'tunnel'
++import type ProxyAgent from 'undici/types/proxy-agent'
++
++export enum HttpCodes {
++  OK = 200,
++  MultipleChoices = 300,
++  MovedPermanently = 301,
++  ResourceMoved = 302,
++  SeeOther = 303,
++  NotModified = 304,
++  UseProxy = 305,
++  SwitchProxy = 306,
++  TemporaryRedirect = 307,
++  PermanentRedirect = 308,
++  BadRequest = 400,
++  Unauthorized = 401,
++  PaymentRequired = 402,
++  Forbidden = 403,
++  NotFound = 404,
++  MethodNotAllowed = 405,
++  NotAcceptable = 406,
++  ProxyAuthenticationRequired = 407,
++  RequestTimeout = 408,
++  Conflict = 409,
++  Gone = 410,
++  TooManyRequests = 429,
++  InternalServerError = 500,
++  NotImplemented = 501,
++  BadGateway = 502,
++  ServiceUnavailable = 503,
++  GatewayTimeout = 504
++}
++
++export enum Headers {
++  Accept = 'accept',
++  ContentType = 'content-type'
++}
++
++export enum MediaTypes {
++  ApplicationJson = 'application/json'
++}
++
++/**
++ * Returns the proxy URL, depending upon the supplied url and proxy environment variables.
++ * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
++ */
++export function getProxyUrl(serverUrl: string): string {
++  const proxyUrl = pm.getProxyUrl(new URL(serverUrl))
++  return proxyUrl ? proxyUrl.href : ''
++}
++
++const HttpRedirectCodes: number[] = [
++  HttpCodes.MovedPermanently,
++  HttpCodes.ResourceMoved,
++  HttpCodes.SeeOther,
++  HttpCodes.TemporaryRedirect,
++  HttpCodes.PermanentRedirect
++]
++const HttpResponseRetryCodes: number[] = [
++  HttpCodes.BadGateway,
++  HttpCodes.ServiceUnavailable,
++  HttpCodes.GatewayTimeout
++]
++const RetryableHttpVerbs: string[] = ['OPTIONS', 'GET', 'DELETE', 'HEAD']
++const ExponentialBackoffCeiling = 10
++const ExponentialBackoffTimeSlice = 5
++
++export class HttpClientError extends Error {
++  constructor(message: string, statusCode: number) {
++    super(message)
++    this.name = 'HttpClientError'
++    this.statusCode = statusCode
++    Object.setPrototypeOf(this, HttpClientError.prototype)
++  }
++
++  statusCode: number
++  result?: any
++}
++
++export class HttpClientResponse {
++  constructor(message: http.IncomingMessage) {
++    this.message = message
++  }
++
++  message: http.IncomingMessage
++  async readBody(): Promise<string> {
++    return new Promise<string>(async resolve => {
++      let output = Buffer.alloc(0)
++
++      this.message.on('data', (chunk: Buffer) => {
++        output = Buffer.concat([output, chunk])
++      })
++
++      this.message.on('end', () => {
++        resolve(output.toString())
++      })
++    })
++  }
++
++  async readBodyBuffer?(): Promise<Buffer> {
++    return new Promise<Buffer>(async resolve => {
++      const chunks: Buffer[] = []
++
++      this.message.on('data', (chunk: Buffer) => {
++        chunks.push(chunk)
++      })
++
++      this.message.on('end', () => {
++        resolve(Buffer.concat(chunks))
++      })
++    })
++  }
++}
++
++export function isHttps(requestUrl: string): boolean {
++  const parsedUrl: URL = new URL(requestUrl)
++  return parsedUrl.protocol === 'https:'
++}
++
++export class HttpClient {
++  userAgent: string | undefined
++  handlers: ifm.RequestHandler[]
++  requestOptions: ifm.RequestOptions | undefined
++
++  private _ignoreSslError = false
++  private _socketTimeout: number | undefined
++  private _allowRedirects = true
++  private _allowRedirectDowngrade = false
++  private _maxRedirects = 50
++  private _allowRetries = false
++  private _maxRetries = 1
++  private _agent: any
++  private _proxyAgent: any
++  private _proxyAgentDispatcher: any
++  private _keepAlive = false
++  private _disposed = false
++
++  constructor(
++    userAgent?: string,
++    handlers?: ifm.RequestHandler[],
++    requestOptions?: ifm.RequestOptions
++  ) {
++    this.userAgent = userAgent
++    this.handlers = handlers || []
++    this.requestOptions = requestOptions
++    if (requestOptions) {
++      if (requestOptions.ignoreSslError != null) {
++        this._ignoreSslError = requestOptions.ignoreSslError
++      }
++
++      this._socketTimeout = requestOptions.socketTimeout
++
++      if (requestOptions.allowRedirects != null) {
++        this._allowRedirects = requestOptions.allowRedirects
++      }
++
++      if (requestOptions.allowRedirectDowngrade != null) {
++        this._allowRedirectDowngrade = requestOptions.allowRedirectDowngrade
++      }
++
++      if (requestOptions.maxRedirects != null) {
++        this._maxRedirects = Math.max(requestOptions.maxRedirects, 0)
++      }
++
++      if (requestOptions.keepAlive != null) {
++        this._keepAlive = requestOptions.keepAlive
++      }
++
++      if (requestOptions.allowRetries != null) {
++        this._allowRetries = requestOptions.allowRetries
++      }
++
++      if (requestOptions.maxRetries != null) {
++        this._maxRetries = requestOptions.maxRetries
++      }
++    }
++  }
++
++  async options(
++    requestUrl: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    return this.request('OPTIONS', requestUrl, null, additionalHeaders || {})
++  }
++
++  async get(
++    requestUrl: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    return this.request('GET', requestUrl, null, additionalHeaders || {})
++  }
++
++  async del(
++    requestUrl: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    return this.request('DELETE', requestUrl, null, additionalHeaders || {})
++  }
++
++  async post(
++    requestUrl: string,
++    data: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    return this.request('POST', requestUrl, data, additionalHeaders || {})
++  }
++
++  async patch(
++    requestUrl: string,
++    data: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    return this.request('PATCH', requestUrl, data, additionalHeaders || {})
++  }
++
++  async put(
++    requestUrl: string,
++    data: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    return this.request('PUT', requestUrl, data, additionalHeaders || {})
++  }
++
++  async head(
++    requestUrl: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    return this.request('HEAD', requestUrl, null, additionalHeaders || {})
++  }
++
++  async sendStream(
++    verb: string,
++    requestUrl: string,
++    stream: NodeJS.ReadableStream,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    return this.request(verb, requestUrl, stream, additionalHeaders)
++  }
++
++  /**
++   * Gets a typed object from an endpoint
++   * Be aware that not found returns a null.  Other errors (4xx, 5xx) reject the promise
++   */
++  async getJson<T>(
++    requestUrl: string,
++    additionalHeaders: http.OutgoingHttpHeaders = {}
++  ): Promise<ifm.TypedResponse<T>> {
++    additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(
++      additionalHeaders,
++      Headers.Accept,
++      MediaTypes.ApplicationJson
++    )
++    const res: HttpClientResponse = await this.get(
++      requestUrl,
++      additionalHeaders
++    )
++    return this._processResponse<T>(res, this.requestOptions)
++  }
++
++  async postJson<T>(
++    requestUrl: string,
++    obj: any,
++    additionalHeaders: http.OutgoingHttpHeaders = {}
++  ): Promise<ifm.TypedResponse<T>> {
++    const data: string = JSON.stringify(obj, null, 2)
++    additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(
++      additionalHeaders,
++      Headers.Accept,
++      MediaTypes.ApplicationJson
++    )
++    additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(
++      additionalHeaders,
++      Headers.ContentType,
++      MediaTypes.ApplicationJson
++    )
++    const res: HttpClientResponse = await this.post(
++      requestUrl,
++      data,
++      additionalHeaders
++    )
++    return this._processResponse<T>(res, this.requestOptions)
++  }
++
++  async putJson<T>(
++    requestUrl: string,
++    obj: any,
++    additionalHeaders: http.OutgoingHttpHeaders = {}
++  ): Promise<ifm.TypedResponse<T>> {
++    const data: string = JSON.stringify(obj, null, 2)
++    additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(
++      additionalHeaders,
++      Headers.Accept,
++      MediaTypes.ApplicationJson
++    )
++    additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(
++      additionalHeaders,
++      Headers.ContentType,
++      MediaTypes.ApplicationJson
++    )
++    const res: HttpClientResponse = await this.put(
++      requestUrl,
++      data,
++      additionalHeaders
++    )
++    return this._processResponse<T>(res, this.requestOptions)
++  }
++
++  async patchJson<T>(
++    requestUrl: string,
++    obj: any,
++    additionalHeaders: http.OutgoingHttpHeaders = {}
++  ): Promise<ifm.TypedResponse<T>> {
++    const data: string = JSON.stringify(obj, null, 2)
++    additionalHeaders[Headers.Accept] = this._getExistingOrDefaultHeader(
++      additionalHeaders,
++      Headers.Accept,
++      MediaTypes.ApplicationJson
++    )
++    additionalHeaders[Headers.ContentType] = this._getExistingOrDefaultHeader(
++      additionalHeaders,
++      Headers.ContentType,
++      MediaTypes.ApplicationJson
++    )
++    const res: HttpClientResponse = await this.patch(
++      requestUrl,
++      data,
++      additionalHeaders
++    )
++    return this._processResponse<T>(res, this.requestOptions)
++  }
++
++  /**
++   * Makes a raw http request.
++   * All other methods such as get, post, patch, and request ultimately call this.
++   * Prefer get, del, post and patch
++   */
++  async request(
++    verb: string,
++    requestUrl: string,
++    data: string | NodeJS.ReadableStream | null,
++    headers?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse> {
++    if (this._disposed) {
++      throw new Error('Client has already been disposed.')
++    }
++
++    const parsedUrl = new URL(requestUrl)
++    let info: ifm.RequestInfo = this._prepareRequest(verb, parsedUrl, headers)
++
++    // Only perform retries on reads since writes may not be idempotent.
++    const maxTries: number =
++      this._allowRetries && RetryableHttpVerbs.includes(verb)
++        ? this._maxRetries + 1
++        : 1
++    let numTries = 0
++
++    let response: HttpClientResponse | undefined
++    do {
++      response = await this.requestRaw(info, data)
++
++      // Check if it's an authentication challenge
++      if (
++        response &&
++        response.message &&
++        response.message.statusCode === HttpCodes.Unauthorized
++      ) {
++        let authenticationHandler: ifm.RequestHandler | undefined
++
++        for (const handler of this.handlers) {
++          if (handler.canHandleAuthentication(response)) {
++            authenticationHandler = handler
++            break
++          }
++        }
++
++        if (authenticationHandler) {
++          return authenticationHandler.handleAuthentication(this, info, data)
++        } else {
++          // We have received an unauthorized response but have no handlers to handle it.
++          // Let the response return to the caller.
++          return response
++        }
++      }
++
++      let redirectsRemaining: number = this._maxRedirects
++      while (
++        response.message.statusCode &&
++        HttpRedirectCodes.includes(response.message.statusCode) &&
++        this._allowRedirects &&
++        redirectsRemaining > 0
++      ) {
++        const redirectUrl: string | undefined =
++          response.message.headers['location']
++        if (!redirectUrl) {
++          // if there's no location to redirect to, we won't
++          break
++        }
++        const parsedRedirectUrl = new URL(redirectUrl)
++        if (
++          parsedUrl.protocol === 'https:' &&
++          parsedUrl.protocol !== parsedRedirectUrl.protocol &&
++          !this._allowRedirectDowngrade
++        ) {
++          throw new Error(
++            'Redirect from HTTPS to HTTP protocol. This downgrade is not allowed for security reasons. If you want to allow this behavior, set the allowRedirectDowngrade option to true.'
++          )
++        }
++
++        // we need to finish reading the response before reassigning response
++        // which will leak the open socket.
++        await response.readBody()
++
++        // strip authorization header if redirected to a different hostname
++        if (parsedRedirectUrl.hostname !== parsedUrl.hostname) {
++          for (const header in headers) {
++            // header names are case insensitive
++            if (header.toLowerCase() === 'authorization') {
++              delete headers[header]
++            }
++          }
++        }
++
++        // let's make the request with the new redirectUrl
++        info = this._prepareRequest(verb, parsedRedirectUrl, headers)
++        response = await this.requestRaw(info, data)
++        redirectsRemaining--
++      }
++
++      if (
++        !response.message.statusCode ||
++        !HttpResponseRetryCodes.includes(response.message.statusCode)
++      ) {
++        // If not a retry code, return immediately instead of retrying
++        return response
++      }
++
++      numTries += 1
++
++      if (numTries < maxTries) {
++        await response.readBody()
++        await this._performExponentialBackoff(numTries)
++      }
++    } while (numTries < maxTries)
++
++    return response
++  }
++
++  /**
++   * Needs to be called if keepAlive is set to true in request options.
++   */
++  dispose(): void {
++    if (this._agent) {
++      this._agent.destroy()
++    }
++
++    this._disposed = true
++  }
++
++  /**
++   * Raw request.
++   * @param info
++   * @param data
++   */
++  async requestRaw(
++    info: ifm.RequestInfo,
++    data: string | NodeJS.ReadableStream | null
++  ): Promise<HttpClientResponse> {
++    return new Promise<HttpClientResponse>((resolve, reject) => {
++      function callbackForResult(err?: Error, res?: HttpClientResponse): void {
++        if (err) {
++          reject(err)
++        } else if (!res) {
++          // If `err` is not passed, then `res` must be passed.
++          reject(new Error('Unknown error'))
++        } else {
++          resolve(res)
++        }
++      }
++
++      this.requestRawWithCallback(info, data, callbackForResult)
++    })
++  }
++
++  /**
++   * Raw request with callback.
++   * @param info
++   * @param data
++   * @param onResult
++   */
++  requestRawWithCallback(
++    info: ifm.RequestInfo,
++    data: string | NodeJS.ReadableStream | null,
++    onResult: (err?: Error, res?: HttpClientResponse) => void
++  ): void {
++    if (typeof data === 'string') {
++      if (!info.options.headers) {
++        info.options.headers = {}
++      }
++      info.options.headers['Content-Length'] = Buffer.byteLength(data, 'utf8')
++    }
++
++    let callbackCalled = false
++    function handleResult(err?: Error, res?: HttpClientResponse): void {
++      if (!callbackCalled) {
++        callbackCalled = true
++        onResult(err, res)
++      }
++    }
++
++    const req: http.ClientRequest = info.httpModule.request(
++      info.options,
++      (msg: http.IncomingMessage) => {
++        const res: HttpClientResponse = new HttpClientResponse(msg)
++        handleResult(undefined, res)
++      }
++    )
++
++    let socket: net.Socket
++    req.on('socket', sock => {
++      socket = sock
++    })
++
++    // If we ever get disconnected, we want the socket to timeout eventually
++    req.setTimeout(this._socketTimeout || 3 * 60000, () => {
++      if (socket) {
++        socket.end()
++      }
++      handleResult(new Error(`Request timeout: ${info.options.path}`))
++    })
++
++    req.on('error', function (err) {
++      // err has statusCode property
++      // res should have headers
++      handleResult(err)
++    })
++
++    if (data && typeof data === 'string') {
++      req.write(data, 'utf8')
++    }
++
++    if (data && typeof data !== 'string') {
++      data.on('close', function () {
++        req.end()
++      })
++
++      data.pipe(req)
++    } else {
++      req.end()
++    }
++  }
++
++  /**
++   * Gets an http agent. This function is useful when you need an http agent that handles
++   * routing through a proxy server - depending upon the url and proxy environment variables.
++   * @param serverUrl  The server URL where the request will be sent. For example, https://api.github.com
++   */
++  getAgent(serverUrl: string): http.Agent {
++    const parsedUrl = new URL(serverUrl)
++    return this._getAgent(parsedUrl)
++  }
++
++  async getAgentDispatcher(serverUrl: string): Promise<ProxyAgent | undefined> {
++    const parsedUrl = new URL(serverUrl)
++    const proxyUrl = pm.getProxyUrl(parsedUrl)
++    const useProxy = proxyUrl && proxyUrl.hostname
++    if (!useProxy) {
++      return undefined
++    }
++
++    return await this._getProxyAgentDispatcher(parsedUrl, proxyUrl)
++  }
++
++  private _prepareRequest(
++    method: string,
++    requestUrl: URL,
++    headers?: http.OutgoingHttpHeaders
++  ): ifm.RequestInfo {
++    const info: ifm.RequestInfo = <ifm.RequestInfo>{}
++
++    info.parsedUrl = requestUrl
++    const usingSsl: boolean = info.parsedUrl.protocol === 'https:'
++    info.httpModule = usingSsl ? https : http
++    const defaultPort: number = usingSsl ? 443 : 80
++
++    info.options = <http.RequestOptions>{}
++    info.options.host = info.parsedUrl.hostname
++    info.options.port = info.parsedUrl.port
++      ? parseInt(info.parsedUrl.port)
++      : defaultPort
++    info.options.path =
++      (info.parsedUrl.pathname || '') + (info.parsedUrl.search || '')
++    info.options.method = method
++    info.options.headers = this._mergeHeaders(headers)
++    if (this.userAgent != null) {
++      info.options.headers['user-agent'] = this.userAgent
++    }
++
++    info.options.agent = this._getAgent(info.parsedUrl)
++
++    // gives handlers an opportunity to participate
++    if (this.handlers) {
++      for (const handler of this.handlers) {
++        handler.prepareRequest(info.options)
++      }
++    }
++
++    return info
++  }
++
++  private _mergeHeaders(
++    headers?: http.OutgoingHttpHeaders
++  ): http.OutgoingHttpHeaders {
++    if (this.requestOptions && this.requestOptions.headers) {
++      return Object.assign(
++        {},
++        lowercaseKeys(this.requestOptions.headers),
++        lowercaseKeys(headers || {})
++      )
++    }
++
++    return lowercaseKeys(headers || {})
++  }
++
++  private _getExistingOrDefaultHeader(
++    additionalHeaders: http.OutgoingHttpHeaders,
++    header: string,
++    _default: string
++  ): string | number | string[] {
++    let clientHeader: string | undefined
++    if (this.requestOptions && this.requestOptions.headers) {
++      clientHeader = lowercaseKeys(this.requestOptions.headers)[header]
++    }
++    return additionalHeaders[header] || clientHeader || _default
++  }
++
++  private _getAgent(parsedUrl: URL): http.Agent {
++    let agent
++    const proxyUrl = pm.getProxyUrl(parsedUrl)
++    const useProxy = proxyUrl && proxyUrl.hostname
++
++    if (this._keepAlive && useProxy) {
++      agent = this._proxyAgent
++    }
++
++    if (!useProxy) {
++      agent = this._agent
++    }
++
++    // if agent is already assigned use that agent.
++    if (agent) {
++      return agent
++    }
++
++    const usingSsl = parsedUrl.protocol === 'https:'
++    let maxSockets = 100
++    if (this.requestOptions) {
++      maxSockets = this.requestOptions.maxSockets || http.globalAgent.maxSockets
++    }
++
++    // This is `useProxy` again, but we need to check `proxyURl` directly for TypeScripts's flow analysis.
++    if (proxyUrl && proxyUrl.hostname) {
++      const agentOptions = {
++        maxSockets,
++        keepAlive: this._keepAlive,
++        proxy: {
++          ...((proxyUrl.username || proxyUrl.password) && {
++            proxyAuth: `${proxyUrl.username}:${proxyUrl.password}`
++          }),
++          host: proxyUrl.hostname,
++          port: proxyUrl.port
++        }
++      }
++
++      let tunnelAgent: Function
++      const overHttps = proxyUrl.protocol === 'https:'
++      if (usingSsl) {
++        tunnelAgent = overHttps ? tunnel.httpsOverHttps : tunnel.httpsOverHttp
++      } else {
++        tunnelAgent = overHttps ? tunnel.httpOverHttps : tunnel.httpOverHttp
++      }
++
++      agent = tunnelAgent(agentOptions)
++      this._proxyAgent = agent
++    }
++
++    // if tunneling agent isn't assigned create a new agent
++    if (!agent) {
++      const options = {keepAlive: this._keepAlive, maxSockets}
++      agent = usingSsl ? new https.Agent(options) : new http.Agent(options)
++      this._agent = agent
++    }
++
++    if (usingSsl && this._ignoreSslError) {
++      // we don't want to set NODE_TLS_REJECT_UNAUTHORIZED=0 since that will affect request for entire process
++      // http.RequestOptions doesn't expose a way to modify RequestOptions.agent.options
++      // we have to cast it to any and change it directly
++      agent.options = Object.assign(agent.options || {}, {
++        rejectUnauthorized: false
++      })
++    }
++
++    return agent
++  }
++
++  private async _getProxyAgentDispatcher(
++    parsedUrl: URL,
++    proxyUrl: URL
++  ): Promise<ProxyAgent> {
++    let proxyAgent
++
++    if (this._keepAlive) {
++      proxyAgent = this._proxyAgentDispatcher
++    }
++
++    // if agent is already assigned use that agent.
++    if (proxyAgent) {
++      return proxyAgent
++    }
++
++    const usingSsl = parsedUrl.protocol === 'https:'
++
++    // Lazy load ProxyAgent to avoid bundling all the undici
++    const ProxyAgent = (await import(
++      'undici/lib/proxy-agent'
++    )) as typeof import('undici/types/proxy-agent').default
++
++    proxyAgent = new ProxyAgent({
++      uri: proxyUrl.href,
++      pipelining: !this._keepAlive ? 0 : 1,
++      ...((proxyUrl.username || proxyUrl.password) && {
++        token: `Basic ${Buffer.from(
++          `${proxyUrl.username}:${proxyUrl.password}`
++        ).toString('base64')}`
++      })
++    })
++    this._proxyAgentDispatcher = proxyAgent
++
++    if (usingSsl && this._ignoreSslError) {
++      // we don't want to set NODE_TLS_REJECT_UNAUTHORIZED=0 since that will affect request for entire process
++      // http.RequestOptions doesn't expose a way to modify RequestOptions.agent.options
++      // we have to cast it to any and change it directly
++      proxyAgent.options = Object.assign(proxyAgent.options.requestTls || {}, {
++        rejectUnauthorized: false
++      })
++    }
++
++    return proxyAgent
++  }
++
++  private async _performExponentialBackoff(retryNumber: number): Promise<void> {
++    retryNumber = Math.min(ExponentialBackoffCeiling, retryNumber)
++    const ms: number = ExponentialBackoffTimeSlice * Math.pow(2, retryNumber)
++    return new Promise(resolve => setTimeout(() => resolve(), ms))
++  }
++
++  private async _processResponse<T>(
++    res: HttpClientResponse,
++    options?: ifm.RequestOptions
++  ): Promise<ifm.TypedResponse<T>> {
++    return new Promise<ifm.TypedResponse<T>>(async (resolve, reject) => {
++      const statusCode = res.message.statusCode || 0
++
++      const response: ifm.TypedResponse<T> = {
++        statusCode,
++        result: null,
++        headers: {}
++      }
++
++      // not found leads to null obj returned
++      if (statusCode === HttpCodes.NotFound) {
++        resolve(response)
++      }
++
++      // get the result from the body
++
++      function dateTimeDeserializer(key: any, value: any): any {
++        if (typeof value === 'string') {
++          const a = new Date(value)
++          if (!isNaN(a.valueOf())) {
++            return a
++          }
++        }
++
++        return value
++      }
++
++      let obj: any
++      let contents: string | undefined
++
++      try {
++        contents = await res.readBody()
++        if (contents && contents.length > 0) {
++          if (options && options.deserializeDates) {
++            obj = JSON.parse(contents, dateTimeDeserializer)
++          } else {
++            obj = JSON.parse(contents)
++          }
++
++          response.result = obj
++        }
++
++        response.headers = res.message.headers
++      } catch (err) {
++        // Invalid resource (contents not json);  leaving result obj null
++      }
++
++      // note that 3xx redirects are handled by the http layer.
++      if (statusCode > 299) {
++        let msg: string
++
++        // if exception/error in body, attempt to get better error
++        if (obj && obj.message) {
++          msg = obj.message
++        } else if (contents && contents.length > 0) {
++          // it may be the case that the exception is in the body message as string
++          msg = contents
++        } else {
++          msg = `Failed request: (${statusCode})`
++        }
++
++        const err = new HttpClientError(msg, statusCode)
++        err.result = response.result
++
++        reject(err)
++      } else {
++        resolve(response)
++      }
++    })
++  }
++}
++
++const lowercaseKeys = (obj: {[index: string]: any}): any =>
++  Object.keys(obj).reduce((c: any, k) => ((c[k.toLowerCase()] = obj[k]), c), {})
+diff --git a/src/interfaces.ts b/src/interfaces.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..96b0fec7a99e80c5f77c02523ac36e7f70c8eb2d
+--- /dev/null
++++ b/src/interfaces.ts
+@@ -0,0 +1,91 @@
++import * as http from 'http'
++import * as https from 'https'
++import {HttpClientResponse} from './index'
++
++export interface HttpClient {
++  options(
++    requestUrl: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse>
++  get(
++    requestUrl: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse>
++  del(
++    requestUrl: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse>
++  post(
++    requestUrl: string,
++    data: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse>
++  patch(
++    requestUrl: string,
++    data: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse>
++  put(
++    requestUrl: string,
++    data: string,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse>
++  sendStream(
++    verb: string,
++    requestUrl: string,
++    stream: NodeJS.ReadableStream,
++    additionalHeaders?: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse>
++  request(
++    verb: string,
++    requestUrl: string,
++    data: string | NodeJS.ReadableStream,
++    headers: http.OutgoingHttpHeaders
++  ): Promise<HttpClientResponse>
++  requestRaw(
++    info: RequestInfo,
++    data: string | NodeJS.ReadableStream
++  ): Promise<HttpClientResponse>
++  requestRawWithCallback(
++    info: RequestInfo,
++    data: string | NodeJS.ReadableStream,
++    onResult: (err?: Error, res?: HttpClientResponse) => void
++  ): void
++}
++
++export interface RequestHandler {
++  prepareRequest(options: http.RequestOptions): void
++  canHandleAuthentication(response: HttpClientResponse): boolean
++  handleAuthentication(
++    httpClient: HttpClient,
++    requestInfo: RequestInfo,
++    data: string | NodeJS.ReadableStream | null
++  ): Promise<HttpClientResponse>
++}
++
++export interface RequestInfo {
++  options: http.RequestOptions
++  parsedUrl: URL
++  httpModule: typeof http | typeof https
++}
++
++export interface RequestOptions {
++  headers?: http.OutgoingHttpHeaders
++  socketTimeout?: number
++  ignoreSslError?: boolean
++  allowRedirects?: boolean
++  allowRedirectDowngrade?: boolean
++  maxRedirects?: number
++  maxSockets?: number
++  keepAlive?: boolean
++  deserializeDates?: boolean
++  // Allows retries only on Read operations (since writes may not be idempotent)
++  allowRetries?: boolean
++  maxRetries?: number
++}
++
++export interface TypedResponse<T> {
++  statusCode: number
++  result: T | null
++  headers: http.IncomingHttpHeaders
++}
+diff --git a/src/proxy.ts b/src/proxy.ts
+new file mode 100644
+index 0000000000000000000000000000000000000000..3a9c6834ec9da13b1af9b8f8390eff8ec1002f85
+--- /dev/null
++++ b/src/proxy.ts
+@@ -0,0 +1,108 @@
++export function getProxyUrl(reqUrl: URL): URL | undefined {
++  const usingSsl = reqUrl.protocol === 'https:'
++
++  if (checkBypass(reqUrl)) {
++    return undefined
++  }
++
++  const proxyVar = (() => {
++    if (usingSsl) {
++      return process.env['https_proxy'] || process.env['HTTPS_PROXY']
++    } else {
++      return process.env['http_proxy'] || process.env['HTTP_PROXY']
++    }
++  })()
++
++  if (proxyVar) {
++    try {
++      return new DecodedURL(proxyVar)
++    } catch {
++      if (!proxyVar.startsWith('http://') && !proxyVar.startsWith('https://'))
++        return new DecodedURL(`http://${proxyVar}`)
++    }
++  } else {
++    return undefined
++  }
++}
++
++export function checkBypass(reqUrl: URL): boolean {
++  if (!reqUrl.hostname) {
++    return false
++  }
++
++  const reqHost = reqUrl.hostname
++  if (isLoopbackAddress(reqHost)) {
++    return true
++  }
++
++  const noProxy = process.env['no_proxy'] || process.env['NO_PROXY'] || ''
++  if (!noProxy) {
++    return false
++  }
++
++  // Determine the request port
++  let reqPort: number | undefined
++  if (reqUrl.port) {
++    reqPort = Number(reqUrl.port)
++  } else if (reqUrl.protocol === 'http:') {
++    reqPort = 80
++  } else if (reqUrl.protocol === 'https:') {
++    reqPort = 443
++  }
++
++  // Format the request hostname and hostname with port
++  const upperReqHosts = [reqUrl.hostname.toUpperCase()]
++  if (typeof reqPort === 'number') {
++    upperReqHosts.push(`${upperReqHosts[0]}:${reqPort}`)
++  }
++
++  // Compare request host against noproxy
++  for (const upperNoProxyItem of noProxy
++    .split(',')
++    .map(x => x.trim().toUpperCase())
++    .filter(x => x)) {
++    if (
++      upperNoProxyItem === '*' ||
++      upperReqHosts.some(
++        x =>
++          x === upperNoProxyItem ||
++          x.endsWith(`.${upperNoProxyItem}`) ||
++          (upperNoProxyItem.startsWith('.') &&
++            x.endsWith(`${upperNoProxyItem}`))
++      )
++    ) {
++      return true
++    }
++  }
++
++  return false
++}
++
++function isLoopbackAddress(host: string): boolean {
++  const hostLower = host.toLowerCase()
++  return (
++    hostLower === 'localhost' ||
++    hostLower.startsWith('127.') ||
++    hostLower.startsWith('[::1]') ||
++    hostLower.startsWith('[0:0:0:0:0:0:0:1]')
++  )
++}
++
++class DecodedURL extends URL {
++  private _decodedUsername: string
++  private _decodedPassword: string
++
++  constructor(url: string | URL, base?: string | URL) {
++    super(url, base)
++    this._decodedUsername = decodeURIComponent(super.username)
++    this._decodedPassword = decodeURIComponent(super.password)
++  }
++
++  get username(): string {
++    return this._decodedUsername
++  }
++
++  get password(): string {
++    return this._decodedPassword
++  }
++}
