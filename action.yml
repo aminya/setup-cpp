@@ -100,7 +100,7 @@ inputs:
 
 runs:
   using: "node20"
-  main: "dist/modern/setup-cpp.js"
+  main: "dist/modern/setup-cpp.mjs"
 
 branding:
   icon: "award"

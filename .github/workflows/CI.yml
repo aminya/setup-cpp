@@ -214,7 +214,7 @@ jobs:
           node-version: 16
       - name: Smoke Test Node 16
         run: |
-          node ./dist/modern/setup-cpp.js --help
+          node ./dist/modern/setup-cpp.mjs --help
 
   Docker:
     name: Docker-${{ matrix.container.image }}

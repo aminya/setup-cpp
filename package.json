@@ -6,8 +6,8 @@
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "main": "dist/legacy/setup-cpp.js",
-  "modern": "./dist/modern/setup-cpp.js",
-  "source": "./src/main.ts",
+  "modern": "./dist/modern/setup-cpp.mjs",
+  "source": "./src/setup-cpp.ts",
   "bin": {
     "setup-cpp": "dist/legacy/setup-cpp.js"
   },
@@ -26,12 +26,13 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "turbo build && run-p lint.root.tsc build.parcel copy.matchers && run-s build.babel",
+    "build": "turbo build && run-p lint.root.tsc build.parcel build.vite && run-p build.babel copy.json",
     "build.parcel": "cross-env NODE_ENV=production parcel build",
-    "build.babel": "babel ./dist --out-dir dist --plugins @upleveled/babel-plugin-remove-node-prefix --plugins @babel/plugin-transform-private-methods --compact --no-babelrc --source-maps true",
+    "build.vite": "cross-env NODE_ENV=production vite build",
+    "build.babel": "babel ./dist/legacy --out-dir ./dist/legacy --plugins @upleveled/babel-plugin-remove-node-prefix --plugins @babel/plugin-transform-private-methods --compact --no-babelrc --source-maps true",
     "bump": "ncu -u -x numerous,execa,prettier,@types/node,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
     "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/modern ./dist/modern ",
-    "copy.matchers": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern",
+    "copy.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern",
     "dev.parcel": "cross-env NODE_ENV=development parcel watch",
     "dev.packages": "turbo dev",
     "dev": "run-p dev.packages dev.parcel",
@@ -124,6 +125,7 @@
     "setup-python": "github:aminya/setup-python#a783db655c6e40317e2c0c96f9d162d9c9f4a751",
     "shx": "0.3.4",
     "simple-update-notifier": "^2.0.0",
+    "terser": "^5.31.6",
     "terser-config-atomic": "^1.0.0",
     "time-delta": "github:aminya/time-delta#69d91a41cef28e569be9a2991129f5f7d1f0d00e",
     "ts-node": "^10.9.2",
@@ -133,6 +135,8 @@
     "ubuntu-version": "^2.0.0",
     "untildify-user": "workspace:*",
     "util.types": "^0.0.2",
+    "vite": "^5.4.3",
+    "vite-plugin-node": "^3.1.0",
     "web-streams-polyfill": "^4.0.0",
     "which": "^4.0.0"
   },
@@ -215,15 +219,6 @@
       "context": "node",
       "engines": {
         "node": ">=12.x"
-      },
-      "includeNodeModules": true,
-      "optimize": true,
-      "outputFormat": "commonjs"
-    },
-    "modern": {
-      "context": "node",
-      "engines": {
-        "node": ">=20.x"
       },
       "includeNodeModules": true,
       "optimize": true,

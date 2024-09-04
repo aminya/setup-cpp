@@ -287,8 +287,8 @@ async function getGccCmdVersion(binDir: string, givenVersion: string) {
       // try to find the gcc exe in the bin dir
       const files = (await readdir(binDir)).sort(
         (exe1, exe2) => {
-          const version1 = exe1.match(/^gcc-?(.*)(\.exe)?$/)?.[1] || ""
-          const version2 = exe2.match(/^gcc-?(.*)(\.exe)?$/)?.[1] || ""
+          const version1 = exe1.match(/^gcc-?(.*)(\.exe)?$/)?.[1] ?? ""
+          const version2 = exe2.match(/^gcc-?(.*)(\.exe)?$/)?.[1] ?? ""
           return compareVersion(version1, version2)
         },
       )

@@ -21,7 +21,9 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     // target Node.js 12 https://node.green/#ES2019
-    "lib": ["ES2019"],
+    "lib": [
+      "ES2019"
+    ],
     "target": "ESNext",
     "allowJs": true,
     "esModuleInterop": true,
@@ -36,6 +38,7 @@
     "./src",
     "./dev/",
     "./*.ts",
-    "jest.config.mjs"
+    "jest.config.mjs",
+    "vite.config.mts"
   ]
 }
