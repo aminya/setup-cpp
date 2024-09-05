@@ -7,13 +7,13 @@ import { addAptRepository } from "./apt-repository.js"
 import { aptTimeout } from "./apt-timeout.js"
 import { getApt } from "./get-apt.js"
 import { initAptMemoized } from "./init-apt.js"
-import { filterAndQualifyAptPackages } from "./qualify-install.js"
+import { AptPackageInfo, filterAndQualifyAptPackages } from "./qualify-install.js"
 import { updateAptReposMemoized } from "./update.js"
 
 /**
  * The information about an installation result
  */
-export type InstallationInfo = {
+export type InstallationInfo = AptPackageInfo & {
   /** The install dir of the package (Defaults to `undefined`) */
   installDir?: string
   /** The bin dir of the package (Defaults to `/usr/bin`) */
@@ -67,7 +67,7 @@ const retryErrors = [
   ])
  * ```
  */
-export async function installAptPack(packages: AptPackage[], update = false): Promise<InstallationInfo> {
+export async function installAptPack(packages: AptPackage[], update = false): Promise<InstallationInfo[]> {
   const apt: string = getApt()
 
   for (const { name, version } of packages) {
@@ -83,10 +83,11 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
   await addRepositories(apt, packages)
 
   const needToInstall = await filterAndQualifyAptPackages(packages, apt)
+  const needToInstallArgs = needToInstall.map((pack) => pack.qualified)
 
   if (needToInstall.length === 0) {
     info("All packages are already installed")
-    return { binDir: "/usr/bin/" }
+    return needToInstall.map((pack) => ({ ...pack, binDir: "/usr/bin/" }))
   }
 
   // Initialize apt if needed
@@ -97,17 +98,17 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
     await addAptKeys(packages)
 
     // Install
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], {
+    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstallArgs], {
       ...defaultExecOptions,
       env: getAptEnv(apt),
     })
   } catch (err) {
     if (isExecaError(err)) {
       if (retryErrors.some((error) => err.stderr.includes(error))) {
-        warning(`Failed to install packages ${needToInstall}. Retrying...`)
+        warning(`Failed to install packages ${needToInstallArgs}. Retrying...`)
         execRootSync(
           apt,
-          ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall],
+          ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstallArgs],
           { ...defaultExecOptions, env: getAptEnv(apt) },
         )
       }
@@ -116,7 +117,7 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
     }
   }
 
-  return { binDir: "/usr/bin/" }
+  return needToInstall.map((pack) => ({ ...pack, binDir: "/usr/bin/" }))
 }
 
 async function addRepositories(apt: string, packages: AptPackage[]) {

@@ -1,4 +1,3 @@
-import { warning } from "ci-log"
 import escapeRegex from "escape-string-regexp"
 import { execa } from "execa"
 import { getAptEnv } from "./apt-env.js"
@@ -6,16 +5,6 @@ import { getApt } from "./get-apt.js"
 import type { AptPackage } from "./install.js"
 import { isAptPackInstalled } from "./is-installed.js"
 import { updateAptReposMemoized, updatedRepos } from "./update.js"
-
-/**
- * The type of apt package to install
- */
-export enum AptPackageType {
-  NameDashVersion = 0,
-  NameEqualsVersion = 1,
-  Name = 2,
-  None = 3,
-}
 
 /**
  * Filter out the packages that are already installed and qualify the packages into a full package name/version
@@ -31,66 +20,110 @@ export async function filterAndQualifyAptPackages(packages: AptPackage[], apt: s
  * If the package is already installed, return undefined
  */
 export async function qualifiedNeededAptPackage(pack: AptPackage, apt: string = getApt()) {
-  // Qualify the package into full package name/version
-  const qualified = await getAptArg(apt, pack.name, pack.version)
+  const info = await findAptPackageInfo(pack.name, pack.version, apt)
+  if (info === undefined) {
+    throw new Error(`Could not find package ${pack.name} ${pack.version}`)
+  }
+
   // filter out the package that are already installed
-  return (await isAptPackInstalled(qualified)) ? undefined : qualified
+  return (await isAptPackInstalled(info.qualified)) ? undefined : info
 }
 
-async function aptPackageType(apt: string, name: string, version: string | undefined): Promise<AptPackageType> {
-  if (version !== undefined && version !== "") {
+export type AptPackageInfo = {
+  name: string
+  version: string
+  qualified: string
+}
+
+/**
+ * Get the version of the package from apt-cache show
+ * If the version is not found, check if apt-cache search can find the version
+ * If the version is still not found, update the repos and try again
+ */
+export async function findAptPackageInfo(
+  name: string,
+  version: string | undefined,
+  apt: string = getApt(),
+): Promise<AptPackageInfo | undefined> {
+  const info = await aptCacheShow(name, version, apt)
+  if (info !== undefined) {
+    return info
+  }
+
+  if (version !== undefined) {
+    // check if apt-cache search can find the version
     const { stdout } = await execa("apt-cache", [
       "search",
       "--names-only",
       `^${escapeRegex(name)}-${escapeRegex(version)}$`,
     ], { env: getAptEnv(apt), stdio: "pipe" })
-    if (stdout.trim() !== "") {
-      return AptPackageType.NameDashVersion
-    }
 
-    try {
-      // check if apt-get show can find the version
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`], { env: getAptEnv(apt) })
-      if (stdout.trim() === "") {
-        return AptPackageType.NameEqualsVersion
-      }
-    } catch {
-      // ignore
-    }
-  }
+    const stdOutTrim = (stdout as string).trim()
 
-  try {
-    const { stdout: showStdout } = await execa("apt-cache", ["show", name], { env: getAptEnv(apt), stdio: "pipe" })
-    if (showStdout.trim() !== "") {
-      return AptPackageType.Name
+    if (stdOutTrim !== "") {
+      // get the package name by splitting the first line by " - "
+      const packages = stdOutTrim.split("\n")
+      const actualName = packages[0].split(" - ")[0]
+
+      // get the version from apt-cache show
+      return aptCacheShow(actualName, undefined, apt)
     }
-  } catch {
-    // ignore
   }
 
   // If apt-cache fails, update the repos and try again
   if (!updatedRepos) {
     updateAptReposMemoized(apt)
-    return aptPackageType(apt, name, version)
+    return findAptPackageInfo(apt, name, version)
   }
 
-  return AptPackageType.None
+  return undefined
 }
 
-async function getAptArg(apt: string, name: string, version: string | undefined) {
-  const package_type = await aptPackageType(apt, name, version)
-  switch (package_type) {
-    case AptPackageType.NameDashVersion:
-      return `${name}-${version}`
-    case AptPackageType.NameEqualsVersion:
-      return `${name}=${version}`
-    case AptPackageType.Name:
-      if (version !== undefined && version !== "") {
-        warning(`Could not find package ${name} with version ${version}. Installing the latest version.`)
+/**
+ * Get the info about a package from apt-cache show
+ *
+ * @param name The name of the package
+ * @param version The version of the package
+ * @param apt The apt command to use
+ *
+ * @returns The package info or undefined if the package is not found
+ */
+export async function aptCacheShow(
+  name: string,
+  version: string | undefined,
+  apt: string = getApt(),
+): Promise<AptPackageInfo | undefined> {
+  try {
+    const { stdout } = await execa("apt-cache", [
+      "show",
+      version !== undefined && version !== ""
+        ? `${name}=${version}`
+        : name,
+    ], { env: getAptEnv(apt), stdout: "pipe" })
+
+    const stdoutTrim = (stdout as string).trim()
+
+    if (stdoutTrim === "") {
+      return undefined
+    }
+
+    // parse the version from the output
+    // Version: 4:11.2.0-1ubuntu1
+    const versionMatch = stdoutTrim.match(/^Version: (.*)$/m)
+
+    if (versionMatch !== null) {
+      const actualVersion = versionMatch[1]
+      return {
+        name,
+        version: actualVersion,
+        qualified: `${name}-${actualVersion}`,
       }
-      return name
-    default:
-      throw new Error(`Could not find package ${name} ${version ?? ""}`)
+    }
+
+    return undefined
+  } catch {
+    // ignore
   }
+
+  return undefined
 }

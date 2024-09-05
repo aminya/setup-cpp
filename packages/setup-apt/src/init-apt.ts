@@ -17,7 +17,7 @@ export async function initApt(apt: string) {
   ], apt)
 
   if (toInstall.length !== 0) {
-    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall], {
+    execRootSync(apt, ["install", "-y", "--fix-broken", "-o", aptTimeout, ...toInstall.map(pack => pack.qualified)], {
       ...defaultExecOptions,
       env: getAptEnv(apt),
     })
