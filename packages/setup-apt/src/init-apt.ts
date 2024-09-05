@@ -25,4 +25,4 @@ export async function initApt(apt: string) {
 }
 
 /** Install gnupg and certificates (usually missing from docker containers) (memoized) */
-export const initAptMemoized = memoize(initApt, { promise: true })
+export const initAptMemoized = await memoize(initApt, { promise: true })

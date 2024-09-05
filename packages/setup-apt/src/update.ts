@@ -24,4 +24,4 @@ export function updateAptRepos(apt: string = getApt()) {
  * Update the apt repositories (memoized)
  * @param apt The apt command to use (optional)
  */
-export const updateAptReposMemoized = memoize(updateAptRepos)
+export const updateAptReposMemoized = await memoize(updateAptRepos)

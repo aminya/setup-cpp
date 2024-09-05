@@ -34,7 +34,7 @@ async function ubuntuVersion_raw(): Promise<number[] | null> {
 }
 
 /** Detect Ubuntu version */
-export const ubuntuVersion = memoize(ubuntuVersion_raw, { promise: true })
+export const ubuntuVersion = await memoize(ubuntuVersion_raw, { promise: true })
 
 /** Detect Ubuntu version using os.version() for Ubuntu based distros */
 function detectUsingOsVersion() {

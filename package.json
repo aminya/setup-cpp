@@ -208,6 +208,9 @@
   "pnpm": {
     "patchedDependencies": {
       "@actions/http-client@2.2.3": "patches/@actions__http-client@2.2.3.patch"
+    },
+    "overrides": {
+      "memoizee": "https://github.com/aminya/memoizee#fa36fc6f8bf3c8d3160f4731826c9db5b7d5e632"
     }
   }
 }
