@@ -13,7 +13,7 @@ import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
-import { loadGitHubAssetList, matchAsset } from "../utils/asset/load-assets.js"
+import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
@@ -29,18 +29,22 @@ const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURL
 async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): Promise<PackageInfo> {
   switch (platform) {
     case "win32": {
-      const mingwAssets = await loadGitHubAssetList(
+      const mingwAssets = await loadAssetList(
         join(dirname, "github_brechtsanders_winlibs_mingw.json"),
       )
+
+      const mingwArchMap = {
+        x64: "x86_64",
+        ia32: "i386",
+      } as Record<string, string | undefined>
+
       const asset = matchAsset(
         mingwAssets,
         {
           version,
-          arch: arch === "x64"
-            ? "x86_64"
-            : arch === "ia32"
-            ? "i386"
-            : arch,
+          keywords: [
+            mingwArchMap[arch] ?? arch,
+          ],
         },
       )
 

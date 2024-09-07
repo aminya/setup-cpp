@@ -1,26 +1,29 @@
 import { readFile } from "fs/promises"
 
 /**
- * The list of assets of a GitHub release
+ * The list of assets
  * @key tag The tag of the release
  * @value assets The names of the assets of the release
  */
 export type Assets = Record<string, string[]>
 
-export async function loadGitHubAssetList(path: string): Promise<Assets> {
+/**
+ * Load the list of assets from a json file
+ */
+export async function loadAssetList(path: string): Promise<Assets> {
   const data = await readFile(path, "utf-8")
   return JSON.parse(data)
 }
 
 type MatchAssetOpts = {
   version: string
-  arch?: string
+  keywords?: string[]
   filterTag?: (version: string) => boolean
   filterName?: (asset: string) => boolean
 }
 
 /**
- * Match the asset that matches the version and arch
+ * Match the asset that matches the version and given keywords
  */
 export function matchAsset(
   assets: Assets,
@@ -60,21 +63,23 @@ export function matchAsset(
   }
 
   if (matchedNames.length === 0) {
-    throw new Error(`no asset found for version ${opts.version} and arch ${opts.arch}`)
+    throw new Error(`no asset found for version ${opts.version}`)
   }
 
-  // use the first asset if the arch is not specified
-  if (opts.arch === undefined) {
+  if (opts.keywords?.length === 0) {
     return { tag, name: matchedNames[0] }
   }
 
-  // find the asset that matches the arch
+  // find the first asset that matches the keywords
   for (const name of matchedNames) {
-    // search each asset name for the arch
-    if (name.includes(opts.arch)) {
+    if (opts.keywords!.every((keyword) => name.includes(keyword))) {
       return { tag, name }
     }
   }
 
-  throw new Error(`arch ${opts.arch} could not be found among ${JSON.stringify(matchedNames)}`)
+  throw new Error(
+    `Could not find a matching asset for version ${opts.version} and keywords ${JSON.stringify(opts.keywords)} among ${
+      JSON.stringify(matchedNames)
+    }`,
+  )
 }

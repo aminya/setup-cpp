@@ -69,7 +69,7 @@ async function fetchIndexFile(version: string, url: string, htmlDownloadDir: str
         retry: {
           delay: 100,
           maxRetries: 3,
-        }
+        },
       },
     )
     dl.on("start", () => {
