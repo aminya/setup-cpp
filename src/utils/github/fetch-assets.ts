@@ -83,7 +83,7 @@ export async function saveGitHubAssetList(
   const jsonStringify = JsonStringify.configure({
     deterministic: compareVersion,
   })
-  const data = jsonStringify(assets)
+  const data = jsonStringify(assets, null, 2)
 
   // write the assets to a json file
   await writeFile(path, data)
