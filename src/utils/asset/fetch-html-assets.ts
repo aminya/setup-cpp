@@ -1,5 +1,4 @@
 import { mkdir, readFile, readdir, writeFile } from "fs/promises"
-import he from "he"
 import { DownloaderHelper } from "node-downloader-helper"
 import JsonStringify from "safe-stable-stringify"
 import { compareVersion } from "../setup/version.ts"
@@ -67,6 +66,10 @@ async function fetchIndexFile(version: string, url: string, htmlDownloadDir: str
         override: {
           skip: true,
         },
+        retry: {
+          delay: 100,
+          maxRetries: 3,
+        }
       },
     )
     dl.on("start", () => {
@@ -106,7 +109,7 @@ async function extractAssetsFromHTML(opts: Options) {
         continue
       }
 
-      assets[version].push(he.decode(asset))
+      assets[version].push(asset.replace("%2B", "+"))
     }
 
     if (assets[version].length === 0) {
