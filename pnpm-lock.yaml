@@ -28,6 +28,9 @@ importers:
       '@actions/tool-cache':
         specifier: ^2.0.1
         version: 2.0.1
+      '@aminya/minijson':
+        specifier: 1.0.3
+        version: 1.0.3
       '@babel/core':
         specifier: ^7.25.2
         version: 7.25.2
@@ -464,6 +467,10 @@ packages:
   '@aminya/eslint-plugin-only-warn@1.2.2':
     resolution: {integrity: sha512-0VdfoicL+dorb0WrbbhsFsH8xH+8X2Y6CrO/3br68kimkMNOJB/5DFGRraVDYHfCIQgMnlv5Q9GX1yI7V4GcgQ==}
     engines: {node: '>=6'}
+
+  '@aminya/minijson@1.0.3':
+    resolution: {integrity: sha512-XGEPTolLWLyc/op0zGAr4/pFCqCC1eZ9wGkz6XmbNewC1Uu1nzyvcwYKP1gMYnrkQU1DsY93qkerpPzbNDqEdg==}
+    hasBin: true
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -3822,6 +3829,10 @@ packages:
   jsonfile@6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}
 
+  jsonminify@0.4.2:
+    resolution: {integrity: sha512-mEtP5ECD0293D+s45JhDutqF5mFCkWY8ClrPFxjSFR2KUoantofky7noSzyKnAnD9Gd8pXHZSUd5bgzLDUBbfA==}
+    engines: {node: '>=0.8.0', npm: '>=1.1.0'}
+
   jsx-ast-utils@2.4.1:
     resolution: {integrity: sha512-z1xSldJ6imESSzOjd3NNkieVJKRlKYSOtMG8SFyCj2FIrvSaSuli/WjpBkEzCBoR9bYYYFgqJw61Xhu7Lcgk+w==}
     engines: {node: '>=4.0'}
@@ -5539,6 +5550,10 @@ snapshots:
       uuid: 3.4.0
 
   '@aminya/eslint-plugin-only-warn@1.2.2': {}
+
+  '@aminya/minijson@1.0.3':
+    dependencies:
+      jsonminify: 0.4.2
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -9703,6 +9718,8 @@ snapshots:
       universalify: 2.0.1
     optionalDependencies:
       graceful-fs: 4.2.11
+
+  jsonminify@0.4.2: {}
 
   jsx-ast-utils@2.4.1:
     dependencies:

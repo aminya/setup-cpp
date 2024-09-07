@@ -26,12 +26,12 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "turbo build && run-p lint.root.tsc build.vite build.vite.legacy && run-p copy.json",
+    "build": "turbo build && run-p lint.root.tsc build.vite build.vite.legacy && run-s build.json",
     "build.vite": "cross-env NODE_ENV=production vite build",
     "build.vite.legacy": "cross-env NODE_ENV=production TARGET=legacy vite build",
+    "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file ./dist/**/*.json",
     "bump": "ncu -u -x numerous,execa,prettier,@types/node,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
     "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/modern ./dist/modern ",
-    "copy.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern",
     "dev.vite": "cross-env NODE_ENV=development vite build --watch",
     "dev.packages": "turbo dev",
     "dev": "run-p dev.packages dev.vite",
@@ -59,6 +59,7 @@
     "@actions/http-client": "^2.2.3",
     "@actions/io": "^1.1.3",
     "@actions/tool-cache": "^2.0.1",
+    "@aminya/minijson": "1.0.3",
     "@babel/core": "^7.25.2",
     "@biomejs/biome": "^1.8.3",
     "@iarna/toml": "^2.2.5",
