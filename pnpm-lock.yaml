@@ -79,6 +79,9 @@ importers:
       '@types/eslint':
         specifier: ^8.56.12
         version: 8.56.12
+      '@types/he':
+        specifier: ^1.2.3
+        version: 1.2.3
       '@types/iarna__toml':
         specifier: ~2.0.5
         version: 2.0.5
@@ -151,6 +154,9 @@ importers:
       execa:
         specifier: ^7.2.0
         version: 7.2.0
+      he:
+        specifier: ^1.2.0
+        version: 1.2.0
       is-url-online:
         specifier: ^1.5.0
         version: 1.5.0
@@ -1688,6 +1694,9 @@ packages:
 
   '@types/graceful-fs@4.1.9':
     resolution: {integrity: sha512-olP3sd1qOEe5dXTSaFvQG+02VdRXcdytWLAZsAq1PecU8uqQAhkrnbli7DagjtXKW/Bl7YJbUsa8MPcuc8LHEQ==}
+
+  '@types/he@1.2.3':
+    resolution: {integrity: sha512-q67/qwlxblDzEDvzHhVkwc1gzVWxaNxeyHUBF4xElrvjL11O+Ytze+1fGpBHlr/H9myiBUaUXNnNPmBHxxfAcA==}
 
   '@types/iarna__toml@2.0.5':
     resolution: {integrity: sha512-I55y+SxI0ayM4MBU6yfGJGmi4wRll6wtSeKiFYAZj+Z5Q1DVbMgBSVDYY+xQZbjIlLs/pN4fidnvR8faDrmxPg==}
@@ -6883,6 +6892,8 @@ snapshots:
   '@types/graceful-fs@4.1.9':
     dependencies:
       '@types/node': 12.20.55
+
+  '@types/he@1.2.3': {}
 
   '@types/iarna__toml@2.0.5':
     dependencies:

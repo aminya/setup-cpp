@@ -141,7 +141,7 @@ const UBUNTU_RC: Map<string, string> = new Map()
 /**
  * The (latest) Ubuntu versions for each LLVM version.
  *
- * https://github.com/llvm/llvm-project/releases/tag/llvmorg-14.0.1 or https://releases.llvm.org/14.0.1
+ * https://github.com/llvm/llvm-project/releases/tag/llvmorg-14.0.1 or https://releases.llvm.org/6.0.1
  */
 // TODO change based on ubuntu version
 const UBUNTU_X64_SUFFIX_MAP: { [key: string]: string } = {
