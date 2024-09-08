@@ -10,9 +10,13 @@ import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { setupGcc } from "../gcc/gcc.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
+import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import { type InstallationInfo, setupBin } from "../utils/setup/setupBin.js"
+import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { semverCoerceIfInvalid } from "../utils/setup/version.js"
 import { getVersion } from "../versions/versions.js"
 import { LLVMPackages, setupLLVMApt } from "./llvm_installer.js"
@@ -82,6 +86,14 @@ async function llvmBinaryDeps_raw(majorVersion: number) {
     } else {
       await installAptPack([{ name: "libtinfo-dev" }])
     }
+  } else if (isArch()) {
+    // https://aur.archlinux.org/packages/ncurses5-compat-libs
+    await setupPacmanPack("ncurses5-compat-libs", undefined, "yay")
+  } else if (hasDnf()) {
+    // https://packages.fedoraproject.org/pkgs/ncurses/ncurses-compat-libs/index.html
+    await setupDnfPack([
+      { name: "ncurses-compat-libs" },
+    ])
   }
 }
 const llvmBinaryDeps = memoize(llvmBinaryDeps_raw, { promise: true })

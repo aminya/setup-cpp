@@ -20,3 +20,5 @@ exe/
 
 coverage
 .turbo
+
+/src/llvm/assets/

@@ -11,11 +11,13 @@ ignorePaths:
   - "**/node_modules/"
   - .vscode/extensions.json
   - patches/*.patch
-  - "**/github_brechtsanders_winlibs_mingw.json"
+  - "**/github_*.json"
+  - "**/llvm_org_releases.json"
 words:
   - aarch
   - aminya
   - applellvm
+  - armv
   - bazel
   - bazelisk
   - biome
@@ -73,6 +75,7 @@ words:
   - nala
   - noconfirm
   - nodistro
+  - NOPASSWD
   - noprogressbar
   - nothrow
   - npmrc

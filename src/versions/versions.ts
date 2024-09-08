@@ -1,11 +1,11 @@
 import type { Opts } from "../cli-options.js"
 import type { Inputs } from "../tool.js"
-import { DefaultLinuxVersion, DefaultVersions } from "./default_versions.js"
+import { DefaultUbuntuVersion, DefaultVersions } from "./default_versions.js"
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
 export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
-  if (isVersionDefault(version) && process.platform === "linux" && osVersion !== null && name in DefaultLinuxVersion) {
-    return getDefaultLinuxVersion(osVersion, DefaultLinuxVersion[name]!)
+  if (isVersionDefault(version) && process.platform === "linux" && osVersion !== null && name in DefaultUbuntuVersion) {
+    return getDefaultLinuxVersion(osVersion, DefaultUbuntuVersion[name]!)
   } else if (isVersionDefault(version) && name in DefaultVersions) {
     return DefaultVersions[name] ?? ""
   } else if (version === "true") {

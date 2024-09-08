@@ -1,27 +1,18 @@
 import { isArch } from "../utils/env/isArch.js"
 
-// passing "" to a tool installed by a package manager (apt, brew, choco) will result in the default version of that package manager.
-// the directly downloaded tools require a given version ("" doesn't work).
+const defaultLLVM = process.platform === "darwin" && process.arch === "x64"
+  ? "15.0.7"
+  : "18.1.8"
 
-function getLLVMDefault() {
-  switch (process.platform) {
-    case "win32":
-      return "17.0.6"
-    case "linux":
-      // used for non-ubuntu (Fedora, Arch)
-      // the suffixes relate to the suffix in the llvm releases
-      return "17.0.6-ubuntu-22.04"
-    case "darwin":
-      return "15.0.3"
-    default:
-      return "17.0.6"
-  }
-}
-
+/**
+ * Default versions for the tools
+ * DefaultUbuntuVersion overrides the default version for the tools on Ubuntu
+ */
 export const DefaultVersions: Record<string, string | undefined> = {
-  llvm: getLLVMDefault(), // https://github.com/llvm/llvm-project/releases
-  clangtidy: getLLVMDefault(),
-  clangformat: getLLVMDefault(),
+  // https://github.com/llvm/llvm-project/releases
+  llvm: defaultLLVM,
+  clangtidy: defaultLLVM,
+  clangformat: defaultLLVM,
   ninja: "1.12.1", // https://github.com/ninja-build/ninja/releases
   cmake: "3.30.2", // https://github.com/Kitware/CMake/releases
   gcovr: "5.2", // "6.0", // https://pypi.org/project/gcovr/
@@ -34,7 +25,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
     ? "14.2.0posix-18.1.8-12.0.0-ucrt-r1"
     : "", // use the default version on Ubuntu, Fedora, Arch, macOS, etc.
   // mingw: isArch() ? "12.2.0-1" : "8", // https://archlinux.org/packages/extra/x86_64/mingw-w64-gcc/
-  powershell: "7.4.5", // https://github.com/PowerShell/PowerShell/releases/tag/v7.4.5
+  powershell: "7.4.5",
 }
 
 export const MinVersions: Record<string, string | undefined> = {
@@ -45,37 +36,12 @@ export const MinVersions: Record<string, string | undefined> = {
 /// If an ubuntu versions is not in this map:
 // - the newer ubuntu versions use the first entry (e.g. v20),
 // - the older ones use ""
-export const DefaultLinuxVersion: Record<string, Record<number, string> | undefined> = {
+export const DefaultUbuntuVersion: Record<string, Record<number, string> | undefined> = {
   // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=mingw-w64
   mingw: {
     24: "8.0.0-1",
     22: "8.0.0-1",
     20: "7.0.0-2",
-  },
-  // the suffixes relate to the suffix in the llvm releases
-  llvm: {
-    24: "17.0.6-ubuntu-22.04",
-    22: "17.0.6-ubuntu-22.04",
-    20: "17.0.6-ubuntu-22.04",
-    18: "15.0.6-ubuntu-18.04",
-    16: "15.0.6-ubuntu-18.04",
-    14: "13.0.0-ubuntu-16.04",
-  },
-  clangtidy: {
-    24: "17.0.6-ubuntu-22.04",
-    22: "17.0.6-ubuntu-22.04",
-    20: "17.0.6-ubuntu-22.04",
-    18: "15.0.6-ubuntu-18.04",
-    16: "15.0.6-ubuntu-18.04",
-    14: "13.0.0-ubuntu-16.04",
-  },
-  clangformat: {
-    24: "17.0.6-ubuntu-22.04",
-    22: "17.0.6-ubuntu-22.04",
-    20: "17.0.6-ubuntu-22.04",
-    18: "15.0.6-ubuntu-18.04",
-    16: "15.0.6-ubuntu-18.04",
-    14: "13.0.0-ubuntu-16.04",
   },
   gcovr: {
     24: "6.0",

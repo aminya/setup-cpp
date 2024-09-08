@@ -3,25 +3,16 @@ import { fileURLToPath } from "url"
 import * as io from "@actions/io"
 import { execaSync } from "execa"
 import { chmod } from "fs/promises"
-import { isUrlOnline } from "is-url-online"
 import { addExeExt } from "patha"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
-import { getSpecificVersionAndUrl } from "../../utils/setup/version.js"
 import { setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
 import { getVersion } from "../../versions/versions.js"
 import { setupClangFormat, setupClangTools, setupLLVM } from "../llvm.js"
-import { VERSIONS, getLinuxUrl, getUrl } from "../llvm_url.js"
+import { getLLVMAssetURL } from "../llvm_url.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 jest.setTimeout(400000)
-async function testUrl(version: string) {
-  const [specificVersion, url] = await getSpecificVersionAndUrl(VERSIONS, process.platform, version, getUrl)
-
-  if (!(await isUrlOnline(url))) {
-    throw new Error(`Failed to install Version: ${version} => ${specificVersion} \n URL: ${url}`)
-  }
-}
 
 describe("setup-llvm", () => {
   let directory: string
@@ -31,44 +22,24 @@ describe("setup-llvm", () => {
 
   it("Finds URL for ubuntu version", async () => {
     expect(
-      await getSpecificVersionAndUrl(
-        VERSIONS,
-        "linux",
-        "13.0.0-ubuntu-16.04",
-        (_plantform, version) => getLinuxUrl(version),
-      ),
-    ).toStrictEqual([
-      "13.0.0-ubuntu-16.04",
-      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
-    ])
-    expect(
-      await getSpecificVersionAndUrl(
-        VERSIONS,
-        "linux",
-        "13.0.1-ubuntu-18.04",
-        (_plantform, version) => getLinuxUrl(version),
-      ),
-    ).toStrictEqual([
-      "13.0.1-ubuntu-18.04",
-      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
-    ])
-    expect(
-      await getSpecificVersionAndUrl(
-        VERSIONS,
-        "linux",
-        "13.0.0-ubuntu-20.04",
-        (_plantform, version) => getLinuxUrl(version),
-      ),
-    ).toStrictEqual([
-      "13.0.0-ubuntu-20.04",
+      await getLLVMAssetURL("linux", "x86_64", "13.0.0"),
+    ).toStrictEqual(
       "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz",
-    ])
+    )
+    expect(
+      await getLLVMAssetURL("linux", "x86_64", "13.0.1"),
+    ).toStrictEqual(
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.1/clang+llvm-13.0.1-x86_64-linux-gnu-ubuntu-18.04.tar.xz",
+    )
   })
 
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
-        ...(process.platform === "darwin" ? [] : ["16.0.2", "16.0.0"]),
+        "18",
+        "17",
+        "16",
+        "15",
         "15.0.2",
         // "14.0.1",
         "14.0.0",
@@ -89,7 +60,7 @@ describe("setup-llvm", () => {
         "5",
         "5.0.0",
         "4",
-      ].map((version) => testUrl(version)),
+      ].map((version) => getLLVMAssetURL("win32", "x64", version)),
     )
   })
 

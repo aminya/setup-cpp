@@ -1,4 +1,4 @@
-import { saveGitHubAssetList } from "../utils/github/fetch-assets.ts"
+import { saveGitHubAssetList } from "../utils/asset/fetch-github-assets.ts"
 
 /**
  * Generate the list of all releases of a GitHub repository and save it to a json file
