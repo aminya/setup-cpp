@@ -36,7 +36,10 @@ describe("setup-llvm", () => {
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
-        ...(process.platform === "darwin" ? [] : ["16.0.2", "16.0.0"]),
+        "18",
+        "17",
+        "16",
+        "15",
         "15.0.2",
         // "14.0.1",
         "14.0.0",
@@ -57,7 +60,7 @@ describe("setup-llvm", () => {
         "5",
         "5.0.0",
         "4",
-      ].map((version) => getLLVMAssetURL(process.platform, process.arch, version)),
+      ].map((version) => getLLVMAssetURL("win32", "x64", version)),
     )
   })
 
