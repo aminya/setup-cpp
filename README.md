@@ -37,15 +37,13 @@ Run `setup-cpp` with the available options.
 ```shell
 # Windows example (open PowerShell as admin)
 npx setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
-
-RefreshEnv.cmd # activate the environment
+# restart the shell to activate the environment
 ```
 
 ```shell
 # Linux/Macos example
 sudo npx setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
-
-source ~/.cpprc
+source ~/.cpprc # activate cpp environment variables
 ```
 
 NOTE: In the `compiler` entry, you can specify the version after `-` like `llvm-11.0.0`. For the tools, you can pass a specific version instead of `true` that chooses the default version
@@ -58,35 +56,40 @@ NOTE: setup-cpp requires Nodejs 12 or higher. If Nodejs shipped with your distri
 
 #### With executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.40.0), and run it with the available options. You can also automate downloading using `wget`, `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.41.0), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
+
+```shell
+# windows x64
+curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.41.0/setup-cpp-x64-windows.exe"
+
+# linux x64
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.41.0/setup-cpp-x64-linux"
+chmod +x ./setup-cpp
+
+# macos arm64
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.41.0/setup-cpp-arm64-macos"
+chmod +x ./setup-cpp
+
+# macos x64
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.41.0/setup-cpp-x64-macos"
+chmod +x ./setup-cpp
+```
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```shell
 # windows example (open PowerShell as admin)
-curl -LJO "https://github.com/aminya/setup-cpp/releases/download/v0.40.0/setup-cpp-x64-windows.exe"
-./setup-cpp-x64-windows --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
-
-RefreshEnv.cmd # activate cpp environment variables
+./setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+# restart the shell to activate the environment
 ```
 
 ```shell
-# linux example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.40.0/setup-cpp-x64-linux"
-chmod +x ./setup-cpp-x64-linux
-sudo ./setup-cpp-x64-linux --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
-
+# linux/macos example
+sudo ./setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 source ~/.cpprc # activate cpp environment variables
 ```
 
-```shell
-# macos example
-wget "https://github.com/aminya/setup-cpp/releases/download/v0.40.0/setup-cpp-x64-macos"
-chmod +x ./setup-cpp-x64-macos
-sudo ./setup-cpp-x64-macos --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
-
-source ~/.cpprc # activate cpp environment variables
-```
+NOTE: On Unix systems, if you are already a root user (e.g., in a GitLab runner or Docker), you will not need to use `sudo`.
 
 ### Inside GitHub Actions
 
@@ -156,19 +159,19 @@ To provide fast development environments, `setup-cpp` provides several prebuilt 
 You can use these images as a base image for your project.
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.40.0 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.41.0 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.40.0 AS builder
+FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.41.0 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-llvm:40-0.40.0 AS builder
+FROM aminya/setup-cpp-fedora-llvm:40-0.41.0 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-llvm:base-0.40.0 AS builder
+FROM aminya/setup-cpp-arch-llvm:base-0.41.0 AS builder
 ```
 
 The names are in the format `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
@@ -187,7 +190,7 @@ RUN apt-get update -qq && \
     # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.40.0 && \
+    npm install -g setup-cpp@v0.41.0 && \
     # install the compiler and tools
     setup-cpp \
         --nala true \
@@ -296,7 +299,7 @@ stages:
   apt-get install -y --no-install-recommends nodejs npm
 
   # install setup-cpp
-  npm install -g setup-cpp@v0.40.0
+  npm install -g setup-cpp@v0.41.0
 
   # install the compiler and tools
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true

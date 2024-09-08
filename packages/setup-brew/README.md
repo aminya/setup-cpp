@@ -37,9 +37,15 @@ The information about an installation result
 
 ### `getBrewBinDir` (function)
 
+Get the path to the bin directory of brew
+
+**returns:** string
+
+### `getBrewDir` (function)
+
 Get the path where brew is installed
 
-**returns:** "/opt/homebrew/bin/" | "/usr/local/bin/" | "/home/linuxbrew/.linuxbrew/bin/"
+**returns:** "/opt/homebrew" | "/usr/local" | "/home/linuxbrew/.linuxbrew"
 
 ### `BrewPackOptions` (type)
 
