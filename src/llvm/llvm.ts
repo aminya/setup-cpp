@@ -88,7 +88,7 @@ async function llvmBinaryDeps_raw(majorVersion: number) {
     }
   } else if (isArch()) {
     // https://aur.archlinux.org/packages/ncurses5-compat-libs
-    await setupPacmanPack("ncurses5-compat-libs")
+    await setupPacmanPack("ncurses5-compat-libs", undefined, "yay")
   } else if (hasDnf()) {
     // https://packages.fedoraproject.org/pkgs/ncurses/ncurses-compat-libs/index.html
     await setupDnfPack([
