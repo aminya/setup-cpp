@@ -1,5 +1,5 @@
 import { tmpdir } from "os"
-import { dirname } from "path"
+import { dirname, join } from "path"
 import { type AddPathOptions, addPath } from "envosman"
 import { execaSync } from "execa"
 import { DownloaderHelper } from "node-downloader-helper"
@@ -65,22 +65,32 @@ export async function setupBrew(options: SetupBrewOptions = {}): Promise<Install
 }
 
 /**
+ * Get the path to the bin directory of brew
+ * @returns {string} The path where brew binary is installed
+ *
+ * Based on the installation script from https://brew.sh
+ */
+export function getBrewBinDir() {
+  return join(getBrewDir(), "bin")
+}
+
+/**
  * Get the path where brew is installed
  * @returns {string} The path where brew is installed
  *
  * Based on the installation script from https://brew.sh
  */
-export function getBrewBinDir() {
+export function getBrewDir() {
   if (process.platform === "darwin") {
     if (process.arch === "arm64") {
-      return "/opt/homebrew/bin/"
+      return "/opt/homebrew"
     } else {
-      return "/usr/local/bin/"
+      return "/usr/local"
     }
   }
 
   if (process.platform === "linux") {
-    return "/home/linuxbrew/.linuxbrew/bin/"
+    return "/home/linuxbrew/.linuxbrew"
   }
 
   throw new Error("Unsupported platform for brew")

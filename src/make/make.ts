@@ -1,6 +1,7 @@
+import { join } from "path"
 import { addPath } from "envosman"
 import { installAptPack } from "setup-apt"
-import { installBrewPack } from "setup-brew"
+import { getBrewDir, installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
@@ -17,8 +18,10 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
     }
     case "darwin": {
       await installBrewPack("make", version)
-      await addPath("/usr/local/opt/make/libexec/gnubin", rcOptions)
-      return { binDir: "/usr/local/opt/make/libexec/gnubin" }
+
+      const gnuBinDir = join(getBrewDir(), "opt/make/libexec/gnubin")
+      await addPath(gnuBinDir, rcOptions)
+      return { binDir: gnuBinDir }
     }
     case "linux": {
       if (isArch()) {
