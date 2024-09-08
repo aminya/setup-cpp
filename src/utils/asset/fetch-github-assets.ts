@@ -50,8 +50,7 @@ async function fetchGitHubAssetList(
         if (!(release.tag_name in assets)) {
           assets[release.tag_name] = []
         }
-
-        const assets_ref = assets[release.tag_name]
+        const assets_ref = assets[release.tag_name]!
 
         for (const asset of release.assets) {
           if (filterAssets !== undefined && !filterAssets(asset.name)) {

@@ -170,7 +170,7 @@ async function getAssetKeywords(platform: string, arch: string) {
       break
     }
     case "darwin": {
-      keywords.push("darwin")
+      keywords.push("apple")
 
       switch (arch) {
         case "x86_64":

@@ -6,7 +6,7 @@ import { readFile } from "fs/promises"
  * @key tag The tag of the release
  * @value assets The names of the assets of the release
  */
-export type Assets = Record<string, string[]>
+export type Assets = Record<string, string[] | undefined>
 
 /**
  * Load the list of assets from a json file
@@ -39,13 +39,21 @@ export function matchAsset(
   const { tag, assetNames } = assetVersion
 
   // if no keywords are given, return the first asset
-  if (!opts.keywords?.length && !opts.optionalKeywords?.length) {
+  if (
+    (opts.keywords === undefined
+      || opts.keywords.length === 0)
+    && (opts.optionalKeywords === undefined
+      || opts.optionalKeywords.length === 0)
+  ) {
     return { tag, name: assetNames[0] }
   }
 
   // check if the asset contains all the keywords
   let candidates: string[] = []
-  if (opts.keywords?.length) {
+  if (
+    opts.keywords !== undefined
+    && opts.keywords.length !== 0
+  ) {
     for (const name of assetNames) {
       if (opts.keywords!.every((keyword) => name.includes(keyword))) {
         candidates.push(name)
@@ -61,7 +69,10 @@ export function matchAsset(
   }
 
   // prefer the candidates that contain more optional keywords
-  if (opts.optionalKeywords?.length) {
+  if (
+    opts.optionalKeywords !== undefined
+    && opts.optionalKeywords.length !== 0
+  ) {
     // rate the candidates based on the number of optional keywords they contain
     const candidateScores = candidates.map((name) => {
       let score = 0
@@ -112,10 +123,7 @@ function matchAssetVersion(assets: Assets, opts: MatchAssetOpts) {
   let foundVersion: string | undefined
   let foundOrigTag: string | undefined
   for (const [version, origTag] of versionMap.entries()) {
-    if (
-      version === opts.version
-      || version.startsWith(opts.version)
-    ) {
+    if (version.startsWith(opts.version)) {
       foundVersion = version
       foundOrigTag = origTag
       break
