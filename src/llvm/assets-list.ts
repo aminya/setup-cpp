@@ -32,10 +32,15 @@ async function main() {
 }
 
 function isAssetArchive(asset: string): boolean {
-  return asset.endsWith("tar.xz")
-    || asset.endsWith("zip")
-    || asset.endsWith("exe")
-    || asset.endsWith("tar.gz")
+  // only download the LLVM and clang+llvm archives
+  return (asset.startsWith("LLVM-")
+    || asset.startsWith("clang+llvm-")
+    || asset.startsWith("clang%2Bllvm-")) // cspell: disable-line
+    // only download the archives
+    && (asset.endsWith("tar.xz")
+      || asset.endsWith("zip")
+      || asset.endsWith("exe")
+      || asset.endsWith("tar.gz"))
 }
 
 main().catch((err) => {

@@ -49,9 +49,6 @@ export async function getLLVMAssetURL(platform: string, arch: string, version: s
       filterMapTag(tag) {
         return tag.replace(/^llvmorg-/, "")
       },
-      filterName(name) {
-        return name.startsWith("LLVM-") || name.startsWith("clang+llvm-")
-      },
     },
   )
 
@@ -88,6 +85,7 @@ async function getAssetKeywords(platform: string, arch: string) {
     case "win32": {
       if (x86_64.includes(arch)) {
         keywords.push("win64")
+        // TODO fallback to win32 if win64 is not available (e.g. for LLVM 3.6.2 and older)
       } else if (x86.includes(arch)) {
         keywords.push("win32")
       } else if (arm64.includes(arch)) {

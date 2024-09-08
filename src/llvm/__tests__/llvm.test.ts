@@ -24,7 +24,7 @@ describe("setup-llvm", () => {
     expect(
       await getLLVMAssetURL("linux", "x86_64", "13.0.0"),
     ).toStrictEqual(
-      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-16.04.tar.xz",
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-13.0.0/clang+llvm-13.0.0-x86_64-linux-gnu-ubuntu-20.04.tar.xz",
     )
     expect(
       await getLLVMAssetURL("linux", "x86_64", "13.0.1"),

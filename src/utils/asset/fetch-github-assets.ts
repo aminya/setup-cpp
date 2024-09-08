@@ -47,16 +47,19 @@ async function fetchGitHubAssetList(
           continue
         }
 
-        if (!(release.tag_name in assets)) {
-          assets[release.tag_name] = []
-        }
-        const assets_ref = assets[release.tag_name]!
+        const versionAssets: string[] = []
+
+        // const assets_ref = assets[release.tag_name]!
 
         for (const asset of release.assets) {
           if (filterAssets !== undefined && !filterAssets(asset.name)) {
             continue
           }
-          assets_ref.push(asset.name)
+          versionAssets.push(asset.name)
+        }
+
+        if (versionAssets.length !== 0) {
+          assets[release.tag_name] = versionAssets.sort().reverse()
         }
       }
     } catch (err) {

@@ -1,3 +1,5 @@
+import { existsSync } from "fs"
+import { join } from "path"
 import { mkdir, readFile, readdir, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
 import JsonStringify from "safe-stable-stringify"
@@ -58,6 +60,10 @@ async function fetchIndexFiles(opts: Options) {
 
 async function fetchIndexFile(version: string, url: string, htmlDownloadDir: string) {
   try {
+    if (existsSync(join(htmlDownloadDir, version))) {
+      return
+    }
+
     const dl = new DownloaderHelper(
       url,
       htmlDownloadDir,
@@ -66,10 +72,7 @@ async function fetchIndexFile(version: string, url: string, htmlDownloadDir: str
         override: {
           skip: true,
         },
-        retry: {
-          delay: 100,
-          maxRetries: 3,
-        },
+        timeout: 500,
       },
     )
     dl.on("start", () => {
@@ -92,9 +95,8 @@ async function extractAssetsFromHTML(opts: Options) {
   const indexFiles = await readdir(opts.htmlDownloadDir)
   await Promise.all(indexFiles.map(async (indexFile) => {
     const version = indexFile.replace(".html", "")
-    if (!(version in assets)) {
-      assets[version] = []
-    }
+
+    const versionAssets: string[] = []
 
     // read the html file
     const body = await readFile(`${opts.htmlDownloadDir}/${indexFile}`, "utf8")
@@ -109,12 +111,12 @@ async function extractAssetsFromHTML(opts: Options) {
         continue
       }
 
-      assets[version].push(asset.replace("%2B", "+"))
+      versionAssets.push(asset.replace("%2B", "+"))
     }
 
-    if (assets[version].length === 0) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete assets[version]
+    if (versionAssets.length !== 0) {
+      // sort the names and update the assets
+      assets[version] = versionAssets.sort().reverse()
     }
   }))
 
