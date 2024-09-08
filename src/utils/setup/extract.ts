@@ -92,7 +92,7 @@ export function extractExe(file: string, dest: string) {
 export async function extractZip(file: string, dest: string) {
   // if unzip is available use it
   if (which.sync("unzip", { nothrow: true }) !== null) {
-    await execa("unzip", [file, "-d", dest], { stdio: "inherit" })
+    await execa("unzip", ["-q", file, "-d", dest], { stdio: "inherit" })
     await grantUserWriteAccess(dest)
     return dest
   }
