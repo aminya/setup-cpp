@@ -7,6 +7,7 @@ import { mkdirp } from "mkdirp"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import { installAptPack } from "setup-apt"
+import { installBrewPack } from "setup-brew"
 import { untildifyUser } from "untildify-user"
 import which from "which"
 import { rcOptions } from "../../cli-options.js"
@@ -186,6 +187,8 @@ export function setupPipPackSystem(name: string, addPythonPrefix = true) {
     } else if (isUbuntu()) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     }
+  } else if (process.platform === "darwin") {
+    return installBrewPack(name)
   }
   return null
 }
