@@ -34,7 +34,7 @@ function main() {
         `./exe/setup-cpp-${process.arch}-${getPlatformName()}${exe}`,
         "--",
         `{{caxa}}/node_modules/.bin/node${exe}`,
-        "{{caxa}}/setup-cpp.js",
+        "{{caxa}}/setup-cpp.mjs",
       ])
     ),
   )
