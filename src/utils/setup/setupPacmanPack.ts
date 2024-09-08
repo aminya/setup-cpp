@@ -3,6 +3,8 @@ import { info, warning } from "ci-log"
 import { execa, execaSync } from "execa"
 import which from "which"
 import type { InstallationInfo } from "./setupBin.js"
+import { tmpdir } from "os"
+import { join } from "path"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
@@ -14,9 +16,8 @@ export async function setupPacmanPack(name: string, version?: string, aur?: stri
 
   const pacman = "pacman"
 
-  if (aur === "yay" && which.sync("yay", { nothrow: true }) === null) {
-    // TODO: install yay automatically
-    throw new Error(`yay is needed for ${name}, but it is not installed, please install it manually first`)
+  if (aur === "yay") {
+    setupYay()
   }
 
   // yay can't run as root, so skip update
@@ -77,4 +78,30 @@ async function availablePacmanVersions(pacman: string, name: string) {
     warning(`Failed to get available versions for ${name}: ${err}`)
   }
   return availableVersions
+}
+
+function setupYay() {
+  if (which.sync("yay", { nothrow: true }) === null) {
+    try {
+      // Install prerequisites
+      execRootSync("pacman", ["-S", "--noconfirm", "base-devel", "git"])
+
+      // Clone the yay repository into a temporary directory
+      execaSync("git", ["clone", "https://aur.archlinux.org/yay.git"], {
+        stdio: "inherit",
+        cwd: tmpdir(),
+      })
+
+      // Build and install yay
+      execaSync("makepkg", ["-si", "--noconfirm"], {
+        stdio: "inherit",
+        cwd: join(tmpdir(), "yay"),
+      })
+
+      // clean-up
+      execaSync("rm", ["-rf", join(tmpdir(), "yay")], { stdio: "inherit" })
+    } catch (error) {
+      throw new Error(`Failed to install yay: ${error}. Install yay manually and re-run the script.`)
+    }
+  }
 }
