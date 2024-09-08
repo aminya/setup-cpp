@@ -1,10 +1,10 @@
-import { execRootSync } from "admina"
+import { tmpdir } from "os"
+import { join } from "path"
+import { execRootSync, isRoot } from "admina"
 import { info, warning } from "ci-log"
 import { execa, execaSync } from "execa"
 import which from "which"
 import type { InstallationInfo } from "./setupBin.js"
-import { tmpdir } from "os"
-import { join } from "path"
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
@@ -34,8 +34,13 @@ export async function setupPacmanPack(name: string, version?: string, aur?: stri
 
   const runInstall = (arg: string) => {
     if (aur === "yay") {
-      // run yay as non-root, ERROR: Running makepkg as root is not allowed as it can cause permanent, catastrophic damage to your system.
-      return execaSync(aur, ["-S", "--noconfirm", arg])
+      // run yay as non-root to fix ERROR: Running makepkg as root is not allowed as it can cause permanent, catastrophic damage to your system.
+      if (isRoot() && createdBuilderUser) {
+        // Run yay as builder user
+        return execRootSync("su", ["-", "builder", "-c", `yay -S --noconfirm ${arg}`])
+      } else {
+        return execaSync(aur, ["-S", "--noconfirm", arg])
+      }
     }
     return execRootSync(aur ?? pacman, ["-S", "--noconfirm", arg])
   }
@@ -80,26 +85,51 @@ async function availablePacmanVersions(pacman: string, name: string) {
   return availableVersions
 }
 
+let createdBuilderUser = false
+
 function setupYay() {
   if (which.sync("yay", { nothrow: true }) === null) {
     try {
       // Install prerequisites
       execRootSync("pacman", ["-S", "--noconfirm", "base-devel", "git"])
 
-      // Clone the yay repository into a temporary directory
-      execaSync("git", ["clone", "https://aur.archlinux.org/yay.git"], {
-        stdio: "inherit",
-        cwd: tmpdir(),
-      })
+      const yayBuildDir = join(tmpdir(), "yay")
 
-      // Build and install yay
-      execaSync("makepkg", ["-si", "--noconfirm"], {
-        stdio: "inherit",
-        cwd: join(tmpdir(), "yay"),
-      })
+      execRootSync("mkdir", ["-p", yayBuildDir])
+
+      if (isRoot()) {
+        // Create a non-root user to build yay
+        warning("Creating a non-root user to build yay")
+        execRootSync("useradd", ["-m", "-G", "wheel", "builder"])
+        execRootSync("passwd", ["-d", "builder"])
+        execRootSync("chown", ["-R", "builder:builder", yayBuildDir])
+        execRootSync("bash", ["-c", `echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers`])
+        createdBuilderUser = true
+
+        // Clone the yay repository into a temporary directory
+        execaSync("su", ["-", "builder", "-c", `git clone https://aur.archlinux.org/yay.git ${yayBuildDir}`], {
+          stdio: "inherit",
+        })
+
+        execaSync("su", ["-", "builder", "-c", `cd ${yayBuildDir} && makepkg -si --noconfirm`], {
+          stdio: "inherit",
+        })
+      } else {
+        // Clone the yay repository into a temporary directory
+        execaSync("git", ["clone", "https://aur.archlinux.org/yay.git", yayBuildDir], {
+          stdio: "inherit",
+          cwd: tmpdir(),
+        })
+
+        // Build and install yay
+        execaSync("makepkg", ["-si", "--noconfirm"], {
+          stdio: "inherit",
+          cwd: yayBuildDir,
+        })
+      }
 
       // clean-up
-      execaSync("rm", ["-rf", join(tmpdir(), "yay")], { stdio: "inherit" })
+      execaSync("rm", ["-rf", yayBuildDir], { stdio: "inherit" })
     } catch (error) {
       throw new Error(`Failed to install yay: ${error}. Install yay manually and re-run the script.`)
     }

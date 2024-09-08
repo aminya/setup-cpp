@@ -75,6 +75,7 @@ words:
   - nala
   - noconfirm
   - nodistro
+  - NOPASSWD
   - noprogressbar
   - nothrow
   - npmrc
