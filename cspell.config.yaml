@@ -13,11 +13,11 @@ ignorePaths:
   - patches/*.patch
   - "**/github_*.json"
   - "**/llvm_org_releases.json"
-
 words:
   - aarch
   - aminya
   - applellvm
+  - armv
   - bazel
   - bazelisk
   - biome

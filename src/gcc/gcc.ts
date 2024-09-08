@@ -48,6 +48,10 @@ async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arc
         },
       )
 
+      if (asset === undefined) {
+        throw new Error(`No asset found for version ${version} and arch ${arch}`)
+      }
+
       return {
         binRelativeDir: "bin/",
         binFileName: addExeExt("g++"),

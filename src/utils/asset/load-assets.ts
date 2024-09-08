@@ -1,3 +1,4 @@
+import { info } from "ci-log"
 import { readFile } from "fs/promises"
 
 /**
@@ -18,7 +19,8 @@ export async function loadAssetList(path: string): Promise<Assets> {
 type MatchAssetOpts = {
   version: string
   keywords?: string[]
-  filterTag?: (version: string) => boolean
+  optionalKeywords?: string[]
+  filterMapTag?: (tag: string) => string | undefined
   filterName?: (asset: string) => boolean
 }
 
@@ -28,58 +30,119 @@ type MatchAssetOpts = {
 export function matchAsset(
   assets: Assets,
   opts: MatchAssetOpts,
-): { tag: string; name: string } {
-  // get the list of versions
-  let tags = Object.keys(assets)
+): { tag: string; name: string } | undefined {
+  // match the tag
+  const assetVersion = matchAssetVersion(assets, opts)
+  if (assetVersion === undefined) {
+    return undefined
+  }
+  const { tag, assetNames } = assetVersion
 
-  // filter the versions
-  if (opts.filterTag !== undefined) {
-    tags = tags.filter(opts.filterTag)
+  // if no keywords are given, return the first asset
+  if (!opts.keywords?.length && !opts.optionalKeywords?.length) {
+    return { tag, name: assetNames[0] }
   }
 
-  if (tags.length === 0) {
-    throw new Error(`no tag found for version ${opts.version}`)
+  // check if the asset contains all the keywords
+  let candidates: string[] = []
+  if (opts.keywords?.length) {
+    for (const name of assetNames) {
+      if (opts.keywords!.every((keyword) => name.includes(keyword))) {
+        candidates.push(name)
+      }
+    }
+  } else {
+    candidates = assetNames
+  }
+
+  if (candidates.length === 0) {
+    info(`no asset found for version ${opts.version} and keywords ${opts.keywords}`)
+    return undefined
+  }
+
+  // prefer the candidates that contain more optional keywords
+  if (opts.optionalKeywords?.length) {
+    // rate the candidates based on the number of optional keywords they contain
+    const candidateScores = candidates.map((name) => {
+      let score = 0
+      for (const keyword of opts.optionalKeywords!) {
+        if (name.includes(keyword)) {
+          score++
+        }
+      }
+      return score
+    })
+
+    // find the candidate with the highest score
+    const maxScore = Math.max(...candidateScores)
+    const maxIndex = candidateScores.indexOf(maxScore)
+    return { tag, name: candidates[maxIndex] }
+  }
+
+  // return the first candidate if no optional keywords are given
+  return { tag, name: candidates[0] }
+}
+
+function matchAssetVersion(assets: Assets, opts: MatchAssetOpts) {
+  // get the list of versions
+  const origTags = Object.keys(assets)
+
+  // filter/map the tags
+  const versionMap: Map<string, string> = new Map()
+  if (opts.filterMapTag === undefined) {
+    for (const origTag of origTags) {
+      versionMap.set(origTag, origTag)
+    }
+  } else {
+    for (const origTag of origTags) {
+      const mappedTag = opts.filterMapTag(origTag)
+      if (mappedTag !== undefined) {
+        versionMap.set(mappedTag, origTag)
+      }
+    }
+  }
+
+  if (versionMap.size === 0) {
+    info(`no tag found for version ${opts.version}`)
+    return undefined
   }
 
   // find the first tag that starts with the version
   // loop over the versions starting with the latest
-  let tag: string | undefined
-  for (const mingwVersion of tags) {
-    if (mingwVersion.startsWith(opts.version)) {
-      tag = mingwVersion
+  let foundVersion: string | undefined
+  let foundOrigTag: string | undefined
+  for (const [version, origTag] of versionMap.entries()) {
+    if (
+      version === opts.version
+      || version.startsWith(opts.version)
+    ) {
+      foundVersion = version
+      foundOrigTag = origTag
       break
     }
   }
-  if (tag === undefined) {
-    throw new Error(`version ${opts.version} is not supported`)
+
+  if (foundVersion === undefined || foundOrigTag === undefined) {
+    info(`version ${opts.version} is not supported`)
+    return undefined
   }
 
   // get the list of assets
-  let matchedNames = assets[tag]
+  let assetNames = assets[foundOrigTag]
+  if (assetNames === undefined) {
+    info(`no asset found for version ${opts.version}`)
+    return undefined
+  }
 
   // filter the assets
   if (opts.filterName !== undefined) {
-    matchedNames = matchedNames.filter(opts.filterName)
+    assetNames = assetNames.filter(opts.filterName)
   }
 
-  if (matchedNames.length === 0) {
-    throw new Error(`no asset found for version ${opts.version}`)
+  if (assetNames.length === 0) {
+    info(`no asset found for version ${opts.version}`)
+    return undefined
   }
 
-  if (opts.keywords?.length === 0) {
-    return { tag, name: matchedNames[0] }
-  }
-
-  // find the first asset that matches the keywords
-  for (const name of matchedNames) {
-    if (opts.keywords!.every((keyword) => name.includes(keyword))) {
-      return { tag, name }
-    }
-  }
-
-  throw new Error(
-    `Could not find a matching asset for version ${opts.version} and keywords ${JSON.stringify(opts.keywords)} among ${
-      JSON.stringify(matchedNames)
-    }`,
-  )
+  return { tag: foundOrigTag, assetNames }
 }

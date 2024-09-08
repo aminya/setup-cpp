@@ -42,12 +42,17 @@ function detectUsingOsVersion() {
     return null
   }
 
-  // #46~22.04.1-Ubuntu SMP ...
+  // #40~22.04.3-Ubuntu SMP PREEMPT_DYNAMIC Tue Jul 30 17:30:19 UTC 2
   const osVersion: string = os.version()
-  const versionSplitted = osVersion.split(".")
-  const majorVersion = Number.parseInt(versionSplitted[0].replace("#", ""), 10)
-  const minorVersion = Number.parseInt(versionSplitted[1].replace("~", ""), 10)
-  const patchVersion = Number.parseInt(versionSplitted[2].split("-")[0], 10)
+  // parse the version
+  const versionMatch = osVersion.match(/(\d+)\.(\d+)\.(\d+)/)
+  if (versionMatch === null) {
+    return null
+  }
+
+  const majorVersion = Number.parseInt(versionMatch[1], 10)
+  const minorVersion = Number.parseInt(versionMatch[2], 10)
+  const patchVersion = Number.parseInt(versionMatch[3], 10)
 
   return [majorVersion, minorVersion, patchVersion]
 }

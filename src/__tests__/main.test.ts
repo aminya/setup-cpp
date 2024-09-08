@@ -1,7 +1,7 @@
 import { parseArgs } from "../cli-options.js"
 import { getCompilerInfo } from "../compilers.js"
 import type { Inputs } from "../tool.js"
-import { DefaultLinuxVersion } from "../versions/default_versions.js"
+import { DefaultUbuntuVersion } from "../versions/default_versions.js"
 import { getVersion, syncVersions } from "../versions/versions.js"
 
 jest.setTimeout(300000)
@@ -55,18 +55,18 @@ describe("getVersion", () => {
   it("gcovr", () => {
     expect(getVersion("gcovr", "5.0")).toBe("5.0")
     if (process.platform === "linux") {
-      expect(getVersion("gcovr", "true", [22, 4])).toBe(DefaultLinuxVersion.gcovr![22])
-      expect(getVersion("gcovr", "true", [20, 4])).toBe(DefaultLinuxVersion.gcovr![20])
-      expect(getVersion("gcovr", "true", [18, 4])).toBe(DefaultLinuxVersion.gcovr![18])
+      expect(getVersion("gcovr", "true", [22, 4])).toBe(DefaultUbuntuVersion.gcovr![22])
+      expect(getVersion("gcovr", "true", [20, 4])).toBe(DefaultUbuntuVersion.gcovr![20])
+      expect(getVersion("gcovr", "true", [18, 4])).toBe(DefaultUbuntuVersion.gcovr![18])
     }
   })
 
   it("llvm", () => {
     expect(getVersion("llvm", "13.0.0")).toBe("13.0.0")
     if (process.platform === "linux") {
-      expect(getVersion("llvm", "true", [20, 4])).toBe(DefaultLinuxVersion.llvm![20])
-      expect(getVersion("llvm", "true", [18, 4])).toBe(DefaultLinuxVersion.llvm![18])
-      expect(getVersion("llvm", "true", [16, 4])).toBe(DefaultLinuxVersion.llvm![16])
+      expect(getVersion("llvm", "true", [20, 4])).toBe(DefaultUbuntuVersion.llvm![20])
+      expect(getVersion("llvm", "true", [18, 4])).toBe(DefaultUbuntuVersion.llvm![18])
+      expect(getVersion("llvm", "true", [16, 4])).toBe(DefaultUbuntuVersion.llvm![16])
     }
   })
 })
