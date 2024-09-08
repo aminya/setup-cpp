@@ -1,4 +1,3 @@
-import { info } from "ci-log"
 import { readFile } from "fs/promises"
 
 /**

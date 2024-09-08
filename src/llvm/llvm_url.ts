@@ -3,6 +3,7 @@ import { fileURLToPath } from "url"
 import { info } from "ci-log"
 import { addExeExt } from "patha"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
+import { arm64, armv7, powerpc64le, sparc64, x86, x86_64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
@@ -85,32 +86,15 @@ async function getAssetKeywords(platform: string, arch: string) {
 
   switch (platform) {
     case "win32": {
-      switch (arch) {
-        case "win64":
-        case "x64":
-        case "amd64":
-        case "x86_64":
-        case "64":
-          keywords.push("win64")
-          break
-        case "win32":
-        case "x86":
-        case "i386":
-        case "ia32":
-        case "32":
-          keywords.push("win32")
-          break
-        case "woa64":
-        case "aarch64":
-        case "arm64":
-        case "arm": {
-          keywords.push("woa64")
-          break
-        }
-        default:
-          info(`Using arch ${arch} for LLVM`)
-          keywords.push(arch)
-          break
+      if (x86_64.includes(arch)) {
+        keywords.push("win64")
+      } else if (x86.includes(arch)) {
+        keywords.push("win32")
+      } else if (arm64.includes(arch)) {
+        keywords.push("woa64")
+      } else {
+        info(`Using arch ${arch} for LLVM`)
+        keywords.push(arch)
       }
       break
     }
@@ -132,39 +116,21 @@ async function getAssetKeywords(platform: string, arch: string) {
         optionalKeywords.push("rhel")
       }
 
-      switch (arch) {
-        case "x86_64":
-        case "x64":
-        case "amd64":
-        case "64":
-          keywords.push("x86_64")
-          break
-        case "x86":
-        case "i386":
-        case "ia32":
-        case "32":
-          keywords.push("x86")
-          break
-        case "aarch64":
-        case "arm64":
-        case "arm":
-          keywords.push("aarch64")
-          break
-        case "armv7a":
-        case "armv7":
-          keywords.push("armv7a")
-          break
-        case "powerpc64le":
-        case "ppc64le":
-          keywords.push("powerpc64le")
-          break
-        case "sparc64":
-          keywords.push("sparc64")
-          break
-        default:
-          info(`Using arch ${arch} for LLVM`)
-          keywords.push(arch)
-          break
+      if (x86_64.includes(arch)) {
+        keywords.push("x86_64")
+      } else if (x86.includes(arch)) {
+        keywords.push("x86")
+      } else if (arm64.includes(arch)) {
+        keywords.push("aarch64")
+      } else if (armv7.includes(arch)) {
+        keywords.push("armv7a")
+      } else if (powerpc64le.includes(arch)) {
+        keywords.push("powerpc64le")
+      } else if (sparc64.includes(arch)) {
+        keywords.push("sparc64")
+      } else {
+        info(`Using arch ${arch} for LLVM`)
+        keywords.push(arch)
       }
 
       break
@@ -172,46 +138,27 @@ async function getAssetKeywords(platform: string, arch: string) {
     case "darwin": {
       keywords.push("apple")
 
-      switch (arch) {
-        case "x86_64":
-        case "x64":
-        case "amd64":
-        case "64":
-          keywords.push("x86_64")
-          break
-        case "arm64":
-        case "arm":
-        case "aarch64":
-          // allow falling back to x86_64 if arm64 is not available
-          optionalKeywords.push("arm64")
-          break
-        default:
-          info(`Using arch ${arch} for LLVM`)
-          keywords.push(arch)
-          break
+      if (x86_64.includes(arch)) {
+        keywords.push("x86_64")
+      } else if (arm64.includes(arch)) {
+        // allow falling back to x86_64 if arm64 is not available
+        optionalKeywords.push("arm64")
+      } else {
+        info(`Using arch ${arch} for LLVM`)
+        keywords.push(arch)
       }
       break
     }
     case "freebsd": {
       keywords.push("freebsd")
 
-      switch (arch) {
-        case "x86_64":
-        case "x64":
-        case "amd64":
-        case "64":
-          keywords.push("amd64")
-          break
-        case "x86":
-        case "i386":
-        case "ia32":
-        case "32":
-          keywords.push("i386")
-          break
-        default:
-          info(`Using arch ${arch} for LLVM`)
-          keywords.push(arch)
-          break
+      if (x86_64.includes(arch)) {
+        keywords.push("amd64")
+      } else if (x86.includes(arch)) {
+        keywords.push("i386")
+      } else {
+        info(`Using arch ${arch} for LLVM`)
+        keywords.push(arch)
       }
 
       break

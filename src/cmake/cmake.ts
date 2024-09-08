@@ -1,6 +1,8 @@
+import { info } from "ci-log"
 import { addExeExt } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverLte from "semver/functions/lte"
+import { arm64, x86, x86_64 } from "../utils/env/arch.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 
 /** Get the platform data for cmake */
@@ -10,10 +12,15 @@ function getCmakePackageInfo(version: string, platform: NodeJS.Platform, arch: s
     case "win32": {
       const isOld = semverLte(semVersion, "v3.19.6")
       let osArchStr: string
-      if (["ia32", "x86", "i386", "x32"].includes(arch)) {
-        osArchStr = isOld ? "win32-x86" : "windows-i386"
-      } else {
+      if (x86_64.includes(arch)) {
         osArchStr = isOld ? "win64-x64" : "windows-x86_64"
+      } else if (x86.includes(arch)) {
+        osArchStr = isOld ? "win32-x86" : "windows-i386"
+      } else if (arm64.includes(arch)) {
+        osArchStr = "windows-arm64"
+      } else {
+        info(`Trying unsupported arch '${arch}' for cmake on Windows`)
+        osArchStr = `windows-${arch}`
       }
       const folderName = `cmake-${version}-${osArchStr}`
       return {
@@ -37,10 +44,13 @@ function getCmakePackageInfo(version: string, platform: NodeJS.Platform, arch: s
     case "linux": {
       const isOld = semverLte(semVersion, "v3.19.8")
       let osArchStr: string
-      if (["aarch64"].includes(arch)) {
+      if (arm64.includes(arch)) {
         osArchStr = isOld ? "Linux-aarch64" : "linux-aarch64"
-      } else {
+      } else if (x86_64.includes(arch)) {
         osArchStr = isOld ? "Linux-x86_64" : "linux-x86_64"
+      } else {
+        info(`Trying unsupported arch '${arch}' for cmake on Linux`)
+        osArchStr = `linux-${arch}`
       }
       const folderName = `cmake-${version}-${osArchStr}`
       return {
