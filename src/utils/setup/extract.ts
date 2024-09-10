@@ -90,13 +90,19 @@ export function extractExe(file: string, dest: string) {
 
 /// Extract Zip using unzip or 7z
 export async function extractZip(file: string, dest: string) {
-  // if unzip is available use it
+  // prefer 7z if available (faster especially on Windows)
+  if (which.sync("7z", { nothrow: true }) !== null) {
+    return extract7Zip(file, dest)
+  }
+
+  // if unzip is available use it (usually available on posix systems)
   if (which.sync("unzip", { nothrow: true }) !== null) {
     await execa("unzip", ["-q", file, "-d", dest], { stdio: "inherit" })
     await grantUserWriteAccess(dest)
     return dest
   }
 
+  // fallback to 7z (will install 7z if needed)
   return extract7Zip(file, dest)
 }
 
