@@ -11,7 +11,11 @@ const defaultLLVM = process.platform === "darwin" && process.arch === "x64"
 export const DefaultVersions: Record<string, string | undefined> = {
   // https://github.com/llvm/llvm-project/releases
   llvm: defaultLLVM,
+  clang: defaultLLVM,
+  "clang++": defaultLLVM,
+  "clang-tidy": defaultLLVM,
   clangtidy: defaultLLVM,
+  "clang-format": defaultLLVM,
   clangformat: defaultLLVM,
   ninja: "1.12.1", // https://github.com/ninja-build/ninja/releases
   cmake: "3.30.2", // https://github.com/Kitware/CMake/releases

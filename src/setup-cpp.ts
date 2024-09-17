@@ -13,7 +13,7 @@ import { checkUpdates } from "./check-updates.js"
 import { parseArgs, printHelp, rcOptions } from "./cli-options.js"
 import { installCompiler } from "./compilers.js"
 import { installTool } from "./installTool.js"
-import { tools } from "./tool.js"
+import { type Inputs, llvmTools, tools } from "./tool.js"
 import { isArch } from "./utils/env/isArch.js"
 import { ubuntuVersion } from "./utils/env/ubuntu_version.js"
 import { setupPacmanPack } from "./utils/setup/setupPacmanPack.js"
@@ -56,8 +56,8 @@ async function main(args: string[]): Promise<number> {
   const osVersion = await ubuntuVersion()
 
   // sync the version for the llvm tools
-  if (!syncVersions(opts, ["llvm", "clangtidy", "clangformat"])) {
-    error("The same version must be used for llvm, clangformat and clangtidy")
+  if (!syncVersions(opts, llvmTools as Inputs[])) {
+    error("The same version must be used for llvm, clang-format and clang-tidy")
     return 1
   }
 

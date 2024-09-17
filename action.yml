@@ -19,11 +19,35 @@ inputs:
   llvm:
     description: "Wether to install llvm (true/false) or the specific version to install"
     required: false
+  clang:
+    description: "Wether to install clang (true/false) or the specific version to install"
+    required: false
   gcc:
     description: "Wether to install gcc (true/false) or the specific version to install"
     required: false
   msvc:
     description: "Wether to install msvc (true/false) or the specific version to install"
+    required: false
+  cl:
+    description: "Wether to install cl (true/false) or the specific version to install"
+    required: false
+  msbuild:
+    description: "Wether to install msbuild (true/false) or the specific version to install"
+    required: false
+  visualstudio:
+    description: "Wether to install visualstudio (true/false) or the specific version to install"
+    required: false
+  apple-clang:
+    description: "Wether to install apple-clang (true/false) or the specific version to install"
+    required: false
+  apple-llvm:
+    description: "Wether to install apple-llvm (true/false) or the specific version to install"
+    required: false
+  appleclang:
+    description: "Wether to install apple-clang (true/false) or the specific version to install"
+    required: false
+  applellvm:
+    description: "Wether to install apple-llvm (true/false) or the specific version to install"
     required: false
   vcvarsall:
     description: "If should run vcvarsall?"
@@ -31,8 +55,14 @@ inputs:
   cppcheck:
     description: "Wether to install cppcheck (true/false) or the specific version to install."
     required: false
+  clang-tidy:
+    description: "Wether to install clang-tidy (true/false) or the specific version to install."
+    required: false
   clangtidy:
     description: "The clangWether to install tidy (true/false) or the specific version to install."
+    required: false
+  clang-format:
+    description: "The clangWether to install format (true/false) or the specific version to install."
     required: false
   clangformat:
     description: "The clangWether to install format (true/false) or the specific version to install."
@@ -93,6 +123,9 @@ inputs:
     required: false
   powershell:
     description: "Wether to install powershell (true/false) or the specific version to install."
+    required: false
+  pwsh:
+    description: "Wether to install pwsh (true/false) or the specific version to install."
     required: false
   python:
     description: "Wether to install python (true/false) or the specific version to install."

@@ -32,7 +32,9 @@ All the available tools:
 
   console.table(
     {
-      "compiler and analyzer": { tools: "--llvm, --gcc, --msvc, --vcvarsall, --cppcheck, --clangtidy, --clangformat" },
+      "compiler and analyzer": {
+        tools: "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall, --cppcheck, --clang-tidy, --clang-format",
+      },
       "build system": { tools: "--cmake, --ninja, --meson, --make, --task, --bazel" },
       "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala" },
       cache: { tools: "--ccache, --sccache" },
