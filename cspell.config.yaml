@@ -28,6 +28,7 @@ words:
   - choco
   - clangd
   - cmake
+  - cmakeformat
   - cobertura
   - copr
   - CPATH
