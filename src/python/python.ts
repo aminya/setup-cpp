@@ -56,9 +56,17 @@ async function setupPipx(foundPython: string) {
       }
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
-    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
+    await setupVenv(foundPython)
   } catch (err) {
     warning(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
+  }
+}
+
+async function setupVenv(foundPython: string) {
+  try {
+    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
+  } catch (err) {
+    warning(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
@@ -70,9 +78,9 @@ async function setupWheel(foundPython: string) {
       isLibrary: true,
       usePipx: false,
     })
-    await setupPipPackWithPython(foundPython, "wheel", undefined, { upgrade: true, isLibrary: true, usePipx: false })
+    await setupPipPackWithPython(foundPython, "wheel", undefined, { upgrade: false, isLibrary: true, usePipx: false })
   } catch (err) {
-    warning(`Failed to install setuptools or wheel: ${(err as Error).toString()}. Ignoring...`)
+    warning(`Failed to install setuptools/wheel: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
