@@ -26,7 +26,11 @@ import { isBinUptoDate } from "../utils/setup/version.js"
 import { unique } from "../utils/std/index.js"
 import { MinVersions } from "../versions/default_versions.js"
 
-export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export async function setupPython(
+  version: string,
+  setupDir: string,
+  arch: string,
+): Promise<InstallationInfo & { bin: string }> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
   assert(installInfo.bin !== undefined)
   const foundPython = installInfo.bin
@@ -41,7 +45,7 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 
   await setupWheel(foundPython)
 
-  return installInfo
+  return installInfo as InstallationInfo & { bin: string }
 }
 
 async function setupPipx(foundPython: string) {

@@ -154,14 +154,17 @@ async function getPipxBinDir_() {
 }
 const getPipxBinDir = memoize(getPipxBinDir_, { promise: true })
 
-async function getPython_(): Promise<string> {
-  const pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin
-  if (pythonBin === undefined) {
-    throw new Error("Python binary was not found")
+/* eslint-disable require-atomic-updates */
+let pythonBin: string | undefined
+
+async function getPython(): Promise<string> {
+  if (pythonBin !== undefined) {
+    return pythonBin
   }
+
+  pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin
   return pythonBin
 }
-const getPython = memoize(getPython_, { promise: true })
 
 type PipxShowType = {
   venvs: Record<string, {
