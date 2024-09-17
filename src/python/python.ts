@@ -293,7 +293,7 @@ async function ensurePipUpgrade(foundPython: string) {
   return false
 }
 
-async function addPythonBaseExecPrefix_raw(python: string) {
+async function addPythonBaseExecPrefix_(python: string) {
   const dirs: string[] = []
 
   // detection based on the platform
@@ -317,4 +317,4 @@ async function addPythonBaseExecPrefix_raw(python: string) {
  *
  * The answer is cached for subsequent calls
  */
-export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_raw, { promise: true })
+export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_, { promise: true })

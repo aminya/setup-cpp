@@ -97,7 +97,7 @@ export async function hasPipx(givenPython: string) {
   return (await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })).exitCode === 0
 }
 
-async function getPipxHome_raw() {
+async function getPipxHome_() {
   let pipxHome = process.env.PIPX_HOME
   if (pipxHome !== undefined) {
     return pipxHome
@@ -130,9 +130,9 @@ async function getPipxHome_raw() {
   await mkdirp(join(pipxHome, "venv"))
   return pipxHome
 }
-const getPipxHome = memoize(getPipxHome_raw, { promise: true })
+const getPipxHome = memoize(getPipxHome_, { promise: true })
 
-async function getPipxBinDir_raw() {
+async function getPipxBinDir_() {
   if (process.env.PIPX_BIN_DIR !== undefined) {
     return process.env.PIPX_BIN_DIR
   }
@@ -142,16 +142,16 @@ async function getPipxBinDir_raw() {
   await mkdirp(pipxBinDir)
   return pipxBinDir
 }
-const getPipxBinDir = memoize(getPipxBinDir_raw, { promise: true })
+const getPipxBinDir = memoize(getPipxBinDir_, { promise: true })
 
-async function getPython_raw(): Promise<string> {
+async function getPython_(): Promise<string> {
   const pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin
   if (pythonBin === undefined) {
     throw new Error("Python binary was not found")
   }
   return pythonBin
 }
-const getPython = memoize(getPython_raw, { promise: true })
+const getPython = memoize(getPython_, { promise: true })
 
 async function pipHasPackage(python: string, name: string) {
   const result = await execa(python, ["-m", "pip", "-qq", "index", "versions", name], {

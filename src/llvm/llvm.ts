@@ -18,6 +18,7 @@ import { type InstallationInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { semverCoerceIfInvalid } from "../utils/setup/version.js"
+import { quoteIfHasSpace } from "../utils/std/index.js"
 import { getVersion } from "../versions/versions.js"
 import { LLVMPackages, setupLLVMApt } from "./llvm_installer.js"
 import { getLLVMPackageInfo } from "./llvm_url.js"
@@ -26,11 +27,11 @@ const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURL
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
-  await activateLLVM(installationInfo.installDir ?? setupDir)
+  await activateLLVM(installationInfo.installDir ?? setupDir, version)
   return installationInfo
 }
 
-async function setupLLVMWithoutActivation_raw(version: string, setupDir: string, arch: string) {
+async function setupLLVMWithoutActivation_(version: string, setupDir: string, arch: string) {
   // install LLVM
   const [installationInfo, _1] = await Promise.all([
     setupLLVMOnly(version, setupDir, arch),
@@ -42,7 +43,7 @@ async function setupLLVMWithoutActivation_raw(version: string, setupDir: string,
 
   return installationInfo
 }
-const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_raw, { promise: true })
+const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_, { promise: true })
 
 /**
  * Setup clang-format
@@ -64,8 +65,7 @@ async function setupLLVMOnly(
   arch: string,
   packages: LLVMPackages = LLVMPackages.All,
 ) {
-  const coeredVersion = semverCoerceIfInvalid(version)
-  const majorVersion = Number.parseInt(coeredVersion.split(".")[0], 10)
+  const majorVersion = majorLLVMVersion(version)
   try {
     if (isUbuntu()) {
       return await setupLLVMApt(majorVersion, packages)
@@ -79,7 +79,12 @@ async function setupLLVMOnly(
   return installationInfo
 }
 
-async function llvmBinaryDeps_raw(majorVersion: number) {
+function majorLLVMVersion(version: string) {
+  const coeredVersion = semverCoerceIfInvalid(version)
+  return Number.parseInt(coeredVersion.split(".")[0], 10)
+}
+
+async function llvmBinaryDeps_(majorVersion: number) {
   if (isUbuntu()) {
     if (majorVersion <= 10) {
       await installAptPack([{ name: "libtinfo5" }])
@@ -96,52 +101,51 @@ async function llvmBinaryDeps_raw(majorVersion: number) {
     ])
   }
 }
-const llvmBinaryDeps = memoize(llvmBinaryDeps_raw, { promise: true })
+const llvmBinaryDeps = memoize(llvmBinaryDeps_, { promise: true })
 
-async function setupLLVMDeps_raw(arch: string) {
+async function setupLLVMDeps_(arch: string) {
   if (process.platform === "linux") {
     // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first,
     // but with a lower priority than the one used by activateLLVM()
     await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch, 40)
   }
 }
-const setupLLVMDeps = memoize(setupLLVMDeps_raw, { promise: true })
+const setupLLVMDeps = memoize(setupLLVMDeps_, { promise: true })
 
-export async function activateLLVM(directory: string) {
+export async function activateLLVM(directory: string, version: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""
   const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
 
+  const llvmMajor = majorLLVMVersion(version)
+
   const actPromises: Promise<void>[] = [
+    // compiler paths
+    addEnv("CC", addExeExt(`${directory}/bin/clang`), rcOptions),
+    addEnv("CXX", addExeExt(`${directory}/bin/clang++`), rcOptions),
+
     // the output of this action
     addEnv("LLVM_PATH", directory, rcOptions),
 
     // Setup LLVM as the compiler
-    addEnv("LD_LIBRARY_PATH", `${directory}/lib${delimiter}${ld}`, rcOptions),
-    addEnv("DYLD_LIBRARY_PATH", `${directory}/lib${delimiter}${dyld}`, rcOptions),
+    addEnv("LD_LIBRARY_PATH", `${ld}${delimiter}${directory}/lib`, rcOptions),
+    addEnv("DYLD_LIBRARY_PATH", `${dyld}${delimiter}${directory}/lib`, rcOptions),
 
     // compiler flags
-    addEnv("LDFLAGS", `-L"${directory}/lib"`, rcOptions),
-    addEnv("CPPFLAGS", `-I"${directory}/include"`, rcOptions),
+    addEnv("LLVM_LDFLAGS", `-L${quoteIfHasSpace(`${directory}/lib`)}`, rcOptions),
+    addEnv("LLVM_CPPFLAGS", `-I${quoteIfHasSpace(`${directory}/include`)}`, rcOptions),
 
-    // compiler paths
-    addEnv("CC", addExeExt(`${directory}/bin/clang`), rcOptions),
-    addEnv("CXX", addExeExt(`${directory}/bin/clang++`), rcOptions),
+    // CPATH
+    await pathExists(`${directory}/lib/clang/${version}/include`)
+      ? addEnv("LLVM_CPATH", `${directory}/lib/clang/${version}/include`, rcOptions)
+      : await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)
+      ? addEnv("LLVM_CPATH", `${directory}/lib/clang/${llvmMajor}/include`, rcOptions)
+      : Promise.resolve(),
 
     addEnv("LIBRARY_PATH", `${directory}/lib`, rcOptions),
 
     // os sdks
     setupMacOSSDK(),
   ]
-
-  // TODO Causes issues with clangd
-  // TODO Windows builds fail with llvm's CPATH
-  // if (process.platform !== "win32") {
-  //   if (await pathExists(`${directory}/lib/clang/${version}/include`)) {
-  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${version}/include`, rcOptions))
-  //   } else if (await pathExists(`${directory}/lib/clang/${llvmMajor}/include`)) {
-  //     promises.push(addEnv("CPATH", `${directory}/lib/clang/${llvmMajor}/include`, rcOptions))
-  //   }
-  // }
 
   if (isUbuntu()) {
     const priority = 60

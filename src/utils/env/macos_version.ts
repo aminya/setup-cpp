@@ -6,7 +6,7 @@ import memoize from "memoizee"
  *
  * @returns {number[]} - The macOS version as an array of numbers
  */
-function macosVersion_raw() {
+function macosVersion_() {
   if (process.platform !== "darwin") {
     return []
   }
@@ -14,4 +14,4 @@ function macosVersion_raw() {
   const { version } = macosRelease()
   return version.split(".").map((v) => Number.parseInt(v, 10))
 }
-export const macosVersion = memoize(macosVersion_raw)
+export const macosVersion = memoize(macosVersion_)

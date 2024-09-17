@@ -66,9 +66,6 @@ async function main(args: string[]): Promise<number> {
     await setupPacmanPack("python-pygments")
   }
 
-  /** Used to unset CPPFLAGS of LLVM when other compilers are used as the main compiler */
-  let hasLLVM = false
-
   // loop over the tools and run their setup function
 
   let failedFast = false
@@ -89,7 +86,7 @@ async function main(args: string[]): Promise<number> {
       // running the setup function for this tool
       time1 = Date.now()
       // eslint-disable-next-line no-await-in-loop
-      hasLLVM = await installTool(
+      await installTool(
         tool,
         version,
         osVersion,
@@ -109,7 +106,7 @@ async function main(args: string[]): Promise<number> {
     const maybeCompiler = opts.compiler
     if (maybeCompiler !== undefined) {
       const time1Compiler = Date.now()
-      await installCompiler(maybeCompiler, osVersion, setupCppDir, arch, successMessages, hasLLVM, errorMessages)
+      await installCompiler(maybeCompiler, osVersion, setupCppDir, arch, successMessages, errorMessages)
       const time2Compiler = Date.now()
       info(`took ${timeFormatter.format(time1Compiler, time2Compiler) || "0 seconds"}`)
     }
