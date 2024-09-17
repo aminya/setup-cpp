@@ -4,7 +4,7 @@ import { error } from "ci-log"
 import pTimeout from "p-timeout"
 import { setupBrew } from "setup-brew"
 import { getSuccessMessage, rcOptions } from "./cli-options.js"
-import { type ToolName, setups } from "./tool.js"
+import { type ToolName, llvmTools, setups } from "./tool.js"
 import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
 import { getVersion } from "./versions/versions.js"
@@ -46,7 +46,7 @@ async function installToolImpl(
   setupCppDir: string,
   successMessages: string[],
 ) {
-  const hasLLVM = ["llvm", "clangformat", "clangtidy"].includes(tool)
+  const hasLLVM = llvmTools.includes(tool)
 
   let installationInfo: InstallationInfo | undefined | void
   if (tool === "vcvarsall") {

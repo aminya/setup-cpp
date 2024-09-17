@@ -3,6 +3,7 @@
     "orta.vscode-jest",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "biomejs.biome"
+    "biomejs.biome",
+    "p42ai.refactor"
   ]
 }
