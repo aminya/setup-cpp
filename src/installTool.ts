@@ -22,9 +22,8 @@ export async function installTool(
   timeout: number = DEFAULT_TIMEOUT,
 ) {
   startGroup(`Installing ${tool} ${version}`)
-  let hasLLVM = false
   try {
-    hasLLVM = await pTimeout(installToolImpl(tool, version, osVersion, arch, setupCppDir, successMessages), {
+    await pTimeout(installToolImpl(tool, version, osVersion, arch, setupCppDir, successMessages), {
       milliseconds: timeout,
       message: `Timeout while installing ${tool} ${version}. You can increase the timeout from options`,
     })
@@ -37,7 +36,6 @@ export async function installTool(
     errorMessages.push(`${tool} failed to install`)
   }
   endGroup()
-  return hasLLVM
 }
 
 async function installToolImpl(
@@ -48,7 +46,6 @@ async function installToolImpl(
   setupCppDir: string,
   successMessages: string[],
 ) {
-  // eslint-disable-next-line no-param-reassign
   const hasLLVM = ["llvm", "clangformat", "clangtidy"].includes(tool)
 
   let installationInfo: InstallationInfo | undefined | void
@@ -72,5 +69,4 @@ async function installToolImpl(
   }
   // preparing a report string
   successMessages.push(getSuccessMessage(tool, installationInfo))
-  return hasLLVM
 }

@@ -6,7 +6,7 @@ import { getUbuntuVersion } from "ubuntu-version"
 import which from "which"
 import { isUbuntu } from "./isUbuntu.js"
 
-async function ubuntuVersion_raw(): Promise<number[] | null> {
+async function ubuntuVersion_(): Promise<number[] | null> {
   try {
     if (isUbuntu()) {
       try {
@@ -34,7 +34,7 @@ async function ubuntuVersion_raw(): Promise<number[] | null> {
 }
 
 /** Detect Ubuntu version */
-export const ubuntuVersion = memoize(ubuntuVersion_raw, { promise: true })
+export const ubuntuVersion = memoize(ubuntuVersion_, { promise: true })
 
 /** Detect Ubuntu version using os.version() for Ubuntu based distros */
 function detectUsingOsVersion() {

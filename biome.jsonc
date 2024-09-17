@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/1.9.1/schema.json",
   "files": {
     "ignore": [
       "**/node_modules/**",
@@ -33,8 +33,18 @@
       "suspicious": {
         "noConfusingVoidType": "off"
       },
-      "nursery": {
-        "useImportExtensions": "warn"
+      "correctness": {
+        "useImportExtensions": {
+          "level": "error",
+          "options": {
+            "suggestedExtensions": {
+              "ts": {
+                "component": "js",
+                "module": "js"
+              }
+            }
+          }
+        }
       }
     }
   },

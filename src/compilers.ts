@@ -33,7 +33,6 @@ export async function installCompiler(
   setupCppDir: string,
   arch: string,
   successMessages: string[],
-  hasLLVM: boolean,
   errorMessages: string[],
 ) {
   try {
@@ -67,11 +66,6 @@ export async function installCompiler(
           ? await setupMingw(gccVersion, join(setupCppDir, "gcc"), arch)
           : await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
 
-        if (hasLLVM) {
-          // remove back the added CPPFLAGS of LLVM that include the LLVM headers
-          await addEnv("CPPFLAGS", "", rcOptions)
-        }
-
         await activateGcovGCC(gccVersion)
 
         successMessages.push(getSuccessMessage("gcc", installationInfo))
@@ -89,11 +83,6 @@ export async function installCompiler(
           join(setupCppDir, "msvc"),
           arch,
         )
-
-        if (hasLLVM) {
-          // remove the CPPFLAGS of LLVM that include the LLVM headers
-          await addEnv("CPPFLAGS", "", rcOptions)
-        }
 
         successMessages.push(getSuccessMessage("msvc", installationInfo))
         break
