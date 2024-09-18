@@ -183,7 +183,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
 }
 
 async function findPython(binDir?: string) {
-  for (const pythonBin of ["python3", "python"]) {
+  for (const pythonBin of ["python", "python3"]) {
     // eslint-disable-next-line no-await-in-loop
     const foundPython = await isPythonUpToDate(pythonBin, binDir)
     if (foundPython !== undefined) {
@@ -215,10 +215,8 @@ async function isPythonUpToDate(candidate: string, binDir?: string) {
   try {
     if (binDir !== undefined) {
       const pythonBinPath = join(binDir, addExeExt(candidate))
-      if (await pathExists(pythonBinPath)) {
-        if (await isBinUptoDate(pythonBinPath, MinVersions.python!)) {
-          return pythonBinPath
-        }
+      if (await pathExists(pythonBinPath) && await isBinUptoDate(pythonBinPath, MinVersions.python!)) {
+        return pythonBinPath
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

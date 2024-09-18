@@ -50,6 +50,7 @@ export async function setupPipPackWithPython(
   const { usePipx = true, user = true, upgrade = false, isLibrary = false } = options
 
   const isPipx = usePipx && !isLibrary && (await hasPipx(givenPython))
+
   const pip = isPipx ? "pipx" : "pip"
 
   // if upgrade is not requested, check if the package is already installed, and return if it is
@@ -104,7 +105,8 @@ async function finishPipPackageInstall(givenPython: string, name: string) {
 }
 
 export async function hasPipx(givenPython: string) {
-  return (await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })).exitCode === 0
+  const res = await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })
+  return res.exitCode === 0
 }
 
 async function getPipxHome_() {
