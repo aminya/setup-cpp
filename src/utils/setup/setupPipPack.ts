@@ -53,18 +53,21 @@ export async function setupPipPackWithPython(
 
   const pip = isPipx ? "pipx" : "pip"
 
+  // remove `[]` extensions
+  const nameOnly = getPackageName(name)
+
   // if upgrade is not requested, check if the package is already installed, and return if it is
   if (!upgrade) {
     const installed = isPipx
-      ? await pipxPackageInstalled(givenPython, name)
-      : await pipPackageIsInstalled(givenPython, name)
+      ? await pipxPackageInstalled(givenPython, nameOnly)
+      : await pipPackageIsInstalled(givenPython, nameOnly)
     if (installed) {
-      const binDir = await finishPipPackageInstall(givenPython, name)
+      const binDir = await finishPipPackageInstall(givenPython, nameOnly)
       return { binDir }
     }
   }
 
-  const hasPackage = await pipHasPackage(givenPython, name)
+  const hasPackage = await pipHasPackage(givenPython, nameOnly)
   if (hasPackage) {
     try {
       info(`Installing ${name} ${version ?? ""} via ${pip}`)
@@ -96,7 +99,7 @@ export async function setupPipPackWithPython(
     throw new Error(`Failed to install ${name} as it was not found via ${pip} or the system package manager`)
   }
 
-  const binDir = await finishPipPackageInstall(givenPython, name)
+  const binDir = await finishPipPackageInstall(givenPython, nameOnly)
   return { binDir }
 }
 
@@ -169,6 +172,15 @@ async function getPython(): Promise<string> {
 
   pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin
   return pythonBin
+}
+
+/**
+ * Get the actual name of a pip package from the given string
+ * @param pkg the given name that might contain extensions in `[]`.
+ * @returns stirped down name of the package
+ */
+function getPackageName(pkg: string) {
+  return pkg.replace(/\[.*]/g, "").trim()
 }
 
 async function pipPackageIsInstalled(python: string, name: string) {
