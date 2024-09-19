@@ -14,15 +14,16 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 `setup-cpp` is **modular** and you can choose to install any of these tools:
 
-| category              | tools                                                                       |
-| --------------------- | --------------------------------------------------------------------------- |
-| compiler and analyzer | llvm, gcc, msvc, apple-clang, vcvarsall, cppcheck, clang-tidy, clang-format |
-| build system          | cmake, ninja, meson, make, task, bazel, cmakelang, cmake-format, cmake-lint |
-| package manager       | vcpkg, conan, choco, brew, nala                                             |
-| cache                 | ccache, sccache                                                             |
-| documentation         | doxygen, graphviz                                                           |
-| coverage              | gcovr, opencppcoverage, kcov                                                |
-| other                 | python, powershell, sevenzip                                                |
+| category        | tools                                                                                                       |
+| --------------- | ----------------------------------------------------------------------------------------------------------- |
+| compiler        | llvm, gcc, msvc, apple-clang, vcvarsall                                                                     |
+| build system    | cmake, ninja, meson, make, task, bazel                                                                      |
+| package manager | vcpkg, conan, choco, brew, nala                                                                             |
+| analyzer/linter | clang-tidy, clang-format, cppcheck, cpplint, flawfinder, lizard, infer, cmakelang, cmake-format, cmake-lint |
+| cache           | ccache, sccache                                                                                             |
+| documentation   | doxygen, graphviz                                                                                           |
+| coverage        | gcovr, opencppcoverage, kcov                                                                                |
+| other           | python, powershell, sevenzip                                                                                |
 
 `setup-cpp` automatically handles the dependencies of the selected tool (e.g., `python` is required for `conan`).
 

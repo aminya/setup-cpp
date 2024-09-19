@@ -33,12 +33,16 @@ All the available tools:
   console.table(
     {
       "compiler and analyzer": {
-        tools: "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall, --cppcheck, --clang-tidy, --clang-format",
+        tools: "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall",
       },
       "build system": {
-        tools: "--cmake, --ninja, --meson, --make, --task, --bazel, --cmakelang, --cmake-lint, --cmake-format",
+        tools: "--cmake, --ninja, --meson, --make, --task, --bazel",
       },
       "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala" },
+      "analyzer/linter": {
+        tools:
+          "--clang-tidy, --clang-format, --cppcheck, --cpplint, --flawfinder, --lizard, --infer, , --cmakelang, --cmake-lint, --cmake-format",
+      },
       cache: { tools: "--ccache, --sccache" },
       documentation: { tools: "--doxygen, --graphviz" },
       coverage: { tools: "--gcovr, --opencppcoverage, --kcov" },

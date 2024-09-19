@@ -6,11 +6,15 @@ import { setupCmake } from "./cmake/cmake.js"
 import { setupCmakelang } from "./cmakelang/cmakelang.js"
 import { setupConan } from "./conan/conan.js"
 import { setupCppcheck } from "./cppcheck/cppcheck.js"
+import { setupCpplint } from "./cpplint/cpplint.js"
 import { setupDoxygen } from "./doxygen/doxygen.js"
+import { setupFlawfinder } from "./flawfinder/flawfinder.js"
 import { setupGcc, setupMingw } from "./gcc/gcc.js"
 import { setupGcovr } from "./gcovr/gcovr.js"
 import { setupGraphviz } from "./graphviz/graphviz.js"
+import { setupInfer } from "./infer/infer.js"
 import { setupKcov } from "./kcov/kcov.js"
+import { setupLizard } from "./lizard/lizard.js"
 import { setupAppleClang } from "./llvm/apple-clang.js"
 import { setupClangFormat, setupClangTools, setupLLVM } from "./llvm/llvm.js"
 import { setupMake } from "./make/make.js"
@@ -81,6 +85,10 @@ export const setups = {
   doxygen: setupDoxygen,
   graphviz: setupGraphviz,
   cppcheck: setupCppcheck,
+  cpplint: setupCpplint,
+  flawfinder: setupFlawfinder,
+  lizard: setupLizard,
+  infer: setupInfer,
   "clang-tidy": setupClangTools,
   clangtidy: setupClangTools,
   "clang-format": setupClangFormat,

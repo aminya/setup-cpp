@@ -21,6 +21,7 @@ const viteConfig = defineConfig({
           : "es",
       },
     },
+    emptyOutDir: process.env.NODE_ENV === "production",
   },
   resolve: {
     alias: {
