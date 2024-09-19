@@ -77,6 +77,12 @@ describe("syncVersion", () => {
     expect(opts4.compiler).toBe("llvm-13.0.0")
     expect(opts4.clangtidy).toBe("13.0.0")
     expect(opts4.clangformat).toBe(undefined)
+
+    const opts5 = parseArgs(["--compiler", "gcc-13", "--clangtidy", "true"])
+    expect(syncVersions(opts5, [...llvmTools, "compiler"] as Inputs[], getCompilerInfo("gcc-13"))).toBe(true)
+    expect(opts5.compiler).toBe("gcc-13")
+    expect(opts5.clangtidy).toBe("true")
+    expect(opts5.clangformat).toBe(undefined)
   })
 })
 

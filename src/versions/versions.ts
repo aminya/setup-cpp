@@ -41,13 +41,23 @@ function getDefaultLinuxVersion(osVersion: number[], toolLinuxVersions: Record<n
  * @param tools - The tools to sync the versions for (it can include `compiler`)
  * @param compilerInfo - The compiler info to sync the versions for (if any)
  */
-export function syncVersions(opts: Opts, tools: Inputs[], compilerInfo: CompilerInfo | undefined = undefined): boolean {
+export function syncVersions(
+  opts: Opts,
+  toolsGiven: Inputs[],
+  compilerInfo: CompilerInfo | undefined = undefined,
+): boolean {
+  // check if compiler version should be synced
+  const syncCompiler = compilerInfo === undefined ? false : toolsGiven.includes(compilerInfo.compiler as Inputs)
+
+  // remove the compiler from the tools if it should not be synced
+  const tools = syncCompiler ? toolsGiven : toolsGiven.filter((tool) => tool !== "compiler")
+
   // filter out the tools that are in use in the options
   const toolsInUse = tools.filter((tool) => opts[tool] !== undefined)
 
   // filter out the tools that are not default
   const toolsNonDefaultVersion = toolsInUse.filter((tool) => {
-    const version = (tool === "compiler" && compilerInfo !== undefined)
+    const version = (syncCompiler && tool === "compiler" && compilerInfo !== undefined)
       ? compilerInfo.version
       : opts[tool]
     return !isVersionDefault(version)
@@ -55,7 +65,7 @@ export function syncVersions(opts: Opts, tools: Inputs[], compilerInfo: Compiler
 
   // find the target version to sync to
   const targetVersion: string = (toolsNonDefaultVersion.length !== 0)
-    ? (toolsNonDefaultVersion[0] === "compiler" && compilerInfo !== undefined)
+    ? (syncCompiler && toolsNonDefaultVersion[0] === "compiler" && compilerInfo !== undefined)
       ? compilerInfo.version ?? "true"
       : opts[toolsNonDefaultVersion[0]] ?? "true"
     : "true"
@@ -63,7 +73,7 @@ export function syncVersions(opts: Opts, tools: Inputs[], compilerInfo: Compiler
   // error if any explicit versions don't match the target version
   if (
     toolsNonDefaultVersion.some((tool) => {
-      if (tool === "compiler" && compilerInfo !== undefined) {
+      if (syncCompiler && tool === "compiler" && compilerInfo !== undefined) {
         return opts.compiler !== `${compilerInfo.compiler}-${targetVersion}`
       }
 
@@ -75,7 +85,7 @@ export function syncVersions(opts: Opts, tools: Inputs[], compilerInfo: Compiler
 
   // update the version of all the tools to the target version
   for (const tool of toolsInUse) {
-    opts[tool] = (tool === "compiler" && compilerInfo !== undefined)
+    opts[tool] = (syncCompiler && tool === "compiler" && compilerInfo !== undefined)
       ? `${compilerInfo.compiler}-${targetVersion}`
       : targetVersion
   }
