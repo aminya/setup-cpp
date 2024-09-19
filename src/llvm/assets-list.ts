@@ -21,7 +21,9 @@ async function main() {
       for (let major = 1; major <= 9; major++) {
         for (let minor = 0; minor <= 9; minor++) {
           for (let patch = 0; patch <= 9; patch++) {
-            const version = `${major}.${minor}.${patch}`
+            const version = (major >= 3 && minor >= 4 && patch >= 1)
+              ? `${major}.${minor}`
+              : `${major}.${minor}.${patch}`
             yield [version, `https://releases.llvm.org/${version}`] as [string, string]
           }
         }
