@@ -27,6 +27,7 @@ import { setupTask } from "./task/task.js"
 import { setupVcpkg } from "./vcpkg/vcpkg.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
 import { setupCpplint } from "./cpplint/cpplint.js"
+import { setupFlawfinder } from "./flawfinder/flawfinder.js"
 
 export const llvmSetups = { llvm: setupLLVM, clang: setupLLVM, "clang++": setupLLVM } as const
 export const gccSetups = { gcc: setupGcc, "g++": setupGcc } as const
@@ -83,6 +84,7 @@ export const setups = {
   graphviz: setupGraphviz,
   cppcheck: setupCppcheck,
   cpplint: setupCpplint,
+  flawfinder: setupFlawfinder,
   "clang-tidy": setupClangTools,
   clangtidy: setupClangTools,
   "clang-format": setupClangFormat,
