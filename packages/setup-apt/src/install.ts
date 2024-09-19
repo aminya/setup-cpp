@@ -68,55 +68,60 @@ const retryErrors = [
  * ```
  */
 export async function installAptPack(packages: AptPackage[], update = false): Promise<InstallationInfo> {
-  const apt: string = getApt()
-
-  for (const { name, version } of packages) {
-    info(`Installing ${name} ${version ?? ""} via ${apt}`)
-  }
-
-  // Update the repos if needed
-  if (update) {
-    updateAptReposMemoized(apt)
-  }
-
-  // Add the repos if needed
-  await addRepositories(apt, packages)
-
-  const needToInstall = await filterAndQualifyAptPackages(packages, apt)
-
-  if (needToInstall.length === 0) {
-    info("All packages are already installed")
-    return { binDir: "/usr/bin/" }
-  }
-
-  // Initialize apt if needed
-  await initAptMemoized(apt)
-
   try {
-    // Add the keys if needed
-    await addAptKeys(packages)
+    const apt: string = getApt()
 
-    // Install
-    execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], {
-      ...defaultExecOptions,
-      env: getAptEnv(apt),
-    })
-  } catch (err) {
-    if (isExecaError(err)) {
-      if (retryErrors.some((error) => err.stderr.includes(error))) {
-        warning(`Failed to install packages ${needToInstall}. Retrying...`)
-        execRootSync(
-          apt,
-          ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall],
-          { ...defaultExecOptions, env: getAptEnv(apt) },
-        )
-      }
-    } else {
-      throw err
+    for (const { name, version } of packages) {
+      info(`Installing ${name} ${version ?? ""} via ${apt}`)
     }
-  }
 
-  return { binDir: "/usr/bin/" }
+    // Update the repos if needed
+    if (update) {
+      updateAptReposMemoized(apt)
+    }
+
+    // Add the repos if needed
+    await addRepositories(apt, packages)
+
+    const needToInstall = await filterAndQualifyAptPackages(packages, apt)
+
+    if (needToInstall.length === 0) {
+      info("All packages are already installed")
+      return { binDir: "/usr/bin/" }
+    }
+
+    // Initialize apt if needed
+    await initAptMemoized(apt)
+
+    try {
+      // Add the keys if needed
+      await addAptKeys(packages)
+
+      // Install
+      execRootSync(apt, ["install", "--fix-broken", "-y", ...needToInstall], {
+        ...defaultExecOptions,
+        env: getAptEnv(apt),
+      })
+    } catch (err) {
+      if (isExecaError(err)) {
+        if (retryErrors.some((error) => err.stderr.includes(error))) {
+          warning(`Failed to install packages ${needToInstall}. Retrying...`)
+          execRootSync(
+            apt,
+            ["install", "--fix-broken", "-y", "-o", aptTimeout, ...needToInstall],
+            { ...defaultExecOptions, env: getAptEnv(apt) },
+          )
+        }
+      } else {
+        throw err
+      }
+    }
+
+    return { binDir: "/usr/bin/" }
+  } catch (err) {
+    const msg = err instanceof Error ? `${err.message}\n${err.stack}` : String(err)
+    throw new Error(`Failed to install apt packages: ${msg}`)
+  }
 }
 
 async function addRepositories(apt: string, packages: AptPackage[]) {

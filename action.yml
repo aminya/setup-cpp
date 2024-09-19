@@ -70,6 +70,21 @@ inputs:
   cmake:
     description: "Wether to install cmake (true/false) or the specific version to install."
     required: false
+  cmakelang:
+    description: "Wether to install cmakelang (true/false) or the specific version to install."
+    required: false
+  cmake-lint:
+    description: "Wether to install cmake-lint (true/false) or the specific version to install."
+    required: false
+  cmakelint:
+    description: "Wether to install cmake-lint (true/false) or the specific version to install."
+    required: false
+  cmake-format:
+    description: "Wether to install cmake-format (true/false) or the specific version to install."
+    required: false
+  cmakeformat:
+    description: "Wether to install cmake-format (true/false) or the specific version to install."
+    required: false
   ninja:
     description: "Wether to install ninja (true/false) or the specific version to install."
     required: false

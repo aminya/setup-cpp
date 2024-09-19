@@ -50,9 +50,26 @@ export async function setupPipPackWithPython(
   const { usePipx = true, user = true, upgrade = false, isLibrary = false } = options
 
   const isPipx = usePipx && !isLibrary && (await hasPipx(givenPython))
+
   const pip = isPipx ? "pipx" : "pip"
 
-  const hasPackage = await pipHasPackage(givenPython, name)
+  // remove `[]` extensions
+  const nameOnly = getPackageName(name)
+
+  // if upgrade is not requested, check if the package is already installed, and return if it is
+  if (!upgrade) {
+    const installed = isPipx
+      ? await pipxPackageInstalled(givenPython, nameOnly)
+      : await pipPackageIsInstalled(givenPython, nameOnly)
+    if (installed) {
+      const binDir = isPipx
+        ? await finishPipxPackageInstall()
+        : await finishPipPackageInstall(givenPython, nameOnly)
+      return { binDir }
+    }
+  }
+
+  const hasPackage = await pipHasPackage(givenPython, nameOnly)
   if (hasPackage) {
     try {
       info(`Installing ${name} ${version ?? ""} via ${pip}`)
@@ -74,27 +91,36 @@ export async function setupPipPackWithPython(
         env,
       })
     } catch (err) {
-      info(`Failed to install ${name} via ${pip}: ${err}.`)
+      const msg = err instanceof Error ? `${err.message}\n${err.stack}` : String(err)
+      info(`Failed to install ${name} via ${pip}: ${msg}`)
       if ((await setupPipPackSystem(name)) === null) {
         throw new Error(`Failed to install ${name} via ${pip}: ${err}.`)
       }
     }
-  } else {
-    if ((await setupPipPackSystem(name)) === null) {
-      throw new Error(`Failed to install ${name} as it was not found via ${pip} or the system package manager`)
-    }
+  } else if ((await setupPipPackSystem(name)) === null) {
+    throw new Error(`Failed to install ${name} as it was not found via ${pip} or the system package manager`)
   }
 
-  const execPaths = await addPythonBaseExecPrefix(givenPython)
-  const binDir = await findBinDir(execPaths, name)
-
-  await addPath(binDir, rcOptions)
-
+  const binDir = isPipx
+    ? await finishPipxPackageInstall()
+    : await finishPipPackageInstall(givenPython, nameOnly)
   return { binDir }
 }
 
+function finishPipxPackageInstall() {
+  return getPipxBinDir()
+}
+
+async function finishPipPackageInstall(givenPython: string, name: string) {
+  const pythonBaseExecPrefix = await addPythonBaseExecPrefix(givenPython)
+  const binDir = await findBinDir(pythonBaseExecPrefix, name)
+  await addPath(binDir, rcOptions)
+  return binDir
+}
+
 export async function hasPipx(givenPython: string) {
-  return (await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })).exitCode === 0
+  const res = await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })
+  return res.exitCode === 0
 }
 
 async function getPipxHome_() {
@@ -144,14 +170,77 @@ async function getPipxBinDir_() {
 }
 const getPipxBinDir = memoize(getPipxBinDir_, { promise: true })
 
-async function getPython_(): Promise<string> {
-  const pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin
-  if (pythonBin === undefined) {
-    throw new Error("Python binary was not found")
+/* eslint-disable require-atomic-updates */
+let pythonBin: string | undefined
+
+async function getPython(): Promise<string> {
+  if (pythonBin !== undefined) {
+    return pythonBin
   }
+
+  pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin
   return pythonBin
 }
-const getPython = memoize(getPython_, { promise: true })
+
+/**
+ * Get the actual name of a pip package from the given string
+ * @param pkg the given name that might contain extensions in `[]`.
+ * @returns stirped down name of the package
+ */
+function getPackageName(pkg: string) {
+  return pkg.replace(/\[.*]/g, "").trim()
+}
+
+async function pipPackageIsInstalled(python: string, name: string) {
+  try {
+    const result = await execa(python, ["-m", "pip", "-qq", "show", name], {
+      stdio: "ignore",
+      reject: false,
+    })
+    return result.exitCode === 0
+  } catch {
+    return false
+  }
+}
+
+type PipxShowType = {
+  venvs: Record<string, {
+    metadata: {
+      main_package: {
+        package: string
+        package_or_url: string
+        apps: string[]
+      }
+    }
+  }>
+}
+
+async function pipxPackageInstalled(python: string, name: string) {
+  try {
+    const result = await execa(python, ["-m", "pipx", "list", "--json"], {
+      stdio: "ignore",
+      reject: false,
+    })
+    if (result.exitCode !== 0 || typeof result.stdout !== "string") {
+      return false
+    }
+
+    const pipxOut = JSON.parse(result.stdout) as PipxShowType
+    // search among the venvs
+    if (name in pipxOut.venvs) {
+      return true
+    }
+    // search among the urls
+    for (const venv of Object.values(pipxOut.venvs)) {
+      if (venv.metadata.main_package.package_or_url === name || venv.metadata.main_package.package === name) {
+        return true
+      }
+    }
+  } catch {
+    // ignore
+  }
+  return false
+}
 
 async function pipHasPackage(python: string, name: string) {
   const result = await execa(python, ["-m", "pip", "-qq", "index", "versions", name], {

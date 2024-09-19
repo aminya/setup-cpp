@@ -20,9 +20,11 @@
     "skipLibCheck": true,
     "allowImportingTsExtensions": true,
     "noEmit": true,
-    // target Node.js 12 https://node.green/#ES2019
     "lib": [
-      "ES2019"
+      // target Node.js 12 https://node.green/#ES2019
+      "ES2019",
+      // https://node.green/#ES2020-features-String-prototype-matchAll
+      "ES2020.String"
     ],
     "target": "ESNext",
     "allowJs": true,

@@ -3,6 +3,7 @@ import { setupBazel } from "./bazel/bazel.js"
 import { setupCcache } from "./ccache/ccache.js"
 import { setupChocolatey } from "./chocolatey/chocolatey.js"
 import { setupCmake } from "./cmake/cmake.js"
+import { setupCmakelang } from "./cmakelang/cmakelang.js"
 import { setupConan } from "./conan/conan.js"
 import { setupCppcheck } from "./cppcheck/cppcheck.js"
 import { setupDoxygen } from "./doxygen/doxygen.js"
@@ -42,19 +43,32 @@ export const appleClangSetups = {
   "apple-llvm": setupAppleClang,
 } as const
 
+const cmakeLangSetups = {
+  cmakelang: setupCmakelang,
+  "cmake-lint": setupCmakelang,
+  "cmake-format": setupCmakelang,
+  cmakelint: setupCmakelang,
+  cmakeformat: setupCmakelang,
+} as const
+
 export const llvmTools = ["llvm", "clang", "clang++", "clang-tidy", "clang-format", "clangtidy", "clangformat"]
 
 /** The setup functions */
 export const setups = {
+  nala: setupNala,
+  brew: setupBrew,
+  choco: setupChocolatey,
+  python: setupPython,
+  powershell: setupPowershell,
+  pwsh: setupPowershell,
   ...llvmSetups,
   ...gccSetups,
   ...mingwSetups,
   ...msvcSetups,
   ...appleClangSetups,
-  nala: setupNala,
+  ...cmakeLangSetups,
   cmake: setupCmake,
   ninja: setupNinja,
-  python: setupPython,
   vcpkg: setupVcpkg,
   bazel: setupBazel,
   conan: setupConan,
@@ -62,10 +76,6 @@ export const setups = {
   gcovr: setupGcovr,
   opencppcoverage: setupOpencppcoverage,
   OpenCppCoverage: setupOpencppcoverage,
-  choco: setupChocolatey,
-  brew: setupBrew,
-  powershell: setupPowershell,
-  pwsh: setupPowershell,
   ccache: setupCcache,
   sccache: setupSccache,
   doxygen: setupDoxygen,

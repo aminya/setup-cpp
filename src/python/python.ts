@@ -26,7 +26,11 @@ import { isBinUptoDate } from "../utils/setup/version.js"
 import { unique } from "../utils/std/index.js"
 import { MinVersions } from "../versions/default_versions.js"
 
-export async function setupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export async function setupPython(
+  version: string,
+  setupDir: string,
+  arch: string,
+): Promise<InstallationInfo & { bin: string }> {
   const installInfo = await findOrSetupPython(version, setupDir, arch)
   assert(installInfo.bin !== undefined)
   const foundPython = installInfo.bin
@@ -41,7 +45,7 @@ export async function setupPython(version: string, setupDir: string, arch: strin
 
   await setupWheel(foundPython)
 
-  return installInfo
+  return installInfo as InstallationInfo & { bin: string }
 }
 
 async function setupPipx(foundPython: string) {
@@ -56,9 +60,17 @@ async function setupPipx(foundPython: string) {
       }
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
-    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
+    await setupVenv(foundPython)
   } catch (err) {
     warning(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
+  }
+}
+
+async function setupVenv(foundPython: string) {
+  try {
+    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
+  } catch (err) {
+    warning(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
@@ -70,9 +82,9 @@ async function setupWheel(foundPython: string) {
       isLibrary: true,
       usePipx: false,
     })
-    await setupPipPackWithPython(foundPython, "wheel", undefined, { upgrade: true, isLibrary: true, usePipx: false })
+    await setupPipPackWithPython(foundPython, "wheel", undefined, { upgrade: false, isLibrary: true, usePipx: false })
   } catch (err) {
-    warning(`Failed to install setuptools or wheel: ${(err as Error).toString()}. Ignoring...`)
+    warning(`Failed to install setuptools/wheel: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
@@ -171,7 +183,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
 }
 
 async function findPython(binDir?: string) {
-  for (const pythonBin of ["python3", "python"]) {
+  for (const pythonBin of ["python", "python3"]) {
     // eslint-disable-next-line no-await-in-loop
     const foundPython = await isPythonUpToDate(pythonBin, binDir)
     if (foundPython !== undefined) {
@@ -203,10 +215,8 @@ async function isPythonUpToDate(candidate: string, binDir?: string) {
   try {
     if (binDir !== undefined) {
       const pythonBinPath = join(binDir, addExeExt(candidate))
-      if (await pathExists(pythonBinPath)) {
-        if (await isBinUptoDate(pythonBinPath, MinVersions.python!)) {
-          return pythonBinPath
-        }
+      if (await pathExists(pythonBinPath) && await isBinUptoDate(pythonBinPath, MinVersions.python!)) {
+        return pythonBinPath
       }
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

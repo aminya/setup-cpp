@@ -35,7 +35,9 @@ All the available tools:
       "compiler and analyzer": {
         tools: "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall, --cppcheck, --clang-tidy, --clang-format",
       },
-      "build system": { tools: "--cmake, --ninja, --meson, --make, --task, --bazel" },
+      "build system": {
+        tools: "--cmake, --ninja, --meson, --make, --task, --bazel, --cmakelang, --cmake-lint, --cmake-format",
+      },
       "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala" },
       cache: { tools: "--ccache, --sccache" },
       documentation: { tools: "--doxygen, --graphviz" },
