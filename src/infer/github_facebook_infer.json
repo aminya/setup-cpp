@@ -1,0 +1,110 @@
+{
+  "v1.2.0": [
+    "infer-osx-x86_64-v1.2.0.tar.xz",
+    "infer-osx-arm64-v1.2.0.tar.xz",
+    "infer-linux-x86_64-v1.2.0.tar.xz"
+  ],
+  "v1.1.0": [
+    "infer-linux64-v1.1.0.tar.xz"
+  ],
+  "v1.0.0": [
+    "infer-osx-v1.0.0.tar.xz",
+    "infer-linux64-v1.0.0.tar.xz"
+  ],
+  "v0.17.0": [
+    "infer-osx-v0.17.0.tar.xz",
+    "infer-linux64-v0.17.0.tar.xz"
+  ],
+  "v0.16.0": [
+    "infer-osx-v0.16.0.tar.xz",
+    "infer-linux64-v0.16.0.tar.xz"
+  ],
+  "v0.15.0": [
+    "infer-osx-v0.15.0.tar.xz",
+    "infer-linux64-v0.15.0.tar.xz"
+  ],
+  "v0.14.0": [
+    "infer-osx-v0.14.0.tar.xz",
+    "infer-linux64-v0.14.0.tar.xz"
+  ],
+  "v0.13.1": [
+    "infer-osx-v0.13.1.tar.xz",
+    "infer-linux64-v0.13.1.tar.xz"
+  ],
+  "v0.13.0": [
+    "infer-osx-v0.13.0.tar.xz",
+    "infer-linux64-v0.13.0.tar.xz"
+  ],
+  "v0.12.1": [
+    "infer-osx-v0.12.1.tar.xz",
+    "infer-linux64-v0.12.1.tar.xz"
+  ],
+  "v0.12.0": [
+    "infer-osx-v0.12.0.tar.xz",
+    "infer-linux64-v0.12.0.tar.xz"
+  ],
+  "v0.11.0": [
+    "infer-osx-v0.11.0.tar.xz",
+    "infer-linux64-v0.11.0.tar.xz"
+  ],
+  "v0.10.0": [
+    "infer-osx-v0.10.0.tar.xz",
+    "infer-linux64-v0.10.0.tar.xz"
+  ],
+  "v0.9.5": [
+    "infer-osx-v0.9.5.tar.xz",
+    "infer-linux64-v0.9.5.tar.xz"
+  ],
+  "v0.9.4.1": [
+    "infer-osx-v0.9.4.1.tar.xz",
+    "infer-linux64-v0.9.4.1.tar.xz"
+  ],
+  "v0.9.4": [
+    "infer-osx-v0.9.4.tar.xz",
+    "infer-linux64-v0.9.4.tar.xz"
+  ],
+  "v0.9.3": [
+    "infer-osx-v0.9.3.tar.xz",
+    "infer-linux64-v0.9.3.tar.xz"
+  ],
+  "v0.9.2": [
+    "infer-osx-v0.9.2.tar.xz",
+    "infer-linux64-v0.9.2.tar.xz"
+  ],
+  "v0.9.1": [
+    "infer-osx-v0.9.1.tar.xz",
+    "infer-linux64-v0.9.1.tar.xz"
+  ],
+  "v0.9.0": [
+    "infer-osx-v0.9.0.tar.xz",
+    "infer-linux64-v0.9.0.tar.xz"
+  ],
+  "v0.8.1": [
+    "infer-osx-v0.8.1.tar.xz",
+    "infer-linux64-v0.8.1.tar.xz"
+  ],
+  "v0.8.0": [
+    "infer-osx-v0.8.0.tar.xz",
+    "infer-linux64-v0.8.0.tar.xz"
+  ],
+  "v0.7.0": [
+    "infer-osx-v0.7.0.tar.xz",
+    "infer-linux64-v0.7.0.tar.xz"
+  ],
+  "v0.6.0": [
+    "infer-osx-v0.6.0.tar.xz",
+    "infer-linux64-v0.6.0.tar.xz"
+  ],
+  "v0.5.0": [
+    "infer-osx-v0.5.0.tar.xz",
+    "infer-linux64-v0.5.0.tar.xz"
+  ],
+  "v0.4.0": [
+    "infer-osx-v0.4.0.tar.xz",
+    "infer-linux64-v0.4.0.tar.xz"
+  ],
+  "v0.3.0": [
+    "infer-osx-v0.3.0.tar.xz",
+    "infer-linux64-v0.3.0.tar.xz"
+  ]
+}

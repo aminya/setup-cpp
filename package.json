@@ -34,7 +34,7 @@
     "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/modern ./dist/modern ",
     "dev.vite": "cross-env NODE_ENV=development vite build --watch",
     "dev.packages": "turbo dev",
-    "dev": "run-p dev.packages dev.vite",
+    "dev": "run-p build.json dev.packages dev.vite",
     "docs": "shx rm -rf packages/*/README.md && pnpm -r exec readme --path ../../dev/readme/template.md -y && pnpm -r exec ts-readme",
     "format": "run-s lint.dprint",
     "lint": "turbo lint && run-p --aggregate-output --continue-on-error lint.**",

@@ -34,7 +34,7 @@ All the available tools:
     {
       "compiler and analyzer": {
         tools:
-          "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall, --cppcheck, --clang-tidy, --clang-format, --cpplint, --flawfinder, --lizard",
+          "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall, --cppcheck, --clang-tidy, --clang-format, --cpplint, --flawfinder, --lizard, --infer",
       },
       "build system": {
         tools: "--cmake, --ninja, --meson, --make, --task, --bazel, --cmakelang, --cmake-lint, --cmake-format",

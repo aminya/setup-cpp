@@ -163,7 +163,7 @@ async function getAssetKeywords(platform: string, arch: string) {
     }
     default:
       info(`Using ${platform} ${arch} for LLVM`)
-      optionalKeywords.push(platform, arch)
+      keywords.push(platform, arch)
       break
   }
   return { keywords, optionalKeywords }

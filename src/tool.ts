@@ -12,6 +12,7 @@ import { setupFlawfinder } from "./flawfinder/flawfinder.js"
 import { setupGcc, setupMingw } from "./gcc/gcc.js"
 import { setupGcovr } from "./gcovr/gcovr.js"
 import { setupGraphviz } from "./graphviz/graphviz.js"
+import { setupInfer } from "./infer/infer.js"
 import { setupKcov } from "./kcov/kcov.js"
 import { setupLizard } from "./lizard/lizard.js"
 import { setupAppleClang } from "./llvm/apple-clang.js"
@@ -87,6 +88,7 @@ export const setups = {
   cpplint: setupCpplint,
   flawfinder: setupFlawfinder,
   lizard: setupLizard,
+  infer: setupInfer,
   "clang-tidy": setupClangTools,
   clangtidy: setupClangTools,
   "clang-format": setupClangFormat,

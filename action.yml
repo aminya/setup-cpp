@@ -64,6 +64,9 @@ inputs:
   lizard:
     description: "Wether to install lizard (true/false) or the specific version to install."
     required: false
+  infer:
+    description: "Wether to install facebook/infer (true/false) or the specific version to install."
+    required: false
   clang-tidy:
     description: "Wether to install clang-tidy (true/false) or the specific version to install."
     required: false
