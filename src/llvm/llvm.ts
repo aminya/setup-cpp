@@ -1,15 +1,19 @@
+import { tmpdir } from "os"
 import path, { delimiter, join } from "path"
 import { fileURLToPath } from "url"
+import { execRootSync } from "admina"
 import { GITHUB_ACTIONS } from "ci-info"
 import { info, warning } from "ci-log"
 import { addEnv } from "envosman"
 import memoize from "memoizee"
+import { DownloaderHelper } from "node-downloader-helper"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { setupGcc } from "../gcc/gcc.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
+import { arm64, x86_64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
@@ -87,7 +91,27 @@ function majorLLVMVersion(version: string) {
 async function llvmBinaryDeps_(majorVersion: number) {
   if (isUbuntu()) {
     if (majorVersion <= 10) {
-      await installAptPack([{ name: "libtinfo5" }])
+      try {
+        await installAptPack([{ name: "libtinfo5" }])
+      } catch (err) {
+        // Manually install libtinfo5 if the package is not available
+        info(`Failed to install libtinfo5 ${err}\nManually installing the package`)
+        const arch = x86_64.includes(process.arch)
+          ? "amd64"
+          : arm64.includes(process.arch)
+          ? "arm64"
+          : process.arch
+
+        const fileName = `libtinfo5_6.3-2ubuntu0.1_${arch}.deb`
+        const url = `http://launchpadlibrarian.net/666971015/${fileName}`
+        const dl = new DownloaderHelper(url, tmpdir(), { fileName })
+        dl.on("error", (dlErr) => {
+          throw new Error(`Failed to download ${url}: ${dlErr}`)
+        })
+        await dl.start()
+        // Install the downloaded package via dpkg
+        execRootSync("dpkg", ["-i", join(tmpdir(), fileName)])
+      }
     } else {
       await installAptPack([{ name: "libtinfo-dev" }])
     }

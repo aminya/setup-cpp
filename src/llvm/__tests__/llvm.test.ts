@@ -82,7 +82,7 @@ describe("setup-llvm", () => {
     execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
   })
 
-  it("should setup LLVM from llvm.org", async () => {
+  it("should setup LLVM 5 from llvm.org", async () => {
     const { binDir } = await setupLLVM("5", directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
@@ -92,7 +92,7 @@ describe("setup-llvm", () => {
     // test compilation
     const file = join(dirname, "main.cpp")
     const main_exe = join(dirname, addExeExt("main"))
-    execaSync("clang++", [file, "-o", main_exe], { cwd: dirname })
+    execaSync("clang++", ["-std=c++17", file, "-o", main_exe], { cwd: dirname })
     if (process.platform !== "win32") {
       await chmod(main_exe, "755")
     }
