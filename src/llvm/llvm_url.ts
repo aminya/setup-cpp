@@ -71,7 +71,7 @@ export async function getLLVMAssetURL(platform: string, arch: string, version: s
   )
 
   if (websiteAsset !== undefined) {
-    return `https://llvm.org/releases/${websiteAsset.tag}/${websiteAsset.name}`
+    return `https://releases.llvm.org/${websiteAsset.tag}/${websiteAsset.name}`
   }
 
   throw new Error(`No asset found for version ${version} matching ${keywords} and ${optionalKeywords}`)

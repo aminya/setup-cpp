@@ -82,6 +82,23 @@ describe("setup-llvm", () => {
     execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
   })
 
+  it("should setup LLVM from llvm.org", async () => {
+    const { binDir } = await setupLLVM("5", directory, process.arch)
+    await testBin("clang++", ["--version"], binDir)
+
+    expect(process.env.CC?.includes("clang")).toBeTruthy()
+    expect(process.env.CXX?.includes("clang++")).toBeTruthy()
+
+    // test compilation
+    const file = join(dirname, "main.cpp")
+    const main_exe = join(dirname, addExeExt("main"))
+    execaSync("clang++", [file, "-o", main_exe], { cwd: dirname })
+    if (process.platform !== "win32") {
+      await chmod(main_exe, "755")
+    }
+    execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
+  })
+
   it("should setup clang-format", async () => {
     const osVersion = await ubuntuVersion()
     const { binDir } = await setupClangFormat(getVersion("llvm", "true", osVersion), directory, process.arch)
