@@ -62,7 +62,9 @@ export async function setupPipPackWithPython(
       ? await pipxPackageInstalled(givenPython, nameOnly)
       : await pipPackageIsInstalled(givenPython, nameOnly)
     if (installed) {
-      const binDir = await finishPipPackageInstall(givenPython, nameOnly)
+      const binDir = isPipx
+        ? await finishPipxPackageInstall()
+        : await finishPipPackageInstall(givenPython, nameOnly)
       return { binDir }
     }
   }
@@ -99,8 +101,14 @@ export async function setupPipPackWithPython(
     throw new Error(`Failed to install ${name} as it was not found via ${pip} or the system package manager`)
   }
 
-  const binDir = await finishPipPackageInstall(givenPython, nameOnly)
+  const binDir = isPipx
+    ? await finishPipxPackageInstall()
+    : await finishPipPackageInstall(givenPython, nameOnly)
   return { binDir }
+}
+
+function finishPipxPackageInstall() {
+  return getPipxBinDir()
 }
 
 async function finishPipPackageInstall(givenPython: string, name: string) {
