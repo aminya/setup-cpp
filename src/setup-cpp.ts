@@ -11,7 +11,7 @@ import timeDeltaLocale from "time-delta/locales/en.js"
 import { untildifyUser } from "untildify-user"
 import { checkUpdates } from "./check-updates.js"
 import { parseArgs, printHelp, rcOptions } from "./cli-options.js"
-import { installCompiler } from "./compilers.js"
+import { getCompilerInfo, installCompiler } from "./compilers.js"
 import { installTool } from "./installTool.js"
 import { type Inputs, llvmTools, tools } from "./tool.js"
 import { isArch } from "./utils/env/isArch.js"
@@ -55,8 +55,10 @@ async function main(args: string[]): Promise<number> {
 
   const osVersion = await ubuntuVersion()
 
+  const compilerInfo = opts.compiler !== undefined ? getCompilerInfo(opts.compiler) : undefined
+
   // sync the version for the llvm tools
-  if (!syncVersions(opts, llvmTools as Inputs[])) {
+  if (!syncVersions(opts, [...llvmTools, "compiler"] as Inputs[], compilerInfo)) {
     error("The same version must be used for llvm, clang-format and clang-tidy")
     return 1
   }
@@ -71,11 +73,9 @@ async function main(args: string[]): Promise<number> {
   let failedFast = false
   for (const tool of tools) {
     // fail fast inside CI when any tool fails
-    if (isCI) {
-      if (errorMessages.length !== 0) {
-        failedFast = true
-        break
-      }
+    if (isCI && errorMessages.length !== 0) {
+      failedFast = true
+      break
     }
 
     // get the version or "true" or undefined for this tool from the options
@@ -101,15 +101,20 @@ async function main(args: string[]): Promise<number> {
     }
   }
 
-  if (!failedFast) {
-    // installing the specified compiler
-    const maybeCompiler = opts.compiler
-    if (maybeCompiler !== undefined) {
-      const time1Compiler = Date.now()
-      await installCompiler(maybeCompiler, osVersion, setupCppDir, arch, successMessages, errorMessages)
-      const time2Compiler = Date.now()
-      info(`took ${timeFormatter.format(time1Compiler, time2Compiler) || "0 seconds"}`)
-    }
+  if (!failedFast && compilerInfo !== undefined) {
+    // install the specified compiler
+    const time1Compiler = Date.now()
+    await installCompiler(
+      compilerInfo.compiler,
+      compilerInfo.version,
+      osVersion,
+      setupCppDir,
+      arch,
+      successMessages,
+      errorMessages,
+    )
+    const time2Compiler = Date.now()
+    info(`took ${timeFormatter.format(time1Compiler, time2Compiler) || "0 seconds"}`)
   }
 
   await finalizeRC(rcOptions)

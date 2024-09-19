@@ -12,6 +12,11 @@ import { appleClangSetups, gccSetups, llvmSetups, mingwSetups, msvcSetups } from
 import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { getVersion } from "./versions/versions.js"
 
+export type CompilerInfo = {
+  compiler: string
+  version: string | undefined
+}
+
 /**
  * Detecting the compiler version. Divide the given string by `-` and use the second element as the version
  *
@@ -20,7 +25,7 @@ import { getVersion } from "./versions/versions.js"
  *
  * @nothrow It doesn't throw any error, but it logs the error if it fails to parse the compiler info
  */
-export function getCompilerInfo(compilerAndVersion: string) {
+export function getCompilerInfo(compilerAndVersion: string): CompilerInfo {
   try {
     const compilerAndMaybeVersion = compilerAndVersion.split("-")
     const compiler = compilerAndMaybeVersion[0]
@@ -40,15 +45,14 @@ export function getCompilerInfo(compilerAndVersion: string) {
 
 /** Installing the specified compiler */
 export async function installCompiler(
-  compilerAndVersion: string,
+  compiler: string,
+  version: string | undefined,
   osVersion: number[] | null,
   setupCppDir: string,
   arch: string,
   successMessages: string[],
   errorMessages: string[],
 ) {
-  const { compiler, version } = getCompilerInfo(compilerAndVersion)
-
   let installationInfo: InstallationInfo | undefined | void | null // null means the compiler is not supported
   try {
     // install the compiler. We allow some aliases for the compiler name
@@ -82,7 +86,7 @@ export async function installCompiler(
     }
   } catch (err) {
     error(err as string | Error)
-    errorMessages.push(`Failed to install the ${compilerAndVersion}`)
+    errorMessages.push(`Failed to install the ${compiler} ${version}`)
   }
 
   if (installationInfo !== null) {

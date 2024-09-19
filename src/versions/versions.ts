@@ -1,4 +1,5 @@
 import type { Opts } from "../cli-options.js"
+import type { CompilerInfo } from "../compilers.js"
 import type { Inputs } from "../tool.js"
 import { DefaultUbuntuVersion, DefaultVersions } from "./default_versions.js"
 
@@ -34,21 +35,49 @@ function getDefaultLinuxVersion(osVersion: number[], toolLinuxVersions: Record<n
 /**
  * Sync the versions for the given inputs
  *
+ * It modifies the opts object to have the same version for all the tools
  * If the return is false, it means that versions don't match the target version
+ * @param opts - The options object (modified in place)
+ * @param tools - The tools to sync the versions for (it can include `compiler`)
+ * @param compilerInfo - The compiler info to sync the versions for (if any)
  */
-export function syncVersions(opts: Opts, tools: Inputs[]): boolean {
+export function syncVersions(opts: Opts, tools: Inputs[], compilerInfo: CompilerInfo | undefined = undefined): boolean {
+  // filter out the tools that are in use in the options
   const toolsInUse = tools.filter((tool) => opts[tool] !== undefined)
-  const toolsNonDefaultVersion = toolsInUse.filter((tool) => !isVersionDefault(opts[tool]))
 
-  const targetVersion = toolsNonDefaultVersion.length >= 1 ? opts[toolsNonDefaultVersion[0]] : "true"
+  // filter out the tools that are not default
+  const toolsNonDefaultVersion = toolsInUse.filter((tool) => {
+    const version = (tool === "compiler" && compilerInfo !== undefined)
+      ? compilerInfo.version
+      : opts[tool]
+    return !isVersionDefault(version)
+  })
 
-  if (toolsNonDefaultVersion.some((tool) => opts[tool] !== targetVersion)) {
-    // error if any explicit versions don't match the target version
+  // find the target version to sync to
+  const targetVersion: string = (toolsNonDefaultVersion.length !== 0)
+    ? (toolsNonDefaultVersion[0] === "compiler" && compilerInfo !== undefined)
+      ? compilerInfo.version ?? "true"
+      : opts[toolsNonDefaultVersion[0]] ?? "true"
+    : "true"
+
+  // error if any explicit versions don't match the target version
+  if (
+    toolsNonDefaultVersion.some((tool) => {
+      if (tool === "compiler" && compilerInfo !== undefined) {
+        return opts.compiler !== `${compilerInfo.compiler}-${targetVersion}`
+      }
+
+      return opts[tool] !== targetVersion
+    })
+  ) {
     return false
   }
 
+  // update the version of all the tools to the target version
   for (const tool of toolsInUse) {
-    opts[tool] = targetVersion
+    opts[tool] = (tool === "compiler" && compilerInfo !== undefined)
+      ? `${compilerInfo.compiler}-${targetVersion}`
+      : targetVersion
   }
 
   return true
