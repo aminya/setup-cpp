@@ -33,7 +33,8 @@ All the available tools:
   console.table(
     {
       "compiler and analyzer": {
-        tools: "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall, --cppcheck, --clang-tidy, --clang-format, --cpplint, --flawfinder",
+        tools:
+          "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall, --cppcheck, --clang-tidy, --clang-format, --cpplint, --flawfinder, --lizard",
       },
       "build system": {
         tools: "--cmake, --ninja, --meson, --make, --task, --bazel, --cmakelang, --cmake-lint, --cmake-format",

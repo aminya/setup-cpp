@@ -6,11 +6,14 @@ import { setupCmake } from "./cmake/cmake.js"
 import { setupCmakelang } from "./cmakelang/cmakelang.js"
 import { setupConan } from "./conan/conan.js"
 import { setupCppcheck } from "./cppcheck/cppcheck.js"
+import { setupCpplint } from "./cpplint/cpplint.js"
 import { setupDoxygen } from "./doxygen/doxygen.js"
+import { setupFlawfinder } from "./flawfinder/flawfinder.js"
 import { setupGcc, setupMingw } from "./gcc/gcc.js"
 import { setupGcovr } from "./gcovr/gcovr.js"
 import { setupGraphviz } from "./graphviz/graphviz.js"
 import { setupKcov } from "./kcov/kcov.js"
+import { setupLizard } from "./lizard/lizard.js"
 import { setupAppleClang } from "./llvm/apple-clang.js"
 import { setupClangFormat, setupClangTools, setupLLVM } from "./llvm/llvm.js"
 import { setupMake } from "./make/make.js"
@@ -26,8 +29,6 @@ import { setupSevenZip } from "./sevenzip/sevenzip.js"
 import { setupTask } from "./task/task.js"
 import { setupVcpkg } from "./vcpkg/vcpkg.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
-import { setupCpplint } from "./cpplint/cpplint.js"
-import { setupFlawfinder } from "./flawfinder/flawfinder.js"
 
 export const llvmSetups = { llvm: setupLLVM, clang: setupLLVM, "clang++": setupLLVM } as const
 export const gccSetups = { gcc: setupGcc, "g++": setupGcc } as const
@@ -85,6 +86,7 @@ export const setups = {
   cppcheck: setupCppcheck,
   cpplint: setupCpplint,
   flawfinder: setupFlawfinder,
+  lizard: setupLizard,
   "clang-tidy": setupClangTools,
   clangtidy: setupClangTools,
   "clang-format": setupClangFormat,
