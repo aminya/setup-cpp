@@ -26,6 +26,7 @@ import { setupSevenZip } from "./sevenzip/sevenzip.js"
 import { setupTask } from "./task/task.js"
 import { setupVcpkg } from "./vcpkg/vcpkg.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
+import { setupCpplint } from "./cpplint/cpplint.js"
 
 export const llvmSetups = { llvm: setupLLVM, clang: setupLLVM, "clang++": setupLLVM } as const
 export const gccSetups = { gcc: setupGcc, "g++": setupGcc } as const
@@ -81,6 +82,7 @@ export const setups = {
   doxygen: setupDoxygen,
   graphviz: setupGraphviz,
   cppcheck: setupCppcheck,
+  cpplint: setupCpplint,
   "clang-tidy": setupClangTools,
   clangtidy: setupClangTools,
   "clang-format": setupClangFormat,

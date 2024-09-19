@@ -55,6 +55,9 @@ inputs:
   cppcheck:
     description: "Wether to install cppcheck (true/false) or the specific version to install."
     required: false
+  cpplint:
+    description: "Wether to install cpplint (true/false) or the specific version to install."
+    required: false
   clang-tidy:
     description: "Wether to install clang-tidy (true/false) or the specific version to install."
     required: false
