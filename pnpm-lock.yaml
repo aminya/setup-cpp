@@ -265,6 +265,9 @@ importers:
       ubuntu-version:
         specifier: ^2.0.0
         version: 2.0.0
+      unicorn-magic:
+        specifier: ^0.3.0
+        version: 0.3.0
       untildify-user:
         specifier: workspace:*
         version: link:packages/untildify-user
