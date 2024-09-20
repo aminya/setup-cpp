@@ -24,7 +24,7 @@
     "ci-log": "workspace:*",
     "envosman": "workspace:*",
     "which": "4.0.0",
-    "execa": "^7.2.0",
+    "execa": "^9.4.0",
     "escape-string-regexp": "^5.0.0",
     "node-downloader-helper": "2.1.9",
     "memoizee": "^0.4.17"

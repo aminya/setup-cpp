@@ -211,6 +211,9 @@
   "pnpm": {
     "patchedDependencies": {
       "@actions/http-client@2.2.3": "patches/@actions__http-client@2.2.3.patch"
+    },
+    "overrides": {
+      "execa": "9.4.0"
     }
   }
 }
