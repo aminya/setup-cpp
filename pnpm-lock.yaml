@@ -247,6 +247,9 @@ importers:
       time-delta:
         specifier: github:aminya/time-delta#d732dbc4fe991ab323cfa9075df8a7988537926e
         version: https://codeload.github.com/aminya/time-delta/tar.gz/d732dbc4fe991ab323cfa9075df8a7988537926e
+      timers-browserify:
+        specifier: ^2.0.12
+        version: 2.0.12
       ts-node:
         specifier: ^10.9.2
         version: 10.9.2(@swc/core@1.7.23(@swc/helpers@0.5.13))(@types/node@22.5.5)(typescript@5.6.2)
@@ -4766,6 +4769,9 @@ packages:
     resolution: {integrity: sha512-7PGFlmtwsEADb0WYyvCMa1t+yke6daIG4Wirafur5kcf+MhUnPms1UeR0CKQdTZD81yESwMHbtn+TR+dMviakQ==}
     engines: {node: '>= 0.4'}
 
+  setimmediate@1.0.5:
+    resolution: {integrity: sha512-MATJdZp8sLqDl/68LfQmbP8zKPLQNV6BIZoIgrscFDQ+RsvK/BxeDQOgyxKKoh0y/8h3BqVFnCqQ/gd+reiIXA==}
+
   setup-python@https://codeload.github.com/aminya/setup-python/tar.gz/9700887:
     resolution: {tarball: https://codeload.github.com/aminya/setup-python/tar.gz/9700887}
     version: 5.0.0
@@ -5012,6 +5018,10 @@ packages:
     resolution: {tarball: https://codeload.github.com/aminya/time-delta/tar.gz/d732dbc4fe991ab323cfa9075df8a7988537926e}
     version: 1.0.0
     engines: {node: '>=12'}
+
+  timers-browserify@2.0.12:
+    resolution: {integrity: sha512-9phl76Cqm6FhSX9Xe1ZUAMLtm1BLkKj2Qd5ApyWkXzsMRaA7dgr81kf4wJmQf/hAvg8EEyJxDo3du/0KlhPiKQ==}
+    engines: {node: '>=0.6.0'}
 
   timers-ext@0.1.8:
     resolution: {integrity: sha512-wFH7+SEAcKfJpfLPkrgMPvvwnEtj8W4IurvEyrKsDleXnKLCDw71w8jltvfLa8Rm4qQxxT4jmDBYbJG/z7qoww==}
@@ -10701,6 +10711,8 @@ snapshots:
       functions-have-names: 1.2.3
       has-property-descriptors: 1.0.2
 
+  setimmediate@1.0.5: {}
+
   setup-python@https://codeload.github.com/aminya/setup-python/tar.gz/9700887(encoding@0.1.13):
     dependencies:
       '@actions/cache': 3.2.4(encoding@0.1.13)
@@ -10984,6 +10996,10 @@ snapshots:
     dependencies:
       is-node: 1.0.2
       numerous: 1.0.3
+
+  timers-browserify@2.0.12:
+    dependencies:
+      setimmediate: 1.0.5
 
   timers-ext@0.1.8:
     dependencies:

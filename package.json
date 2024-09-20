@@ -132,6 +132,7 @@
     "terser": "^5.33.0",
     "terser-config-atomic": "^1.0.0",
     "time-delta": "github:aminya/time-delta#d732dbc4fe991ab323cfa9075df8a7988537926e",
+    "timers-browserify": "^2.0.12",
     "ts-node": "^10.9.2",
     "ts-readme": "^1.1.3",
     "turbo": "2.1.2",
@@ -179,7 +180,8 @@
     "ubuntu-version",
     "untildify-user",
     "util.types",
-    "web-streams-polyfill"
+    "web-streams-polyfill",
+    "timers-browserify"
   ],
   "engines": {
     "node": ">=12.x",
