@@ -9,7 +9,7 @@
       "groupName": "devDependencies",
       "semanticCommitType": "chore",
       "automerge": true,
-      "ignoreDeps": ["eslint", "numerous"]
+      "ignoreDeps": ["eslint", "numerous", "execa"]
     },
     {
       "matchDepTypes": ["dependencies"],

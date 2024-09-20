@@ -17,7 +17,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "execa": "^9.4.0",
+    "execa": "^7",
     "which": "^4.0.0",
     "@types/node": "^14"
   },

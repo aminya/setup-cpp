@@ -30,7 +30,7 @@
     "build.vite": "cross-env NODE_ENV=production vite build",
     "build.vite.legacy": "cross-env NODE_ENV=production TARGET=legacy vite build",
     "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file ./dist/**/*.json",
-    "bump": "ncu -u -x numerous,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
+    "bump": "ncu -u -x execa,numerous,eslint,@types/eslint && pnpm update && pnpx typesync && pnpm run clean",
     "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/modern ./dist/modern ",
     "dev.vite": "cross-env NODE_ENV=development vite build --watch",
     "dev.packages": "turbo dev",
@@ -101,7 +101,7 @@
     "eslint": "^8.57.1",
     "eslint-config-atomic": "^1.22.1",
     "exec-powershell": "workspace:*",
-    "execa": "^9.4.0",
+    "execa": "^7",
     "is-url-online": "^1.5.0",
     "jest": "^29.7.0",
     "lefthook": "^1.7.15",
@@ -138,7 +138,6 @@
     "turbo": "2.1.2",
     "typescript": "^5.6.2",
     "ubuntu-version": "^2.0.0",
-    "unicorn-magic": "^0.3.0",
     "untildify-user": "workspace:*",
     "util.types": "^0.0.2",
     "vite": "^5.4.6",
@@ -214,9 +213,6 @@
   "pnpm": {
     "patchedDependencies": {
       "@actions/http-client@2.2.3": "patches/@actions__http-client@2.2.3.patch"
-    },
-    "overrides": {
-      "execa": "9.4.0"
     }
   }
 }
