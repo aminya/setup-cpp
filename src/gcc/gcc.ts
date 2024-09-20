@@ -3,7 +3,7 @@ import { fileURLToPath } from "url"
 import { GITHUB_ACTIONS } from "ci-info"
 import { error, info, warning } from "ci-log"
 import { addEnv, addPath } from "envosman"
-import { type ExecaReturnValue, execa } from "execa"
+import { execa } from "execa"
 import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
@@ -218,20 +218,9 @@ async function setupChocoMingw(version: string, arch: string): Promise<Installat
   return undefined
 }
 
+/** Setup gcc as the compiler */
 async function activateGcc(givenVersion: string, binDir: string, priority: number = 40) {
-  const promises: Promise<void | ExecaReturnValue<string>>[] = []
-  // Setup gcc as the compiler
-
-  // TODO
-  // const ld = process.env.LD_LIBRARY_PATH ?? ""
-  // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
-  // promises.push(
-  //   addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`, rcOptions),
-  //   addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`, rcOptions),
-  //   addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`, rcOptions),
-  //   addEnv("LDFLAGS", `-L${installDir}/lib`, rcOptions),
-  //   addEnv("CPPFLAGS", `-I${installDir}/include`, rcOptions),
-  // )
+  const promises: Promise<void>[] = []
 
   if (process.platform === "win32") {
     promises.push(
@@ -279,6 +268,17 @@ async function activateGcc(givenVersion: string, binDir: string, priority: numbe
   }
 
   promises.push(setupMacOSSDK())
+
+  // TODO
+  // const ld = process.env.LD_LIBRARY_PATH ?? ""
+  // const dyld = process.env.DYLD_LIBRARY_PATH ?? ""
+  // promises.push(
+  //   addEnv("LD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${ld}`, rcOptions),
+  //   addEnv("DYLD_LIBRARY_PATH", `${installDir}/lib${path.delimiter}${dyld}`, rcOptions),
+  //   addEnv("CPATH", `${installDir}/lib/gcc/${majorVersion}/include`, rcOptions),
+  //   addEnv("LDFLAGS", `-L${installDir}/lib`, rcOptions),
+  //   addEnv("CPPFLAGS", `-I${installDir}/include`, rcOptions),
+  // )
 
   if (GITHUB_ACTIONS) {
     await addGccLoggingMatcher()
