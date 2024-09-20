@@ -104,7 +104,7 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
       })
     } catch (err) {
       if (isExecaError(err)) {
-        if (retryErrors.some((error) => err.stderr.includes(error))) {
+        if (retryErrors.some((error) => typeof err.stderr === "string" && err.stderr.includes(error))) {
           warning(`Failed to install packages ${needToInstall}. Retrying...`)
           execRootSync(
             apt,

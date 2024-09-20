@@ -17,7 +17,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@types/node": "^12",
+    "@types/node": "22.5.5",
     "admina": "^1.0.1",
     "ci-info": "^4.0.0",
     "path-exists": "^5.0.0",

@@ -31,7 +31,7 @@ const viteConfig = defineConfig({
           "stream/promises": "./src/utils/compat/stream/promises.ts",
           "stream/web": "web-streams-polyfill/dist/ponyfill.mjs",
           "util/types": "util.types/index.js",
-          'timers/promises': 'timers-browserify',
+          "timers/promises": "timers-browserify",
           diagnostics_channel: "diagnostics_channel/index.js",
         }
         : {}),

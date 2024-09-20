@@ -191,8 +191,8 @@ importers:
         specifier: ^6.2.3
         version: 6.2.3
       numerous:
-        specifier: 2.0.0
-        version: 2.0.0
+        specifier: 1.0.3
+        version: 1.0.3
       p-timeout:
         specifier: ^6.1.2
         version: 6.1.2
@@ -245,8 +245,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       time-delta:
-        specifier: github:aminya/time-delta#d732dbc4fe991ab323cfa9075df8a7988537926e
-        version: https://codeload.github.com/aminya/time-delta/tar.gz/d732dbc4fe991ab323cfa9075df8a7988537926e
+        specifier: github:aminya/time-delta#69d91a4
+        version: https://codeload.github.com/aminya/time-delta/tar.gz/69d91a4
       timers-browserify:
         specifier: ^2.0.12
         version: 2.0.12
@@ -299,8 +299,8 @@ importers:
         specifier: ^1.10.1
         version: 1.10.1
       '@types/node':
-        specifier: ^12
-        version: 12.20.55
+        specifier: 22.5.5
+        version: 22.5.5
       admina:
         specifier: ^1.0.1
         version: 1.0.1
@@ -355,8 +355,8 @@ importers:
   packages/setup-apt:
     dependencies:
       '@types/node':
-        specifier: ^12
-        version: 12.20.55
+        specifier: 22.5.5
+        version: 22.5.5
       admina:
         specifier: ^1.0.1
         version: 1.0.1
@@ -398,8 +398,8 @@ importers:
   packages/setup-brew:
     dependencies:
       '@types/node':
-        specifier: ^12
-        version: 12.20.55
+        specifier: 22.5.5
+        version: 22.5.5
       ci-log:
         specifier: workspace:*
         version: link:../ci-log
@@ -1743,9 +1743,6 @@ packages:
 
   '@types/ms@0.7.34':
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
-
-  '@types/node@12.20.55':
-    resolution: {integrity: sha512-J8xLz7q2OFulZ2cyGTLE1TbbZcjpno7FaN6zdJNrgAdrJ+DZzh/uFR6YrTb4C+nXakvud8Q4+rbhoIWlYQbUFQ==}
 
   '@types/node@14.18.63':
     resolution: {integrity: sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==}
@@ -4302,10 +4299,6 @@ packages:
   numerous@1.0.3:
     resolution: {integrity: sha512-jN2WTpfdMmR1d5ClpYguln+XAvgW7B0te6wlsyaZhyev7E2CyOmvXq5LTIV/p9mt9WrPW9Xw1g5+28iZh8BhFQ==}
 
-  numerous@2.0.0:
-    resolution: {integrity: sha512-t6VXZ+c6NaHnNcSJlqFF93aQhcSDRjgsjmVeJGu8slBlK8I4aspcMcEv5S1mrtqadtm0/4HmEF44EzkJJofFaw==}
-    engines: {node: '>=12'}
-
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -5014,8 +5007,8 @@ packages:
   through@2.3.8:
     resolution: {integrity: sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==}
 
-  time-delta@https://codeload.github.com/aminya/time-delta/tar.gz/d732dbc4fe991ab323cfa9075df8a7988537926e:
-    resolution: {tarball: https://codeload.github.com/aminya/time-delta/tar.gz/d732dbc4fe991ab323cfa9075df8a7988537926e}
+  time-delta@https://codeload.github.com/aminya/time-delta/tar.gz/69d91a4:
+    resolution: {tarball: https://codeload.github.com/aminya/time-delta/tar.gz/69d91a4}
     version: 1.0.0
     engines: {node: '>=12'}
 
@@ -6941,8 +6934,6 @@ snapshots:
   '@types/minimatch@5.1.2': {}
 
   '@types/ms@0.7.34': {}
-
-  '@types/node@12.20.55': {}
 
   '@types/node@14.18.63': {}
 
@@ -10218,10 +10209,6 @@ snapshots:
 
   numerous@1.0.3: {}
 
-  numerous@2.0.0:
-    dependencies:
-      is-node: 1.0.2
-
   object-assign@4.1.1: {}
 
   object-inspect@1.13.2: {}
@@ -10992,7 +10979,7 @@ snapshots:
 
   through@2.3.8: {}
 
-  time-delta@https://codeload.github.com/aminya/time-delta/tar.gz/d732dbc4fe991ab323cfa9075df8a7988537926e:
+  time-delta@https://codeload.github.com/aminya/time-delta/tar.gz/69d91a4:
     dependencies:
       is-node: 1.0.2
       numerous: 1.0.3
