@@ -336,10 +336,10 @@ importers:
   packages/exec-powershell:
     dependencies:
       '@types/node':
-        specifier: ^14
-        version: 14.18.63
+        specifier: ^22.0.0
+        version: 22.5.5
       execa:
-        specifier: ^7
+        specifier: 7.2.0
         version: 7.2.0
       which:
         specifier: ^4.0.0
@@ -370,7 +370,7 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       execa:
-        specifier: ^7
+        specifier: 7.2.0
         version: 7.2.0
       memoizee:
         specifier: ^0.4.17
@@ -404,7 +404,7 @@ importers:
         specifier: workspace:*
         version: link:../envosman
       execa:
-        specifier: ^7
+        specifier: 7.2.0
         version: 7.2.0
       node-downloader-helper:
         specifier: 2.1.9
@@ -1733,9 +1733,6 @@ packages:
 
   '@types/ms@0.7.34':
     resolution: {integrity: sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==}
-
-  '@types/node@14.18.63':
-    resolution: {integrity: sha512-fAtCfv4jJg+ExtXhvCkCqUKZ+4ok/JQk01qDKhL5BDDoS3AxKXhV5/MAVUZyQnSEd2GT92fkgZl0pz0Q0AzcIQ==}
 
   '@types/node@18.19.50':
     resolution: {integrity: sha512-xonK+NRrMBRtkL1hVCc3G+uXtjh1Al4opBLjqVmipe5ZAaBYWW6cNAiBVZ1BvmkBhep698rP3UM3aRAdSALuhg==}
@@ -6928,8 +6925,6 @@ snapshots:
   '@types/minimatch@5.1.2': {}
 
   '@types/ms@0.7.34': {}
-
-  '@types/node@14.18.63': {}
 
   '@types/node@18.19.50':
     dependencies:
