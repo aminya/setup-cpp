@@ -8,15 +8,18 @@
       "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest", "lockFileMaintenance", "rollback", "bump"],
       "groupName": "devDependencies",
       "semanticCommitType": "chore",
-      "automerge": true,
-      "matchPackageNames": ["!eslint", "!numerous", "!execa"]
+      "automerge": true
     },
     {
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest", "lockFileMaintenance", "rollback", "bump"],
       "groupName": "dependencies",
-      "semanticCommitType": "fix",
-      "matchPackageNames": ["!eslint", "!numerous", "!execa"]
+      "semanticCommitType": "fix"
+    },
+    {
+      "matchDatasources": ["npm"],
+      "matchPackageNames": ["eslint", "numerous", "execa"],
+      "rangeStrategy": "pin"
     }
   ]
 }
