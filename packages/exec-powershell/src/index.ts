@@ -18,7 +18,7 @@ export function execPowershell(
   command: string,
   startupFlags: string[] = ["-NoProfile", "-NoLogo", "-NonInteractive"],
   execOptions: execa.Options = { stdio: "inherit" },
-): execa.ExecaChildProcess<string> {
+) {
   return execa.execa(getPowerShell(), [...startupFlags, "-c", command], execOptions)
 }
 
@@ -36,7 +36,7 @@ export function execPowershellSync(
   command: string,
   startupFlags: string[] = ["-NoProfile", "-NoLogo", "-NonInteractive"],
   execOptions: execa.SyncOptions = { stdio: "inherit" },
-): execa.ExecaSyncReturnValue<string> {
+) {
   return execa.execaSync(getPowerShell(), [...startupFlags, "-c", command], execOptions)
 }
 
