@@ -29,7 +29,7 @@ jobs:
         node:
           - 22.6.0
         pnpm:
-          - 9.10.0
+          - 9.11.0
     steps:
       - uses: actions/checkout@v4
         with:
@@ -97,7 +97,7 @@ jobs:
         node:
           - 22
         pnpm:
-          - 9.10.0
+          - 9.11.0
     steps:
       - uses: actions/checkout@v4
 
@@ -164,7 +164,7 @@ jobs:
         node:
           - 22
         pnpm:
-          - 9.10.0
+          - 9.11.0
     steps:
       - uses: actions/checkout@v4
         with:
@@ -245,7 +245,7 @@ jobs:
         node:
           - 22
         pnpm:
-          - 9.10.0
+          - 9.11.0
         container:
           - { file: "ubuntu-llvm.dockerfile", image: "setup-cpp-ubuntu-llvm", tag: "22.04-0.43.0" }
           - { file: "fedora-llvm.dockerfile", image: "setup-cpp-fedora-llvm", tag: "40-0.43.0" }
