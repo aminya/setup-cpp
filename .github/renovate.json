@@ -15,7 +15,8 @@
       "matchDepTypes": ["dependencies"],
       "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest", "lockFileMaintenance", "rollback", "bump"],
       "groupName": "dependencies",
-      "semanticCommitType": "fix"
+      "semanticCommitType": "fix",
+      "matchPackageNames": ["!eslint", "!numerous", "!execa"]
     }
   ]
 }
