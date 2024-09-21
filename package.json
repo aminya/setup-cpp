@@ -98,7 +98,7 @@
     "escape-path-with-spaces": "^1.0.2",
     "escape-quotes": "^1.0.2",
     "escape-string-regexp": "^5.0.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.0.0",
     "eslint-config-atomic": "^1.22.1",
     "exec-powershell": "workspace:*",
     "execa": "^7",
