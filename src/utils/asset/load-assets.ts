@@ -38,12 +38,11 @@ export type MatchAssetOpts = {
   /**
    * Custom version compare function
    * @param candidate The candidate version
-   * @param version The version to compare against
    * @returns true if the candidate version satisfies the version
    *
    * @default semverSatisfies
    */
-  versionSatisfies?: (candidate: string, version: string) => boolean
+  versionSatisfies?: (candidate: string) => boolean
   /**
    * Custom tag filter and map function
    * @param tag The tag to filter and map

@@ -5,6 +5,8 @@ import { info } from "ci-log"
 import { addEnv, addPath } from "envosman"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
+import semverCoerce from "semver/functions/coerce.js"
+import semverSatisfies from "semver/functions/satisfies.js"
 import { installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
@@ -102,6 +104,16 @@ export async function getMinGWPackageInfo(
     ia32: "i386",
   } as Record<string, string | undefined>
 
+  // extract the base version by coercing the version
+  const versionCoerce = semverCoerce(version)
+  if (versionCoerce === null) {
+    throw new Error(`Invalid MinGW version requested '${version}'`)
+  }
+
+  const runtime = extractMinGWRuntime(version)
+  const threadModel = extractMinGWThreadModel(version)
+  const exceptionModel = extractMingwExceptionModel(version)
+
   const asset = matchAsset(
     mingwAssets,
     {
@@ -109,6 +121,28 @@ export async function getMinGWPackageInfo(
       keywords: [
         mingwArchMap[arch] ?? arch,
       ],
+      filterName: (assetName) => {
+        const assetRuntime = extractMinGWRuntime(assetName)
+        const assetThreadModel = extractMinGWThreadModel(assetName)
+        const assetExceptionModel = extractMingwExceptionModel(assetName)
+
+        return (runtime === undefined || runtime === assetRuntime)
+          && (threadModel === undefined || threadModel === assetThreadModel)
+          && (assetExceptionModel === undefined || assetExceptionModel === exceptionModel)
+      },
+      versionSatisfies: (assetVersion) => {
+        // extract the base version by coercing the version
+        const assetCoerce = semverCoerce(assetVersion)
+        if (assetCoerce === null) {
+          throw new Error(`Invalid MinGW asset version: '${assetVersion}'`)
+        }
+
+        // if the asset version is satisfied by the version
+        // and the runtime and thread model match or not specified
+        return semverSatisfies(assetCoerce, `^${versionCoerce}`)
+          && (runtime === undefined || runtime === extractMinGWRuntime(assetVersion))
+          && (threadModel === undefined || threadModel === extractMinGWThreadModel(assetVersion))
+      },
     },
   )
 
@@ -123,6 +157,50 @@ export async function getMinGWPackageInfo(
     extractFunction: extract7Zip,
     url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${asset.tag}/${asset.name}`,
   }
+}
+
+/**
+ * Extract the runtime used by the MinGW asset/version
+ * @param input The input to extract the runtime from
+ *
+ * @example
+ * extractMinGWRuntime("14.2.0posix-18.1.8-12.0.0-ucrt-r1") // "ucrt"
+ * extractMinGWRuntime("10.5.0-11.0.1-msvcrt-r2") // "msvcrt"
+ * extractMinGWRuntime("11.1.0-12.0.0-9.0.0-r1") // undefined
+ */
+function extractMinGWRuntime(input: string) {
+  const match = input.match(/(ucrt|msvcrt)/)
+  return match !== null ? match[1] : undefined
+}
+
+/**
+ * Extract the thread model used by the MinGW asset/version
+ * @param input The input to extract the thread model from
+ *
+ * @example
+ * extractMinGWThreadModel("14.2.0posix-18.1.8-12.0.0-ucrt-r1") // "posix"
+ * extractMinGWThreadModel("14.2.0mcf-12.0.0-ucrt-r1") // "mcf"
+ * extractMinGWThreadModel("10.5.0-11.0.1-msvcrt-r2") // undefined
+ * extractMinGWThreadModel("11.1.0-12.0.0-9.0.0-r1") // undefined
+ */
+function extractMinGWThreadModel(input: string) {
+  const match = input.match(/(posix|mcf)/)
+  return match !== null ? match[1] : undefined
+}
+
+/**
+ * Extract the exception model used by the MinGW asset/version
+ *
+ * @param input The input to extract the exception model from
+ *
+ * @example
+ * extractMingwExceptionModel("14.2.0posix-18.1.8-12.0.0-ucrt-r1") // "seh"
+ * extractMingwExceptionModel("14.2.0mcf-12.0.0-ucrt-r1") // undefined
+ * extractMingwExceptionModel("10.5.0-11.0.1-msvcrt-r2") // "dwarf"
+ */
+function extractMingwExceptionModel(input: string) {
+  const match = input.match(/(seh|dwarf)/)
+  return match !== null ? match[1] : undefined
 }
 
 async function activateMinGW(binDir: string) {
