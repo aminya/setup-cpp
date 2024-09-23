@@ -1,4 +1,5 @@
 import { readFile } from "fs/promises"
+import semverSatisfies from "semver/functions/satisfies.js"
 
 /**
  * The list of assets
@@ -15,16 +16,56 @@ export async function loadAssetList(path: string): Promise<Assets> {
   return JSON.parse(data)
 }
 
-type MatchAssetOpts = {
+/**
+ * The options to match the asset
+ */
+export type MatchAssetOpts = {
+  /**
+   * The version to match
+   */
   version: string
+  /**
+   * The keywords that must be in the asset name
+   * @default []
+   */
   keywords?: string[]
+  /**
+   * Optional keywords that are not required to be in the asset name
+   * but increase the score of the asset if they are present
+   * @default []
+   */
   optionalKeywords?: string[]
+  /**
+   * Custom version compare function
+   * @param candidate The candidate version
+   * @param version The version to compare against
+   * @returns true if the candidate version satisfies the version
+   *
+   * @default semverSatisfies
+   */
+  versionSatisfies?: (candidate: string, version: string) => boolean
+  /**
+   * Custom tag filter and map function
+   * @param tag The tag to filter and map
+   * @returns The mapped tag or undefined if the tag should be
+   * excluded from the search
+   * @default undefined
+   */
   filterMapTag?: (tag: string) => string | undefined
+  /**
+   * Custom asset name filter function
+   * @param asset The asset name to filter
+   * @returns true if the asset should be included in the search
+   * @default undefined
+   */
   filterName?: (asset: string) => boolean
 }
 
 /**
  * Match the asset that matches the version and given keywords
+ * @param assets The list of assets
+ * @param opts The options to match the asset
+ * @returns The tag and name of the asset that matches the version and keywords
  */
 export function matchAsset(
   assets: Assets,
@@ -52,11 +93,14 @@ export function matchAsset(
     return undefined
   }
 
+  // Assume the version is a semver version if a custom version compare function is not given
+  const versionSatisfies = opts.versionSatisfies ?? semverSatisfies
+
   // find the first tag that starts with the version
   // loop over the versions starting with the latest
   const candidateTags: string[] = []
   for (const [version, origTag] of versionMap.entries()) {
-    if (version.startsWith(opts.version)) {
+    if (versionSatisfies(version, opts.version)) {
       candidateTags.push(origTag)
     }
   }
