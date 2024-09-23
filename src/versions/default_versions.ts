@@ -18,13 +18,12 @@ export const DefaultVersions: Record<string, string | undefined> = {
   "clang-format": defaultLLVM,
   clangformat: defaultLLVM,
   ninja: "1.12.1", // https://github.com/ninja-build/ninja/releases
-  cmake: "3.30.2", // https://github.com/Kitware/CMake/releases
-  gcovr: "5.2", // "6.0", // https://pypi.org/project/gcovr/
-  conan: "1.64.1", // 2.0.17 // https://github.com/conan-io/conan/releases
-  meson: "1.5.1", // https://github.com/mesonbuild/meson/releases
+  cmake: "3.30.3", // https://github.com/Kitware/CMake/releases
+  conan: "1.65.0", // 2.7.1 // https://github.com/conan-io/conan/releases
+  meson: "1.5.2", // https://github.com/mesonbuild/meson/releases
   kcov: "42", // https://github.com/SimonKagstrom/kcov/releases
-  task: "3.38.0", // https://github.com/go-task/task/releases
-  doxygen: isArch() ? "1.11.0-4" : "1.11.0", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
+  task: "3.39.2", // https://github.com/go-task/task/releases
+  doxygen: isArch() ? "1.12.0-2" : "1.12.0", // https://www.doxygen.nl/download.html // https://packages.ubuntu.com/search?suite=all&arch=any&searchon=names&keywords=doxygen // https://formulae.brew.sh/formula/doxygen // https://archlinux.org/packages/extra/x86_64/doxygen/
   gcc: process.platform === "win32"
     ? "14.2.0posix-18.1.8-12.0.0-ucrt-r1"
     : "", // use the default version on Ubuntu, Fedora, Arch, macOS, etc.

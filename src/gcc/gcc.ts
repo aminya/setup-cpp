@@ -1,83 +1,34 @@
-import path, { join } from "path"
+import path from "path"
 import { fileURLToPath } from "url"
 import { GITHUB_ACTIONS } from "ci-info"
 import { error, info, warning } from "ci-log"
-import { addEnv, addPath } from "envosman"
+import { addEnv } from "envosman"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
-import { addExeExt } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
 import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
-import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
-import { extract7Zip } from "../utils/setup/extract.js"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { compareVersion } from "../utils/setup/version.js"
+import { addGccLoggingMatcher } from "./gccMatcher.js"
+import { setupMingw } from "./mingw.js"
 
-const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
-
-async function getGccPackageInfo(version: string, platform: NodeJS.Platform, arch: string): Promise<PackageInfo> {
-  switch (platform) {
-    case "win32": {
-      const mingwAssets = await loadAssetList(
-        join(dirname, "github_brechtsanders_winlibs_mingw.json"),
-      )
-
-      const mingwArchMap = {
-        x64: "x86_64",
-        ia32: "i386",
-      } as Record<string, string | undefined>
-
-      const asset = matchAsset(
-        mingwAssets,
-        {
-          version,
-          keywords: [
-            mingwArchMap[arch] ?? arch,
-          ],
-        },
-      )
-
-      if (asset === undefined) {
-        throw new Error(`No asset found for version ${version} and arch ${arch}`)
-      }
-
-      return {
-        binRelativeDir: "bin/",
-        binFileName: addExeExt("g++"),
-        extractedFolderName: "mingw64",
-        extractFunction: extract7Zip,
-        url: `https://github.com/brechtsanders/winlibs_mingw/releases/download/${asset.tag}/${asset.name}`,
-      }
-    }
-    default:
-      throw new Error(`Unsupported platform '${platform}'`)
-  }
-}
+export const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 export async function setupGcc(version: string, setupDir: string, arch: string, priority: number = 40) {
   let installationInfo: InstallationInfo | undefined
   switch (process.platform) {
     case "win32": {
-      if (arch === "arm" || arch === "arm64") {
-        await setupChocoPack("gcc-arm-embedded", version)
-      }
-      try {
-        installationInfo = await setupBin("g++", version, getGccPackageInfo, setupDir, arch)
-      } catch (err) {
-        info(`Failed to download g++ binary. ${err}. Falling back to chocolatey.`)
-        installationInfo = await setupChocoMingw(version, arch)
-      }
+      installationInfo = await setupMingw(version, setupDir, arch)
       break
     }
     case "darwin": {
@@ -159,75 +110,18 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
   return undefined
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupMingw(version: string, setupDir: string, arch: string) {
-  let installationInfo: InstallationInfo | undefined
-  switch (process.platform) {
-    case "win32":
-    case "darwin": {
-      return setupGcc(version, setupDir, arch)
-    }
-    case "linux": {
-      if (isArch()) {
-        installationInfo = await setupPacmanPack("mingw-w64-gcc", version)
-      } else if (hasDnf()) {
-        installationInfo = await setupDnfPack([{ name: "mingw64-gcc", version }])
-      } else if (isUbuntu()) {
-        installationInfo = await installAptPack([
-          {
-            name: "mingw-w64",
-            version,
-            repository: "ppa:ubuntu-toolchain-r/test",
-            key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-          },
-        ])
-      }
-      break
-    }
-    default: {
-      throw new Error(`Unsupported platform for ${arch}`)
-    }
-  }
-  if (installationInfo !== undefined) {
-    // TODO: setup alternatives and update CC/CXX env. ?
-    // Setting up g++-mingw-w64-i686-win32 (10.3.0-14ubuntu1+24.3) ...
-    // update-alternatives: using /usr/bin/i686-w64-mingw32-g++-win32 to provide /usr/bin/i686-w64-mingw32-g++ (i686-w64-mingw32-g++) in auto mode
-    // Setting up g++-mingw-w64-x86-64-win32 (10.3.0-14ubuntu1+24.3) ...
-    // update-alternatives: using /usr/bin/x86_64-w64-mingw32-g++-win32 to provide /usr/bin/x86_64-w64-mingw32-g++ (x86_64-w64-mingw32-g++) in auto mode
-    // await activateGcc(version, installationInfo.binDir)
-    return installationInfo
-  }
-  return undefined
-}
-
-async function setupChocoMingw(version: string, arch: string): Promise<InstallationInfo | undefined> {
-  await setupChocoPack("mingw", version)
-  let binDir: string | undefined
-  if (arch === "x64" && (await pathExists("C:/tools/mingw64/bin"))) {
-    binDir = "C:/tools/mingw64/bin"
-    await addPath(binDir, rcOptions)
-  } else if (arch === "ia32" && (await pathExists("C:/tools/mingw32/bin"))) {
-    binDir = "C:/tools/mingw32/bin"
-    await addPath(binDir, rcOptions)
-  } else if (await pathExists(`${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin/g++.exe`)) {
-    binDir = `${process.env.ChocolateyInstall ?? "C:/ProgramData/chocolatey"}/bin`
-  }
-  if (binDir !== undefined) {
-    return { binDir }
-  }
-  return undefined
-}
-
-/** Setup gcc as the compiler */
+/**
+ * Setup gcc as the compiler on Linux and macOS
+ */
 async function activateGcc(givenVersion: string, binDir: string, priority: number = 40) {
+  if (process.platform === "win32") {
+    // already done in setupMingw
+    return
+  }
+
   const promises: Promise<void>[] = []
 
-  if (process.platform === "win32") {
-    promises.push(
-      addEnv("CC", addExeExt(`${binDir}/gcc`), rcOptions),
-      addEnv("CXX", addExeExt(`${binDir}/g++`), rcOptions),
-    )
-  } else {
+  {
     // if version is empty, get the version from the gcc command
     let version = givenVersion
     if (givenVersion === "") {
@@ -328,12 +222,4 @@ async function getGccCmdVersion(binDir: string, givenVersion: string) {
     error(`Failed to get gcc version: ${err}`)
     return givenVersion
   }
-}
-
-async function addGccLoggingMatcher() {
-  const matcherPath = join(dirname, "gcc_matcher.json")
-  if (!(await pathExists(matcherPath))) {
-    return warning("the gcc_matcher.json file does not exist in the same folder as setup-cpp.js")
-  }
-  info(`::add-matcher::${matcherPath}`)
 }
