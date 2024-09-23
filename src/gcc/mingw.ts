@@ -130,7 +130,7 @@ export async function getMinGWPackageInfo(
           && (threadModel === undefined || threadModel === assetThreadModel)
           && (assetExceptionModel === undefined || assetExceptionModel === exceptionModel)
       },
-      versionSatisfies: (assetVersion) => {
+      versionSatisfies: (assetVersion, _version) => {
         // extract the base version by coercing the version
         const assetCoerce = semverCoerce(assetVersion)
         if (assetCoerce === null) {

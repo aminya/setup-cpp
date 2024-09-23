@@ -137,6 +137,31 @@ export function semverCoerceIfInvalid(version: string) {
   return version
 }
 
+/**
+ * Coerce the given version to a semver range if it is invalid
+ */
+export function semverCoercedRangeIfInvalid(version: string) {
+  if (semverValid(version) === null) {
+    // version coercion
+    try {
+      // find the semver version of an integer
+      const coercedVersion = semverCoerce(version)
+      if (coercedVersion !== null) {
+        // if the versions doesn't specify a range specifier (e.g. ^, ~, >, <, etc.), add a ^ to the version
+        const versionRange = /^[<=>^~]/.test(coercedVersion.version)
+          ? coercedVersion.version
+          : `^${coercedVersion.version}`
+
+        info(`Coerced version '${version}' to '${versionRange}'`)
+        return versionRange
+      }
+    } catch (err) {
+      // handled below
+    }
+  }
+  return version
+}
+
 export function removeVPrefix(version: string) {
   return Number.parseInt(version.replace(/^v/, ""), 10)
 }

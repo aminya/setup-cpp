@@ -1,5 +1,6 @@
 import { readFile } from "fs/promises"
 import semverSatisfies from "semver/functions/satisfies.js"
+import { semverCoercedRangeIfInvalid } from "../setup/version.ts"
 
 /**
  * The list of assets
@@ -38,11 +39,12 @@ export type MatchAssetOpts = {
   /**
    * Custom version compare function
    * @param candidate The candidate version
+   * @param coeredVersion The coerced version to compare against
    * @returns true if the candidate version satisfies the version
    *
    * @default semverSatisfies
    */
-  versionSatisfies?: (candidate: string) => boolean
+  versionSatisfies?: (candidate: string, coeredVersion: string) => boolean
   /**
    * Custom tag filter and map function
    * @param tag The tag to filter and map
@@ -93,13 +95,16 @@ export function matchAsset(
   }
 
   // Assume the version is a semver version if a custom version compare function is not given
-  const versionSatisfies = opts.versionSatisfies ?? semverSatisfies
+  const versionSatisfies: (c: string, v: string) => boolean = opts.versionSatisfies ?? semverSatisfies
+
+  // If not a valid semver version, coerce it to a semver version range
+  const versionRange = semverCoercedRangeIfInvalid(opts.version)
 
   // find the first tag that starts with the version
   // loop over the versions starting with the latest
   const candidateTags: string[] = []
   for (const [version, origTag] of versionMap.entries()) {
-    if (versionSatisfies(version, opts.version)) {
+    if (versionSatisfies(version, versionRange)) {
       candidateTags.push(origTag)
     }
   }
