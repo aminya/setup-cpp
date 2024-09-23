@@ -1,6 +1,6 @@
+import { join } from "path"
 import { info, warning } from "ci-log"
 import { pathExists } from "path-exists"
-import { join } from "path/posix"
 import { dirname } from "./gcc.ts"
 
 export async function addGccLoggingMatcher() {

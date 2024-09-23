@@ -104,12 +104,6 @@ export async function getMinGWPackageInfo(
     ia32: "i386",
   } as Record<string, string | undefined>
 
-  // extract the base version by coercing the version
-  const versionCoerce = semverCoerce(version)
-  if (versionCoerce === null) {
-    throw new Error(`Invalid MinGW version requested '${version}'`)
-  }
-
   const runtime = extractMinGWRuntime(version)
   const threadModel = extractMinGWThreadModel(version)
   const exceptionModel = extractMingwExceptionModel(version)
@@ -122,15 +116,11 @@ export async function getMinGWPackageInfo(
         mingwArchMap[arch] ?? arch,
       ],
       filterName: (assetName) => {
-        const assetRuntime = extractMinGWRuntime(assetName)
-        const assetThreadModel = extractMinGWThreadModel(assetName)
-        const assetExceptionModel = extractMingwExceptionModel(assetName)
-
-        return (runtime === undefined || runtime === assetRuntime)
-          && (threadModel === undefined || threadModel === assetThreadModel)
-          && (assetExceptionModel === undefined || assetExceptionModel === exceptionModel)
+        return (runtime === undefined || runtime === extractMinGWRuntime(assetName))
+          && (threadModel === undefined || threadModel === extractMinGWThreadModel(assetName))
+          && (exceptionModel === undefined || exceptionModel === extractMingwExceptionModel(assetName))
       },
-      versionSatisfies: (assetVersion, _version) => {
+      versionSatisfies: (assetVersion, versionRange) => {
         // extract the base version by coercing the version
         const assetCoerce = semverCoerce(assetVersion)
         if (assetCoerce === null) {
@@ -139,7 +129,7 @@ export async function getMinGWPackageInfo(
 
         // if the asset version is satisfied by the version
         // and the runtime and thread model match or not specified
-        return semverSatisfies(assetCoerce, `^${versionCoerce}`)
+        return semverSatisfies(assetCoerce, versionRange)
           && (runtime === undefined || runtime === extractMinGWRuntime(assetVersion))
           && (threadModel === undefined || threadModel === extractMinGWThreadModel(assetVersion))
       },
