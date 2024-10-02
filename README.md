@@ -57,22 +57,22 @@ NOTE: setup-cpp requires Nodejs 12 or higher. If Nodejs shipped with your distri
 
 #### With executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.43.0), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.44.0), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
 
 ```shell
 # windows x64
-curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.43.0/setup-cpp-x64-windows.exe"
+curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.44.0/setup-cpp-x64-windows.exe"
 
 # linux x64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.43.0/setup-cpp-x64-linux"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.44.0/setup-cpp-x64-linux"
 chmod +x ./setup-cpp
 
 # macos arm64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.43.0/setup-cpp-arm64-macos"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.44.0/setup-cpp-arm64-macos"
 chmod +x ./setup-cpp
 
 # macos x64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.43.0/setup-cpp-x64-macos"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.44.0/setup-cpp-x64-macos"
 chmod +x ./setup-cpp
 ```
 
@@ -131,13 +131,19 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
+            ./build/
             ~/vcpkg
-            ./build/vcpkg_installed
-            ${{ env.HOME }}/.cache/vcpkg/archives
+            ~/.cache/vcpkg/archives
+            ${{ env.LOCALAPPDATA }}/vcpkg/archives
+            ${{ env.APPDATA }}/vcpkg/archives
             ${{ env.XDG_CACHE_HOME }}/vcpkg/archives
-            ${{ env.LOCALAPPDATA }}\vcpkg\archives
-            ${{ env.APPDATA }}\vcpkg\archives
-          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ env.BUILD_TYPE }}-${{ hashFiles('**/CMakeLists.txt') }}-${{ hashFiles('./vcpkg.json')}}
+            ~/.cache/ccache
+            ~/.ccache
+            ~/.config/ccache
+            ~/Library/Caches/ccache
+            ${{ env.LOCALAPPDATA }}/ccache
+            ${{ env.XDG_CACHE_HOME }}/ccache
+          key: ${{ runner.os }}-${{ matrix.compiler }}-${{ env.BUILD_TYPE }}-${{ hashFiles('**/CMakeLists.txt', './vcpkg.json') }}
           restore-keys: |
             ${{ runner.os }}-${{ env.BUILD_TYPE }}-
 
@@ -161,19 +167,19 @@ To provide fast development environments, `setup-cpp` provides several prebuilt 
 You can use these images as a base image for your project.
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.43.0 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.44.0 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.43.0 AS builder
+FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.44.0 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-llvm:40-0.43.0 AS builder
+FROM aminya/setup-cpp-fedora-llvm:40-0.44.0 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-llvm:base-0.43.0 AS builder
+FROM aminya/setup-cpp-arch-llvm:base-0.44.0 AS builder
 ```
 
 The names are in the format `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
@@ -192,7 +198,7 @@ RUN apt-get update -qq && \
     # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.43.0 && \
+    npm install -g setup-cpp@v0.44.0 && \
     # install the compiler and tools
     setup-cpp \
         --nala true \
@@ -301,7 +307,7 @@ stages:
   apt-get install -y --no-install-recommends nodejs npm
 
   # install setup-cpp
-  npm install -g setup-cpp@v0.43.0
+  npm install -g setup-cpp@v0.44.0
 
   # install the compiler and tools
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
