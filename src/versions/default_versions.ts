@@ -18,8 +18,7 @@ export const DefaultVersions: Record<string, string | undefined> = {
   "clang-format": defaultLLVM,
   clangformat: defaultLLVM,
   ninja: "1.12.1", // https://github.com/ninja-build/ninja/releases
-  cmake: "3.30.3", // https://github.com/Kitware/CMake/releases
-  conan: "1.65.0", // 2.7.1 // https://github.com/conan-io/conan/releases
+  cmake: "3.30.4", // https://github.com/Kitware/CMake/releases
   meson: "1.5.2", // https://github.com/mesonbuild/meson/releases
   kcov: "42", // https://github.com/SimonKagstrom/kcov/releases
   task: "3.39.2", // https://github.com/go-task/task/releases
