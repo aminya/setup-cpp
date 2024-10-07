@@ -1,6 +1,7 @@
 import { promises } from "fs"
 import { execRoot } from "admina"
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 import { sourceRC } from "envosman"
 import type { RcOptions } from "envosman/dist/rc-file.js"
 const { appendFile } = promises

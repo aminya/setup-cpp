@@ -1,7 +1,8 @@
 import { tmpdir } from "os"
 import { basename, join } from "path"
 import { cacheDir, downloadTool, find } from "@actions/tool-cache"
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 import { info, warning } from "ci-log"
 import { addPath } from "envosman"
 import { chmod } from "fs/promises"

@@ -1,7 +1,8 @@
 import path, { join } from "path"
 import { fileURLToPath } from "url"
 import { debug } from "@actions/core"
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 import { info, warning } from "ci-log"
 import { pathExists } from "path-exists"
 import { findPyPyVersion } from "setup-python/src/find-pypy.js"

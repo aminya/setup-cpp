@@ -1,6 +1,7 @@
 import { promises } from "fs"
 import { exportVariable as ghExportVariable } from "@actions/core"
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 import { error, info } from "ci-log"
 import { execPowershell } from "exec-powershell"
 import { defaultRcPath, sourceRCInRc } from "./rc-file.js"

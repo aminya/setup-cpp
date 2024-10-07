@@ -1,6 +1,6 @@
 {
   "name": "setup-brew",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Setup brew and brew packages",
   "repository": "https://github.com/aminya/setup-cpp",
   "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-brew",
@@ -9,6 +9,11 @@
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
   "scripts": {
     "build": "tsc --pretty",
     "dev": "tsc --watch --pretty",

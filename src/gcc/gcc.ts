@@ -1,6 +1,7 @@
 import path from "path"
 import { fileURLToPath } from "url"
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 import { error, info, warning } from "ci-log"
 import { addEnv } from "envosman"
 import { execa } from "execa"

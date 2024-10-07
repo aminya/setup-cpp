@@ -1,4 +1,5 @@
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 import { info } from "ci-log"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"

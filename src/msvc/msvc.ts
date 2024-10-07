@@ -2,7 +2,8 @@ import path, { join } from "path"
 import { fileURLToPath } from "url"
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 import { error, info, warning } from "ci-log"
 import { findVcvarsall, vsversion_to_versionnumber } from "msvc-dev-cmd/lib.js"
 import { pathExists } from "path-exists"

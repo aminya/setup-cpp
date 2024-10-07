@@ -1,6 +1,6 @@
 {
   "name": "setup-apt",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Setup apt packages and repositories in Debian/Ubuntu-based distributions",
   "repository": "https://github.com/aminya/setup-cpp",
   "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-apt",
@@ -9,6 +9,11 @@
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
   "scripts": {
     "build": "tsc --pretty",
     "dev": "tsc --watch --pretty",

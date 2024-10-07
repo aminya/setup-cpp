@@ -1,6 +1,7 @@
 import path, { join } from "path"
 import { fileURLToPath } from "url"
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 import { info } from "ci-log"
 import { addEnv, addPath } from "envosman"
 import { pathExists } from "path-exists"

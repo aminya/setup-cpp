@@ -1,6 +1,6 @@
 {
   "name": "envosman",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Manage environment variables, PATH, and rc files",
   "repository": "https://github.com/aminya/setup-cpp",
   "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/envosman",

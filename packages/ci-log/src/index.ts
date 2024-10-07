@@ -1,5 +1,6 @@
 import * as core from "@actions/core"
-import { GITHUB_ACTIONS } from "ci-info"
+import ciInfo from "ci-info"
+const { GITHUB_ACTIONS } = ciInfo
 
 export function error(err: string | Error) {
   return GITHUB_ACTIONS ? core.error(err) : console.log(`\x1b[31m${err}\x1b[0m`)
