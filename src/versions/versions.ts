@@ -1,35 +1,114 @@
+import fs from "fs"
+import path from "path"
+import { fileURLToPath } from "url"
+import memoize from "memoizee"
 import type { Opts } from "../cli-options.js"
 import type { CompilerInfo } from "../compilers.js"
-import type { Inputs } from "../tool.js"
-import { DefaultUbuntuVersion, DefaultVersions } from "./default_versions.js"
+import type { Inputs, ToolName } from "../tool.js"
+import { isArch } from "../utils/env/isArch.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
+
+export function getVersion(name: ToolName, version: string | undefined, distroVersion: number[] | null = null) {
+  if (isVersionDefault(version)) {
+    return getVersionDefault(name, distroVersion) ?? ""
+  }
+
+  return version
+}
+
+type ArchVersionMap = Record<NodeJS.Architecture | "else", string | undefined>
+type DistroVersionMap = Record<
+  `${number}` | `${number}.${number}` | `${number}.${number}.${number}` | string | "else",
+  ArchVersionMap | string | undefined
+>
+type DistroMap = Record<"ubuntu" | "archlinux" | string | "else", DistroVersionMap | string | undefined>
+type PlatformMap = Record<NodeJS.Platform | "else", DistroMap | string | undefined>
+type Versions = Record<ToolName | "pip", PlatformMap | string | undefined>
+
+function readVersions_(): Versions {
+  const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
+
+  const jsonPath = path.join(dirname, "versions.json")
+  return JSON.parse(fs.readFileSync(jsonPath, "utf-8")) as Versions
+}
+const readVersions = memoize(readVersions_)
 
 /** Get the default version if passed true or undefined, otherwise return the version itself */
-export function getVersion(name: string, version: string | undefined, osVersion: number[] | null = null) {
-  if (isVersionDefault(version) && process.platform === "linux" && osVersion !== null && name in DefaultUbuntuVersion) {
-    return getDefaultLinuxVersion(osVersion, DefaultUbuntuVersion[name]!)
-  } else if (isVersionDefault(version) && name in DefaultVersions) {
-    return DefaultVersions[name] ?? ""
-  } else if (version === "true") {
-    return ""
+export function getVersionDefault(
+  tool: ToolName | "pip",
+  distroVersion: number[] | null = null,
+): string | undefined {
+  // get the tool
+  const versions = readVersions()
+  const platformMapOrVersion = versions[tool]
+  if (platformMapOrVersion === undefined) {
+    throw new Error(`Tool "${tool}" not found in versions data`)
   }
-  return version ?? ""
+  // platform-independent versions
+  if (typeof platformMapOrVersion === "string") {
+    return platformMapOrVersion
+  }
+  const platformMap = platformMapOrVersion
+
+  // Check for platform-specific versions
+  const distroMapOrVersion = platformMap[process.platform] ?? platformMap.else
+  if (distroMapOrVersion === undefined) {
+    throw new Error(`Platform "${process.platform}" not found in versions data for tool "${tool}"`)
+  }
+  // distro-independent versions
+  if (typeof distroMapOrVersion === "string") {
+    return distroMapOrVersion
+  }
+  const distroMap = distroMapOrVersion
+
+  // check for distro-specific versions
+  const distro = isUbuntu() ? "ubuntu" : isArch() ? "archlinux" : "else"
+  const distroVersionMapOrVersion = distroMap[distro] ?? distroMap.else
+  if (distroVersionMapOrVersion === undefined) {
+    throw new Error(`Distro "${distro}" not found in versions data for tool "${tool}"`)
+  }
+
+  // distro version independent versions
+  if (typeof distroVersionMapOrVersion === "string") {
+    return distroVersionMapOrVersion
+  }
+  const distroVersionMap = distroVersionMapOrVersion
+
+  // check for the distro-specific version for the current architecture
+  const archVersionMapOrVersion = distroVersion !== null
+    ? matchDistroVersion(distroVersion, distroVersionMap)
+    : distroVersionMap.else
+  if (archVersionMapOrVersion === undefined) {
+    throw new Error(`Architecture "${process.arch}" not found in versions data for tool "${tool}"`)
+  }
+  if (typeof archVersionMapOrVersion === "string") {
+    return archVersionMapOrVersion
+  }
+  const archVersionMap = archVersionMapOrVersion
+
+  // get the version for the current architecture
+  return archVersionMap[process.arch] ?? archVersionMap.else
+}
+
+/// choose the default linux version based on ubuntu version
+function matchDistroVersion(distroVersion: number[], distroVersionMap: DistroVersionMap) {
+  const distroVersionMaj = distroVersion[0]
+
+  // find which version block the os version is in
+  const satisfyingVersion = Object.keys(distroVersionMap)
+    .map((v) => Number.parseInt(v, 10))
+    .filter((v) => !Number.isNaN(v))
+    .sort((a, b) => b - a) // sort in descending order
+    .find((v) => distroVersionMaj >= v)
+
+  return satisfyingVersion !== undefined
+    ? distroVersionMap[satisfyingVersion]
+      ?? distroVersionMap.else
+    : distroVersionMap.else
 }
 
 function isVersionDefault(version: string | undefined) {
   return version === "true" || version === undefined
-}
-
-/// choose the default linux version based on ubuntu version
-function getDefaultLinuxVersion(osVersion: number[], toolLinuxVersions: Record<number, string>) {
-  const osVersionMaj = osVersion[0]
-
-  // find which version block the os version is in
-  const satisfyingVersion = Object.keys(toolLinuxVersions)
-    .map((v) => Number.parseInt(v, 10))
-    .sort((a, b) => b - a) // sort in descending order
-    .find((v) => osVersionMaj >= v)
-
-  return satisfyingVersion === undefined ? "" : toolLinuxVersions[satisfyingVersion]
 }
 
 /**
