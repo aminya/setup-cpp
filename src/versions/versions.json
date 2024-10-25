@@ -66,7 +66,6 @@
     "else": ""
   },
   "nala": {
-    "win32": "14.2.0posix-18.1.8-12.0.0-ucrt-r1",
     "linux": {
       "ubuntu": {
         "22": "",

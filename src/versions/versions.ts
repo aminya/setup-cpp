@@ -42,7 +42,7 @@ export function getVersionDefault(
   const versions = readVersions()
   const platformMapOrVersion = versions[tool]
   if (platformMapOrVersion === undefined) {
-    throw new Error(`Tool "${tool}" not found in versions data`)
+    return undefined // no default version for this tool
   }
   // platform-independent versions
   if (typeof platformMapOrVersion === "string") {
