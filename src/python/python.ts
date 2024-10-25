@@ -25,13 +25,16 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack.js"
 import { isBinUptoDate } from "../utils/setup/version.js"
 import { unique } from "../utils/std/index.js"
-import { getVersionDefault } from "../versions/versions.js"
+import { getVersionDefault, isMinVersion } from "../versions/versions.js"
 
 export async function setupPython(
-  version: string,
+  givenVersion: string,
   setupDir: string,
   arch: string,
 ): Promise<InstallationInfo & { bin: string }> {
+  // if a version range specified, use the default version, and later check the range
+  const version = isMinVersion(givenVersion) ? "" : givenVersion
+
   const installInfo = await findOrSetupPython(version, setupDir, arch)
   assert(installInfo.bin !== undefined)
   const foundPython = installInfo.bin

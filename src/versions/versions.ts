@@ -171,3 +171,7 @@ export function syncVersions(
 
   return true
 }
+
+export function isMinVersion(version: string) {
+  return version.startsWith(">")
+}

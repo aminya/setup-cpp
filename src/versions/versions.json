@@ -3,8 +3,8 @@
   "cmake": "3.30.4",
   "task": "3.39.2",
   "powershell": "7.4.5",
-  "pip": "22.2.0",
-  "python": "3.7.9",
+  "pip": ">=22.2.0",
+  "python": ">=3.7.9",
   "meson": {
     "linux": {
       "ubuntu": {
