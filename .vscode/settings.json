@@ -26,6 +26,9 @@
   "[yaml]": {
     "editor.defaultFormatter": "dprint.dprint"
   },
+  "[github-actions-workflow]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
   "cSpell.advanced.feature.useReferenceProviderWithRename": true,
   "cSpell.checkOnlyEnabledFileTypes": false,
   "cSpell.numSuggestions": 3,

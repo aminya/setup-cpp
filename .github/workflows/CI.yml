@@ -20,16 +20,11 @@ jobs:
   Build:
     runs-on: ${{ matrix.os }}
     name: Build
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     strategy:
       fail-fast: false
       matrix:
         os:
           - ubuntu-22.04
-        node:
-          - 22.6.0
-        pnpm:
-          - 9.11.0
     steps:
       - uses: actions/checkout@v4
         with:
@@ -38,12 +33,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: "./.nvmrc"
 
       - name: Setup Pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ matrix.pnpm }}
+        uses: pnpm/action-setup@v4
 
       - name: Install
         run: |
@@ -84,7 +77,6 @@ jobs:
   BuildExecutable:
     name: Build-Executable-${{ matrix.os }}
     needs: [Build]
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -94,10 +86,6 @@ jobs:
           - ubuntu-24.04
           - macos-13
           - macos-14 # arm64
-        node:
-          - 22
-        pnpm:
-          - 9.11.0
     steps:
       - uses: actions/checkout@v4
 
@@ -109,12 +97,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: "./.nvmrc"
 
       - name: Setup Pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ matrix.pnpm }}
+        uses: pnpm/action-setup@v4
 
       - name: Cache node_modules
         uses: actions/cache@v4
@@ -123,7 +109,7 @@ jobs:
             ~/.pnpm-store
             D:\.pnpm-store
             ./node_modules
-          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', '.nvmrc', './packages/*/package.json') }}"
           restore-keys: |
             "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 
@@ -146,7 +132,6 @@ jobs:
 
   Test:
     name: Test-${{ matrix.os }}
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     needs: [Build]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -161,10 +146,6 @@ jobs:
           - macos-14
           - macos-13
           - macos-12
-        node:
-          - 22
-        pnpm:
-          - 9.11.0
     steps:
       - uses: actions/checkout@v4
         with:
@@ -178,12 +159,10 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
+          node-version-file: "./.nvmrc"
 
       - name: Setup Pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: ${{ matrix.pnpm }}
+        uses: pnpm/action-setup@v4
 
       - name: Cache node_modules
         uses: actions/cache@v4
@@ -192,7 +171,7 @@ jobs:
             ~/.pnpm-store
             D:\.pnpm-store
             ./node_modules
-          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-node:${{ matrix.node }}-pnpm:${{ matrix.pnpm }}-${{ hashFiles('./.npmrc') }}-deps:${{ hashFiles('./package.json') }}"
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', '.nvmrc', './packages/*/package.json') }}"
           restore-keys: |
             "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 
@@ -234,7 +213,6 @@ jobs:
 
   Docker:
     name: Docker-${{ matrix.container.image }}
-    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
     needs: [Build]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -242,10 +220,6 @@ jobs:
       matrix:
         os:
           - ubuntu-24.04
-        node:
-          - 22
-        pnpm:
-          - 9.11.0
         container:
           - { file: "ubuntu-llvm.dockerfile", image: "setup-cpp-ubuntu-llvm", tag: "22.04-0.44.0" }
           - { file: "fedora-llvm.dockerfile", image: "setup-cpp-fedora-llvm", tag: "40-0.44.0" }

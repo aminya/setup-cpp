@@ -81,6 +81,7 @@ words:
   - noreply
   - nothrow
   - npmrc
+  - nvmrc
   - Opencppcoverage
   - OSSDK
   - papm
