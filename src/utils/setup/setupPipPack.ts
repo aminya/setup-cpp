@@ -277,6 +277,10 @@ export function setupPipPackSystem(name: string, addPythonPrefix = true) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     }
   } else if (process.platform === "darwin") {
+    if (["venv"].includes(name)) {
+      return null
+    }
+
     return installBrewPack(name)
   }
   return null

@@ -4,7 +4,7 @@ import { dirname, join, parse as pathParse } from "path"
 import { getExecOutput } from "@actions/exec"
 import ciInfo from "ci-info"
 const { GITHUB_ACTIONS } = ciInfo
-import { info, warning } from "ci-log"
+import { info, notice, warning } from "ci-log"
 import { addPath } from "envosman"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
@@ -63,7 +63,7 @@ async function setupPipx(foundPython: string) {
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
     await setupVenv(foundPython)
   } catch (err) {
-    warning(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
+    notice(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
@@ -71,7 +71,7 @@ async function setupVenv(foundPython: string) {
   try {
     await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
   } catch (err) {
-    warning(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
+    notice(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
@@ -85,7 +85,7 @@ async function setupWheel(foundPython: string) {
     })
     await setupPipPackWithPython(foundPython, "wheel", undefined, { upgrade: false, isLibrary: true, usePipx: false })
   } catch (err) {
-    warning(`Failed to install setuptools/wheel: ${(err as Error).toString()}. Ignoring...`)
+    notice(`Failed to install setuptools/wheel: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
