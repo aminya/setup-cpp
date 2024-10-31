@@ -28,13 +28,10 @@ import { unique } from "../utils/std/index.js"
 import { getVersionDefault, isMinVersion } from "../versions/versions.js"
 
 export async function setupPython(
-  givenVersion: string,
+  version: string,
   setupDir: string,
   arch: string,
 ): Promise<InstallationInfo & { bin: string }> {
-  // if a version range specified, use the default version, and later check the range
-  const version = isMinVersion(givenVersion) ? "" : givenVersion
-
   const installInfo = await findOrSetupPython(version, setupDir, arch)
   assert(installInfo.bin !== undefined)
   const foundPython = installInfo.bin
@@ -92,7 +89,10 @@ async function setupWheel(foundPython: string) {
   }
 }
 
-async function findOrSetupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+async function findOrSetupPython(givenVersion: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  // if a version range specified, use the default version, and later check the range
+  const version = isMinVersion(givenVersion) ? "" : givenVersion
+
   let installInfo: InstallationInfo | undefined
   let foundPython = await findPython(setupDir)
 
