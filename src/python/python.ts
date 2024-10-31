@@ -25,7 +25,7 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack.js"
 import { isBinUptoDate } from "../utils/setup/version.js"
 import { unique } from "../utils/std/index.js"
-import { MinVersions } from "../versions/default_versions.js"
+import { getVersionDefault, isMinVersion } from "../versions/versions.js"
 
 export async function setupPython(
   version: string,
@@ -89,7 +89,10 @@ async function setupWheel(foundPython: string) {
   }
 }
 
-async function findOrSetupPython(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+async function findOrSetupPython(givenVersion: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  // if a version range specified, use the default version, and later check the range
+  const version = isMinVersion(givenVersion) ? "" : givenVersion
+
   let installInfo: InstallationInfo | undefined
   let foundPython = await findPython(setupDir)
 
@@ -214,9 +217,11 @@ async function findPython(binDir?: string) {
 
 async function isPythonUpToDate(candidate: string, binDir?: string) {
   try {
+    const targetVersion = getVersionDefault("python")
+
     if (binDir !== undefined) {
       const pythonBinPath = join(binDir, addExeExt(candidate))
-      if (await pathExists(pythonBinPath) && await isBinUptoDate(pythonBinPath, MinVersions.python!)) {
+      if (await pathExists(pythonBinPath) && await isBinUptoDate(pythonBinPath, targetVersion!)) {
         return pythonBinPath
       }
     }
@@ -224,7 +229,7 @@ async function isPythonUpToDate(candidate: string, binDir?: string) {
     const pythonBinPaths = (await which(candidate, { nothrow: true, all: true })) ?? []
     for (const pythonBinPath of pythonBinPaths) {
       // eslint-disable-next-line no-await-in-loop
-      if (await isBinUptoDate(pythonBinPath, MinVersions.python!)) {
+      if (await isBinUptoDate(pythonBinPath, targetVersion!)) {
         return pythonBinPath
       }
     }
@@ -260,11 +265,13 @@ async function findPip() {
 
 async function isPipUptoDate(pip: string) {
   try {
+    const targetVersion = getVersionDefault("pip")
+
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     const pipPaths = (await which(pip, { nothrow: true, all: true })) ?? []
     for (const pipPath of pipPaths) {
       // eslint-disable-next-line no-await-in-loop
-      if (await isBinUptoDate(pipPath, MinVersions.pip!)) {
+      if (await isBinUptoDate(pipPath, targetVersion!)) {
         return pipPath
       }
     }

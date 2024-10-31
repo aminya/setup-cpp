@@ -3,6 +3,7 @@ import { info } from "ci-log"
 import { isUrlOnline } from "is-url-online"
 import semverCoerce from "semver/functions/coerce"
 import semverCompare from "semver/functions/compare"
+import semverSatisfies from "semver/functions/satisfies"
 import semverValid from "semver/functions/valid"
 
 /**
@@ -112,7 +113,15 @@ export async function isBinUptoDate(
 ) {
   const givenVersion = await getBinVersion(givenFile, versionRegex)
   if (givenVersion !== undefined && targetVersion !== "") {
-    return semverCompare(givenVersion, targetVersion) !== -1
+    try {
+      // if -1, it means the given version is newer than the target version
+      // this requires the target version to be a valid semver range
+      return semverCompare(givenVersion, targetVersion) !== -1
+    } catch {
+      // check if the given version satisfies the target version
+      // this works even if the target version is not a valid semver range (e.g. >=1.2.3)
+      return semverSatisfies(givenVersion, targetVersion)
+    }
   } else {
     // assume given version is old
     return false
