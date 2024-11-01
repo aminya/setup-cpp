@@ -66,6 +66,7 @@ words:
   - libstdc
   - libtinfo
   - liuli
+  - mdimporterdir
   - memoizee
   - msbuild
   - msvc
@@ -92,6 +93,7 @@ words:
   - pwsh
   - pygments
   - pypy
+  - qlplugindir
   - Sccache
   - setupcpp
   - setx

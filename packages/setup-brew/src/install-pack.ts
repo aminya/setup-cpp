@@ -3,19 +3,11 @@ import { info } from "ci-log"
 import { execaSync } from "execa"
 import which from "which"
 import type { InstallationInfo } from "./InstallationInfo.js"
+import type { BrewPackOptions } from "./install-pack-options.js"
 import { getBrewBinDir, setupBrew } from "./install.js"
 
 /* eslint-disable require-atomic-updates */
 let hasBrew = false
-
-export type BrewPackOptions = {
-  /** Whether to overwrite the package if it already exists */
-  overwrite?: boolean
-  /** Whether to install the package as a cask */
-  cask?: boolean
-  /** Extra args */
-  args?: string[]
-}
 
 /** A function that installs a package using brew
  *
@@ -28,13 +20,13 @@ export type BrewPackOptions = {
 export async function installBrewPack(
   name: string,
   version?: string,
-  givenOptions: BrewPackOptions = {},
+  options: BrewPackOptions = {},
 ): Promise<InstallationInfo> {
-  const options = {
-    overwrite: true,
-    cask: false,
-    args: [],
-    ...givenOptions,
+  if (!("overwrite" in options)) {
+    options.overwrite = true // default to true if not specified
+  }
+  if (options.cask) {
+    options.overwrite = false // mutually exclusive with --overwrite
   }
 
   info(`Installing ${name} ${version ?? ""} via brew`)
@@ -52,11 +44,13 @@ export async function installBrewPack(
     "install",
     (version !== undefined && version !== "") ? `${name}@${version}` : name,
   ]
-  if (options.overwrite) {
-    args.push("--overwrite")
-  }
-  if (options.cask) {
-    args.push("--cask")
+  // Add options to args
+  for (const [key, value] of Object.entries(options)) {
+    if (typeof value === "boolean" && value) {
+      args.push(`--${key}`)
+    } else if (typeof value === "string") {
+      args.push(`--${key}`, value)
+    }
   }
 
   // brew is not thread-safe

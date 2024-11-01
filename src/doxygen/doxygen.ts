@@ -79,7 +79,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       //   installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
       // } catch {
       const installationInfo = await installBrewPack("doxygen", undefined, {
-        cask: true,
+        formula: true,
       })
       // }
 
