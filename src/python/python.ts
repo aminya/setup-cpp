@@ -71,7 +71,7 @@ async function setupVenv(foundPython: string) {
   try {
     await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
   } catch (err) {
-    notice(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
+    info(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
@@ -85,7 +85,7 @@ async function setupWheel(foundPython: string) {
     })
     await setupPipPackWithPython(foundPython, "wheel", undefined, { upgrade: false, isLibrary: true, usePipx: false })
   } catch (err) {
-    notice(`Failed to install setuptools/wheel: ${(err as Error).toString()}. Ignoring...`)
+    info(`Failed to install setuptools/wheel: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
