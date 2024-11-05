@@ -30,6 +30,8 @@ export type SetupPipPackOptions = {
   upgrade?: boolean
   /** Whether the package is a library */
   isLibrary?: boolean
+  /** python version (e.g. >=3.8.0) */
+  pythonVersion?: string
 }
 
 /** A function that installs a package using pip */
@@ -38,7 +40,7 @@ export async function setupPipPack(
   version?: string,
   options: SetupPipPackOptions = {},
 ): Promise<InstallationInfo> {
-  return setupPipPackWithPython(await getPython(), name, version, options)
+  return setupPipPackWithPython(await getPython(options.pythonVersion), name, version, options)
 }
 
 export async function setupPipPackWithPython(
@@ -173,12 +175,15 @@ const getPipxBinDir = memoize(getPipxBinDir_, { promise: true })
 /* eslint-disable require-atomic-updates */
 let pythonBin: string | undefined
 
-async function getPython(): Promise<string> {
+async function getPython(givenPythonVersion?: string): Promise<string> {
   if (pythonBin !== undefined) {
     return pythonBin
   }
 
-  pythonBin = (await setupPython(getVersion("python", undefined, await ubuntuVersion()), "", process.arch)).bin
+  const pythonVersion = givenPythonVersion
+    ?? getVersion("python", undefined, await ubuntuVersion())
+
+  pythonBin = (await setupPython(pythonVersion, "", process.arch)).bin
   return pythonBin
 }
 
@@ -277,6 +282,10 @@ export function setupPipPackSystem(name: string, addPythonPrefix = true) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     }
   } else if (process.platform === "darwin") {
+    if (["venv"].includes(name)) {
+      return null
+    }
+
     return installBrewPack(name)
   }
   return null
