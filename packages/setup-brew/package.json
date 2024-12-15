@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/cross-spawn": "~6.0.6",
     "@types/which": "~3.0.4",
-    "cross-spawn": "7.0.3",
+    "cross-spawn": "7.0.6",
     "path-exists": "5.0.0",
     "patha": "0.4.1"
   },
