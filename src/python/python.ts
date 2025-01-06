@@ -61,17 +61,8 @@ async function setupPipx(foundPython: string) {
       }
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
-    await setupVenv(foundPython)
   } catch (err) {
     notice(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
-  }
-}
-
-async function setupVenv(foundPython: string) {
-  try {
-    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
-  } catch (err) {
-    info(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
