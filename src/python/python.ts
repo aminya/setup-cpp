@@ -55,11 +55,13 @@ async function setupPipx(foundPython: string) {
   try {
     if (!(await hasPipx(foundPython))) {
       try {
-        await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
-      } catch (err) {
-        if (setupPipPackSystem("pipx", false) === null) {
-          throw new Error(`pipx was not installed correctly ${err}`)
+        // first try with the system-wide pipx
+        if ((await setupPipPackSystem("pipx", isArch())) === null) {
+          // try with pip
+          await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
         }
+      } catch (err) {
+        throw new Error(`pipx was not installed correctly ${err}`)
       }
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
@@ -84,7 +86,7 @@ async function setupVenv(foundPython: string) {
 async function hasVenv(foundPython: string): Promise<boolean> {
   try {
     // check if venv module exits
-    await execa(foundPython, ["-m", "venv", "-h"], { stdio: "inherit" })
+    await execa(foundPython, ["-m", "venv", "-h"], { stdio: "ignore" })
     return true
   } catch {
     // if module not found, continue
