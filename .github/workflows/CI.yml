@@ -205,7 +205,7 @@ jobs:
           RUNNER_OS_NAME: ${{ matrix.os }}
 
       - name: Setup Node 12
-        if: ${{ !contains(matrix.os, 'macos-14') }}
+        if: ${{ !contains(matrix.os, 'macos-14') && !contains(matrix.os, 'macos-15') }}
         uses: actions/setup-node@v4
         with:
           node-version: 12
