@@ -83,7 +83,6 @@ async function getAssetKeywords(platform: string, arch: string) {
 
   switch (platform) {
     case "win32": {
-      optionalKeywords.push("windows", "Windows")
       if (x86_64.includes(arch)) {
         optionalKeywords.push("win64", "x86_64", "X64")
         // TODO fallback to win32 if win64 is not available (e.g. for LLVM 3.6.2 and older)
@@ -95,6 +94,7 @@ async function getAssetKeywords(platform: string, arch: string) {
         info(`Using arch ${arch} for LLVM`)
         keywords.push(arch)
       }
+      optionalKeywords.push("windows", "Windows")
       break
     }
     case "linux": {
