@@ -143,9 +143,12 @@ jobs:
           - ubuntu-24.04
           - ubuntu-22.04
           - ubuntu-20.04
-          - macos-14
-          - macos-13
-          - macos-12
+          - macos-15 # arm64
+          - macos-15-large # x64
+          - macos-14 # arm64
+          - macos-14-large # x64
+          # - macos-14-xlarge #arm64
+          - macos-13 # x64
     steps:
       - uses: actions/checkout@v4
         with:
