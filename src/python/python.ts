@@ -61,22 +61,22 @@ async function setupPipx(foundPython: string) {
     if (!(await hasPipxModule(foundPython))) {
       try {
         // first try with the system-wide pipx
-        if ((await setupPipPackSystem("pipx", isArch())) === null) {
-          // try with pip
-          await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
-        }
+        await setupPipPackSystem("pipx", isArch())
+        // then install with the system-wide pipx
+        await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
       } catch (err) {
-        throw new Error(`pipx was not installed correctly ${err}`)
+        throw new Error(`pipx was not installed completely: ${err}`)
       }
     }
     if (await hasPipxModule(foundPython)) {
       await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
       return
     } else if (await hasPipxBinary()) {
+      notice("pipx module not found. Trying to install with pipx binary...")
       await execa("pipx", ["ensurepath"], { stdio: "inherit" })
       return
     } else {
-      notice("pipx module or pipx binary not found. Corrput pipx installation.")
+      throw new Error("pipx module or pipx binary not found. Corrput pipx installation.")
     }
   } catch (err) {
     notice(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
