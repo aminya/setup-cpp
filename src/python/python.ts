@@ -22,7 +22,12 @@ import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
-import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack.js"
+import {
+  hasPipxBinary,
+  hasPipxModule,
+  setupPipPackSystem,
+  setupPipPackWithPython,
+} from "../utils/setup/setupPipPack.js"
 import { isBinUptoDate } from "../utils/setup/version.js"
 import { unique } from "../utils/std/index.js"
 import { getVersionDefault, isMinVersion } from "../versions/versions.js"
@@ -36,6 +41,9 @@ export async function setupPython(
   assert(installInfo.bin !== undefined)
   const foundPython = installInfo.bin
 
+  // setup venv
+  await setupVenv(foundPython)
+
   // setup pip
   const foundPip = await findOrSetupPip(foundPython)
   if (foundPip === undefined) {
@@ -43,7 +51,6 @@ export async function setupPython(
   }
 
   await setupPipx(foundPython)
-
   await setupWheel(foundPython)
 
   return installInfo as InstallationInfo & { bin: string }
@@ -51,28 +58,53 @@ export async function setupPython(
 
 async function setupPipx(foundPython: string) {
   try {
-    if (!(await hasPipx(foundPython))) {
+    if (!(await hasPipxModule(foundPython))) {
       try {
+        // first try with the system-wide pipx
+        await setupPipPackSystem("pipx", isArch())
+        // then install with the system-wide pipx
         await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
       } catch (err) {
-        if (setupPipPackSystem("pipx", false) === null) {
-          throw new Error(`pipx was not installed correctly ${err}`)
-        }
+        throw new Error(`pipx was not installed completely: ${err}`)
       }
     }
-    await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
-    await setupVenv(foundPython)
+    if (await hasPipxModule(foundPython)) {
+      await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
+      return
+    } else if (await hasPipxBinary()) {
+      notice("pipx module not found. Trying to install with pipx binary...")
+      await execa("pipx", ["ensurepath"], { stdio: "inherit" })
+      return
+    } else {
+      throw new Error("pipx module or pipx binary not found. Corrput pipx installation.")
+    }
   } catch (err) {
     notice(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
 async function setupVenv(foundPython: string) {
+  if (await hasVenv(foundPython)) {
+    info("venv module already installed.")
+    return
+  }
+
   try {
-    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
+    await setupPipPackSystem("venv")
   } catch (err) {
     info(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
   }
+}
+
+async function hasVenv(foundPython: string): Promise<boolean> {
+  try {
+    // check if venv module exits
+    await execa(foundPython, ["-m", "venv", "-h"], { stdio: "ignore" })
+    return true
+  } catch {
+    // if module not found, continue
+  }
+  return false
 }
 
 /** Setup wheel and setuptools */

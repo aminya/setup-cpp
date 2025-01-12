@@ -109,7 +109,7 @@ jobs:
             ~/.pnpm-store
             D:\.pnpm-store
             ./node_modules
-          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', '.nvmrc', './packages/*/package.json') }}"
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', './.nvmrc', './pnpm-*.yaml') }}"
           restore-keys: |
             "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 
@@ -174,7 +174,7 @@ jobs:
             ~/.pnpm-store
             D:\.pnpm-store
             ./node_modules
-          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', '.nvmrc', './packages/*/package.json') }}"
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', './.nvmrc', './pnpm-*.yaml') }}"
           restore-keys: |
             "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 

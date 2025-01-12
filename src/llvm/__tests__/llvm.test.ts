@@ -64,20 +64,22 @@ describe("setup-llvm", () => {
     const directory = await setupTmpDir("llvm")
 
     const osVersion = await ubuntuVersion()
-    const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
-    await testBin("clang++", ["--version"], binDir)
+    {
+      const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
+      await testBin("clang++", ["--version"], binDir)
 
-    expect(process.env.CC?.includes("clang")).toBeTruthy()
-    expect(process.env.CXX?.includes("clang++")).toBeTruthy()
+      expect(process.env.CC?.includes("clang")).toBeTruthy()
+      expect(process.env.CXX?.includes("clang++")).toBeTruthy()
 
-    // test compilation
-    const file = join(dirname, "main.cpp")
-    const main_exe = join(dirname, addExeExt("main"))
-    await execa("clang++", [file, "-o", main_exe], { cwd: dirname })
-    if (process.platform !== "win32") {
-      await chmod(main_exe, "755")
+      // test compilation
+      const file = join(dirname, "main.cpp")
+      const main_exe = join(dirname, addExeExt("main"))
+      await execa("clang++", [file, "-o", main_exe], { cwd: dirname })
+      if (process.platform !== "win32") {
+        await chmod(main_exe, "755")
+      }
+      await execa(main_exe, { cwd: dirname, stdio: "inherit" })
     }
-    await execa(main_exe, { cwd: dirname, stdio: "inherit" })
 
     {
       const { binDir } = await setupClangFormat(getVersion("llvm", "true", osVersion), directory, process.arch)
