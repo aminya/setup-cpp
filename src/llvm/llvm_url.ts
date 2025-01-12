@@ -3,7 +3,7 @@ import { fileURLToPath } from "url"
 import { info } from "ci-log"
 import { addExeExt } from "patha"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
-import { arm64, armv7, powerpc64le, sparc64, x86, x86_64 } from "../utils/env/arch.js"
+import { arm64, armv7, powerpc64le, sparc64, sparcv9, x86, x86_64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
@@ -155,6 +155,20 @@ async function getAssetKeywords(platform: string, arch: string) {
         keywords.push("amd64")
       } else if (x86.includes(arch)) {
         keywords.push("i386")
+      } else {
+        info(`Using arch ${arch} for LLVM`)
+        keywords.push(arch)
+      }
+
+      break
+    }
+    case "solaris": {
+      keywords.push("solaris")
+
+      if (x86_64.includes(arch)) {
+        keywords.push("amd64")
+      } else if (sparcv9.includes(arch)) {
+        keywords.push("sparcv9")
       } else {
         info(`Using arch ${arch} for LLVM`)
         keywords.push(arch)
