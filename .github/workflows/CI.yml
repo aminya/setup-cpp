@@ -82,9 +82,9 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - windows-2022
-          - ubuntu-24.04
-          - macos-13
+          - windows-2019
+          - ubuntu-20.04
+          - macos-13 # x64
           - macos-14 # arm64
     steps:
       - uses: actions/checkout@v4
@@ -143,9 +143,12 @@ jobs:
           - ubuntu-24.04
           - ubuntu-22.04
           - ubuntu-20.04
-          - macos-14
-          - macos-13
-          - macos-12
+          - macos-15 # arm64
+          # - macos-15-large # x64
+          - macos-14 # arm64
+          # - macos-14-large # x64
+          # - macos-14-xlarge #arm64
+          - macos-13 # x64
     steps:
       - uses: actions/checkout@v4
         with:
@@ -202,7 +205,7 @@ jobs:
           RUNNER_OS_NAME: ${{ matrix.os }}
 
       - name: Setup Node 12
-        if: ${{ !contains(matrix.os, 'macos-14') }}
+        if: ${{ !contains(matrix.os, 'macos-14') && !contains(matrix.os, 'macos-15') }}
         uses: actions/setup-node@v4
         with:
           node-version: 12

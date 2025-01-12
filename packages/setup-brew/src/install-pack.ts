@@ -25,7 +25,7 @@ export async function installBrewPack(
   if (!("overwrite" in options)) {
     options.overwrite = true // default to true if not specified
   }
-  if (options.cask) {
+  if (options.cask === true) {
     options.overwrite = false // mutually exclusive with --overwrite
   }
 

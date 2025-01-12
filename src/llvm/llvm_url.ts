@@ -3,7 +3,7 @@ import { fileURLToPath } from "url"
 import { info } from "ci-log"
 import { addExeExt } from "patha"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
-import { arm64, armv7, powerpc64le, sparc64, x86, x86_64 } from "../utils/env/arch.js"
+import { arm64, armv7, powerpc64le, sparc64, sparcv9, x86, x86_64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
@@ -83,8 +83,10 @@ async function getAssetKeywords(platform: string, arch: string) {
 
   switch (platform) {
     case "win32": {
+      optionalKeywords.push("windows", "Windows")
       if (x86_64.includes(arch)) {
-        keywords.push("win64")
+        // prefer win64 keyword over x86_64 or x64
+        optionalKeywords.push("win64", "win64", "win64", "x86_64", "X64")
         // TODO fallback to win32 if win64 is not available (e.g. for LLVM 3.6.2 and older)
       } else if (x86.includes(arch)) {
         keywords.push("win32")
@@ -97,7 +99,7 @@ async function getAssetKeywords(platform: string, arch: string) {
       break
     }
     case "linux": {
-      keywords.push("linux")
+      optionalKeywords.push("linux", "Linux")
 
       if (isUbuntu()) {
         optionalKeywords.push("ubuntu")
@@ -115,7 +117,7 @@ async function getAssetKeywords(platform: string, arch: string) {
       }
 
       if (x86_64.includes(arch)) {
-        keywords.push("x86_64")
+        optionalKeywords.push("x86_64", "X64")
       } else if (x86.includes(arch)) {
         keywords.push("x86")
       } else if (arm64.includes(arch)) {
@@ -134,13 +136,13 @@ async function getAssetKeywords(platform: string, arch: string) {
       break
     }
     case "darwin": {
-      keywords.push("apple")
+      optionalKeywords.push("apple", "macos", "macOS")
 
       if (x86_64.includes(arch)) {
-        keywords.push("x86_64")
+        optionalKeywords.push("x86_64", "X64")
       } else if (arm64.includes(arch)) {
         // allow falling back to x86_64 if arm64 is not available
-        optionalKeywords.push("arm64")
+        optionalKeywords.push("arm64", "ARM64")
       } else {
         info(`Using arch ${arch} for LLVM`)
         keywords.push(arch)
@@ -154,6 +156,20 @@ async function getAssetKeywords(platform: string, arch: string) {
         keywords.push("amd64")
       } else if (x86.includes(arch)) {
         keywords.push("i386")
+      } else {
+        info(`Using arch ${arch} for LLVM`)
+        keywords.push(arch)
+      }
+
+      break
+    }
+    case "solaris": {
+      keywords.push("solaris")
+
+      if (x86_64.includes(arch)) {
+        keywords.push("amd64")
+      } else if (sparcv9.includes(arch)) {
+        keywords.push("sparcv9")
       } else {
         info(`Using arch ${arch} for LLVM`)
         keywords.push(arch)

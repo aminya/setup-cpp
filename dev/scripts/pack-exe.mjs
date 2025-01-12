@@ -15,29 +15,18 @@ function getPlatformName() {
   }
 }
 
-function main() {
-  let exes
-  if (process.platform === "win32") {
-    exes = [".exe"]
-  } else if (process.platform === "darwin") {
-    exes = [""]
-  } else {
-    exes = [""]
-  }
+async function main() {
+  const exe = process.platform === "win32" ? ".exe" : ""
 
-  return Promise.all(
-    exes.map((exe) =>
-      execaNode("./node_modules/caxa/build/index.mjs", [
-        "--input",
-        "./dist/modern",
-        "--output",
-        `./exe/setup-cpp-${process.arch}-${getPlatformName()}${exe}`,
-        "--",
-        `{{caxa}}/node_modules/.bin/node${exe}`,
-        "{{caxa}}/setup-cpp.mjs",
-      ])
-    ),
-  )
+  await execaNode("./node_modules/caxa/build/index.mjs", [
+    "--input",
+    "./dist/modern",
+    "--output",
+    `./exe/setup-cpp-${process.arch}-${getPlatformName()}${exe}`,
+    "--",
+    `{{caxa}}/node_modules/.bin/node${exe}`,
+    "{{caxa}}/setup-cpp.mjs",
+  ])
 }
 
 main().catch((err) => {

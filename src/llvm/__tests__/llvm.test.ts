@@ -1,7 +1,7 @@
 import path, { join } from "path"
 import { fileURLToPath } from "url"
 import * as io from "@actions/io"
-import { execaSync } from "execa"
+import { execa } from "execa"
 import { chmod } from "fs/promises"
 import { addExeExt } from "patha"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
@@ -15,11 +15,6 @@ const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURL
 jest.setTimeout(400000)
 
 describe("setup-llvm", () => {
-  let directory: string
-  beforeAll(async () => {
-    directory = await setupTmpDir("llvm")
-  })
-
   it("Finds URL for ubuntu version", async () => {
     expect(
       await getLLVMAssetURL("linux", "x86_64", "13.0.0"),
@@ -36,6 +31,7 @@ describe("setup-llvm", () => {
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
+        "19",
         "18",
         "17",
         "16",
@@ -64,7 +60,9 @@ describe("setup-llvm", () => {
     )
   })
 
-  it("should setup LLVM", async () => {
+  it("should setup latest LLVM", async () => {
+    const directory = await setupTmpDir("llvm")
+
     const osVersion = await ubuntuVersion()
     const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
@@ -75,44 +73,46 @@ describe("setup-llvm", () => {
     // test compilation
     const file = join(dirname, "main.cpp")
     const main_exe = join(dirname, addExeExt("main"))
-    execaSync("clang++", [file, "-o", main_exe], { cwd: dirname })
+    await execa("clang++", [file, "-o", main_exe], { cwd: dirname })
     if (process.platform !== "win32") {
       await chmod(main_exe, "755")
     }
-    execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
+    await execa(main_exe, { cwd: dirname, stdio: "inherit" })
+
+    {
+      const { binDir } = await setupClangFormat(getVersion("llvm", "true", osVersion), directory, process.arch)
+      await testBin("clang-format", ["--version"], binDir)
+    }
+
+    {
+      const { binDir } = await setupClangTools(getVersion("llvm", "true", osVersion), directory, process.arch)
+      await testBin("clang-tidy", ["--version"], binDir)
+      await testBin("clang-format", ["--version"], binDir)
+    }
+
+    await io.rmRF(directory)
   })
 
   it("should setup LLVM 5 from llvm.org", async () => {
+    const directory = await setupTmpDir("llvm")
+
     const { binDir } = await setupLLVM("5", directory, process.arch)
     await testBin("clang++", ["--version"], binDir)
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
     expect(process.env.CXX?.includes("clang++")).toBeTruthy()
 
-    // test compilation
-    const file = join(dirname, "main.cpp")
-    const main_exe = join(dirname, addExeExt("main"))
-    execaSync("clang++", ["-std=c++17", file, "-o", main_exe], { cwd: dirname })
-    if (process.platform !== "win32") {
+    if (process.platform === "linux") {
+      // test compilation
+      // the old clang doesn't work inside GitHub actions for other than linux due to system libraries and SDKs
+
+      const file = join(dirname, "main.cpp")
+      const main_exe = join(dirname, addExeExt("main"))
+      await execa("clang++", ["-std=c++17", file, "-o", main_exe], { cwd: dirname })
       await chmod(main_exe, "755")
+      await execa(main_exe, { cwd: dirname, stdio: "inherit" })
     }
-    execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
-  })
 
-  it("should setup clang-format", async () => {
-    const osVersion = await ubuntuVersion()
-    const { binDir } = await setupClangFormat(getVersion("llvm", "true", osVersion), directory, process.arch)
-    await testBin("clang-format", ["--version"], binDir)
-  })
-
-  it("should setup clang tools", async () => {
-    const osVersion = await ubuntuVersion()
-    const { binDir } = await setupClangTools(getVersion("llvm", "true", osVersion), directory, process.arch)
-    await testBin("clang-tidy", ["--version"], binDir)
-    await testBin("clang-format", ["--version"], binDir)
-  })
-
-  afterAll(async () => {
     await io.rmRF(directory)
-  }, 100000)
+  })
 })
