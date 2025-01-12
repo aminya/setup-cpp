@@ -51,7 +51,7 @@ export async function setupPipPackWithPython(
 ): Promise<InstallationInfo> {
   const { usePipx = true, user = true, upgrade = false, isLibrary = false } = options
 
-  const isPipx = usePipx && !isLibrary && (await hasPipx(givenPython))
+  const isPipx = usePipx && !isLibrary && (await hasPipxModule(givenPython))
 
   const pip = isPipx ? "pipx" : "pip"
 
@@ -120,7 +120,11 @@ async function finishPipPackageInstall(givenPython: string, name: string) {
   return binDir
 }
 
-export async function hasPipx(givenPython: string) {
+export async function hasPipxBinary() {
+  return (await which("pipx", { nothrow: true })) !== null
+}
+
+export async function hasPipxModule(givenPython: string) {
   const res = await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })
   return res.exitCode === 0
 }

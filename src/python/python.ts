@@ -22,7 +22,12 @@ import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
-import { hasPipx, setupPipPackSystem, setupPipPackWithPython } from "../utils/setup/setupPipPack.js"
+import {
+  hasPipxBinary,
+  hasPipxModule,
+  setupPipPackSystem,
+  setupPipPackWithPython,
+} from "../utils/setup/setupPipPack.js"
 import { isBinUptoDate } from "../utils/setup/version.js"
 import { unique } from "../utils/std/index.js"
 import { getVersionDefault, isMinVersion } from "../versions/versions.js"
@@ -53,7 +58,7 @@ export async function setupPython(
 
 async function setupPipx(foundPython: string) {
   try {
-    if (!(await hasPipx(foundPython))) {
+    if (!(await hasPipxModule(foundPython))) {
       try {
         // first try with the system-wide pipx
         if ((await setupPipPackSystem("pipx", isArch())) === null) {
@@ -64,7 +69,15 @@ async function setupPipx(foundPython: string) {
         throw new Error(`pipx was not installed correctly ${err}`)
       }
     }
-    await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
+    if (await hasPipxModule(foundPython)) {
+      await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
+      return
+    } else if (await hasPipxBinary()) {
+      await execa("pipx", ["ensurepath"], { stdio: "inherit" })
+      return
+    } else {
+      notice("pipx module or pipx binary not found. Corrput pipx installation.")
+    }
   } catch (err) {
     notice(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
   }
