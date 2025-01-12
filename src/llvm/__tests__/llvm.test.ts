@@ -68,7 +68,7 @@ describe("setup-llvm", () => {
   afterEach(async () => {
     await io.rmRF(directory)
   }, 100000)
-  
+
   describe("should setup latest LLVM", () => {
     it("should download LLVM", async () => {
       const osVersion = await ubuntuVersion()
