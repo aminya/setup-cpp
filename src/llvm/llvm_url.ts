@@ -83,9 +83,9 @@ async function getAssetKeywords(platform: string, arch: string) {
 
   switch (platform) {
     case "win32": {
-      keywords.push("windows", "Windows")
+      optionalKeywords.push("windows", "Windows")
       if (x86_64.includes(arch)) {
-        keywords.push("win64", "x86_64", "X64")
+        optionalKeywords.push("win64", "x86_64", "X64")
         // TODO fallback to win32 if win64 is not available (e.g. for LLVM 3.6.2 and older)
       } else if (x86.includes(arch)) {
         keywords.push("win32")
@@ -98,7 +98,7 @@ async function getAssetKeywords(platform: string, arch: string) {
       break
     }
     case "linux": {
-      keywords.push("linux", "Linux")
+      optionalKeywords.push("linux", "Linux")
 
       if (isUbuntu()) {
         optionalKeywords.push("ubuntu")
@@ -116,7 +116,7 @@ async function getAssetKeywords(platform: string, arch: string) {
       }
 
       if (x86_64.includes(arch)) {
-        keywords.push("x86_64", "X64")
+        optionalKeywords.push("x86_64", "X64")
       } else if (x86.includes(arch)) {
         keywords.push("x86")
       } else if (arm64.includes(arch)) {
@@ -135,10 +135,10 @@ async function getAssetKeywords(platform: string, arch: string) {
       break
     }
     case "darwin": {
-      keywords.push("apple", "macos", "macOS")
+      optionalKeywords.push("apple", "macos", "macOS")
 
       if (x86_64.includes(arch)) {
-        keywords.push("x86_64", "X64")
+        optionalKeywords.push("x86_64", "X64")
       } else if (arm64.includes(arch)) {
         // allow falling back to x86_64 if arm64 is not available
         optionalKeywords.push("arm64", "ARM64")
