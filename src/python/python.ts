@@ -68,11 +68,28 @@ async function setupPipx(foundPython: string) {
 }
 
 async function setupVenv(foundPython: string) {
+  if (await hasVenv(foundPython)) {
+    return
+  }
+
+  info("venv module not found. Installing it...")
+
   try {
-    await setupPipPackWithPython(foundPython, "venv", undefined, { upgrade: false, usePipx: false })
+    await setupPipPackSystem("venv")
   } catch (err) {
     info(`Failed to install venv: ${(err as Error).toString()}. Ignoring...`)
   }
+}
+
+async function hasVenv(foundPython: string): Promise<boolean> {
+  try {
+    // check if venv module exits
+    await execa(foundPython, ["-m", "venv", "-h"], { stdio: "inherit" })
+    return true
+  } catch {
+    // if module not found, continue
+  }
+  return false
 }
 
 /** Setup wheel and setuptools */

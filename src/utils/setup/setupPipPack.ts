@@ -282,6 +282,7 @@ export function setupPipPackSystem(name: string, addPythonPrefix = true) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     }
   } else if (process.platform === "darwin") {
+    // brew doesn't have venv
     if (["venv"].includes(name)) {
       return null
     }
