@@ -15,11 +15,6 @@ const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURL
 jest.setTimeout(400000)
 
 describe("setup-llvm", () => {
-  let directory: string
-  beforeAll(async () => {
-    directory = await setupTmpDir("llvm")
-  })
-
   it("Finds URL for ubuntu version", async () => {
     expect(
       await getLLVMAssetURL("linux", "x86_64", "13.0.0"),
@@ -65,22 +60,46 @@ describe("setup-llvm", () => {
     )
   })
 
-  it("should setup LLVM", async () => {
-    const osVersion = await ubuntuVersion()
-    const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
-    await testBin("clang++", ["--version"], binDir)
+  let directory: string
+  beforeEach(async () => {
+    directory = await setupTmpDir("llvm")
+  })
 
-    expect(process.env.CC?.includes("clang")).toBeTruthy()
-    expect(process.env.CXX?.includes("clang++")).toBeTruthy()
+  afterEach(async () => {
+    await io.rmRF(directory)
+  }, 100000)
+  
+  describe("should setup latest LLVM", () => {
+    it("should download LLVM", async () => {
+      const osVersion = await ubuntuVersion()
+      const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
+      await testBin("clang++", ["--version"], binDir)
 
-    // test compilation
-    const file = join(dirname, "main.cpp")
-    const main_exe = join(dirname, addExeExt("main"))
-    execaSync("clang++", [file, "-o", main_exe], { cwd: dirname })
-    if (process.platform !== "win32") {
-      await chmod(main_exe, "755")
-    }
-    execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
+      expect(process.env.CC?.includes("clang")).toBeTruthy()
+      expect(process.env.CXX?.includes("clang++")).toBeTruthy()
+
+      // test compilation
+      const file = join(dirname, "main.cpp")
+      const main_exe = join(dirname, addExeExt("main"))
+      execaSync("clang++", [file, "-o", main_exe], { cwd: dirname })
+      if (process.platform !== "win32") {
+        await chmod(main_exe, "755")
+      }
+      execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
+    })
+
+    it("should setup clang-format", async () => {
+      const osVersion = await ubuntuVersion()
+      const { binDir } = await setupClangFormat(getVersion("llvm", "true", osVersion), directory, process.arch)
+      await testBin("clang-format", ["--version"], binDir)
+    })
+
+    it("should setup clang tools", async () => {
+      const osVersion = await ubuntuVersion()
+      const { binDir } = await setupClangTools(getVersion("llvm", "true", osVersion), directory, process.arch)
+      await testBin("clang-tidy", ["--version"], binDir)
+      await testBin("clang-format", ["--version"], binDir)
+    })
   })
 
   it("should setup LLVM 5 from llvm.org", async () => {
@@ -99,21 +118,4 @@ describe("setup-llvm", () => {
     }
     execaSync(main_exe, { cwd: dirname, stdio: "inherit" })
   })
-
-  it("should setup clang-format", async () => {
-    const osVersion = await ubuntuVersion()
-    const { binDir } = await setupClangFormat(getVersion("llvm", "true", osVersion), directory, process.arch)
-    await testBin("clang-format", ["--version"], binDir)
-  })
-
-  it("should setup clang tools", async () => {
-    const osVersion = await ubuntuVersion()
-    const { binDir } = await setupClangTools(getVersion("llvm", "true", osVersion), directory, process.arch)
-    await testBin("clang-tidy", ["--version"], binDir)
-    await testBin("clang-format", ["--version"], binDir)
-  })
-
-  afterAll(async () => {
-    await io.rmRF(directory)
-  }, 100000)
 })
