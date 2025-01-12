@@ -36,6 +36,9 @@ export async function setupPython(
   assert(installInfo.bin !== undefined)
   const foundPython = installInfo.bin
 
+  // setup venv
+  await setupVenv(foundPython)
+
   // setup pip
   const foundPip = await findOrSetupPip(foundPython)
   if (foundPip === undefined) {
@@ -43,7 +46,6 @@ export async function setupPython(
   }
 
   await setupPipx(foundPython)
-
   await setupWheel(foundPython)
 
   return installInfo as InstallationInfo & { bin: string }
@@ -61,7 +63,6 @@ async function setupPipx(foundPython: string) {
       }
     }
     await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
-    await setupVenv(foundPython)
   } catch (err) {
     notice(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
   }
@@ -69,10 +70,9 @@ async function setupPipx(foundPython: string) {
 
 async function setupVenv(foundPython: string) {
   if (await hasVenv(foundPython)) {
+    info("venv module already installed.")
     return
   }
-
-  info("venv module not found. Installing it...")
 
   try {
     await setupPipPackSystem("venv")
