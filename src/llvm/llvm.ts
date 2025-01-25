@@ -71,12 +71,17 @@ async function setupLLVMOnly(
   packages: LLVMPackages = LLVMPackages.All,
 ) {
   const majorVersion = majorLLVMVersion(version)
-  try {
-    if (isUbuntu()) {
+  if (isUbuntu()) {
+    try {
       return await setupLLVMApt(majorVersion, packages)
+    } catch (err) {
+      info(`Failed to install llvm via system package manager ${err}. Trying to remove the repository`)
+      try {
+        execRootSync(join(dirname, "llvm_repo_remove.bash"), [`${majorVersion}`])
+      } catch (err) {
+        info(`Failed to remove llvm repository ${err}`)
+      }
     }
-  } catch (err) {
-    info(`Failed to install llvm via system package manager ${err}`)
   }
 
   const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)

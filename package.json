@@ -26,10 +26,11 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "turbo build && run-p lint.root.tsc build.vite build.vite.legacy && run-s build.json",
+    "build": "turbo build && run-p lint.root.tsc build.vite build.vite.legacy && run-p build.json build.bash",
     "build.vite": "cross-env NODE_ENV=production vite build",
     "build.vite.legacy": "cross-env NODE_ENV=production TARGET=legacy vite build",
     "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file ./dist/**/*.json",
+    "build.bash": "shx cp ./src/*/*.bash ./dist/legacy/ && shx cp ./dist/legacy/*.bash ./dist/modern",
     "bump": "ncu -u -x execa,numerous,eslint,@types/eslint,which && pnpm update && pnpx typesync && pnpm run clean",
     "bump.llvm": "GITHUB_TOKEN=$(gh auth token) tsx ./src/llvm/assets-list.ts",
     "bump.gcc": "GITHUB_TOKEN=$(gh auth token) tsx ./src/gcc/assets-list.ts",
