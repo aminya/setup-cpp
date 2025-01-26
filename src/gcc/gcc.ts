@@ -50,21 +50,35 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
           // the default version
           installationInfo = await installAptPack([{ name: "gcc" }, { name: "g++" }])
         } else {
-          // add the PPA for access to more versions
-          installationInfo = await installAptPack([
-            {
-              name: "gcc",
-              version,
-              repository: "ppa:ubuntu-toolchain-r/test",
-              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-            },
-            {
-              name: "g++",
-              version,
-              repository: "ppa:ubuntu-toolchain-r/test",
-              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-            },
-          ])
+          try {
+            // first try to install the version from the default repository
+            installationInfo = await installAptPack([
+              {
+                name: "gcc",
+                version,
+              },
+              {
+                name: "g++",
+                version,
+              },
+            ])
+          } catch (err) {
+            // add the PPA for access to more versions
+            installationInfo = await installAptPack([
+              {
+                name: "gcc",
+                version,
+                repository: "ppa:ubuntu-toolchain-r/test",
+                key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+              },
+              {
+                name: "g++",
+                version,
+                repository: "ppa:ubuntu-toolchain-r/test",
+                key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+              },
+            ])
+          }
         }
       }
       // if (arch !== "x64") {
