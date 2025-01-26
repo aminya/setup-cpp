@@ -119,7 +119,11 @@ async function llvmBinaryDeps_(majorVersion: number) {
         execRootSync("dpkg", ["-i", join(tmpdir(), fileName)])
       }
     } else {
-      await installAptPack([{ name: "libtinfo-dev" }])
+      try {
+        await installAptPack([{ name: "libtinfo6" }])
+      } catch (err) {
+        info(`Failed to install libtinfo6 ${err}\nSkipping the dependency`)
+      }
     }
   } else if (isArch()) {
     // https://aur.archlinux.org/packages/ncurses5-compat-libs
