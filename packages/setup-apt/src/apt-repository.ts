@@ -26,3 +26,16 @@ export async function installAddAptRepo(apt: string) {
     { ...defaultExecOptions, env: getAptEnv(apt) },
   )
 }
+
+export async function removeAptRepository(repo: string, apt = getApt()) {
+  await initAptMemoized(apt)
+  await installAddAptRepo(apt)
+  execRootSync("add-apt-repository", ["-y", "--no-update", "--remove", repo], {
+    ...defaultExecOptions,
+    env: getAptEnv(apt),
+  })
+
+  // Update the repos
+  updateAptReposMemoized.clear() // ensure update is called
+  updateAptReposMemoized(apt)
+}

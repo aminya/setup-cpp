@@ -71,12 +71,17 @@ async function setupLLVMOnly(
   packages: LLVMPackages = LLVMPackages.All,
 ) {
   const majorVersion = majorLLVMVersion(version)
-  try {
-    if (isUbuntu()) {
+  if (isUbuntu()) {
+    try {
       return await setupLLVMApt(majorVersion, packages)
+    } catch (err) {
+      info(`Failed to install llvm via system package manager ${err}. Trying to remove the repository`)
+      try {
+        execRootSync(join(dirname, "llvm_repo_remove.bash"), [`${majorVersion}`])
+      } catch (err) {
+        info(`Failed to remove llvm repository ${err}`)
+      }
     }
-  } catch (err) {
-    info(`Failed to install llvm via system package manager ${err}`)
   }
 
   const installationInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
@@ -114,7 +119,11 @@ async function llvmBinaryDeps_(majorVersion: number) {
         execRootSync("dpkg", ["-i", join(tmpdir(), fileName)])
       }
     } else {
-      await installAptPack([{ name: "libtinfo-dev" }])
+      try {
+        await installAptPack([{ name: "libtinfo6" }])
+      } catch (err) {
+        info(`Failed to install libtinfo6 ${err}\nSkipping the dependency`)
+      }
     }
   } else if (isArch()) {
     // https://aur.archlinux.org/packages/ncurses5-compat-libs
