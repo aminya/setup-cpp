@@ -37,56 +37,59 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
       break
     }
     case "linux": {
-      if (arch === "x64") {
-        if (isArch()) {
-          installationInfo = await setupPacmanPack("gcc", version)
-        } else if (hasDnf()) {
-          installationInfo = await setupDnfPack([
-            { name: "gcc", version },
-            { name: "gcc-c++", version },
-            { name: "libstdc++-devel" },
-          ])
-        } else if (isUbuntu()) {
-          if (version === "") {
-            // the default version
-            installationInfo = await installAptPack([{ name: "gcc" }, { name: "g++" }])
-          } else {
-            // add the PPA for access to more versions
-            installationInfo = await installAptPack([
-              {
-                name: "gcc",
-                version,
-                repository: "ppa:ubuntu-toolchain-r/test",
-                key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-              },
-              {
-                name: "g++",
-                version,
-                repository: "ppa:ubuntu-toolchain-r/test",
-                key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-              },
-            ])
-          }
-        }
-      } else {
-        info(`Install g++-multilib because gcc for ${arch} was requested`)
-        if (isArch()) {
-          installationInfo = await setupPacmanPack("gcc-multilib", version)
-        } else if (isUbuntu()) {
-          if (version === "") {
-            // the default version
-            installationInfo = await installAptPack([{ name: "gcc-multilib" }])
-          } else {
-            // add the PPA for access to more versions
-            installationInfo = await installAptPack([{
-              name: "gcc-multilib",
+      if (isArch()) {
+        installationInfo = await setupPacmanPack("gcc", version)
+      } else if (hasDnf()) {
+        installationInfo = await setupDnfPack([
+          { name: "gcc", version },
+          { name: "gcc-c++", version },
+          { name: "libstdc++-devel" },
+        ])
+      } else if (isUbuntu()) {
+        if (version === "") {
+          // the default version
+          installationInfo = await installAptPack([{ name: "gcc" }, { name: "g++" }])
+        } else {
+          // add the PPA for access to more versions
+          installationInfo = await installAptPack([
+            {
+              name: "gcc",
               version,
               repository: "ppa:ubuntu-toolchain-r/test",
               key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
-            }])
-          }
+            },
+            {
+              name: "g++",
+              version,
+              repository: "ppa:ubuntu-toolchain-r/test",
+              key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+            },
+          ])
         }
       }
+      // if (arch !== "x64") {
+      //   try {
+      //     info(`Install g++-multilib because gcc for ${arch} was requested`)
+      //     if (isArch()) {
+      //       installationInfo = await setupPacmanPack("gcc-multilib", version)
+      //     } else if (isUbuntu()) {
+      //       if (version === "") {
+      //         // the default version
+      //         installationInfo = await installAptPack([{ name: "gcc-multilib" }])
+      //       } else {
+      //         // add the PPA for access to more versions
+      //         installationInfo = await installAptPack([{
+      //           name: "gcc-multilib",
+      //           version,
+      //           repository: "ppa:ubuntu-toolchain-r/test",
+      //           key: { key: "1E9377A2BA9EF27F", fileName: "ubuntu-toolchain-r-test.gpg" },
+      //         }])
+      //       }
+      //     }
+      //   } catch (err) {
+      //     info(`Failed to install gcc-multilib ${err}\nSkipping the dependency`)
+      //   }
+      // }
       break
     }
     // TODO support bare-metal (need to support passing it as the input)
