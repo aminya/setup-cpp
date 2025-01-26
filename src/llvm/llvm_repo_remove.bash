@@ -5,6 +5,7 @@
 
 set -eux
 
+CURRENT_LLVM_STABLE=18
 BASE_URL="http://apt.llvm.org"
 
 # Check for required tools
