@@ -78,8 +78,8 @@ async function setupLLVMOnly(
       info(`Failed to install llvm via system package manager ${err}. Trying to remove the repository`)
       try {
         execRootSync(join(dirname, "llvm_repo_remove.bash"), [`${majorVersion}`])
-      } catch (err) {
-        info(`Failed to remove llvm repository ${err}`)
+      } catch (removeErr) {
+        info(`Failed to remove llvm repository ${removeErr}`)
       }
     }
   }
@@ -94,36 +94,38 @@ function majorLLVMVersion(version: string) {
   return Number.parseInt(coeredVersion.split(".")[0], 10)
 }
 
-async function llvmBinaryDeps_(majorVersion: number) {
+async function llvmBinaryDeps_(_majorVersion: number) {
   if (isUbuntu()) {
-    if (majorVersion <= 10) {
+    for (const dep of ["libtinfo5", "libtinfo6"]) {
+      /* eslint-disable no-await-in-loop */
       try {
-        await installAptPack([{ name: "libtinfo5" }])
-      } catch (err) {
-        // Manually install libtinfo5 if the package is not available
-        info(`Failed to install libtinfo5 ${err}\nManually installing the package`)
-        const arch = x86_64.includes(process.arch)
-          ? "amd64"
-          : arm64.includes(process.arch)
-          ? "arm64"
-          : process.arch
+        try {
+          await installAptPack([{ name: dep }])
+        } catch (err) {
+          if (dep === "libtinfo5") {
+            // Manually install libtinfo5 if the package is not available
+            info(`Failed to install ${dep} ${err}\nManually installing the package`)
+            const arch = x86_64.includes(process.arch)
+              ? "amd64"
+              : arm64.includes(process.arch)
+              ? "arm64"
+              : process.arch
 
-        const fileName = `libtinfo5_6.3-2ubuntu0.1_${arch}.deb`
-        const url = `http://launchpadlibrarian.net/666971015/${fileName}`
-        const dl = new DownloaderHelper(url, tmpdir(), { fileName })
-        dl.on("error", (dlErr) => {
-          throw new Error(`Failed to download ${url}: ${dlErr}`)
-        })
-        await dl.start()
-        // Install the downloaded package via dpkg
-        execRootSync("dpkg", ["-i", join(tmpdir(), fileName)])
-      }
-    } else {
-      try {
-        await installAptPack([{ name: "libtinfo6" }])
+            const fileName = `libtinfo5_6.3-2ubuntu0.1_${arch}.deb`
+            const url = `http://launchpadlibrarian.net/666971015/${fileName}`
+            const dl = new DownloaderHelper(url, tmpdir(), { fileName })
+            dl.on("error", (dlErr) => {
+              throw new Error(`Failed to download ${url}: ${dlErr}`)
+            })
+            await dl.start()
+            // Install the downloaded package via dpkg
+            execRootSync("dpkg", ["-i", join(tmpdir(), fileName)])
+          }
+        }
       } catch (err) {
-        info(`Failed to install libtinfo6 ${err}\nSkipping the dependency`)
+        info(`Failed to install ${dep}. Ignoring`)
       }
+      /* eslint-enable no-await-in-loop */
     }
   } else if (isArch()) {
     // https://aur.archlinux.org/packages/ncurses5-compat-libs
