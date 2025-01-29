@@ -78,28 +78,28 @@ export async function getLLVMAssetURL(platform: string, arch: string, version: s
 }
 
 async function getAssetKeywords(platform: string, arch: string) {
-  const keywords: string[] = []
-  const optionalKeywords: string[] = []
+  const keywords: (string | string[])[] = []
+  const optionalKeywords: (string | string[])[] = []
 
   switch (platform) {
     case "win32": {
-      optionalKeywords.push("windows", "Windows")
+      const osKeywordsChoice: string[] = ["windows", "Windows"]
       if (x86_64.includes(arch)) {
-        // prefer win64 keyword over x86_64 or x64
-        optionalKeywords.push("win64", "win64", "win64", "x86_64", "X64")
+        osKeywordsChoice.push("win64", "win64", "win64", "x86_64", "X64")
         // TODO fallback to win32 if win64 is not available (e.g. for LLVM 3.6.2 and older)
       } else if (x86.includes(arch)) {
-        keywords.push("win32")
+        osKeywordsChoice.push("win32")
       } else if (arm64.includes(arch)) {
-        keywords.push("woa64")
+        osKeywordsChoice.push("woa64")
       } else {
         info(`Using arch ${arch} for LLVM`)
-        keywords.push(arch)
+        osKeywordsChoice.push(arch)
       }
+      keywords.push(osKeywordsChoice)
       break
     }
     case "linux": {
-      optionalKeywords.push("linux", "Linux")
+      const osKeywordsChoice = ["linux", "Linux"]
 
       if (isUbuntu()) {
         optionalKeywords.push("ubuntu")
@@ -117,7 +117,7 @@ async function getAssetKeywords(platform: string, arch: string) {
       }
 
       if (x86_64.includes(arch)) {
-        optionalKeywords.push("x86_64", "X64")
+        keywords.push(["x86_64", "X64"])
       } else if (x86.includes(arch)) {
         keywords.push("x86")
       } else if (arm64.includes(arch)) {
@@ -132,17 +132,17 @@ async function getAssetKeywords(platform: string, arch: string) {
         info(`Using arch ${arch} for LLVM`)
         keywords.push(arch)
       }
-
+      keywords.push(osKeywordsChoice)
       break
     }
     case "darwin": {
-      optionalKeywords.push("apple", "macos", "macOS")
+      keywords.push(["apple", "macos", "macOS"])
 
       if (x86_64.includes(arch)) {
-        optionalKeywords.push("x86_64", "X64")
+        optionalKeywords.push(["x86_64", "X64"])
       } else if (arm64.includes(arch)) {
         // allow falling back to x86_64 if arm64 is not available
-        optionalKeywords.push("arm64", "ARM64")
+        optionalKeywords.push(["arm64", "ARM64"])
       } else {
         info(`Using arch ${arch} for LLVM`)
         keywords.push(arch)
