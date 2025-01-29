@@ -99,12 +99,12 @@ async function llvmBinaryDeps_(_majorVersion: number) {
     for (const dep of ["libtinfo5", "libtinfo6"]) {
       /* eslint-disable no-await-in-loop */
       try {
+        await installAptPack([{ name: dep }])
+      } catch (_err) {
         try {
-          await installAptPack([{ name: dep }])
-        } catch (err) {
           if (dep === "libtinfo5") {
             // Manually install libtinfo5 if the package is not available
-            info(`Failed to install ${dep} ${err}\nManually installing the package`)
+            info(`Failed to install ${dep}\nManually installing the package`)
             const arch = x86_64.includes(process.arch)
               ? "amd64"
               : arm64.includes(process.arch)
@@ -114,16 +114,17 @@ async function llvmBinaryDeps_(_majorVersion: number) {
             const fileName = `libtinfo5_6.3-2ubuntu0.1_${arch}.deb`
             const url = `http://launchpadlibrarian.net/666971015/${fileName}`
             const dl = new DownloaderHelper(url, tmpdir(), { fileName })
-            dl.on("error", (dlErr) => {
-              throw new Error(`Failed to download ${url}: ${dlErr}`)
+            dl.on("error", async (dlErr) => {
+              info(`Failed to download ${url}: ${dlErr}`)
+              await dl.stop()
             })
             await dl.start()
             // Install the downloaded package via dpkg
             execRootSync("dpkg", ["-i", join(tmpdir(), fileName)])
           }
+        } catch (_errFallback) {
+          info(`Failed to install ${dep}. Ignoring`)
         }
-      } catch (err) {
-        info(`Failed to install ${dep}. Ignoring`)
       }
       /* eslint-enable no-await-in-loop */
     }
