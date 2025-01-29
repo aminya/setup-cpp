@@ -26,16 +26,21 @@ export type MatchAssetOpts = {
    */
   version: string
   /**
-   * The keywords that must be in the asset name
+   * The keywords that must be in the asset name.
+   * If the element is a string, the keyword must be in the asset name.
+   * If the element is an array, one of the keywords must be in the asset name.
    * @default []
    */
-  keywords?: string[]
+  keywords?: (string | string[])[]
   /**
    * Optional keywords that are not required to be in the asset name
    * but increase the score of the asset if they are present
+   *
+   * if the element is a string, the keyword must be in the asset name
+   * if the element is an array, one of the keywords must be in the asset name
    * @default []
    */
-  optionalKeywords?: string[]
+  optionalKeywords?: (string | string[])[]
   /**
    * Custom version compare function
    * @param candidate The candidate version
@@ -158,7 +163,17 @@ function matchAssetName(tag: string, assetNames: string[], opts: MatchAssetOpts)
     && opts.keywords.length !== 0
   ) {
     for (const name of assetNames) {
-      if (opts.keywords!.every((keyword) => name.includes(keyword))) {
+      if (
+        opts.keywords.every((keyword) => {
+          // single keyword
+          if (typeof keyword === "string" && name.includes(keyword)) {
+            return true
+          }
+          // keyword choices
+          return Array.isArray(keyword)
+            && keyword.some((k) => name.includes(k))
+        })
+      ) {
         candidates.push(name)
       }
     }
@@ -179,7 +194,11 @@ function matchAssetName(tag: string, assetNames: string[], opts: MatchAssetOpts)
     const candidateScores = candidates.map((name) => {
       let score = 0
       for (const keyword of opts.optionalKeywords!) {
-        if (name.includes(keyword)) {
+        // single keyword
+        if (typeof keyword === "string" && name.includes(keyword)) {
+          score++
+        } // keyword choices
+        else if (Array.isArray(keyword) && keyword.some((k) => name.includes(k))) {
           score++
         }
       }
