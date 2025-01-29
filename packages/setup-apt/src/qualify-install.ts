@@ -32,7 +32,7 @@ export async function filterAndQualifyAptPackages(packages: AptPackage[], apt: s
  */
 export async function qualifiedNeededAptPackage(pack: AptPackage, apt: string = getApt()) {
   // Qualify the package into full package name/version
-  const qualified = await getAptArg(apt, pack.name, pack.version)
+  const qualified = await getAptArg(apt, pack)
   // filter out the package that are already installed
   return (await isAptPackInstalled(qualified)) ? undefined : qualified
 }
@@ -78,7 +78,9 @@ async function aptPackageType(apt: string, name: string, version: string | undef
   return AptPackageType.None
 }
 
-async function getAptArg(apt: string, name: string, version: string | undefined) {
+async function getAptArg(apt: string, pack: AptPackage) {
+  const { name, version, fallBackToLatest = false } = pack
+
   const package_type = await aptPackageType(apt, name, version)
   switch (package_type) {
     case AptPackageType.NameDashVersion:
@@ -86,7 +88,7 @@ async function getAptArg(apt: string, name: string, version: string | undefined)
     case AptPackageType.NameEqualsVersion:
       return `${name}=${version}`
     case AptPackageType.Name:
-      if (version !== undefined && version !== "") {
+      if (version !== undefined && version !== "" && fallBackToLatest) {
         warning(`Could not find package ${name} with version ${version}. Installing the latest version.`)
       }
       return name

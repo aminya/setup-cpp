@@ -34,6 +34,11 @@ export type AptPackage = {
   repository?: string
   /** The key to add before installing the package (optional) */
   key?: AddAptKeyOptions
+  /**
+   * If the given version is not available, fall back to the latest version
+   * @default false
+   */
+  fallBackToLatest?: boolean
 }
 
 const retryErrors = [
