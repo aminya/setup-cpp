@@ -8,6 +8,7 @@ on:
       - dev
     tags:
       - "*"
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -64,7 +65,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Dist
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: dist
@@ -90,7 +91,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist
 
@@ -123,9 +124,9 @@ jobs:
           pnpm run pack.exe
 
       - name: Upload Executables
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: exe
+          name: exe-${{ matrix.os }}
           path: |
             ./exe
           retention-days: 1
@@ -155,7 +156,7 @@ jobs:
           submodules: true
 
       - name: Download Dist
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist
 
@@ -236,7 +237,7 @@ jobs:
           submodules: true
 
       - name: Download Dist
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: dist
 
@@ -269,7 +270,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Download All Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Place Artifacts
         shell: bash
