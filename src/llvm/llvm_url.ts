@@ -85,7 +85,8 @@ async function getAssetKeywords(platform: string, arch: string) {
     case "win32": {
       const osKeywordsChoice: string[] = ["windows", "Windows"]
       if (x86_64.includes(arch)) {
-        osKeywordsChoice.push("win64", "win64", "win64", "x86_64", "X64")
+        osKeywordsChoice.push("win64", "win64", "win64")
+        optionalKeywords.push(["x86_64", "X64"])
         // TODO fallback to win32 if win64 is not available (e.g. for LLVM 3.6.2 and older)
       } else if (x86.includes(arch)) {
         osKeywordsChoice.push("win32")
