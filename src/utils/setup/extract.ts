@@ -1,7 +1,9 @@
-import { mkdirP } from "@actions/io"
+import { basename, dirname, join } from "path"
+import { mkdirP, mv } from "@actions/io"
 import { grantUserWriteAccess } from "admina"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
+import { rm } from "fs/promises"
 import { installAptPack } from "setup-apt"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip.js"
@@ -66,9 +68,34 @@ let sevenZip: string | undefined
 
 /// Extract 7z using 7z
 export async function extract7Zip(file: string, dest: string) {
+  const name = basename(file)
+
+  if (/.*\.tar\..+$/.test(name)) {
+    // if the file is tar.*, extract the compression first
+    const tarDir = dirname(file)
+    await run7zip(file, tarDir)
+    // extract the tar
+    const tarName = name.slice(0, -3)
+    const tarFile = join(tarDir, tarName)
+    await run7zip(tarFile, tarDir)
+    await rm(tarFile)
+    // Move the extracted files to the destination
+    const folderName = tarName.slice(0, -4)
+    const folderPath = join(tarDir, folderName)
+    info(`Moving ${folderPath} to ${dest}`)
+    await mv(folderPath, dest, { force: true })
+  } else {
+    // extract the 7z file directly
+    await run7zip(file, dest)
+  }
+
+  return dest
+}
+
+async function run7zip(file: string, dest: string) {
+  info(`7z: extracting ${file} to ${dest}`)
   await execa(await getSevenZip(), ["x", file, `-o${dest}`, "-y"], { stdio: "inherit" })
   await grantUserWriteAccess(dest)
-  return dest
 }
 
 /// install 7z if needed
