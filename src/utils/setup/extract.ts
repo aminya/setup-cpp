@@ -1,8 +1,8 @@
 import { basename, dirname, join } from "path"
-import { mkdirP, mv } from "@actions/io"
 import { grantUserWriteAccess } from "admina"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
+import { mkdirp, move } from "fs-extra"
 import { rm } from "fs/promises"
 import { installAptPack } from "setup-apt"
 import which from "which"
@@ -83,7 +83,7 @@ export async function extract7Zip(file: string, dest: string) {
     const folderName = tarName.slice(0, -4)
     const folderPath = join(tarDir, folderName)
     info(`Moving ${folderPath} to ${dest}`)
-    await mv(folderPath, dest, { force: true })
+    await move(folderPath, dest, { overwrite: true })
   } else {
     // extract the 7z file directly
     await run7zip(file, dest)
@@ -137,7 +137,7 @@ export async function extractTarByExe(file: string, dest: string, stripComponent
   await installTarDependencies(getArchiveType(file))
 
   try {
-    await mkdirP(dest)
+    await mkdirp(dest)
   } catch {
     // ignore
   }
