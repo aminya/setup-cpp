@@ -117,4 +117,22 @@ describe("setup-llvm", () => {
 
     await io.rmRF(directory)
   })
+
+  // test installation of LLVM 10 to 19 on Linux
+  for (let version = 10; version <= 19; version++) {
+    if (process.platform !== "linux") {
+      continue
+    }
+    it(`should setup LLVM ${version} on Linux`, async () => {
+      const directory = await setupTmpDir("llvm")
+
+      const { binDir } = await setupLLVM(`${version}`, directory, process.arch)
+      await testBin("clang++", ["--version"], binDir)
+
+      expect(process.env.CC?.includes("clang")).toBeTruthy()
+      expect(process.env.CXX?.includes("clang++")).toBeTruthy()
+
+      await io.rmRF(directory)
+    })
+  }
 })

@@ -21,6 +21,7 @@ words:
   - bazel
   - bazelisk
   - biome
+  - mkdirp
   - biomejs
   - buildtools
   - caxa
