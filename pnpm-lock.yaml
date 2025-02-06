@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   '@actions/http-client@2.2.3':
-    hash: gqcf2jay7nqqezf3jni6mxu74u
+    hash: 410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae
     path: patches/@actions__http-client@2.2.3.patch
 
 importers:
@@ -24,7 +24,7 @@ importers:
         version: 1.1.1
       '@actions/http-client':
         specifier: ^2.2.3
-        version: 2.2.3(patch_hash=gqcf2jay7nqqezf3jni6mxu74u)
+        version: 2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)
       '@actions/io':
         specifier: ^1.1.3
         version: 1.1.3
@@ -5720,7 +5720,7 @@ snapshots:
       '@actions/core': 1.11.1
       '@actions/exec': 1.1.1
       '@actions/glob': 0.1.2
-      '@actions/http-client': 2.2.3(patch_hash=gqcf2jay7nqqezf3jni6mxu74u)
+      '@actions/http-client': 2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)
       '@actions/io': 1.1.3
       '@azure/abort-controller': 1.1.0
       '@azure/ms-rest-js': 2.7.0(encoding@0.1.13)
@@ -5736,7 +5736,7 @@ snapshots:
       '@actions/core': 1.11.1
       '@actions/exec': 1.1.1
       '@actions/glob': 0.1.2
-      '@actions/http-client': 2.2.3(patch_hash=gqcf2jay7nqqezf3jni6mxu74u)
+      '@actions/http-client': 2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)
       '@actions/io': 1.1.3
       '@azure/abort-controller': 1.1.0
       '@azure/ms-rest-js': 2.7.0(encoding@0.1.13)
@@ -5751,13 +5751,13 @@ snapshots:
 
   '@actions/core@1.10.1':
     dependencies:
-      '@actions/http-client': 2.2.3(patch_hash=gqcf2jay7nqqezf3jni6mxu74u)
+      '@actions/http-client': 2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)
       uuid: 8.3.2
 
   '@actions/core@1.11.1':
     dependencies:
       '@actions/exec': 1.1.1
-      '@actions/http-client': 2.2.3(patch_hash=gqcf2jay7nqqezf3jni6mxu74u)
+      '@actions/http-client': 2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)
 
   '@actions/exec@1.1.1':
     dependencies:
@@ -5773,7 +5773,7 @@ snapshots:
       '@actions/core': 1.11.1
       minimatch: 3.1.2
 
-  '@actions/http-client@2.2.3(patch_hash=gqcf2jay7nqqezf3jni6mxu74u)':
+  '@actions/http-client@2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)':
     dependencies:
       tunnel: 0.0.6
       undici: 5.28.4
@@ -5784,7 +5784,7 @@ snapshots:
     dependencies:
       '@actions/core': 1.11.1
       '@actions/exec': 1.1.1
-      '@actions/http-client': 2.2.3(patch_hash=gqcf2jay7nqqezf3jni6mxu74u)
+      '@actions/http-client': 2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)
       '@actions/io': 1.1.3
       semver: 6.3.1
       uuid: 3.4.0
@@ -11127,7 +11127,7 @@ snapshots:
       '@actions/core': 1.11.1
       '@actions/exec': 1.1.1
       '@actions/glob': 0.4.0
-      '@actions/http-client': 2.2.3(patch_hash=gqcf2jay7nqqezf3jni6mxu74u)
+      '@actions/http-client': 2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)
       '@actions/io': 1.1.3
       '@actions/tool-cache': 2.0.1
       '@iarna/toml': 3.0.0
