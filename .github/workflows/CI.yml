@@ -284,6 +284,14 @@ jobs:
           name: dist
           path: dist/
 
+      - name: Place Artifacts
+        shell: bash
+        run: |
+          mv -v ./dist/ ./dist-artifacts
+          mv -v ./dist-artifacts/* ./
+
+          chmod +x -R ./exe/
+
       - name: Draft the release
         uses: meeDamian/github-release@2.0
         with:
