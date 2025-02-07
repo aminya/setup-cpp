@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: true
 
 env:
@@ -51,11 +51,16 @@ jobs:
       - name: Update Dist
         run: |
           if [ "$(git diff --ignore-space-at-eol --text dist/ | wc -l)" -gt "0" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add dist/
-            git commit -m "chore(build): update dist"
-            git push
+            if [[ "${{ github.ref_name }}" =~ ^refs/heads/ ]]; then
+              git config user.name "github-actions[bot]"
+              git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+              
+              git add dist/
+              git commit -m "chore(build): update dist"
+              git push
+            else
+              echo "Skipping push for non-branch commit"
+            fi
           fi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
