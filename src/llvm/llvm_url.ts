@@ -7,7 +7,7 @@ import { arm64, armv7, powerpc64le, sparc64, sparcv9, x86, x86_64 } from "../uti
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
-import { extractExe, extractTarByExe, getArchiveType, getExtractFunction } from "../utils/setup/extract.js"
+import { extractTarByExe, getArchiveType, getExtractFunction } from "../utils/setup/extract.js"
 import type { PackageInfo } from "../utils/setup/setupBin.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
