@@ -130,7 +130,7 @@ jobs:
           name: exe-${{ matrix.os }}
           path: |
             ./exe
-          retention-days: 1
+          retention-days: 7
 
   Test:
     name: Test-${{ matrix.os }}
@@ -276,7 +276,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: exe-*
-          path: exe/
+          path: ./exe/
+          merge-multiple: true
+
+      - name: Chmod executables
+        shell: bash
+        run: |
+          chmod +x -R ./exe/
 
       - name: Download Dist
         uses: actions/download-artifact@v4
@@ -284,23 +290,19 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Place Artifacts
-        shell: bash
+      - name: Tar Dist
         run: |
-          mv -v ./dist/ ./dist-artifacts
-          mv -v ./dist-artifacts/* ./
+          tar -czf modern.tgz ./dist/modern
+          tar -czf legacy.tgz ./dist/legacy
+          ls -R ./dist/
+        continue-on-error: true
 
-          chmod +x -R ./exe/
-
-      - name: Draft the release
-        uses: meeDamian/github-release@2.0
+      - name: Create Release in this repo
+        uses: softprops/action-gh-release@v2
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          gzip: folders
-          draft: true
-          files: >
-            ./exe/setup-cpp-x64-windows.exe
-            ./exe/setup-cpp-x64-linux
-            ./exe/setup-cpp-x64-macos
-            ./dist/legacy/
-            ./dist/modern/
+          files: |
+            ./exe/*
+            modern.tgz
+            legacy.tgz
+          generate_release_notes: true
+          # fail_on_unmatched_files: true
