@@ -18,7 +18,7 @@
     "build": "tsc --pretty",
     "dev": "tsc --watch --pretty",
     "lint.tsc": "tsc --noEmit --pretty",
-    "lint.eslint": "eslint **/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml} --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
+    "lint.eslint": "eslint '**/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml}' --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
     "prepublishOnly": "pnpm run build",
     "test": "jest --coverage"
   },
