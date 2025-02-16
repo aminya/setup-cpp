@@ -22,25 +22,47 @@ describe("getCompilerInfo", () => {
     expect(compiler).toBe("llvm")
     expect(version).toBe("12")
   })
-})
 
-describe("getCompilerInfo", () => {
-  it("getCompilerInfo with semver", () => {
-    const { compiler, version } = getCompilerInfo("llvm-12.0.0")
-    expect(compiler).toBe("llvm")
-    expect(version).toBe("12.0.0")
+  it("extracts gcc version", () => {
+    const { compiler, version } = getCompilerInfo("gcc-11.2.0")
+    expect(compiler).toBe("gcc")
+    expect(version).toBe("11.2.0")
   })
 
-  it("getCompilerInfo with major version", () => {
-    const { compiler, version } = getCompilerInfo("llvm-12")
-    expect(compiler).toBe("llvm")
-    expect(version).toBe("12")
+  it("extracts apple-clang version", () => {
+    const { compiler, version } = getCompilerInfo("apple-clang-14")
+    expect(compiler).toBe("apple-clang")
+    expect(version).toBe("14")
   })
 
-  it("getCompilerInfo without version", () => {
-    const { compiler, version } = getCompilerInfo("llvm")
-    expect(compiler).toBe("llvm")
-    expect(version).toBeUndefined()
+  it("extracts msvc version", () => {
+    const { compiler, version } = getCompilerInfo("msvc-14.16.27023")
+    expect(compiler).toBe("msvc")
+    expect(version).toBe("14.16.27023")
+  })
+
+  it("extracts msvc version with year", () => {
+    const { compiler, version } = getCompilerInfo("msvc-2017")
+    expect(compiler).toBe("msvc")
+    expect(version).toBe("2017")
+  })
+
+  it("extracts msvc version with year and version", () => {
+    const { compiler, version } = getCompilerInfo("msvc-2017.1")
+    expect(compiler).toBe("msvc")
+    expect(version).toBe("2017.1")
+  })
+
+  it("extracts gcc version with pre-release and build metadata", () => {
+    const { compiler, version } = getCompilerInfo("gcc-11.2.0-beta.1+build.123")
+    expect(compiler).toBe("gcc")
+    expect(version).toBe("11.2.0-beta.1+build.123")
+  })
+
+  it("extracts clang version with pre-release", () => {
+    const { compiler, version } = getCompilerInfo("clang-15.0.0-rc1")
+    expect(compiler).toBe("clang")
+    expect(version).toBe("15.0.0-rc1")
   })
 })
 
