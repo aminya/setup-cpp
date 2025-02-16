@@ -19,7 +19,18 @@ export type CompilerInfo = {
 }
 
 /**
- * Detecting the compiler version. Divide the given string by `-` and use the second element as the version
+ * Match version patterns like:
+ * - Standard versions: digit.digit.digit
+ * - Semver with pre-release: digit.digit.digit-alpha.1
+ * - Semver with build metadata: digit.digit.digit+build.123
+ * - MSVC style: digit.digit.digit.digit
+ * - Year versions: 2015, 2017, etc.
+ */
+const versionPattern = /[.-]((?:\d{4}|\d+(?:\.\d+)*(?:-[\w.-]+)?(?:\+[\w.-]+)?)$)/
+
+/**
+ * Detecting the compiler version by looking for a version-like pattern.
+ * Supports compiler names that contain hyphens and various version formats.
  *
  * @param compilerAndVersion - The compiler and version string
  * @returns The compiler and version
@@ -28,16 +39,20 @@ export type CompilerInfo = {
  */
 export function getCompilerInfo(compilerAndVersion: string): CompilerInfo {
   try {
-    const compilerAndMaybeVersion = compilerAndVersion.split("-")
-    const compiler = compilerAndMaybeVersion[0]
-    if (1 in compilerAndMaybeVersion) {
-      const maybeVersion = compilerAndMaybeVersion[1]
-      if (semverValid(maybeVersion) === null) {
-        info(`Invalid semver version ${maybeVersion} used for the compiler.`)
-      }
-      return { compiler, version: maybeVersion }
+    const match = compilerAndVersion.match(versionPattern)
+
+    if (match === null) {
+      return { compiler: compilerAndVersion, version: undefined }
     }
-    return { compiler, version: undefined }
+
+    const version = match[1]
+    const compiler = compilerAndVersion.slice(0, match.index).replace(/[.-]$/, "")
+
+    // Only check semver for non-year versions
+    if (!version.match(/^\d{4}$/) && semverValid(version) === null) {
+      info(`Non-semver version format: ${version}`)
+    }
+    return { compiler, version }
   } catch (err) {
     error(`Failed to parse the compiler info ${compilerAndVersion}: ${err}`)
     return { compiler: compilerAndVersion, version: undefined }
