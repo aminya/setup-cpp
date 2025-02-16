@@ -57,22 +57,22 @@ NOTE: setup-cpp requires Nodejs 12 or higher. If Nodejs shipped with your distri
 
 #### With executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.46.1), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v0.46.2), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
 
 ```shell
 # windows x64
-curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.46.1/setup-cpp-x64-windows.exe"
+curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.46.2/setup-cpp-x64-windows.exe"
 
 # linux x64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.46.1/setup-cpp-x64-linux"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.46.2/setup-cpp-x64-linux"
 chmod +x ./setup-cpp
 
 # macos arm64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.46.1/setup-cpp-arm64-macos"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.46.2/setup-cpp-arm64-macos"
 chmod +x ./setup-cpp
 
 # macos x64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.46.1/setup-cpp-x64-macos"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v0.46.2/setup-cpp-x64-macos"
 chmod +x ./setup-cpp
 ```
 
@@ -167,19 +167,19 @@ To provide fast development environments, `setup-cpp` provides several prebuilt 
 You can use these images as a base image for your project.
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.46.1 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.46.2 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.46.1 AS builder
+FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.46.2 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-llvm:40-0.46.1 AS builder
+FROM aminya/setup-cpp-fedora-llvm:40-0.46.2 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-llvm:base-0.46.1 AS builder
+FROM aminya/setup-cpp-arch-llvm:base-0.46.2 AS builder
 ```
 
 The names are in the format `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
@@ -198,7 +198,7 @@ RUN apt-get update -qq && \
     # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v0.46.1 && \
+    npm install -g setup-cpp@v0.46.2 && \
     # install the compiler and tools
     setup-cpp \
         --nala true \
@@ -307,7 +307,7 @@ stages:
   apt-get install -y --no-install-recommends nodejs npm
 
   # install setup-cpp
-  npm install -g setup-cpp@v0.46.1
+  npm install -g setup-cpp@v0.46.2
 
   # install the compiler and tools
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true

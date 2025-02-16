@@ -4,7 +4,7 @@ FROM fedora:40 AS setup-cpp-fedora
 # install nodejs
 RUN dnf -y install nodejs npm && \
 # install setup-cpp
-    npm install -g setup-cpp@v0.46.1 && \
+    npm install -g setup-cpp@v0.46.2 && \
 # install the compiler and tools
     setup-cpp \
         --compiler llvm \
