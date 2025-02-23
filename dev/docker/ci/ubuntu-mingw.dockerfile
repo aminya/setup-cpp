@@ -3,9 +3,14 @@ FROM ubuntu:22.04 AS setup-cpp-ubuntu-mingw
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
+# install latest nodejs
 RUN apt-get update -qq && \
-# install nodejs
-    apt-get install -y --no-install-recommends nodejs npm && \
+    apt-get install -y --no-install-recommends curl gnupg ca-certificates && \
+    mkdir -p /etc/apt/keyrings && \
+    curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg --dearmor -o /etc/apt/keyrings/nodesource.gpg && \
+    echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_20.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list && \
+    apt-get update -qq && \
+    apt-get install -y --no-install-recommends nodejs && \
 # install the compiler and tools
     node /usr/lib/setup-cpp/setup-cpp.js \
         --nala true \
