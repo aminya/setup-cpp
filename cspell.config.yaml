@@ -20,6 +20,7 @@ words:
   - armv
   - bazel
   - bazelisk
+  - binfmt
   - biome
   - biomejs
   - buildtools
@@ -103,6 +104,7 @@ words:
   - SYSROOT
   - Syuu
   - terserrc
+  - tonistiigi
   - Trofimovich
   - tsbuildinfo
   - ucrt
