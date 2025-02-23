@@ -235,6 +235,9 @@ jobs:
           - { file: "ubuntu-mingw.dockerfile", image: "setup-cpp-ubuntu-mingw", tag: "22.04-0.46.2" }
           # - { file: "fedora-mingw.dockerfile", image: "setup-cpp-fedora-mingw", tag: "40-0.46.2" }
           # - { file: "arch-mingw.dockerfile", image: "setup-cpp-arch-mingw", tag: "base-0.46.2" }
+        exclude:
+          - platform: linux/arm64
+            container: { file: "arch-llvm.dockerfile", image: "setup-cpp-arch-llvm", tag: "base-0.46.2" }
     steps:
       - uses: actions/checkout@v4
         with:
