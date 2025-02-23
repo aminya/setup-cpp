@@ -4,7 +4,11 @@ FROM setup-cpp-ubuntu AS setup-cpp-ubuntu-llvm
 RUN node /usr/lib/setup-cpp/setup-cpp.js \
     --compiler llvm && \
 # cleanup
-    dnf clean all && \
+    nala autoremove -y && \
+    nala autopurge -y && \
+    apt-get clean && \
+    nala clean --lists && \
+    rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
 
 ENTRYPOINT ["/bin/bash"]
