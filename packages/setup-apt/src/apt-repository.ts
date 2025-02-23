@@ -16,7 +16,7 @@ export async function addAptRepository(repo: string, apt = getApt()) {
   updateAptReposMemoized(apt)
 }
 
-export async function installAddAptRepo(apt: string) {
+export async function installAddAptRepo(apt: string = getApt()) {
   if (await isAptPackInstalled("software-properties-common")) {
     return
   }
