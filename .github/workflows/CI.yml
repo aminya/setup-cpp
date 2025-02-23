@@ -288,6 +288,7 @@ jobs:
           cache-to: type=inline
 
       - name: Test LLVM
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -297,6 +298,7 @@ jobs:
           tags: aminya/test-${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-mingw
+        if: ${{ !contains(matrix.container.distro, 'fedora') }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -308,6 +310,7 @@ jobs:
           cache-to: type=inline
 
       - name: Test Mingw
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && !contains(matrix.container.distro, 'fedora') }}
         uses: docker/build-push-action@v6
         with:
           context: .
