@@ -21,9 +21,9 @@ words:
   - bazel
   - bazelisk
   - biome
-  - mkdirp
   - biomejs
   - buildtools
+  - Buildx
   - caxa
   - ccache
   - choco
@@ -69,6 +69,7 @@ words:
   - liuli
   - mdimporterdir
   - memoizee
+  - mkdirp
   - msbuild
   - msvc
   - msvcrt
