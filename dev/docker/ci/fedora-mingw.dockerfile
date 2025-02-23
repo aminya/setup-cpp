@@ -1,24 +1,9 @@
-## base image
-FROM fedora:40 AS setup-cpp-fedora-mingw
+FROM setup-cpp-fedora AS setup-cpp-ubuntu-llvm
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
-
-# install nodejs
-RUN dnf -y install nodejs npm && \
-# install the compiler and tools
-    node /usr/lib/setup-cpp/setup-cpp.js \
-        --compiler mingw \
-        --cmake true \
-        --ninja true \
-        --task true \
-        --vcpkg true \
-        --python true \
-        --make true \
-        --cppcheck true \
-        --gcovr true \
-        --doxygen true \
-        --ccache true \
-        --powershell true && \
+# install mingw
+RUN node /usr/lib/setup-cpp/setup-cpp.js \
+    --compiler mingw \
+    --powershell true && \
 # cleanup
     dnf clean all && \
     rm -rf /tmp/*

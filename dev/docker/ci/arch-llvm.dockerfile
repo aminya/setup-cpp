@@ -1,25 +1,8 @@
-## base image
-FROM archlinux:base AS setup-cpp-arch
+FROM setup-cpp-arch AS setup-cpp-arch-llvm
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
-
-RUN pacman -Syuu --noconfirm && \
-    pacman-db-upgrade && \
-# install nodejs
-    pacman -S --noconfirm --needed nodejs npm && \
-# install the compiler and tools
-    node /usr/lib/setup-cpp/setup-cpp.js \
-        --compiler llvm \
-        --cmake true \
-        --ninja true \
-        --task true \
-        --vcpkg true \
-        --python true \
-        --make true \
-        --cppcheck true \
-        --gcovr true \
-        --doxygen true \
-        --ccache true && \
+# install llvm
+RUN node /usr/lib/setup-cpp/setup-cpp.js \
+    --compiler llvm && \
 # arch cleanup
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \

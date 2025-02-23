@@ -1,23 +1,8 @@
-## base image
-FROM fedora:40 AS setup-cpp-fedora
+FROM setup-cpp-fedora AS setup-cpp-fedora-llvm
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
-
-# install nodejs
-RUN dnf -y install nodejs npm && \
-# install the compiler and tools
-    node /usr/lib/setup-cpp/setup-cpp.js \
-        --compiler llvm \
-        --cmake true \
-        --ninja true \
-        --task true \
-        --vcpkg true \
-        --python true \
-        --make true \
-        --cppcheck true \
-        --gcovr true \
-        --doxygen true \
-        --ccache true && \
+# install llvm
+RUN node /usr/lib/setup-cpp/setup-cpp.js \
+    --compiler llvm && \
 # cleanup
     dnf clean all && \
     rm -rf /tmp/*

@@ -230,19 +230,13 @@ jobs:
         platform:
           - linux/amd64
         container:
-          - { file: "ubuntu-llvm.dockerfile", image: "setup-cpp-ubuntu-llvm", tag: "22.04-0.46.2" }
-          - { file: "fedora-llvm.dockerfile", image: "setup-cpp-fedora-llvm", tag: "40-0.46.2" }
-          - { file: "arch-llvm.dockerfile", image: "setup-cpp-arch-llvm", tag: "base-0.46.2" }
-          - { file: "ubuntu-mingw.dockerfile", image: "setup-cpp-ubuntu-mingw", tag: "22.04-0.46.2" }
-          # - { file: "fedora-mingw.dockerfile", image: "setup-cpp-fedora-mingw", tag: "40-0.46.2" }
-          # - { file: "arch-mingw.dockerfile", image: "setup-cpp-arch-mingw", tag: "base-0.46.2" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-0.46.2" }
+          - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-0.46.2" }
+          - { distro: "arch", image: "setup-cpp-arch", tag: "base-0.46.2" }
         include:
           - os: ubuntu-24.04
             platform: linux/arm64
-            container: { file: "ubuntu-llvm.dockerfile", image: "setup-cpp-ubuntu-llvm", tag: "22.04-0.46.2" }
-          - os: ubuntu-24.04
-            platform: linux/arm64
-            container: { file: "ubuntu-mingw.dockerfile", image: "setup-cpp-ubuntu-mingw", tag: "22.04-0.46.2" }
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-0.46.2" }
     steps:
       - uses: actions/checkout@v4
         with:
@@ -271,25 +265,56 @@ jobs:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push
+      - name: Build setup-cpp-${{matrix.container.distro }}
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./dev/docker/ci/${{ matrix.container.file }}
+          file: ./dev/docker/ci/${{ matrix.container.distro }}.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}:latest
+          tags: ${{ matrix.container.image }},aminya/${{ matrix.container.image }}:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}:latest
           cache-from: type=registry,ref=user/app:latest
           cache-to: type=inline
 
-      - name: Test
+      - name: Build setup-cpp-${{matrix.container.distro }}-llvm
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./dev/docker/examples/${{ matrix.container.file }}
+          file: ./dev/docker/ci/${{ matrix.container.distro }}-llvm.dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: ${{ matrix.platform }}
+          tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-llvm:latest
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
+
+      - name: Test LLVM
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./dev/docker/examples/${{ matrix.container.distro }}-llvm.dockerfile
           push: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/test-${{ matrix.container.image }}:${{ matrix.container.tag }}
+          tags: aminya/test-${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
+
+      - name: Build setup-cpp-${{matrix.container.distro }}-mingw
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./dev/docker/ci/${{ matrix.container.distro }}-mingw.dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: ${{ matrix.platform }}
+          tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-mingw:latest
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
+
+      - name: Test Mingw
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./dev/docker/examples/${{ matrix.container.distro }}-mingw.dockerfile
+          push: false
+          platforms: ${{ matrix.platform }}
+          tags: aminya/test-${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}
 
   Release:
     if: startsWith(github.ref, 'refs/tags/')
