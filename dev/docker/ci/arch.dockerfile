@@ -1,5 +1,5 @@
 ## base image
-FROM archlinux:base AS arch-nodejs
+FROM --platform=$BUILDPLATFORM archlinux:base AS arch-nodejs
 
 RUN pacman -Syuu --noconfirm && \
     pacman-db-upgrade && \
@@ -10,7 +10,7 @@ RUN pacman -Syuu --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /tmp/*
 
-FROM arch-nodejs AS setup-cpp-arch
+FROM --platform=$BUILDPLATFORM arch-nodejs AS setup-cpp-arch
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 

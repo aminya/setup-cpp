@@ -1,5 +1,5 @@
 #### Base Image with Node.js
-FROM ubuntu:22.04 AS ubuntu-nodejs
+FROM --platform=$BUILDPLATFORM ubuntu:22.04 AS ubuntu-nodejs
 
 # install latest nodejs
 RUN apt-get update -qq && \
@@ -15,7 +15,7 @@ RUN apt-get update -qq && \
     rm -rf /tmp/*
 
 #### Base Image with Tools
-FROM ubuntu-nodejs AS setup-cpp-ubuntu
+FROM --platform=$BUILDPLATFORM ubuntu-nodejs AS setup-cpp-ubuntu
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 

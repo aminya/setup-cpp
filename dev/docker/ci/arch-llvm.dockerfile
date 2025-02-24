@@ -1,4 +1,4 @@
-FROM setup-cpp-arch AS setup-cpp-arch-llvm
+FROM --platform=$BUILDPLATFORM setup-cpp-arch:latest AS setup-cpp-arch-llvm
 
 # install llvm
 RUN node /usr/lib/setup-cpp/setup-cpp.js \

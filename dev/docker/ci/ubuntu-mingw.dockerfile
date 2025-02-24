@@ -1,4 +1,4 @@
-FROM setup-cpp-ubuntu AS setup-cpp-ubuntu-mingw
+FROM --platform=$BUILDPLATFORM setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-mingw
 
 # install mingw/powershell
 RUN node /usr/lib/setup-cpp/setup-cpp.js \

@@ -1,5 +1,5 @@
 ## base image
-FROM fedora:40 AS fedora-nodejs
+FROM --platform=$BUILDPLATFORM fedora:40 AS fedora-nodejs
 
 # install nodejs
 RUN dnf -y install nodejs npm && \
@@ -7,7 +7,7 @@ RUN dnf -y install nodejs npm && \
     dnf clean all && \
     rm -rf /tmp/*
 
-FROM fedora-nodejs AS setup-cpp-fedora
+FROM --platform=$BUILDPLATFORM fedora-nodejs AS setup-cpp-fedora
 
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 

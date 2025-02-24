@@ -1,4 +1,4 @@
-FROM setup-cpp-fedora AS setup-cpp-fedora-llvm
+FROM --platform=$BUILDPLATFORM setup-cpp-fedora:latest AS setup-cpp-fedora-llvm
 
 # install llvm
 RUN node /usr/lib/setup-cpp/setup-cpp.js \
