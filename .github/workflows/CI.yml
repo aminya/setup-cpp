@@ -234,7 +234,7 @@ jobs:
           - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-0.46.2" }
           - { distro: "arch", image: "setup-cpp-arch", tag: "base-0.46.2" }
         include:
-          - os: ubuntu-24.04
+          - os: ubuntu-24.04-arm
             platform: linux/arm64
             container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-0.46.2" }
     steps:
@@ -246,17 +246,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist
-
-      - name: Set up QEMU
-        if: contains(matrix.platform, 'arm64')
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
-          image: tonistiigi/binfmt:qemu-v7.0.0
-
-      - name: Set up Docker Buildx
-        if: contains(matrix.platform, 'arm64')
-        uses: docker/setup-buildx-action@v3
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
