@@ -27,7 +27,10 @@ RUN pacman -Syuu --noconfirm && \
         --cppcheck true \
         --gcovr true \
         --doxygen true \
-        --ccache true && \
+        --ccache true \
+        --conan true \
+        --cmakelang true \
+        --meson true && \
 # arch cleanup
     pacman -Scc --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \

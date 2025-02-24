@@ -8,7 +8,20 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 `setup-cpp` can be used locally from terminal, from CI services like GitHub Actions and GitLab Pipelines, and inside containers like Docker.
 
-`setup-cpp` is supported on many platforms. It is continuously tested on several configurations including Windows (11, 10, 2022, 2019) x64/ARM/x86, Linux (Ubuntu 24.0, 22.04, 20.04, 18.04, Fedora, ArchLinux) x64/ARM, and macOS (15, 14, 13, 12, 11, 10.15) x64/ARM. `setup-cpp` is backed by unit tests for each tool and integration tests for compiling cpp projects.
+`setup-cpp` is supported on many platforms. It is continuously tested on several configurations including Windows (11, 10, 2022, 2019) x64/ARM/x86, Linux (Ubuntu 24.0, 22.04, 20.04, 18.04, Fedora, ArchLinux) x64/ARM64, and macOS (15, 14, 13, 12, 11, 10.15) x64/ARM. `setup-cpp` is backed by unit tests for each tool and integration tests for compiling cpp projects.
+
+<!-- dprint-ignore -->
+```yaml
+# GitHub Actions example:
+      - name: Setup Cpp
+        uses: aminya/setup-cpp@v1
+        with:
+          compiler: llvm
+          vcvarsall: true
+          cmake: true
+          ninja: true
+          vcpkg: true
+```
 
 ## Features
 
@@ -94,7 +107,31 @@ NOTE: On Unix systems, if you are already a root user (e.g., in a GitLab runner 
 
 ### Inside GitHub Actions
 
-Here is a complete cross-platform example that tests llvm, gcc, and msvc. It also uses cmake, ninja, vcpkg, and cppcheck.
+A simple example for building with LLVM, cmake, ninja, vcpkg:
+
+<!-- dprint-ignore -->
+```yaml
+      - name: Setup Cpp
+        uses: aminya/setup-cpp@v1
+        with:
+          compiler: llvm
+          vcvarsall: true
+          cmake: true
+          ninja: true
+          vcpkg: true
+```
+
+A simple example for installing clang-format for code formatting:
+
+<!-- dprint-ignore -->
+```yaml
+      - name: Setup Cpp
+        uses: aminya/setup-cpp@v1
+        with:
+          clang-format: true
+```
+
+A complete cross-platform example that tests llvm, gcc, and msvc. It also uses cmake, ninja, vcpkg, and cppcheck.
 
 `.github/workflows/ci.yml`:
 
@@ -151,27 +188,39 @@ jobs:
         uses: aminya/setup-cpp@v1
         with:
           compiler: ${{ matrix.compiler }}
-          vcvarsall: ${{ contains(matrix.os, 'windows') }}
+          vcvarsall: true
           cmake: true
           ninja: true
           vcpkg: true
-          cppcheck: true
-          clang-tidy: true # instead of `true`, which chooses the default version, you can pass a specific version.
-          # ...
+          cppcheck: true # instead of `true`, which chooses the default version, you can pass a specific version.
 ```
 
 ### Prebuilt Docker Images
 
-To provide fast development environments, `setup-cpp` provides several prebuilt docker images that have the tools you need (e.g. `llvm, cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache`).
+To provide fast development environments, `setup-cpp` provides several prebuilt docker images that have the tools you need. You can use these images as a base image for your project.
 
-You can use these images as a base image for your project.
+Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.46.2 AS builder
+FROM aminya/setup-cpp-ubuntu:22.04-0.46.2 AS builder
 ```
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.46.2 AS builder
+FROM aminya/setup-cpp-ubuntu:22.04-0.46.2 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-fedora:40-0.46.2 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-arch:base-0.46.2 AS builder
+```
+
+With `llvm`
+
+```dockerfile
+FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.46.2 AS builder
 ```
 
 ```dockerfile
@@ -182,7 +231,17 @@ FROM aminya/setup-cpp-fedora-llvm:40-0.46.2 AS builder
 FROM aminya/setup-cpp-arch-llvm:base-0.46.2 AS builder
 ```
 
-The names are in the format `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
+With `mingw`
+
+```dockerfile
+FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.46.2 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-arch-mingw:base-0.46.2 AS builder
+```
+
+The names are in the format `aminya/setup-cpp-<platform>:<platform_version>-<setup_cpp_version>` and `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
 
 If you need to install the tools selectively, see the next section.
 

@@ -22,7 +22,10 @@ RUN node /usr/lib/setup-cpp/setup-cpp.js \
         --cppcheck true \
         --gcovr true \
         --doxygen true \
-        --ccache true && \
+        --ccache true \
+        --conan true \
+        --cmakelang true \
+        --meson true && \
 # cleanup
     dnf clean all && \
     rm -rf /tmp/*
