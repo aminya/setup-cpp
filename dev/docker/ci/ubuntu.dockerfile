@@ -30,13 +30,8 @@ RUN node /usr/lib/setup-cpp/setup-cpp.js \
     --cppcheck true \
     --gcovr true \
     --doxygen true \
+    --vcpkg true \
     --ccache true && \
-# install vcpkg if the architecture is amd64
-    dpkgArch="$(dpkg --print-architecture)" && \
-    case "${dpkgArch##*-}" in \
-        amd64) node /usr/lib/setup-cpp/setup-cpp.js --vcpkg true ;; \
-        *) echo >&2 "unsupported vcpkg architecture: ${dpkgArch}" ;; \
-    esac && \
 # cleanup
     nala autoremove -y && \
     nala autopurge -y && \
