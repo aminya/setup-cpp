@@ -21,17 +21,20 @@ COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
 # install the cpp tools
 RUN node /usr/lib/setup-cpp/setup-cpp.js \
-    --nala true \
-    --cmake true \
-    --ninja true \
-    --task true \
-    --python true \
-    --make true \
-    --cppcheck true \
-    --gcovr true \
-    --doxygen true \
-    --vcpkg true \
-    --ccache true && \
+        --nala true \
+        --cmake true \
+        --ninja true \
+        --task true \
+        --python true \
+        --make true \
+        --cppcheck true \
+        --gcovr true \
+        --doxygen true \
+        --vcpkg true \
+        --ccache true \
+        --conan true \
+        --cmakelang true \
+        --meson true && \
 # cleanup
     nala autoremove -y && \
     nala autopurge -y && \
