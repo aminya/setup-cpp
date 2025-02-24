@@ -83,8 +83,10 @@ async function main(args: string[]): Promise<number> {
 
     // skip if undefined
     if (version !== undefined) {
+      const timeout = opts.timeout !== undefined ? Number.parseFloat(opts.timeout) * 60 * 1000 : undefined
       // running the setup function for this tool
       time1 = Date.now()
+
       // eslint-disable-next-line no-await-in-loop
       await installTool(
         tool,
@@ -94,7 +96,7 @@ async function main(args: string[]): Promise<number> {
         setupCppDir,
         successMessages,
         errorMessages,
-        Number.parseFloat(opts.timeout ?? "20") * 60 * 1000,
+        timeout,
       )
       time2 = Date.now()
       info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
