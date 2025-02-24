@@ -71,35 +71,36 @@ async function main(args: string[]): Promise<number> {
   // loop over the tools and run their setup function
 
   let failedFast = false
-  for (const tool of tools) {
-    // fail fast inside CI when any tool fails
-    if (isCI && errorMessages.length !== 0) {
-      failedFast = true
-      break
-    }
-
-    // get the version or "true" or undefined for this tool from the options
+  for (const tool of tools) { // get the version or "true" or undefined for this tool from the options
     const version = opts[tool]
 
-    // skip if undefined
-    if (version !== undefined) {
-      const timeout = opts.timeout !== undefined ? Number.parseFloat(opts.timeout) * 60 * 1000 : undefined
-      // running the setup function for this tool
-      time1 = Date.now()
+    // skip if undefined or false
+    if (version === undefined || version === "false") {
+      continue
+    }
 
-      // eslint-disable-next-line no-await-in-loop
-      await installTool(
-        tool,
-        version,
-        osVersion,
-        arch,
-        setupCppDir,
-        successMessages,
-        errorMessages,
-        timeout,
-      )
-      time2 = Date.now()
-      info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
+    const timeout = opts.timeout !== undefined ? Number.parseFloat(opts.timeout) * 60 * 1000 : undefined
+    // running the setup function for this tool
+    time1 = Date.now()
+
+    // eslint-disable-next-line no-await-in-loop
+    await installTool(
+      tool,
+      version,
+      osVersion,
+      arch,
+      setupCppDir,
+      successMessages,
+      errorMessages,
+      timeout,
+    )
+    time2 = Date.now()
+    info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
+
+    // fail fast inside CI when any tool fails
+    if (errorMessages.length !== 0 && isCI) {
+      failedFast = true
+      break
     }
   }
 
