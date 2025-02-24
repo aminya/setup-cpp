@@ -80,10 +80,12 @@ export async function installAptPack(packages: AptPackage[], update = false): Pr
       info(`Installing ${name} ${version ?? ""} via ${apt}`)
     }
 
-    // Update the repos if needed
     if (update) {
-      updateAptReposMemoized(apt)
+      // Force update the repos
+      updateAptReposMemoized.clear()
     }
+    // Update the repos if needed
+    updateAptReposMemoized(apt)
 
     // Add the repos if needed
     await addRepositories(apt, packages)

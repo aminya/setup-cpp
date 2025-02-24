@@ -8,7 +8,7 @@ import { updateAptReposMemoized } from "./update.js"
 
 export async function addAptRepository(repo: string, apt = getApt()) {
   await initAptMemoized(apt)
-  await installAddAptRepo(apt)
+  await installAddAptRepo()
   execRootSync("add-apt-repository", ["-y", "--no-update", repo], { ...defaultExecOptions, env: getAptEnv(apt) })
 
   // Update the repos
@@ -16,10 +16,11 @@ export async function addAptRepository(repo: string, apt = getApt()) {
   updateAptReposMemoized(apt)
 }
 
-export async function installAddAptRepo(apt: string) {
+export async function installAddAptRepo() {
   if (await isAptPackInstalled("software-properties-common")) {
     return
   }
+  const apt = "apt-get"
   execRootSync(
     apt,
     ["install", "-y", "--fix-broken", "-o", aptTimeout, "software-properties-common"],
@@ -29,7 +30,7 @@ export async function installAddAptRepo(apt: string) {
 
 export async function removeAptRepository(repo: string, apt = getApt()) {
   await initAptMemoized(apt)
-  await installAddAptRepo(apt)
+  await installAddAptRepo()
   execRootSync("add-apt-repository", ["-y", "--no-update", "--remove", repo], {
     ...defaultExecOptions,
     env: getAptEnv(apt),

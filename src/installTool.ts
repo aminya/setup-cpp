@@ -1,7 +1,6 @@
 import { join } from "path"
 import { endGroup, startGroup } from "@actions/core"
 import { error } from "ci-log"
-import pTimeout from "p-timeout"
 import { setupBrew } from "setup-brew"
 import { getSuccessMessage, rcOptions } from "./cli-options.js"
 import { type ToolName, llvmTools, setups } from "./tool.js"
@@ -9,7 +8,7 @@ import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
 import { getVersion } from "./versions/versions.js"
 
-export const DEFAULT_TIMEOUT = 20 * 60 * 1000 // 20 minutes
+export const DEFAULT_TIMEOUT = 60 * 60 * 1000 // 60 minutes
 
 export async function installTool(
   tool: ToolName,
@@ -19,14 +18,11 @@ export async function installTool(
   setupCppDir: string,
   successMessages: string[],
   errorMessages: string[],
-  timeout: number = DEFAULT_TIMEOUT,
+  _timeout: number = DEFAULT_TIMEOUT, // TODO: pass to execa
 ) {
   startGroup(`Installing ${tool} ${version}`)
   try {
-    await pTimeout(installToolImpl(tool, version, osVersion, arch, setupCppDir, successMessages), {
-      milliseconds: timeout,
-      message: `Timeout while installing ${tool} ${version}. You can increase the timeout from options`,
-    })
+    await installToolImpl(tool, version, osVersion, arch, setupCppDir, successMessages)
   } catch (e) {
     // push error message to the logger
     error(e as string | Error)

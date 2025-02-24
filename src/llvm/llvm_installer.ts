@@ -5,7 +5,7 @@ import { execRoot } from "admina"
 import { addPath } from "envosman"
 import { chmod, readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
-import { aptTimeout, hasNala, installAptPack, isAptPackRegexInstalled } from "setup-apt"
+import { aptTimeout, hasNala, installAddAptRepo, installAptPack, isAptPackRegexInstalled } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { DEFAULT_TIMEOUT } from "../installTool.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
@@ -33,13 +33,14 @@ export async function setupLLVMApt(
   const installerScript = await readFile(dl.getDownloadPath(), "utf-8")
 
   const installerPath = join(tmpdir(), "llvm-setup-cpp.sh")
-  const neededPackages = await patchAptLLVMScript(
+  await patchAptLLVMScript(
     installerScript,
     installerPath,
     majorVersion,
     packages,
   )
-  await installAptPack(neededPackages)
+  await installAddAptRepo()
+  await installAptPack([{ name: "lsb-release" }, { name: "wget" }, { name: "gnupg" }])
   await chmod(installerPath, "755")
   await execRoot(
     "bash",
@@ -73,9 +74,6 @@ async function patchAptLLVMScript(
   script = useNalaScript(script)
 
   await writeFile(target_path, script)
-
-  // the packages needed by the script
-  return [{ name: "lsb-release" }, { name: "wget" }, { name: "software-properties-common" }, { name: "gnupg" }]
 }
 
 function debugScript(script: string) {
@@ -90,7 +88,7 @@ function nonInteractiveScript(script: string) {
   return script.replace(
     /add-apt-repository\s*(-y)?\s*"\${REPO_NAME}"/g,
     `add-apt-repository -y -n "\${REPO_NAME}"
-apt-get update -o ${aptTimeout} -y`,
+apt-get update -o ${aptTimeout}`,
   )
 }
 

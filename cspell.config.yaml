@@ -20,10 +20,11 @@ words:
   - armv
   - bazel
   - bazelisk
+  - binfmt
   - biome
-  - mkdirp
   - biomejs
   - buildtools
+  - Buildx
   - caxa
   - ccache
   - choco
@@ -41,11 +42,13 @@ words:
   - dearmor
   - deps
   - devel
+  - dpkg
   - dprint
   - DVCPKG
   - dyld
   - eabi
   - envosman
+  - esac
   - esmodule
   - execa
   - ftxui
@@ -69,6 +72,7 @@ words:
   - liuli
   - mdimporterdir
   - memoizee
+  - mkdirp
   - msbuild
   - msvc
   - msvcrt
@@ -102,6 +106,7 @@ words:
   - SYSROOT
   - Syuu
   - terserrc
+  - tonistiigi
   - Trofimovich
   - tsbuildinfo
   - ucrt

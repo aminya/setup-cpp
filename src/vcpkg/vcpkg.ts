@@ -1,13 +1,14 @@
 import { dirname, join } from "path"
 import { grantUserWriteAccess } from "admina"
 import { info, notice } from "ci-log"
-import { addPath } from "envosman"
+import { addEnv, addPath } from "envosman"
 import { execaSync } from "execa"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix } from "patha"
 import { installAptPack } from "setup-apt"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
+import { arm64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
@@ -17,8 +18,7 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 let hasVCPKG = false
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupVcpkg(version: string, setupDir: string, _arch: string): Promise<InstallationInfo> {
+export async function setupVcpkg(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
   if (!hasVCPKG || which.sync("vcpkg", { nothrow: true }) === null) {
     if (process.platform === "linux") {
       // vcpkg download and extraction dependencies
@@ -66,6 +66,11 @@ export async function setupVcpkg(version: string, setupDir: string, _arch: strin
         cwd: setupDir,
         stdio: "inherit",
       })
+    }
+
+    // Add VCPKG_FORCE_SYSTEM_BINARIES=1 for Linux arm64
+    if (process.platform === "linux" && arch in arm64) {
+      await addEnv("VCPKG_FORCE_SYSTEM_BINARIES", "1")
     }
 
     // bootstrap vcpkg

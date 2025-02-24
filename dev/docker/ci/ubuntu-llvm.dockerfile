@@ -1,25 +1,8 @@
-#### Base Image
-FROM ubuntu:22.04 AS setup-cpp-ubuntu
+FROM --platform=$BUILDPLATFORM setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-llvm
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
-
-RUN apt-get update -qq && \
-# install nodejs
-    apt-get install -y --no-install-recommends nodejs npm && \
-# install the compiler and tools
-    node /usr/lib/setup-cpp/setup-cpp.js \
-        --nala true \
-        --compiler llvm \
-        --cmake true \
-        --ninja true \
-        --task true \
-        --vcpkg true \
-        --python true \
-        --make true \
-        --cppcheck true \
-        --gcovr true \
-        --doxygen true \
-        --ccache true && \
+# install llvm
+RUN node /usr/lib/setup-cpp/setup-cpp.js \
+    --compiler llvm && \
 # cleanup
     nala autoremove -y && \
     nala autopurge -y && \

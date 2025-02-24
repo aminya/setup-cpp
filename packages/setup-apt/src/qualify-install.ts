@@ -75,6 +75,11 @@ async function aptPackageType(apt: string, name: string, version: string | undef
     return aptPackageType(apt, name, version)
   }
 
+  if (version === undefined || version === "") {
+    // if the version is undefined or empty, return the name as a package name
+    return AptPackageType.Name
+  }
+
   return AptPackageType.None
 }
 
@@ -87,12 +92,17 @@ async function getAptArg(apt: string, pack: AptPackage) {
       return `${name}-${version}`
     case AptPackageType.NameEqualsVersion:
       return `${name}=${version}`
-    case AptPackageType.Name:
-      if (version !== undefined && version !== "" && fallBackToLatest) {
-        warning(`Could not find package ${name} with version ${version}. Installing the latest version.`)
+    case AptPackageType.Name: {
+      if (version === undefined || version === "") {
+        return name
       }
-      return name
+      if (fallBackToLatest) {
+        warning(`Could not find package '${name}' with version '${version}'. Installing the latest version.`)
+        return name
+      }
+      throw new Error(`Could not find package '${name}' with version '${version}'`)
+    }
     default:
-      throw new Error(`Could not find package ${name} ${version ?? ""}`)
+      throw new Error(`Could not find package '${name}' ${version ?? "with unspecified version"}`)
   }
 }
