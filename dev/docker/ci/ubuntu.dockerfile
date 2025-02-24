@@ -25,7 +25,7 @@ RUN node /usr/lib/setup-cpp/setup-cpp.js \
     --cmake true \
     --ninja true \
     --task true \
-    --vcpkg true \
+    --vcpkg $([ "$TARGETARCH" = "arm64" ] && echo "false" || echo "true") \
     --python true \
     --make true \
     --cppcheck true \
