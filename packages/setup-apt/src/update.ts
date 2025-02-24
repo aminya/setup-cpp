@@ -13,7 +13,7 @@ export let updatedRepos = false // eslint-disable-line import/no-mutable-exports
 export function updateAptRepos(apt: string = getApt()) {
   execRootSync(
     apt,
-    apt !== "nala" ? ["update", "-o", aptTimeout] : ["update", "-o", aptTimeout],
+    ["update", "-o", aptTimeout],
     { ...defaultExecOptions, env: getAptEnv(apt) },
   )
 
