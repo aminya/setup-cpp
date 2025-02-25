@@ -199,7 +199,45 @@ jobs:
 
 To provide fast development environments, `setup-cpp` provides several prebuilt docker images that have the tools you need. You can use these images as a base image for your project.
 
-Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
+With `llvm` and `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
+
+```dockerfile
+FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.46.2 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-fedora-llvm:40-0.46.2 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-arch-llvm:base-0.46.2 AS builder
+```
+
+With `gcc` and `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
+
+```dockerfile
+FROM aminya/setup-cpp-ubuntu-gcc:22.04-0.46.2 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-fedora-gcc:40-0.46.2 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-arch-gcc:base-0.46.2 AS builder
+```
+
+With `mingw` and `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
+
+```dockerfile
+FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.46.2 AS builder
+```
+
+```dockerfile
+FROM aminya/setup-cpp-arch-mingw:base-0.46.2 AS builder
+```
+
+With `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
 
 ```dockerfile
 FROM aminya/setup-cpp-ubuntu:22.04-0.46.2 AS builder
@@ -215,30 +253,6 @@ FROM aminya/setup-cpp-fedora:40-0.46.2 AS builder
 
 ```dockerfile
 FROM aminya/setup-cpp-arch:base-0.46.2 AS builder
-```
-
-With `llvm`
-
-```dockerfile
-FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.46.2 AS builder
-```
-
-```dockerfile
-FROM aminya/setup-cpp-fedora-llvm:40-0.46.2 AS builder
-```
-
-```dockerfile
-FROM aminya/setup-cpp-arch-llvm:base-0.46.2 AS builder
-```
-
-With `mingw`
-
-```dockerfile
-FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.46.2 AS builder
-```
-
-```dockerfile
-FROM aminya/setup-cpp-arch-mingw:base-0.46.2 AS builder
 ```
 
 The names are in the format `aminya/setup-cpp-<platform>:<platform_version>-<setup_cpp_version>` and `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.

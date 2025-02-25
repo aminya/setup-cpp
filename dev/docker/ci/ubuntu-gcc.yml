@@ -1,0 +1,38 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: ninja
+    command: /root/ninja/ninja
+    args: ["--version"]
+    expectedOutput: [".*1.*"]
+  - name: gcovr
+    command: /usr/local/bin/gcovr
+    args: ["--version"]
+    expectedOutput: [".*gcovr.*"]
+  - name: ccache
+    command: /usr/bin/ccache
+    args: ["--version"]
+    expectedOutput: [".*ccache.*"]
+  - name: doxygen
+    command: /usr/bin/doxygen
+    args: ["--version"]
+    expectedOutput: [".*1.*"]
+  - name: cppcheck
+    command: /usr/bin/cppcheck
+    args: ["--version"]
+    expectedOutput: [".*Cppcheck.*"]
+  - name: gcc
+    command: /usr/bin/gcc
+    args: ["--version"]
+    expectedOutput: [".*gcc.*"]
+
+fileExistenceTests:
+  - name: "vcpkg"
+    path: "/root/vcpkg"
+    shouldExist: true
+  - name: "ninja"
+    path: "/root/ninja"
+    shouldExist: true
+  - name: "cmake"
+    path: "/root/cmake"
+    shouldExist: true

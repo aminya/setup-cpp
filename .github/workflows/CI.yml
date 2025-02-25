@@ -277,7 +277,7 @@ jobs:
           cache-to: type=inline
 
       - name: Test LLVM
-        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && !contains(matrix.platform, 'arm64') }}
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -285,6 +285,28 @@ jobs:
           push: false
           platforms: ${{ matrix.platform }}
           tags: aminya/test-${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
+
+      - name: Build setup-cpp-${{matrix.container.distro }}-gcc
+        if: ${{ !contains(matrix.container.distro, 'fedora') }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./dev/docker/ci/${{ matrix.container.distro }}-gcc.dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          platforms: ${{ matrix.platform }}
+          tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-gcc:latest
+          cache-from: type=registry,ref=user/app:latest
+          cache-to: type=inline
+
+      - name: Test gcc
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./dev/docker/examples/${{ matrix.container.distro }}-gcc.dockerfile
+          push: false
+          platforms: ${{ matrix.platform }}
+          tags: aminya/test-${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-mingw
         if: ${{ !contains(matrix.container.distro, 'fedora') }}
@@ -299,7 +321,7 @@ jobs:
           cache-to: type=inline
 
       - name: Test Mingw
-        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && !contains(matrix.container.distro, 'fedora') && !contains(matrix.platform, 'arm64') }}
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && !contains(matrix.container.distro, 'fedora') }}
         uses: docker/build-push-action@v6
         with:
           context: .

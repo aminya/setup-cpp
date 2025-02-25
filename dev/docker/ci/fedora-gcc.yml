@@ -1,0 +1,28 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: ninja
+    command: /root/ninja/ninja
+    args: ["--version"]
+    expectedOutput: [".*1.*"]
+  - name: gcovr
+    command: gcovr
+    args: ["--version"]
+    expectedOutput: [".*gcovr.*"]
+  - name: ccache
+    command: ccache
+    args: ["--version"]
+    expectedOutput: [".*ccache.*"]
+  - name: doxygen
+    command: doxygen
+    args: ["--version"]
+    expectedOutput: [".*1.*"]
+  - name: gcc
+    command: /usr/bin/gcc
+    args: ["--version"]
+    expectedOutput: [".*gcc.*"]
+
+fileExistenceTests:
+  - name: "vcpkg"
+    path: "/root/vcpkg"
+    shouldExist: true
