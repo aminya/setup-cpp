@@ -287,7 +287,6 @@ jobs:
           tags: aminya/test-${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-gcc
-        if: ${{ !contains(matrix.container.distro, 'fedora') }}
         uses: docker/build-push-action@v6
         with:
           context: .
