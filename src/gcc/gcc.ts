@@ -201,13 +201,13 @@ async function findGccExe(variant: "gcc" | "g++", binDir: string, binVersion: st
   }
 
   // try to find the gcc exe in the bin dir
-  const gccExeRegex = new RegExp(`^${escapeRegex(variant)}-?(.*)(\\.exe)?$`)
+  const gccExeRegex = new RegExp(`^${escapeRegex(variant)}-?([\d\.\-]*)(\\.exe)?$`)
   const files = (await readdir(binDir))
     .filter((file) => gccExeRegex.test(file))
     .sort(
       (exe1, exe2) => {
-        const version1 = exe1.match(gccExeRegex)?.[1] ?? ""
-        const version2 = exe2.match(gccExeRegex)?.[1] ?? ""
+        const version1 = exe1.match(gccExeRegex)![1] ?? ""
+        const version2 = exe2.match(gccExeRegex)![1] ?? ""
         try {
           return compareVersion(version1, version2)
         } catch {
