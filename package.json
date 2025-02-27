@@ -77,7 +77,7 @@
     "@octokit/plugin-rest-endpoint-methods": "^13.3.0",
     "@octokit/rest": "^21.1.0",
     "@octokit/types": "^13.7.0",
-    "@shockpkg/archive-files": "github:aminya/archive-files#54ec59fad46aca736ac6feb6c7bb526528141b9d",
+    "@shockpkg/archive-files": "3.2.5",
     "@swc/jest": "^0.2.37",
     "@types/babel__core": "~7.20.5",
     "@types/cross-spawn": "^6.0.6",

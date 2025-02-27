@@ -65,8 +65,8 @@ importers:
         specifier: ^13.7.0
         version: 13.7.0
       '@shockpkg/archive-files':
-        specifier: github:aminya/archive-files#54ec59fad46aca736ac6feb6c7bb526528141b9d
-        version: https://codeload.github.com/aminya/archive-files/tar.gz/54ec59fad46aca736ac6feb6c7bb526528141b9d
+        specifier: 3.2.5
+        version: 3.2.5
       '@swc/jest':
         specifier: ^0.2.37
         version: 0.2.37(@swc/core@1.7.23(@swc/helpers@0.5.13))
@@ -1642,9 +1642,8 @@ packages:
   '@rushstack/ts-command-line@4.22.8':
     resolution: {integrity: sha512-XbFjOoV7qZHJnSuFUHv0pKaFA4ixyCuki+xMjsMfDwfvQjs5MYG0IK5COal3tRnG7KCDe2l/G+9LrzYE/RJhgg==}
 
-  '@shockpkg/archive-files@https://codeload.github.com/aminya/archive-files/tar.gz/54ec59fad46aca736ac6feb6c7bb526528141b9d':
-    resolution: {tarball: https://codeload.github.com/aminya/archive-files/tar.gz/54ec59fad46aca736ac6feb6c7bb526528141b9d}
-    version: 3.2.2
+  '@shockpkg/archive-files@3.2.5':
+    resolution: {integrity: sha512-RQ9eSdD2ZlPgUcBFTo66nJPOwFq2ONaTLqCeC04i8Dvjbt36+5A8Y8OyCtgpMG71SI73BQuKww9uGlCqvlE+Kg==}
     engines: {node: '>=18.12.0'}
 
   '@shockpkg/hdi-mac@3.1.4':
@@ -3200,9 +3199,6 @@ packages:
 
   fb-watchman@2.0.2:
     resolution: {integrity: sha512-p5161BqbuCaSnB8jIbzQHOlpgsPmK5rJVDfDKO91Axs5NC1uu3HRQm6wt9cd9/+GtQQIO53JdGXXoyDpTAsgYA==}
-
-  fd-slicer@1.1.0:
-    resolution: {integrity: sha512-cE1qsB/VwyQozZ+q1dGxR8LBYNZeofhEdUNGSMbQD3Gw2lAzX9Zb3uIU6Ebc/Fmyjo9AWWfnn0AUCHqtevs/8g==}
 
   fdir@6.4.2:
     resolution: {integrity: sha512-KnhMXsKSPZlAhp7+IjUkRZKPb4fUyccpDrdFXbi4QL1qkmFh9kVY09Yox+n4MaOb3lHZ1Tv829C3oaaXoMYPDQ==}
@@ -5693,8 +5689,9 @@ packages:
     resolution: {integrity: sha512-7dSzzRQ++CKnNI/krKnYRV7JKKPUXMEh61soaHKg9mrWEhzFWhFnxPxGl+69cD1Ou63C13NUPCnmIcrvqCuM6w==}
     engines: {node: '>=12'}
 
-  yauzl@2.10.0:
-    resolution: {integrity: sha512-p4a9I6X6nu6IhoGmBqAcbJy1mlC4j27vEPZX9F4L4/vZT3Lyq1VkFHw/V/PUcB9Buo+DG3iHkT0x3Qya58zc3g==}
+  yauzl@3.2.0:
+    resolution: {integrity: sha512-Ow9nuGZE+qp1u4JIPvg+uCiUr7xGQWdff7JQSk5VGYTAZMDe2q8lxJ10ygv10qmSj031Ty/6FNJpLO4o1Sgc+w==}
+    engines: {node: '>=12'}
 
   yn@3.1.1:
     resolution: {integrity: sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==}
@@ -7074,12 +7071,12 @@ snapshots:
     transitivePeerDependencies:
       - '@types/node'
 
-  '@shockpkg/archive-files@https://codeload.github.com/aminya/archive-files/tar.gz/54ec59fad46aca736ac6feb6c7bb526528141b9d':
+  '@shockpkg/archive-files@3.2.5':
     dependencies:
       '@shockpkg/hdi-mac': 3.1.4
       it-tar: 6.0.5
       unbzip2-stream: 1.4.3
-      yauzl: 2.10.0
+      yauzl: 3.2.0
 
   '@shockpkg/hdi-mac@3.1.4':
     dependencies:
@@ -9138,10 +9135,6 @@ snapshots:
   fb-watchman@2.0.2:
     dependencies:
       bser: 2.1.1
-
-  fd-slicer@1.1.0:
-    dependencies:
-      pend: 1.2.0
 
   fdir@6.4.2(picomatch@4.0.2):
     optionalDependencies:
@@ -11900,10 +11893,10 @@ snapshots:
       y18n: 5.0.8
       yargs-parser: 21.1.1
 
-  yauzl@2.10.0:
+  yauzl@3.2.0:
     dependencies:
       buffer-crc32: 0.2.13
-      fd-slicer: 1.1.0
+      pend: 1.2.0
 
   yn@3.1.1: {}
 
