@@ -21,22 +21,22 @@ export async function setupDnfPack(packages: DnfPackage[]): Promise<Installation
 }
 
 async function getDnfArg(name: string, version: string | undefined) {
-  if (version !== undefined && version !== "") {
-    // check if name-version is available
-    const { stdout } = await execa("dnf", ["search", "-q", `${name}-${version}`])
-
-    if (stdout.trim() !== "") {
-      return `${name}-${version}`
-    } else {
-      // try with ${name}${version}
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { stdout } = await execa("dnf", ["search", "-q", `${name}${version}`])
-      if (stdout.trim() !== "") {
-        return `${name}${version}`
-      }
-
-      warning(`Failed to install ${name} ${version} via dnf, trying without version`)
-    }
+  if (version === undefined || version === "") {
+    return name
   }
+
+  // check if name-version is available
+  const { stdout: nameDashVersionSearch } = await execa("dnf", ["search", "-q", `${name}-${version}`])
+  if (nameDashVersionSearch.trim() !== "") {
+    return `${name}-${version}`
+  }
+
+  // try with ${name}${version}
+  const { stdout: nameVersionSearch } = await execa("dnf", ["search", "-q", `${name}${version}`])
+  if (nameVersionSearch.trim() !== "") {
+    return `${name}${version}`
+  }
+
+  warning(`Failed to install ${name} ${version} via dnf, trying without version`)
   return name
 }

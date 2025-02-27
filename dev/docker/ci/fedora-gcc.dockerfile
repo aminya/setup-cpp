@@ -5,7 +5,6 @@ RUN node /usr/lib/setup-cpp/setup-cpp.js \
     --compiler gcc && \
 # cleanup
     dnf clean all && \
-    rm -rf /tmp/* && \
-    ls /usr/bin/g++-14
+    rm -rf /tmp/*
 
 ENTRYPOINT ["/bin/bash"]
