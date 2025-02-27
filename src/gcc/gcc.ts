@@ -222,7 +222,7 @@ async function findGccExe(variant: "gcc" | "g++", binDir: string, binVersion: st
       binVersion === ""
       || file.includes(binVersion)
       /* eslint-disable-next-line no-await-in-loop */
-      || (await getGccCmdVersion(gccExe)) === binVersion
+      || (await getGccCmdVersion(gccExe))?.includes(binVersion)
     ) {
       return addExeExt(gccExe)
     }
@@ -241,13 +241,14 @@ async function getGccCmdVersion(gccExe: string) {
     const { stdout: versionStdout } = await execa(gccExe, ["--version"], { stdio: "pipe" })
 
     // gcc-11 (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
-    // gcc-12 (Homebrew GCC 12.4.0) 12.4.0
     // gcc (Ubuntu 13.1.0-8ubuntu1~22.04) 13.1.0
+    // gcc-14 (Homebrew GCC 14.2.0_1) 14.2.0
+    // g++-14 (Homebrew GCC 14.2.0_1) 14.2.0
 
-    const versionMatch = (versionStdout as string).match(/gcc.* \(.*\) ([\d.]+)/)
+    const versionMatch = versionStdout.match(/(gcc|g\+\+).* \(.*\) ([\d.]+)/)
 
     if (versionMatch !== null) {
-      return versionMatch[1]
+      return versionMatch[2]
     }
 
     warning(`Failed to parse gcc version from: ${versionStdout}`)
