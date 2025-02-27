@@ -4,6 +4,7 @@ import ciInfo from "ci-info"
 const { GITHUB_ACTIONS } = ciInfo
 import { error, warning } from "ci-log"
 import { addEnv } from "envosman"
+import escapeRegex from "escape-string-regexp"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
@@ -200,7 +201,7 @@ async function findGccExe(variant: "gcc" | "g++", binDir: string, binVersion: st
   }
 
   // try to find the gcc exe in the bin dir
-  const gccExeRegex = new RegExp(`^${variant}-?(.*)(\\.exe)?$`)
+  const gccExeRegex = new RegExp(`^${escapeRegex(variant)}-?(.*)(\\.exe)?$`)
   const files = (await readdir(binDir))
     .filter((file) => gccExeRegex.test(file))
     .sort(
