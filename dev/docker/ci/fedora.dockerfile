@@ -12,7 +12,7 @@ FROM --platform=$BUILDPLATFORM fedora-nodejs AS setup-cpp-fedora
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
 # install the cpp tools
-RUN node /usr/lib/setup-cpp/setup-cpp.js \
+RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
         --cmake true \
         --ninja true \
         --task true \

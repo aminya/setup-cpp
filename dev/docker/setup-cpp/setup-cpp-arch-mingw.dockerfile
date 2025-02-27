@@ -8,6 +8,7 @@ RUN pacman -Syuu --noconfirm && \
 # install setup-cpp
     npm install -g setup-cpp@v0.46.2 && \
 # install the compiler and tools
+    NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \
         --compiler mingw \
         --cmake true \

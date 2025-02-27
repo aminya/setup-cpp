@@ -1,7 +1,7 @@
 FROM --platform=$BUILDPLATFORM setup-cpp-fedora:latest AS setup-cpp-fedora-gcc
 
 # install gcc
-RUN node /usr/lib/setup-cpp/setup-cpp.js \
+RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
     --compiler gcc && \
 # cleanup
     dnf clean all && \

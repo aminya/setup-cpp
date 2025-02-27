@@ -1,7 +1,7 @@
 FROM --platform=$BUILDPLATFORM setup-cpp-fedora:latest AS setup-cpp-fedora-mingw
 
 # install mingw
-RUN node /usr/lib/setup-cpp/setup-cpp.js \
+RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
     --compiler mingw \
     --powershell true && \
 # cleanup
