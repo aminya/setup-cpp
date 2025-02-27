@@ -1,22 +1,62 @@
 schemaVersion: 2.0.0
 
 commandTests:
+  - name: cmake
+    command: cmake
+    args: ["--version"]
+    expectedOutput: [".*3.*"]
   - name: ninja
     command: /root/ninja/ninja
     args: ["--version"]
     expectedOutput: [".*1.*"]
+  - name: task
+    command: task
+    args: ["--version"]
+    expectedOutput: [".*Task version:\\s*v3.*"]
+  - name: python
+    command: python
+    args: ["--version"]
+    expectedOutput: [".*Python.*"]
+  - name: python3
+    command: python3
+    args: ["--version"]
+    expectedOutput: [".*Python.*"]
+  - name: make
+    command: make
+    args: ["--version"]
+    expectedOutput: [".*GNU Make.*"]
+  - name: cppcheck
+    command: cppcheck
+    args: ["--version"]
+    expectedOutput: [".*"]
   - name: gcovr
     command: gcovr
     args: ["--version"]
     expectedOutput: [".*gcovr.*"]
-  - name: ccache
-    command: ccache
-    args: ["--version"]
-    expectedOutput: [".*ccache.*"]
   - name: doxygen
     command: doxygen
     args: ["--version"]
     expectedOutput: [".*1.*"]
+  - name: ccache
+    command: ccache
+    args: ["--version"]
+    expectedOutput: [".*"]
+  - name: conan
+    command: conan
+    args: ["--version"]
+    expectedOutput: [".*"]
+  - name: meson
+    command: meson
+    args: ["--version"]
+    expectedOutput: [".*"]
+  - name: cmake-format
+    command: cmake-format
+    args: ["--version"]
+    expectedOutput: [".*"]
+  - name: cmake-lint
+    command: cmake-lint
+    args: ["--version"]
+    expectedOutput: [".*"]
 
 fileExistenceTests:
   - name: "vcpkg"
