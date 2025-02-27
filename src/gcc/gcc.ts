@@ -8,7 +8,6 @@ import { execa } from "execa"
 import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
-import semverCoerce from "semver/functions/coerce"
 import semverMajor from "semver/functions/major"
 import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
@@ -201,28 +200,30 @@ async function findGccExe(variant: "gcc" | "g++", binDir: string, binVersion: st
   }
 
   // try to find the gcc exe in the bin dir
-  if (binVersion !== "") {
-    const gccExeRegex = new RegExp(`^${variant}-?(.*)(\\.exe)?$`)
-    const files = (await readdir(binDir))
-      .filter((file) => gccExeRegex.test(file))
-      .sort(
-        (exe1, exe2) => {
-          const version1 = exe1.match(gccExeRegex)?.[1] ?? ""
-          const version2 = exe2.match(gccExeRegex)?.[1] ?? ""
-          try {
-            return compareVersion(version1, version2)
-          } catch {
-            return 0
-          }
-        },
-      )
+  const gccExeRegex = new RegExp(`^${variant}-?(.*)(\\.exe)?$`)
+  const files = (await readdir(binDir))
+    .filter((file) => gccExeRegex.test(file))
+    .sort(
+      (exe1, exe2) => {
+        const version1 = exe1.match(gccExeRegex)?.[1] ?? ""
+        const version2 = exe2.match(gccExeRegex)?.[1] ?? ""
+        try {
+          return compareVersion(version1, version2)
+        } catch {
+          return 0
+        }
+      },
+    )
 
-    for (const file of files) {
-      const gccExe = `${binDir}/${file}`
+  for (const file of files) {
+    const gccExe = `${binDir}/${file}`
+    if (
+      binVersion === ""
+      || file.includes(binVersion)
       /* eslint-disable-next-line no-await-in-loop */
-      if (file.includes(binVersion) || (await getGccCmdVersion(gccExe)) === binVersion) {
-        return addExeExt(gccExe)
-      }
+      || (await getGccCmdVersion(gccExe)) === binVersion
+    ) {
+      return addExeExt(gccExe)
     }
   }
 
