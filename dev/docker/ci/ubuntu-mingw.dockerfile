@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-mingw
+FROM --platform=$BUILDPLATFORM aminya/setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-mingw
 
 # install mingw/powershell
 RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \

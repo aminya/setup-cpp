@@ -11,7 +11,7 @@ RUN apt-get update -qq && \
     apt-get update -qq && \
     apt-get install -y --no-install-recommends nodejs && \
 # install setup-cpp
-    npm install -g setup-cpp@v1.0.1 && \
+    npm install -g setup-cpp@v1.0.0 && \
 # install the compiler and tools
     NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \

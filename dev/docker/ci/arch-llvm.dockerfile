@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM setup-cpp-arch:latest AS setup-cpp-arch-llvm
+FROM --platform=$BUILDPLATFORM aminya/setup-cpp-arch:latest AS setup-cpp-arch-llvm
 
 # install llvm
 RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
