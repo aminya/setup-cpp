@@ -268,7 +268,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}:latest
-          cache-from: type=registry,ref=user/app:latest
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:latest
           cache-to: type=inline
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}
@@ -288,7 +288,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-llvm:latest
-          cache-from: type=registry,ref=user/app:latest
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-llvm:latest
           cache-to: type=inline
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-llvm
@@ -318,7 +318,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-gcc:latest
-          cache-from: type=registry,ref=user/app:latest
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-gcc:latest
           cache-to: type=inline
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-gcc
@@ -349,7 +349,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-mingw:latest
-          cache-from: type=registry,ref=user/app:latest
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-mingw:latest
           cache-to: type=inline
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-mingw
