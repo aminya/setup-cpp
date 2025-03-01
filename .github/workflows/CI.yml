@@ -271,6 +271,15 @@ jobs:
           cache-from: type=registry,ref=user/app:latest
           cache-to: type=inline
 
+      - name: Docker Readme for setup-cpp-${{matrix.container.distro }}
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: aminya
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: aminya/${{ matrix.container.image }}
+          readme-filepath: ./README_DOCKER.md
+
       - name: Build setup-cpp-${{matrix.container.distro }}-llvm
         uses: docker/build-push-action@v6
         with:
@@ -281,6 +290,15 @@ jobs:
           tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-llvm:latest
           cache-from: type=registry,ref=user/app:latest
           cache-to: type=inline
+
+      - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-llvm
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: aminya
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: aminya/${{ matrix.container.image }}-llvm
+          readme-filepath: ./README_DOCKER.md
 
       - name: Test LLVM
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
@@ -302,6 +320,15 @@ jobs:
           tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-gcc:latest
           cache-from: type=registry,ref=user/app:latest
           cache-to: type=inline
+
+      - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-gcc
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: aminya
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: aminya/${{ matrix.container.image }}-gcc
+          readme-filepath: ./README_DOCKER.md
 
       - name: Test gcc
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
@@ -325,6 +352,14 @@ jobs:
           cache-from: type=registry,ref=user/app:latest
           cache-to: type=inline
 
+      - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-mingw
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: aminya
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: aminya/${{ matrix.container.image }}-mingw
+          readme-filepath: ./README_DOCKER.md
       - name: Test Mingw
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') && !contains(matrix.container.distro, 'fedora') }}
         uses: docker/build-push-action@v6
