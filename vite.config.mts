@@ -40,7 +40,7 @@ const viteConfig = defineConfig({
   ssr: {
     target: "node",
     noExternal: true,
-    external: module.builtinModules,
+    external: module.builtinModules as string[],
   },
   plugins: isLegacy
     ? [
