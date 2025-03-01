@@ -353,13 +353,14 @@ jobs:
           cache-to: type=inline
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-mingw
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'fedora' }}
         uses: peter-evans/dockerhub-description@v4
         with:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
           repository: aminya/${{ matrix.container.image }}-mingw
           readme-filepath: ./README_DOCKER.md
+
       - name: Test Mingw
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') && !contains(matrix.container.distro, 'fedora') }}
         uses: docker/build-push-action@v6
