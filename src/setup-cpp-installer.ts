@@ -1,4 +1,3 @@
-import { GITHUB_ACTIONS } from "ci-info"
 import { error, info } from "ci-log"
 import { execa } from "execa"
 /**
@@ -8,8 +7,9 @@ import { execa } from "execa"
  */
 export async function installSetupCpp(version: string, packageManager: string = "npm") {
   try {
-    // check if running in github actions
-    if (!GITHUB_ACTIONS) {
+    // check if `setup-cpp` is available in the shell, if so, skip the installation to avoid overwriting the existing version
+    const { stdout } = await execa("setup-cpp", ["--version"])
+    if (stdout) {
       return
     }
 

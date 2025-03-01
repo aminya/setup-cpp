@@ -35,6 +35,11 @@ async function main(args: string[]): Promise<number> {
     printHelp()
   }
 
+  // print version
+  if (opts.version) {
+    info(`${packageJson.version}`)
+  }
+
   // cpu architecture
   const arch = opts.architecture ?? process.arch
 
@@ -123,7 +128,9 @@ async function main(args: string[]): Promise<number> {
   await finalizeRC(rcOptions)
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
-    info("setup-cpp was called without any arguments. Nothing to do.")
+    if (!opts.version && !opts.help) {
+      info("setup-cpp was called without any arguments. Nothing to do.")
+    }
     return 0
   }
 
