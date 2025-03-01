@@ -195,6 +195,16 @@ jobs:
           cppcheck: true # instead of `true`, which chooses the default version, you can pass a specific version.
 ```
 
+When using the `setup-cpp` action in GitHub Actions, it will also install the `setup-cpp` CLI, which you can use in the subsequent commands if needed:
+
+```yaml
+  - name: Setup Cpp
+    uses: aminya/setup-cpp@v1
+
+  - name: Use Setup Cpp CLI
+    run: setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+```
+
 ### Prebuilt Docker Images
 
 To provide fast development environments, `setup-cpp` provides several prebuilt docker images that have the tools you need. You can use these images as a base image for your project.

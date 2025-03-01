@@ -200,6 +200,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - name: Smoke Test Modern Bundle
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
         run: |
@@ -207,6 +208,11 @@ jobs:
           node ./dist/modern/setup-cpp.mjs --gcc true --cmake true
         env:
           RUNNER_OS_NAME: ${{ matrix.os }}
+
+      - name: Smoke Test Global Install
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
+        run: |
+          setup-cpp --help
 
       - name: Setup Node 12
         if: ${{ !contains(matrix.os, 'macos-14') && !contains(matrix.os, 'macos-15') }}

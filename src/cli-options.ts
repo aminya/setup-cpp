@@ -7,7 +7,7 @@ import type { InstallationInfo } from "./utils/setup/setupBin.js"
 
 export function parseArgs(args: string[]): Opts {
   return mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
-    string: [...inputs, "timeout"],
+    string: [...inputs, "timeout", "nodePackageManager"],
     default: Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)])),
     alias: { h: "help" },
     boolean: "help",
@@ -26,6 +26,7 @@ Install all the tools required for building and testing C++/C projects.
 --compiler\t the <compiler> to install.
           \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-13.0.0'
 --$tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
+--nodePackageManager\t the node package manager to use (npm/yarn/pnpm) when installing setup-cpp globally
 
 All the available tools:
 `)
@@ -64,6 +65,7 @@ export type Opts = mri.Argv<
   Record<Inputs, string | undefined> & {
     help: boolean
     timeout?: string
+    nodePackageManager?: string
   }
 >
 

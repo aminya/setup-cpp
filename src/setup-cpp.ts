@@ -9,10 +9,12 @@ import numerousLocale from "numerous/locales/en.js"
 import timeDelta from "time-delta"
 import timeDeltaLocale from "time-delta/locales/en.js"
 import { untildifyUser } from "untildify-user"
+import packageJson from "../package-version.json"
 import { checkUpdates } from "./check-updates.js"
 import { parseArgs, printHelp, rcOptions } from "./cli-options.js"
 import { getCompilerInfo, installCompiler } from "./compilers.js"
 import { installTool } from "./installTool.js"
+import { installSetupCpp } from "./setup-cpp-installer.js"
 import { type Inputs, llvmTools, tools } from "./tool.js"
 import { isArch } from "./utils/env/isArch.js"
 import { ubuntuVersion } from "./utils/env/ubuntu_version.js"
@@ -21,14 +23,12 @@ import { syncVersions } from "./versions/versions.js"
 
 /** The main entry function */
 async function main(args: string[]): Promise<number> {
-  let checkUpdatePromise = Promise.resolve()
-  if (!GITHUB_ACTIONS) {
-    checkUpdatePromise = checkUpdates()
-    process.env.ACTIONS_ALLOW_UNSECURE_COMMANDS = "true"
-  }
+  const checkUpdatePromise = GITHUB_ACTIONS ? Promise.resolve() : checkUpdates()
 
   // parse options using mri or github actions
   const opts = parseArgs(args)
+
+  const installSetupCppPromise = installSetupCpp(packageJson.version, opts.nodePackageManager)
 
   // print help
   if (opts.help) {
@@ -123,7 +123,7 @@ async function main(args: string[]): Promise<number> {
   await finalizeRC(rcOptions)
 
   if (successMessages.length === 0 && errorMessages.length === 0) {
-    warning("setup-cpp was called without any arguments. Nothing to do.")
+    info("setup-cpp was called without any arguments. Nothing to do.")
     return 0
   }
 
@@ -154,7 +154,7 @@ async function main(args: string[]): Promise<number> {
     }
   }
 
-  await checkUpdatePromise
+  await Promise.all([checkUpdatePromise, installSetupCppPromise])
 
   return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
 }
