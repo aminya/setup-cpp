@@ -71,5 +71,6 @@
   "hadolint.hadolintPath": "./target/bin/hadolint",
   "prettier.enable": false,
   "javascript.preferences.importModuleSpecifierEnding": "js",
-  "typescript.preferences.importModuleSpecifierEnding": "js"
+  "typescript.preferences.importModuleSpecifierEnding": "js",
+  "eslint.useESLintClass": true
 }

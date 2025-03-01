@@ -143,8 +143,10 @@ async function activateGcc(givenVersion: string, binDir: string, priority: numbe
   {
     const binVersion = getGccBinVersion(givenVersion)
 
-    const gccPath = await findGccExe("gcc", binDir, binVersion)
-    const gxxPath = await findGccExe("g++", binDir, binVersion)
+    const [gccPath, gxxPath] = await Promise.all([
+      findGccExe("gcc", binDir, binVersion),
+      findGccExe("g++", binDir, binVersion),
+    ])
 
     promises.push(
       addEnv("CC", gccPath, rcOptions),
@@ -201,13 +203,13 @@ async function findGccExe(variant: "gcc" | "g++", binDir: string, binVersion: st
   }
 
   // try to find the gcc exe in the bin dir
-  const gccExeRegex = new RegExp(`^${escapeRegex(variant)}-?([\d\.\-]*)(\\.exe)?$`)
+  const gccExeRegex = new RegExp(`^${escapeRegex(variant)}-?([\\d\\.\\-]*)(?:\\.exe)?$`)
   const files = (await readdir(binDir))
     .filter((file) => gccExeRegex.test(file))
     .sort(
       (exe1, exe2) => {
-        const version1 = exe1.match(gccExeRegex)![1] ?? ""
-        const version2 = exe2.match(gccExeRegex)![1] ?? ""
+        const version1 = exe1.match(gccExeRegex)?.[1] ?? ""
+        const version2 = exe2.match(gccExeRegex)?.[1] ?? ""
         try {
           return compareVersion(version1, version2)
         } catch {
@@ -222,7 +224,7 @@ async function findGccExe(variant: "gcc" | "g++", binDir: string, binVersion: st
       binVersion === ""
       || file.includes(binVersion)
       /* eslint-disable-next-line no-await-in-loop */
-      || (await getGccCmdVersion(gccExe))?.includes(binVersion)
+      || ((await getGccCmdVersion(gccExe))?.includes(binVersion) ?? false)
     ) {
       return addExeExt(gccExe)
     }

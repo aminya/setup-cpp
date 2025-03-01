@@ -49,6 +49,7 @@ words:
   - eabi
   - envosman
   - esac
+  - esbuild
   - esmodule
   - execa
   - ftxui
