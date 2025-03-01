@@ -102,7 +102,10 @@ export async function installCompiler(
     }
   } catch (err) {
     error(err as string | Error)
-    errorMessages.push(`Failed to install the ${compiler} ${version}`)
+    if (err instanceof Error) {
+      error(err.stack ?? "")
+    }
+    errorMessages.push(`Failed to install the ${compiler} compiler ${version}`)
   }
 
   if (installationInfo !== null) {

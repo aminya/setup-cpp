@@ -8,7 +8,7 @@ async function main() {
       const modifiedDockerFile = dockerFileContent
         // load the externally built setup-cpp
         .replace(/FROM (.*)/g, `FROM $1\n\nCOPY "./dist/legacy" "/usr/lib/setup-cpp/"`)
-        .replace("setup-cpp ", "node /usr/lib/setup-cpp/setup-cpp.js ")
+        .replace("setup-cpp ", "node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js ")
         // remove the npm install line
         .replace(/# install setup-cpp\n\s*npm install -g setup-cpp.*\n/, "")
 

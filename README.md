@@ -199,53 +199,93 @@ jobs:
 
 To provide fast development environments, `setup-cpp` provides several prebuilt docker images that have the tools you need. You can use these images as a base image for your project.
 
+The names are in the format `aminya/setup-cpp-<platform>:<platform_version>-<setup_cpp_version>` and `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
+
+#### Ubuntu Images
+
 Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
 
-```dockerfile
-FROM aminya/setup-cpp-ubuntu:22.04-0.46.2 AS builder
-```
-
-```dockerfile
-FROM aminya/setup-cpp-ubuntu:22.04-0.46.2 AS builder
-```
-
-```dockerfile
-FROM aminya/setup-cpp-fedora:40-0.46.2 AS builder
-```
-
-```dockerfile
-FROM aminya/setup-cpp-arch:base-0.46.2 AS builder
-```
-
-With `llvm`
+Image with `llvm` and the base tools:
 
 ```dockerfile
 FROM aminya/setup-cpp-ubuntu-llvm:22.04-0.46.2 AS builder
 ```
 
-```dockerfile
-FROM aminya/setup-cpp-fedora-llvm:40-0.46.2 AS builder
-```
+Image with `gcc` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-llvm:base-0.46.2 AS builder
+FROM aminya/setup-cpp-ubuntu-gcc:22.04-0.46.2 AS builder
 ```
 
-With `mingw`
+Image with `mingw` and the base tools:
 
 ```dockerfile
 FROM aminya/setup-cpp-ubuntu-mingw:22.04-0.46.2 AS builder
 ```
 
+#### Fedora Images
+
+<details>
+
+Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
+
+```dockerfile
+FROM aminya/setup-cpp-fedora-base:40-0.46.2 AS builder
+```
+
+Image with `llvm` and the base tools:
+
+```dockerfile
+FROM aminya/setup-cpp-fedora-llvm:40-0.46.2 AS builder
+```
+
+Image with `gcc` and the base tools:
+
+```dockerfile
+FROM aminya/setup-cpp-fedora-gcc:40-0.46.2 AS builder
+```
+
+Image with `mingw` and the base tools:
+
+```dockerfile
+FROM aminya/setup-cpp-fedora-mingw:40-0.46.2 AS builder
+```
+
+</details>
+
+#### ArchLinux Images
+
+<details>
+
+Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
+
+```dockerfile
+FROM aminya/setup-cpp-arch-base:base-0.46.2 AS builder
+```
+
+Image with `llvm` and the base tools:
+
+```dockerfile
+FROM aminya/setup-cpp-arch-llvm:base-0.46.2 AS builder
+```
+
+Image with `gcc` and the base tools:
+
+```dockerfile
+FROM aminya/setup-cpp-arch-gcc:base-0.46.2 AS builder
+```
+
+Image with `mingw` and the base tools:
+
 ```dockerfile
 FROM aminya/setup-cpp-arch-mingw:base-0.46.2 AS builder
 ```
 
-The names are in the format `aminya/setup-cpp-<platform>:<platform_version>-<setup_cpp_version>` and `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
+</details>
 
-If you need to install the tools selectively, see the next section.
+### Custom Docker Images
 
-### Inside Docker
+If you need to install the tools selectively, you can create your own Docker image with the tools you need.
 
 Here is an example for using setup-cpp to make a builder image that has the Cpp tools you need.
 
@@ -259,6 +299,7 @@ RUN apt-get update -qq && \
     # install setup-cpp
     npm install -g setup-cpp@v0.46.2 && \
     # install the compiler and tools
+    NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \
         --nala true \
         --compiler llvm \

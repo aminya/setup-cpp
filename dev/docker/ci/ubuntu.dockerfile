@@ -20,7 +20,7 @@ FROM --platform=$BUILDPLATFORM ubuntu-nodejs AS setup-cpp-ubuntu
 COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 
 # install the cpp tools
-RUN node /usr/lib/setup-cpp/setup-cpp.js \
+RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
         --nala true \
         --cmake true \
         --ninja true \

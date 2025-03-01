@@ -22,3 +22,5 @@ coverage
 .turbo
 
 /src/llvm/assets/
+
+/build

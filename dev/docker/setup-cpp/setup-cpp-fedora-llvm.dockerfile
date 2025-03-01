@@ -6,6 +6,7 @@ RUN dnf -y install nodejs npm && \
 # install setup-cpp
     npm install -g setup-cpp@v0.46.2 && \
 # install the compiler and tools
+    NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \
         --compiler llvm \
         --cmake true \

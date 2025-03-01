@@ -1,8 +1,8 @@
-FROM --platform=$BUILDPLATFORM setup-cpp-fedora:latest AS setup-cpp-fedora-llvm
+FROM --platform=$BUILDPLATFORM setup-cpp-fedora:latest AS setup-cpp-fedora-gcc
 
-# install llvm
+# install gcc
 RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
-    --compiler llvm && \
+    --compiler gcc && \
 # cleanup
     dnf clean all && \
     rm -rf /tmp/*

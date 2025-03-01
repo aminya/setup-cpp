@@ -17,7 +17,7 @@ COPY "./dist/legacy" "/usr/lib/setup-cpp/"
 # install the cpp tools
 RUN pacman -Syuu --noconfirm && \
     pacman-db-upgrade && \
-    node /usr/lib/setup-cpp/setup-cpp.js \
+    node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
         --cmake true \
         --ninja true \
         --task true \

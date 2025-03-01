@@ -1,2 +1,12 @@
 packages:
-  - "packages/*"
+  - packages/*
+
+onlyBuiltDependencies:
+  - "@biomejs/biome"
+  - "@swc/core"
+  - core-js
+  - dprint
+  - es5-ext
+  - esbuild
+  - iso-constants
+  - lefthook

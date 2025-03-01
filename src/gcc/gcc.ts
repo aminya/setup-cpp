@@ -2,12 +2,13 @@ import path from "path"
 import { fileURLToPath } from "url"
 import ciInfo from "ci-info"
 const { GITHUB_ACTIONS } = ciInfo
-import { error, info, warning } from "ci-log"
+import { error, warning } from "ci-log"
 import { addEnv } from "envosman"
+import escapeRegex from "escape-string-regexp"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
-import semverCoerce from "semver/functions/coerce"
+import { addExeExt } from "patha"
 import semverMajor from "semver/functions/major"
 import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
@@ -19,7 +20,7 @@ import { isUbuntu } from "../utils/env/isUbuntu.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
-import { compareVersion } from "../utils/setup/version.js"
+import { compareVersion, semverCoerceIfInvalid } from "../utils/setup/version.js"
 import { addGccLoggingMatcher } from "./gccMatcher.js"
 import { setupMingw } from "./mingw.js"
 
@@ -140,42 +141,25 @@ async function activateGcc(givenVersion: string, binDir: string, priority: numbe
   const promises: Promise<void>[] = []
 
   {
-    // if version is empty, get the version from the gcc command
-    let version = givenVersion
-    if (givenVersion === "") {
-      version = await getGccCmdVersion(binDir, version)
-      info(`Using gcc version ${version}`)
-    }
+    const binVersion = getGccBinVersion(givenVersion)
 
-    const majorVersion = semverMajor(semverCoerce(version) ?? version)
-    if (majorVersion >= 5) {
+    const [gccPath, gxxPath] = await Promise.all([
+      findGccExe("gcc", binDir, binVersion),
+      findGccExe("g++", binDir, binVersion),
+    ])
+
+    promises.push(
+      addEnv("CC", gccPath, rcOptions),
+      addEnv("CXX", gxxPath, rcOptions),
+    )
+
+    if (isUbuntu()) {
       promises.push(
-        addEnv("CC", `${binDir}/gcc-${majorVersion}`, rcOptions),
-        addEnv("CXX", `${binDir}/g++-${majorVersion}`, rcOptions),
+        addUpdateAlternativesToRc("cc", gccPath, rcOptions, priority),
+        addUpdateAlternativesToRc("cxx", gxxPath, rcOptions, priority),
+        addUpdateAlternativesToRc("gcc", gccPath, rcOptions, priority),
+        addUpdateAlternativesToRc("g++", gxxPath, rcOptions, priority),
       )
-
-      if (isUbuntu()) {
-        promises.push(
-          addUpdateAlternativesToRc("cc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
-          addUpdateAlternativesToRc("cxx", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
-          addUpdateAlternativesToRc("gcc", `${binDir}/gcc-${majorVersion}`, rcOptions, priority),
-          addUpdateAlternativesToRc("g++", `${binDir}/g++-${majorVersion}`, rcOptions, priority),
-        )
-      }
-    } else {
-      promises.push(
-        addEnv("CC", `${binDir}/gcc-${version}`, rcOptions),
-        addEnv("CXX", `${binDir}/g++-${version}`, rcOptions),
-      )
-
-      if (isUbuntu()) {
-        promises.push(
-          addUpdateAlternativesToRc("cc", `${binDir}/gcc-${version}`, rcOptions, priority),
-          addUpdateAlternativesToRc("cxx", `${binDir}/g++-${version}`, rcOptions, priority),
-          addUpdateAlternativesToRc("gcc", `${binDir}/gcc-${version}`, rcOptions, priority),
-          addUpdateAlternativesToRc("g++", `${binDir}/g++-${version}`, rcOptions, priority),
-        )
-      }
     }
   }
 
@@ -199,45 +183,79 @@ async function activateGcc(givenVersion: string, binDir: string, priority: numbe
   await Promise.all(promises)
 }
 
-async function getGccCmdVersion(binDir: string, givenVersion: string) {
+/**
+ * Get the version string used in the gcc exe name
+ */
+function getGccBinVersion(givenVersion: string) {
+  try {
+    const coerced = semverCoerceIfInvalid(givenVersion)
+    const majorVersion = semverMajor(coerced)
+    return majorVersion >= 5 ? `${majorVersion}` : givenVersion
+  } catch {
+    // ignore
+    return givenVersion
+  }
+}
+
+async function findGccExe(variant: "gcc" | "g++", binDir: string, binVersion: string) {
+  if (await pathExists(`${binDir}/${variant}-${binVersion}`)) {
+    return addExeExt(`${binDir}/${variant}-${binVersion}`)
+  }
+
+  // try to find the gcc exe in the bin dir
+  const gccExeRegex = new RegExp(`^${escapeRegex(variant)}-?([\\d\\.\\-]*)(?:\\.exe)?$`)
+  const files = (await readdir(binDir))
+    .filter((file) => gccExeRegex.test(file))
+    .sort(
+      (exe1, exe2) => {
+        const version1 = exe1.match(gccExeRegex)?.[1] ?? ""
+        const version2 = exe2.match(gccExeRegex)?.[1] ?? ""
+        try {
+          return compareVersion(version1, version2)
+        } catch {
+          return 0
+        }
+      },
+    )
+
+  for (const file of files) {
+    const gccExe = `${binDir}/${file}`
+    if (
+      binVersion === ""
+      || file.includes(binVersion)
+      /* eslint-disable-next-line no-await-in-loop */
+      || ((await getGccCmdVersion(gccExe))?.includes(binVersion) ?? false)
+    ) {
+      return addExeExt(gccExe)
+    }
+  }
+
+  if (await pathExists(`${binDir}/${variant}`)) {
+    return addExeExt(`${binDir}/${variant}`)
+  }
+
+  return addExeExt(variant)
+}
+
+async function getGccCmdVersion(gccExe: string) {
   // TODO get the version from the package manager
   try {
-    let gccExe = "gcc"
-    if (await pathExists(`${binDir}/gcc`)) {
-      gccExe = `${binDir}/gcc`
-    } else {
-      // try to find the gcc exe in the bin dir
-      const files = (await readdir(binDir)).sort(
-        (exe1, exe2) => {
-          const version1 = exe1.match(/^gcc-?(.*)(\.exe)?$/)?.[1] ?? ""
-          const version2 = exe2.match(/^gcc-?(.*)(\.exe)?$/)?.[1] ?? ""
-          return compareVersion(version1, version2)
-        },
-      )
-      for (const file of files) {
-        if (file.startsWith("gcc")) {
-          gccExe = `${binDir}/${file}`
-          break
-        }
-      }
-    }
-
     const { stdout: versionStdout } = await execa(gccExe, ["--version"], { stdio: "pipe" })
 
     // gcc-11 (Ubuntu 11.4.0-1ubuntu1~22.04) 11.4.0
-    // gcc-12 (Homebrew GCC 12.4.0) 12.4.0
     // gcc (Ubuntu 13.1.0-8ubuntu1~22.04) 13.1.0
+    // gcc-14 (Homebrew GCC 14.2.0_1) 14.2.0
+    // g++-14 (Homebrew GCC 14.2.0_1) 14.2.0
 
-    const versionMatch = (versionStdout as string).match(/gcc.* \(.*\) ([\d.]+)/)
+    const versionMatch = versionStdout.match(/(gcc|g\+\+).* \(.*\) ([\d.]+)/)
 
     if (versionMatch !== null) {
-      return versionMatch[1]
+      return versionMatch[2]
     }
 
     warning(`Failed to parse gcc version from: ${versionStdout}`)
-    return givenVersion
   } catch (err) {
     error(`Failed to get gcc version: ${err}`)
-    return givenVersion
   }
+  return undefined
 }

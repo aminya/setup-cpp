@@ -1,9 +1,8 @@
-FROM --platform=$BUILDPLATFORM setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-mingw
+FROM --platform=$BUILDPLATFORM setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-gcc
 
-# install mingw/powershell
+# install gcc
 RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
-    --compiler mingw \
-    --powershell true && \
+    --compiler gcc && \
 # cleanup
     nala autoremove -y && \
     nala autopurge -y && \

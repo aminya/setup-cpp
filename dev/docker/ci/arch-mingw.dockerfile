@@ -1,7 +1,7 @@
 FROM --platform=$BUILDPLATFORM setup-cpp-arch:latest AS setup-cpp-arch-mingw
 
 # install mingw/powershell
-RUN node /usr/lib/setup-cpp/setup-cpp.js \
+RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
     --compiler mingw \
     --powershell true && \
 # arch cleanup
