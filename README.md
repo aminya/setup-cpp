@@ -12,7 +12,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 
 <!-- dprint-ignore -->
 ```yaml
-# GitHub Actions example:
+      # GitHub Actions example:
       - name: Setup Cpp
         uses: aminya/setup-cpp@v1
         with:
@@ -70,22 +70,22 @@ NOTE: setup-cpp requires Nodejs 12 or higher. If Nodejs shipped with your distri
 
 #### With executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v1.0.0), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v1.0.1), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
 
 ```shell
 # windows x64
-curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.0.0/setup-cpp-x64-windows.exe"
+curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.0.1/setup-cpp-x64-windows.exe"
 
 # linux x64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.0.0/setup-cpp-x64-linux"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.0.1/setup-cpp-x64-linux"
 chmod +x ./setup-cpp
 
 # macos arm64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.0.0/setup-cpp-arm64-macos"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.0.1/setup-cpp-arm64-macos"
 chmod +x ./setup-cpp
 
 # macos x64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.0.0/setup-cpp-x64-macos"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.0.1/setup-cpp-x64-macos"
 chmod +x ./setup-cpp
 ```
 
@@ -205,22 +205,26 @@ The names are in the format `aminya/setup-cpp-<platform>:<platform_version>-<set
 
 Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
 
+```dockerfile
+FROM aminya/setup-cpp-ubuntu:22.04-1.0.1 AS builder
+```
+
 Image with `llvm` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-llvm:22.04-1.0.0 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:22.04-1.0.1 AS builder
 ```
 
 Image with `gcc` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-gcc:22.04-1.0.0 AS builder
+FROM aminya/setup-cpp-ubuntu-gcc:22.04-1.0.1 AS builder
 ```
 
 Image with `mingw` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-mingw:22.04-1.0.0 AS builder
+FROM aminya/setup-cpp-ubuntu-mingw:22.04-1.0.1 AS builder
 ```
 
 #### Fedora Images
@@ -230,25 +234,25 @@ FROM aminya/setup-cpp-ubuntu-mingw:22.04-1.0.0 AS builder
 Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-base:40-1.0.0 AS builder
+FROM aminya/setup-cpp-fedora:40-1.0.1 AS builder
 ```
 
 Image with `llvm` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-llvm:40-1.0.0 AS builder
+FROM aminya/setup-cpp-fedora-llvm:40-1.0.1 AS builder
 ```
 
 Image with `gcc` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-gcc:40-1.0.0 AS builder
+FROM aminya/setup-cpp-fedora-gcc:40-1.0.1 AS builder
 ```
 
 Image with `mingw` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-mingw:40-1.0.0 AS builder
+FROM aminya/setup-cpp-fedora-mingw:40-1.0.1 AS builder
 ```
 
 </details>
@@ -260,25 +264,25 @@ FROM aminya/setup-cpp-fedora-mingw:40-1.0.0 AS builder
 Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-base:base-1.0.0 AS builder
+FROM aminya/setup-cpp-arch:base-1.0.1 AS builder
 ```
 
 Image with `llvm` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-llvm:base-1.0.0 AS builder
+FROM aminya/setup-cpp-arch-llvm:base-1.0.1 AS builder
 ```
 
 Image with `gcc` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-gcc:base-1.0.0 AS builder
+FROM aminya/setup-cpp-arch-gcc:base-1.0.1 AS builder
 ```
 
 Image with `mingw` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-mingw:base-1.0.0 AS builder
+FROM aminya/setup-cpp-arch-mingw:base-1.0.1 AS builder
 ```
 
 </details>
@@ -297,7 +301,7 @@ RUN apt-get update -qq && \
     # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v1.0.0 && \
+    npm install -g setup-cpp@v1.0.1 && \
     # install the compiler and tools
     NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \
@@ -407,7 +411,7 @@ stages:
   apt-get install -y --no-install-recommends nodejs npm
 
   # install setup-cpp
-  npm install -g setup-cpp@v1.0.0
+  npm install -g setup-cpp@v1.0.1
 
   # install the compiler and tools
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true
