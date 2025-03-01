@@ -236,13 +236,13 @@ jobs:
         platform:
           - linux/amd64
         container:
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.0.0" }
-          - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-1.0.0" }
-          - { distro: "arch", image: "setup-cpp-arch", tag: "base-1.0.0" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.1.0" }
+          - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-1.1.0" }
+          - { distro: "arch", image: "setup-cpp-arch", tag: "base-1.1.0" }
         include:
           - os: ubuntu-24.04-arm
             platform: linux/arm64
-            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.0.0" }
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.1.0" }
     steps:
       - uses: actions/checkout@v4
         with:
