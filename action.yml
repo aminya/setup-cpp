@@ -157,7 +157,10 @@ inputs:
   python:
     description: "Wether to install python (true/false) or the specific version to install."
     required: false
-  nodePackageManager:
+  setup-cpp:
+    description: "Wether to install setup-cpp (true/false) or the specific version to install. (Default to the current version called by the action)"
+    required: false
+  node-package-manager:
     description: "The node package manager to use (npm/yarn/pnpm) when installing setup-cpp globally"
     required: false
 

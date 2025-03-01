@@ -6,11 +6,14 @@ import { type Inputs, inputs } from "./tool.js"
 import type { InstallationInfo } from "./utils/setup/setupBin.js"
 
 export function parseArgs(args: string[]): Opts {
-  return mri<Record<Inputs, string | undefined> & { help: boolean; version: boolean }>(args, {
-    string: [...inputs, "timeout", "nodePackageManager"],
-    default: Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)])),
+  const defaults = Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)]))
+  defaults["setup-cpp"] = "true"
+
+  return mri<Record<Inputs, string | undefined> & { help: boolean; version: boolean; "setup-cpp": boolean }>(args, {
+    string: [...inputs, "timeout", "node-package-manager"],
+    default: defaults,
     alias: { h: "help", v: "version" },
-    boolean: ["help", "version"],
+    boolean: ["help", "version", "setup-cpp"],
   })
 }
 
@@ -41,7 +44,7 @@ All the available tools:
       "build system": {
         tools: "--cmake, --ninja, --meson, --make, --task, --bazel",
       },
-      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala" },
+      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala, --setup-cpp" },
       "analyzer/linter": {
         tools:
           "--clang-tidy, --clang-format, --cppcheck, --cpplint, --flawfinder, --lizard, --infer, , --cmakelang, --cmake-lint, --cmake-format",
@@ -67,8 +70,9 @@ export type Opts = mri.Argv<
   Record<Inputs, string | undefined> & {
     help: boolean
     version: boolean
+    "setup-cpp": boolean
     timeout?: string
-    nodePackageManager?: string
+    "node-package-manager"?: string
   }
 >
 

@@ -1,5 +1,6 @@
 import { error, info } from "ci-log"
 import { execa } from "execa"
+import which from "which"
 /**
  * Install the setup-cpp CLI globally
  * @param version - The version of setup-cpp to install
@@ -8,8 +9,8 @@ import { execa } from "execa"
 export async function installSetupCpp(version: string, packageManager: string = "npm") {
   try {
     // check if `setup-cpp` is available in the shell, if so, skip the installation to avoid overwriting the existing version
-    const { stdout } = await execa("setup-cpp", ["--version"])
-    if (stdout) {
+    const setupCppPath = await which("setup-cpp", { nothrow: true })
+    if (setupCppPath !== null) {
       return
     }
 

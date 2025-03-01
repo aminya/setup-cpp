@@ -28,7 +28,9 @@ async function main(args: string[]): Promise<number> {
   // parse options using mri or github actions
   const opts = parseArgs(args)
 
-  const installSetupCppPromise = installSetupCpp(packageJson.version, opts.nodePackageManager)
+  const installSetupCppPromise = opts["setup-cpp"]
+    ? installSetupCpp(packageJson.version, opts["node-package-manager"])
+    : Promise.resolve()
 
   // print help
   if (opts.help) {
