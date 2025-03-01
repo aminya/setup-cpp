@@ -9,10 +9,12 @@ import numerousLocale from "numerous/locales/en.js"
 import timeDelta from "time-delta"
 import timeDeltaLocale from "time-delta/locales/en.js"
 import { untildifyUser } from "untildify-user"
+import packageJson from "../package-version.json"
 import { checkUpdates } from "./check-updates.js"
 import { parseArgs, printHelp, rcOptions } from "./cli-options.js"
 import { getCompilerInfo, installCompiler } from "./compilers.js"
 import { installTool } from "./installTool.js"
+import { installSetupCpp } from "./setup-cpp-installer.js"
 import { type Inputs, llvmTools, tools } from "./tool.js"
 import { isArch } from "./utils/env/isArch.js"
 import { ubuntuVersion } from "./utils/env/ubuntu_version.js"
@@ -21,11 +23,7 @@ import { syncVersions } from "./versions/versions.js"
 
 /** The main entry function */
 async function main(args: string[]): Promise<number> {
-  let checkUpdatePromise = Promise.resolve()
-  if (!GITHUB_ACTIONS) {
-    checkUpdatePromise = checkUpdates()
-    process.env.ACTIONS_ALLOW_UNSECURE_COMMANDS = "true"
-  }
+  const checkUpdatePromise = GITHUB_ACTIONS ? Promise.resolve() : checkUpdates()
 
   // parse options using mri or github actions
   const opts = parseArgs(args)
@@ -33,6 +31,11 @@ async function main(args: string[]): Promise<number> {
   // print help
   if (opts.help) {
     printHelp()
+  }
+
+  // print version
+  if (opts.version) {
+    info(`${packageJson.version}`)
   }
 
   // cpu architecture
@@ -122,10 +125,19 @@ async function main(args: string[]): Promise<number> {
 
   await finalizeRC(rcOptions)
 
-  if (successMessages.length === 0 && errorMessages.length === 0) {
-    warning("setup-cpp was called without any arguments. Nothing to do.")
-    return 0
+  const noTool = successMessages.length === 0 && errorMessages.length === 0
+
+  // if setup-cpp option is not passed, install setup-cpp by default unless only help or version is passed
+  // So that --help and --version are immutable
+  if (opts["setup-cpp"] === undefined) {
+    opts["setup-cpp"] = !(noTool && (opts.version || opts.help))
   }
+
+  const installSetupCppPromise = opts["setup-cpp"]
+    ? installSetupCpp(packageJson.version, opts["node-package-manager"])
+    : Promise.resolve()
+
+  await Promise.all([checkUpdatePromise, installSetupCppPromise])
 
   // report the messages in the end
   for (const tool of successMessages) {
@@ -135,27 +147,26 @@ async function main(args: string[]): Promise<number> {
     error(tool)
   }
 
-  info("setup-cpp finished")
+  if (successMessages.length !== 0 || errorMessages.length !== 0) {
+    info("setup-cpp finished")
 
-  if (!GITHUB_ACTIONS) {
-    switch (process.platform) {
-      case "win32": {
-        warning("Run `RefreshEnv.cmd` or restart your shell to update the environment.")
-        break
-      }
-      case "linux":
-      case "darwin": {
-        warning("Run `source ~/.cpprc` or restart your shell to update the environment.")
-        break
-      }
-      default: {
-        // nothing
+    if (!GITHUB_ACTIONS) {
+      switch (process.platform) {
+        case "win32": {
+          warning("Run `RefreshEnv.cmd` or restart your shell to update the environment.")
+          break
+        }
+        case "linux":
+        case "darwin": {
+          warning("Run `source ~/.cpprc` or restart your shell to update the environment.")
+          break
+        }
+        default: {
+          // nothing
+        }
       }
     }
   }
-
-  await checkUpdatePromise
-
   return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
 }
 

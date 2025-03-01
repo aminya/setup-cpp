@@ -31,7 +31,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 | --------------- | ----------------------------------------------------------------------------------------------------------- |
 | compiler        | llvm, gcc, msvc, apple-clang, vcvarsall                                                                     |
 | build system    | cmake, ninja, meson, make, task, bazel                                                                      |
-| package manager | vcpkg, conan, choco, brew, nala                                                                             |
+| package manager | vcpkg, conan, choco, brew, nala, setup-cpp                                                                  |
 | analyzer/linter | clang-tidy, clang-format, cppcheck, cpplint, flawfinder, lizard, infer, cmakelang, cmake-format, cmake-lint |
 | cache           | ccache, sccache                                                                                             |
 | documentation   | doxygen, graphviz                                                                                           |
@@ -193,6 +193,19 @@ jobs:
           ninja: true
           vcpkg: true
           cppcheck: true # instead of `true`, which chooses the default version, you can pass a specific version.
+```
+
+When using the `setup-cpp` action in GitHub Actions, by default it will also install the `setup-cpp` CLI, which you can use in the subsequent commands. You can modify the default behaviour if needed.
+
+```yaml
+  - name: Setup Cpp
+    uses: aminya/setup-cpp@v1
+    with:
+      setup-cpp: true
+      node-package-manager: "npm"
+
+  - name: Use Setup Cpp CLI
+    run: setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 ```
 
 ### Prebuilt Docker Images

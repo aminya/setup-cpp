@@ -6,11 +6,12 @@ import { type Inputs, inputs } from "./tool.js"
 import type { InstallationInfo } from "./utils/setup/setupBin.js"
 
 export function parseArgs(args: string[]): Opts {
-  return mri<Record<Inputs, string | undefined> & { help: boolean }>(args, {
-    string: [...inputs, "timeout"],
-    default: Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)])),
-    alias: { h: "help" },
-    boolean: "help",
+  const defaults = Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)]))
+  return mri<Record<Inputs, string | undefined> & { help: boolean; version: boolean; "setup-cpp": boolean }>(args, {
+    string: [...inputs, "timeout", "node-package-manager"],
+    default: defaults,
+    alias: { h: "help", v: "version" },
+    boolean: ["help", "version", "setup-cpp"],
   })
 }
 
@@ -25,7 +26,10 @@ Install all the tools required for building and testing C++/C projects.
 --timeout\t the timeout for the installation of each tool in minutes. By default it is 10 minutes.
 --compiler\t the <compiler> to install.
           \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-13.0.0'
---$tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
+--tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
+--nodePackageManager\t the node package manager to use (npm/yarn/pnpm) when installing setup-cpp globally
+--help\t show this help message
+--version\t show the version of setup-cpp
 
 All the available tools:
 `)
@@ -38,7 +42,7 @@ All the available tools:
       "build system": {
         tools: "--cmake, --ninja, --meson, --make, --task, --bazel",
       },
-      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala" },
+      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala, --setup-cpp" },
       "analyzer/linter": {
         tools:
           "--clang-tidy, --clang-format, --cppcheck, --cpplint, --flawfinder, --lizard, --infer, , --cmakelang, --cmake-lint, --cmake-format",
@@ -63,7 +67,10 @@ export function maybeGetInput(key: string) {
 export type Opts = mri.Argv<
   Record<Inputs, string | undefined> & {
     help: boolean
+    version: boolean
+    "setup-cpp"?: boolean
     timeout?: string
+    "node-package-manager"?: string
   }
 >
 
