@@ -6,7 +6,7 @@ RUN pacman -Syuu --noconfirm && \
 # install nodejs
     pacman -S --noconfirm --needed nodejs npm && \
 # install setup-cpp
-    npm install -g setup-cpp@v0.46.2 && \
+    npm install -g setup-cpp@v1.0.0 && \
 # install the compiler and tools
     NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \
