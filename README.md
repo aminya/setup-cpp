@@ -2,7 +2,7 @@
 
 Install all the tools required for building and testing C++/C projects.
 
-![Build Status (Github Actions)](https://github.com/aminya/setup-cpp/workflows/CI/badge.svg)
+[![Build Status (Github Actions](https://github.com/aminya/setup-cpp/actions/workflows/CI.yml/badge.svg)](https://github.com/aminya/setup-cpp/actions/workflows/CI.yml)
 
 Setting up a **cross-platform** environment for building and testing C++/C projects is a bit tricky. Each platform has its own compilers, and each of them requires a different installation procedure. This package aims to fix this issue.
 
