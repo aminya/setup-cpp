@@ -7,8 +7,6 @@ import type { InstallationInfo } from "./utils/setup/setupBin.js"
 
 export function parseArgs(args: string[]): Opts {
   const defaults = Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)]))
-  defaults["setup-cpp"] = "true"
-
   return mri<Record<Inputs, string | undefined> & { help: boolean; version: boolean; "setup-cpp": boolean }>(args, {
     string: [...inputs, "timeout", "node-package-manager"],
     default: defaults,
@@ -70,7 +68,7 @@ export type Opts = mri.Argv<
   Record<Inputs, string | undefined> & {
     help: boolean
     version: boolean
-    "setup-cpp": boolean
+    "setup-cpp"?: boolean
     timeout?: string
     "node-package-manager"?: string
   }
