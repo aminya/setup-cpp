@@ -1,0 +1,11 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: clang
+    command: bash
+    args: ["-l", "-c", "clang --version"]
+    expectedOutput: [".*clang version.*"]
+  - name: clang++
+    command: bash
+    args: ["-l", "-c", "clang++ --version"]
+    expectedOutput: [".*clang version.*"]

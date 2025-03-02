@@ -338,15 +338,15 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
 
-ENTRYPOINT ["/bin/bash"]
+SHELL ["/bin/bash", "-l", "-c"]
+ENTRYPOINT ["/bin/bash", "-l"]
 
 #### Building (example)
 FROM setup-cpp-ubuntu AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
-RUN bash -c 'source ~/.cpprc \
-    && task build'
+RUN task build
 
 #### Running environment
 # use a fresh image as the runner

@@ -2,69 +2,61 @@ schemaVersion: 2.0.0
 
 commandTests:
   - name: cmake
-    command: cmake
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "cmake --version"]
     expectedOutput: [".*3.*"]
   - name: ninja
-    command: /root/ninja/ninja
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "ninja --version"]
     expectedOutput: [".*1.*"]
   - name: task
-    command: task
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "task --version"]
     expectedOutput: [".*Task version:\\s*v3.*"]
   - name: python
-    command: python
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "python --version"]
     expectedOutput: [".*Python.*"]
   - name: python3
-    command: python3
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "python3 --version"]
     expectedOutput: [".*Python.*"]
   - name: make
-    command: make
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "make --version"]
     expectedOutput: [".*GNU Make.*"]
   - name: cppcheck
-    command: cppcheck
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "cppcheck --version"]
     expectedOutput: [".*"]
   - name: gcovr
-    command: gcovr
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "gcovr --version"]
     expectedOutput: [".*gcovr.*"]
   - name: doxygen
-    command: doxygen
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "doxygen --version"]
     expectedOutput: [".*1.*"]
   - name: ccache
-    command: ccache
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "ccache --version"]
     expectedOutput: [".*"]
   - name: conan
-    command: conan
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "conan --version"]
     expectedOutput: [".*"]
   - name: meson
-    command: meson
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "meson --version"]
     expectedOutput: [".*"]
   - name: cmake-format
-    command: cmake-format
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "cmake-format --version"]
     expectedOutput: [".*"]
   - name: cmake-lint
-    command: cmake-lint
-    args: ["--version"]
+    command: bash
+    args: ["-l", "-c", "cmake-lint --version"]
     expectedOutput: [".*"]
-  - name: gcc
-    command: /usr/bin/gcc
-    args: ["--version"]
-    expectedOutput: [".*gcc.*"]
-  - name: g++
-    command: /usr/bin/g++
-    args: ["--version"]
-    expectedOutput: [".*g++.*"]
 
 fileExistenceTests:
   - name: "vcpkg"
@@ -75,4 +67,7 @@ fileExistenceTests:
     shouldExist: true
   - name: "cmake"
     path: "/root/cmake"
+    shouldExist: true
+  - name: "task"
+    path: "/root/task"
     shouldExist: true

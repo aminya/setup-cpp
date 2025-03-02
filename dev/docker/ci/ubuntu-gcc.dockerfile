@@ -11,4 +11,5 @@ RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
 
-ENTRYPOINT ["/bin/bash"]
+SHELL ["/bin/bash", "-l", "-c"]
+ENTRYPOINT ["/bin/bash", "-l"]

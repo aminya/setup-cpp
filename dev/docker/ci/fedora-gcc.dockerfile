@@ -7,4 +7,5 @@ RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
     dnf clean all && \
     rm -rf /tmp/*
 
-ENTRYPOINT ["/bin/bash"]
+SHELL ["/bin/bash", "-l", "-c"]
+ENTRYPOINT ["/bin/bash", "-l"]

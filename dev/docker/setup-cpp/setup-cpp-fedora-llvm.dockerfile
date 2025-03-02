@@ -23,4 +23,5 @@ RUN dnf -y install nodejs npm && \
     dnf clean all && \
     rm -rf /tmp/*
 
-ENTRYPOINT ["/bin/bash"]
+SHELL ["/bin/bash", "-l", "-c"]
+ENTRYPOINT ["/bin/bash", "-l"]
