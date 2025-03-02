@@ -18,7 +18,6 @@ async function main() {
       const result = await testDocker(variant, distro)
       if (result !== 0) {
         failed = true
-        break
       }
     }
   }
