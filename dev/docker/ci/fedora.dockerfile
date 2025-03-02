@@ -9,10 +9,10 @@ RUN dnf -y install nodejs npm && \
 
 FROM --platform=$BUILDPLATFORM fedora-nodejs AS setup-cpp-fedora
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
+COPY "./dist/modern" "/usr/lib/setup-cpp/"
 
 # install the cpp tools
-RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
+RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
         --cmake true \
         --ninja true \
         --task true \
