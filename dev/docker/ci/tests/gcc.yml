@@ -1,0 +1,11 @@
+schemaVersion: 2.0.0
+
+commandTests:
+  - name: gcc
+    command: /usr/bin/gcc
+    args: ["--version"]
+    expectedOutput: [".*gcc.*"]
+  - name: g++
+    command: /usr/bin/g++
+    args: ["--version"]
+    expectedOutput: [".*g++.*"]
