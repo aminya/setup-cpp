@@ -1,6 +1,9 @@
 ## base image
 FROM --platform=$BUILDPLATFORM archlinux:base AS arch-nodejs
 
+# Setup bash environment
+RUN echo '[[ -f ~/.bashrc ]] && . ~/.bashrc' > /root/.bash_profile
+
 RUN pacman -Syuu --noconfirm && \
     pacman-db-upgrade && \
 # install nodejs
