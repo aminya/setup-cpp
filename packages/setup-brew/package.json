@@ -23,7 +23,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@types/node": "22.5.5",
+    "@types/node": "22.13.8",
     "ci-log": "workspace:*",
     "envosman": "workspace:*",
     "which": "4.0.0",
