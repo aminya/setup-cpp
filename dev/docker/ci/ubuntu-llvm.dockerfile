@@ -1,7 +1,7 @@
 FROM --platform=$BUILDPLATFORM aminya/setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-llvm
 
 # install llvm
-RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
+RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
     --compiler llvm && \
 # cleanup
     nala autoremove -y && \

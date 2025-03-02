@@ -17,10 +17,10 @@ RUN apt-get update -qq && \
 #### Base Image with Tools
 FROM --platform=$BUILDPLATFORM ubuntu-nodejs AS setup-cpp-ubuntu
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
+COPY "./dist/modern" "/usr/lib/setup-cpp/"
 
 # install the cpp tools
-RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
+RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
         --nala true \
         --cmake true \
         --ninja true \

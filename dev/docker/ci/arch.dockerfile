@@ -15,12 +15,12 @@ RUN pacman -Syuu --noconfirm && \
 
 FROM --platform=$BUILDPLATFORM arch-nodejs AS setup-cpp-arch
 
-COPY "./dist/legacy" "/usr/lib/setup-cpp/"
+COPY "./dist/modern" "/usr/lib/setup-cpp/"
 
 # install the cpp tools
 RUN pacman -Syuu --noconfirm && \
     pacman-db-upgrade && \
-    node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.js \
+    node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
         --cmake true \
         --ninja true \
         --task true \
