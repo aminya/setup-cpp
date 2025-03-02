@@ -1,7 +1,9 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:base"],
   "schedule": ["every weekend"],
   "labels": ["dependencies"],
-  "separateMajorMinor": "false",
+  "separateMajorMinor": true,
   "packageRules": [
     {
       "matchDepTypes": ["devDependencies"],
@@ -19,7 +21,7 @@
     {
       "matchDatasources": ["npm"],
       "matchPackageNames": ["eslint", "numerous", "execa", "which", ",@types/eslint"],
-      "rangeStrategy": "pin"
+      "enabled": false
     }
   ]
 }
