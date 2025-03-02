@@ -3,8 +3,7 @@ FROM aminya/setup-cpp-arch-gcc AS builder
 
 COPY ./dev/cpp_vcpkg_project /home/app
 WORKDIR /home/app
-RUN bash -c 'source ~/.cpprc \
-    && task build'
+RUN task build
 
 #### Running environment
 # use a fresh image as the runner

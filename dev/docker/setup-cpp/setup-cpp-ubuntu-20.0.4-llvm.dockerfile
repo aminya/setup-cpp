@@ -36,4 +36,5 @@ RUN apt-get update -qq && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
 
-ENTRYPOINT ["/bin/bash"]
+SHELL ["/bin/bash", "-l", "-c"]
+ENTRYPOINT ["/bin/bash", "-l"]

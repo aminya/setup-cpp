@@ -36,4 +36,5 @@ RUN pacman -Syuu --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /tmp/*
 
-ENTRYPOINT ["/bin/bash"]
+SHELL ["/bin/bash", "-l", "-c"]
+ENTRYPOINT ["/bin/bash", "-l"]
