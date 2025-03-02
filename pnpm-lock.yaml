@@ -297,25 +297,25 @@ importers:
     dependencies:
       '@actions/core':
         specifier: ^1.10.1
-        version: 1.10.1
+        version: 1.11.1
       ci-info:
         specifier: ^4.0.0
-        version: 4.0.0
+        version: 4.1.0
 
   packages/envosman:
     dependencies:
       '@actions/core':
         specifier: ^1.10.1
-        version: 1.10.1
+        version: 1.11.1
       '@types/node':
-        specifier: 22.5.5
-        version: 22.5.5
+        specifier: 22.13.8
+        version: 22.13.8
       admina:
         specifier: ^1.0.1
         version: 1.0.1
       ci-info:
         specifier: ^4.0.0
-        version: 4.0.0
+        version: 4.1.0
       ci-log:
         specifier: workspace:*
         version: link:../ci-log
@@ -349,7 +349,7 @@ importers:
     dependencies:
       '@types/node':
         specifier: ^22.0.0
-        version: 22.5.5
+        version: 22.13.8
       execa:
         specifier: 7.2.0
         version: 7.2.0
@@ -364,14 +364,14 @@ importers:
   packages/setup-apt:
     dependencies:
       '@types/node':
-        specifier: 22.5.5
-        version: 22.5.5
+        specifier: 22.13.8
+        version: 22.13.8
       admina:
         specifier: ^1.0.1
         version: 1.0.1
       ci-info:
         specifier: ^4.0.0
-        version: 4.0.0
+        version: 4.1.0
       ci-log:
         specifier: workspace:*
         version: link:../ci-log
@@ -407,8 +407,8 @@ importers:
   packages/setup-brew:
     dependencies:
       '@types/node':
-        specifier: 22.5.5
-        version: 22.5.5
+        specifier: 22.13.8
+        version: 22.13.8
       ci-log:
         specifier: workspace:*
         version: link:../ci-log
@@ -457,9 +457,6 @@ packages:
 
   '@actions/cache@4.0.2':
     resolution: {integrity: sha512-cBr7JL1q+JKjbBd3w3SZN5OQ1Xg+/D8QLMcE7MpgpghZlL4biBO0ZEeraoTxCZyfN0YY0dxXlLgsgGv/sT5BTg==}
-
-  '@actions/core@1.10.1':
-    resolution: {integrity: sha512-3lBR9EDAY+iYIpTnTIXmWcNbX3T2kCkAEQGIQx4NVQ0575nk2k3GRZDTPQG+vVtS2izSLmINlxXf0uLtnrTP+g==}
 
   '@actions/core@1.11.1':
     resolution: {integrity: sha512-hXJCSrkwfA46Vd9Z3q4cpEpHB1rL5NG04+/rbqW9d3+CSvtB1tYe8UTpAlixa1vj0m/ULglfEK2UKxMGxCxv5A==}
@@ -1821,9 +1818,6 @@ packages:
   '@types/node@22.13.8':
     resolution: {integrity: sha512-G3EfaZS+iOGYWLLRCEAXdWK9my08oHNZ+FHluRiggIYJPOXzhOiDgpVCUHaUvyIC5/fj7C/p637jdzC666AOKQ==}
 
-  '@types/node@22.5.5':
-    resolution: {integrity: sha512-Xjs4y5UPO/CLdzpgR6GirZJx36yScjh73+2NlLlkFRSoQN8B0DpfXPdZGnvVmLRLOsqDpOfTNv7D9trgGhmOIA==}
-
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
 
@@ -2367,10 +2361,6 @@ packages:
 
   ci-info@3.9.0:
     resolution: {integrity: sha512-NIxF55hv4nSqQswkAeiOi1r83xy8JldOFDTWiug55KBu9Jnblncd2U6ViHmYgHf01TPZS77NJBhBMKdWj9HQMQ==}
-    engines: {node: '>=8'}
-
-  ci-info@4.0.0:
-    resolution: {integrity: sha512-TdHqgGf9odd8SXNuxtUBVx8Nv+qZOejE6qyqiy5NtbYYQOeFa6zmHkxlPzmaLxWWHsU6nJmB7AETdVPi+2NBUg==}
     engines: {node: '>=8'}
 
   ci-info@4.1.0:
@@ -5397,9 +5387,6 @@ packages:
   undici-types@5.26.5:
     resolution: {integrity: sha512-JlCMO+ehdEIKqlFxk6IfVoAUVmgz7cU7zD/h9XZ0qzeosSHmUJVOzSQvvYSYWXkFXC+IfLKSIffhv0sVZup6pA==}
 
-  undici-types@6.19.8:
-    resolution: {integrity: sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==}
-
   undici-types@6.20.0:
     resolution: {integrity: sha512-Ny6QZ2Nju20vw1SRHe3d9jVu6gJ+4e3+MMpqu7pqE5HT6WsTSlce++GQmK5UXS8mzV8DSYHrQH+Xrf2jVcuKNg==}
 
@@ -5714,11 +5701,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
-
-  '@actions/core@1.10.1':
-    dependencies:
-      '@actions/http-client': 2.2.3(patch_hash=410f4159d430e898d8e88f8eae2f6217edfc72fa410286fb937423c75f30cbae)
-      uuid: 8.3.2
 
   '@actions/core@1.11.1':
     dependencies:
@@ -7196,10 +7178,6 @@ snapshots:
     dependencies:
       undici-types: 6.20.0
 
-  '@types/node@22.5.5':
-    dependencies:
-      undici-types: 6.19.8
-
   '@types/normalize-package-data@2.4.4': {}
 
   '@types/replace-ext@2.0.2':
@@ -7910,8 +7888,6 @@ snapshots:
   chardet@0.7.0: {}
 
   ci-info@3.9.0: {}
-
-  ci-info@4.0.0: {}
 
   ci-info@4.1.0: {}
 
@@ -11557,8 +11533,6 @@ snapshots:
 
   undici-types@5.26.5:
     optional: true
-
-  undici-types@6.19.8: {}
 
   undici-types@6.20.0: {}
 
