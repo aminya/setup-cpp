@@ -279,6 +279,7 @@ jobs:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          load: true
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:latest
@@ -286,7 +287,6 @@ jobs:
 
       - name: Tag latest locally
         run: |
-          docker pull aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}@${{ steps.build_base.outputs.imageid }}
           docker tag aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:latest
 
       - name: Push latest to Docker Hub
@@ -309,6 +309,7 @@ jobs:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-llvm.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          load: true
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-llvm:latest
@@ -316,7 +317,6 @@ jobs:
 
       - name: Tag latest locally
         run: |
-          docker pull aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}@${{ steps.build_llvm.outputs.imageid }}
           docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
 
       - name: Push latest to Docker Hub
@@ -349,6 +349,7 @@ jobs:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-gcc.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          load: true
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-gcc:latest
@@ -356,7 +357,6 @@ jobs:
 
       - name: Tag latest locally
         run: |
-          docker pull aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}@${{ steps.build_gcc.outputs.imageid }}
           docker tag aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:latest
 
       - name: Push latest to Docker Hub
@@ -390,6 +390,7 @@ jobs:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-mingw.dockerfile
           push: ${{ github.event_name != 'pull_request' }}
+          load: true
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-mingw:latest
@@ -397,7 +398,6 @@ jobs:
 
       - name: Tag latest locally
         run: |
-          docker pull aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}@${{ steps.build_mingw.outputs.imageid }}
           docker tag aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
 
       - name: Push latest to Docker Hub
