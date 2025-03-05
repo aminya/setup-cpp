@@ -257,9 +257,9 @@ jobs:
         id: platform
         run: |
           if [[ "${{ matrix.platform }}" == "linux/amd64" ]]; then
-            echo "suffix=linux-amd64" >> $GITHUB_OUTPUT
+            echo "suffix=amd64" >> $GITHUB_OUTPUT
           else
-            echo "suffix=linux-arm64" >> $GITHUB_OUTPUT
+            echo "suffix=arm64" >> $GITHUB_OUTPUT
           fi
 
       - name: Set up Docker Buildx
@@ -284,7 +284,7 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
-        run: docker tag aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:latest
+        run: docker tag docker.io/aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:latest
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
@@ -311,7 +311,7 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
-        run: docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
+        run: docker tag docker.io/aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
@@ -348,7 +348,7 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
-        run: docker tag aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:latest
+        run: docker tag docker.io/aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:latest
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
@@ -386,7 +386,7 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
-        run: docker tag aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
+        run: docker tag docker.io/aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
@@ -442,14 +442,14 @@ jobs:
               
               # Create versioned manifest
               docker manifest create "aminya/setup-cpp-$DISTRO$VARIANT:$TAG" \
-                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-linux-amd64" \
-                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-linux-arm64"
+                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-amd64" \
+                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-arm64"
               docker manifest push "aminya/setup-cpp-$DISTRO$VARIANT:$TAG"
               
               # Create latest manifest
               docker manifest create "aminya/setup-cpp-$DISTRO$VARIANT:latest" \
-                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-linux-amd64" \
-                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-linux-arm64"
+                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-amd64" \
+                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-arm64"
               docker manifest push "aminya/setup-cpp-$DISTRO$VARIANT:latest"
           done
 
