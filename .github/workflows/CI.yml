@@ -273,6 +273,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}
+        id: build_base
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -284,7 +285,7 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
-        run: docker tag docker.io/aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:latest
+        run: docker tag ${{ steps.build_base.outputs.imageid }} aminya/${{ matrix.container.image }}:latest
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
@@ -300,6 +301,7 @@ jobs:
           readme-filepath: ./README_DOCKER.md
 
       - name: Build setup-cpp-${{matrix.container.distro }}-llvm
+        id: build_llvm
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -311,7 +313,7 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
-        run: docker tag docker.io/aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
+        run: docker tag ${{ steps.build_llvm.outputs.imageid }} aminya/${{ matrix.container.image }}-llvm:latest
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
@@ -337,6 +339,7 @@ jobs:
           tags: aminya/test-${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-gcc
+        id: build_gcc
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -348,7 +351,7 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
-        run: docker tag docker.io/aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:latest
+        run: docker tag ${{ steps.build_gcc.outputs.imageid }} aminya/${{ matrix.container.image }}-gcc:latest
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
@@ -374,6 +377,7 @@ jobs:
           tags: aminya/test-${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-mingw
+        id: build_mingw
         if: ${{ !contains(matrix.container.distro, 'fedora') }}
         uses: docker/build-push-action@v6
         with:
@@ -386,7 +390,7 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
-        run: docker tag docker.io/aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
+        run: docker tag ${{ steps.build_mingw.outputs.imageid }} aminya/${{ matrix.container.image }}-mingw:latest
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
