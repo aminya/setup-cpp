@@ -256,7 +256,11 @@ jobs:
       - name: Define Platform Suffix
         id: platform
         run: |
-          echo "suffix=${{ matrix.platform == 'linux/amd64' && 'linux-amd64' || 'linux-arm64' }}" >> $GITHUB_OUTPUT
+          if [[ "${{ matrix.platform }}" == "linux/amd64" ]]; then
+            echo "suffix=linux-amd64" >> $GITHUB_OUTPUT
+          else
+            echo "suffix=linux-arm64" >> $GITHUB_OUTPUT
+          fi
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
