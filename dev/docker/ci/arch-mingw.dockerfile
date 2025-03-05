@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM aminya/setup-cpp-arch:latest AS setup-cpp-arch-mingw
+FROM aminya/setup-cpp-arch:latest AS setup-cpp-arch-mingw
 
 # install mingw/powershell
 RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \

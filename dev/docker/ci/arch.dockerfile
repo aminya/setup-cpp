@@ -13,7 +13,7 @@ RUN pacman -Syuu --noconfirm && \
     rm -rf /var/cache/pacman/pkg/* && \
     rm -rf /tmp/*
 
-FROM --platform=$BUILDPLATFORM arch-nodejs AS setup-cpp-arch
+FROM arch-nodejs AS setup-cpp-arch
 
 COPY "./dist/modern" "/usr/lib/setup-cpp/"
 

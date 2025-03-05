@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM aminya/setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-gcc
+FROM aminya/setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-gcc
 
 # install gcc
 RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
