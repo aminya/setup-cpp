@@ -54,7 +54,7 @@ jobs:
             if [[ "${{ github.ref_name }}" =~ ^refs/heads/ ]]; then
               git config user.name "github-actions[bot]"
               git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-              
+
               git add dist/
               git commit -m "chore(build): update dist"
               git push
@@ -267,7 +267,7 @@ jobs:
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
         with:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -278,7 +278,7 @@ jobs:
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}.dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
           load: true
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
@@ -294,7 +294,7 @@ jobs:
         run: docker push aminya/${{ matrix.container.image }}:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
         uses: peter-evans/dockerhub-description@v4
         with:
           username: aminya
@@ -308,7 +308,7 @@ jobs:
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-llvm.dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
           load: true
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
@@ -324,7 +324,7 @@ jobs:
         run: docker push aminya/${{ matrix.container.image }}-llvm:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-llvm
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
         uses: peter-evans/dockerhub-description@v4
         with:
           username: aminya
@@ -348,7 +348,7 @@ jobs:
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-gcc.dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
           load: true
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
@@ -364,7 +364,7 @@ jobs:
         run: docker push aminya/${{ matrix.container.image }}-gcc:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-gcc
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
         uses: peter-evans/dockerhub-description@v4
         with:
           username: aminya
@@ -389,7 +389,7 @@ jobs:
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-mingw.dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
           load: true
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
@@ -426,7 +426,7 @@ jobs:
   Docker-Manifest:
     needs: [Docker]
     runs-on: ubuntu-24.04
-    if: ${{ github.event_name != 'pull_request' }}
+    if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -451,13 +451,13 @@ jobs:
           VARIANTS=("" "-llvm" "-gcc" "-mingw")
           for VARIANT in "${VARIANTS[@]}"; do
               echo "Creating manifest for setup-cpp-$DISTRO$VARIANT"
-              
+
               # Create versioned manifest
               docker manifest create "aminya/setup-cpp-$DISTRO$VARIANT:$TAG" \
                 "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-amd64" \
                 "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-arm64"
               docker manifest push "aminya/setup-cpp-$DISTRO$VARIANT:$TAG"
-              
+
               # Create latest manifest
               docker manifest create "aminya/setup-cpp-$DISTRO$VARIANT:latest" \
                 "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-amd64" \
