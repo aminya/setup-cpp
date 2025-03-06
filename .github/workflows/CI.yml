@@ -381,7 +381,7 @@ jobs:
 
       - name: Build setup-cpp-${{matrix.container.distro }}-mingw
         id: build_mingw
-        if: ${{ !contains(matrix.container.distro, 'fedora') }}
+        if: ${{ matrix.container.distro != 'fedora' }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -394,11 +394,12 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
+        if: ${{ matrix.container.distro != 'fedora' }}
         run: |
           docker tag aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
 
       - name: Push latest to Docker Hub
-        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'fedora' }}
         run: docker push aminya/${{ matrix.container.image }}-mingw:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-mingw
@@ -411,7 +412,7 @@ jobs:
           readme-filepath: ./README_DOCKER.md
 
       - name: Test Mingw
-        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && !contains(matrix.container.distro, 'fedora') }}
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && matrix.container.distro != 'fedora' }}
         uses: docker/build-push-action@v6
         with:
           context: .
