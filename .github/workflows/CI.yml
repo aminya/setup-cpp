@@ -435,33 +435,57 @@ jobs:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Enable experimental features
-        run: |
-          mkdir -p ~/.docker
-          echo '{"experimental": "enabled"}' > ~/.docker/config.json
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu:22.04-1.1.1
+          images: aminya/setup-cpp-ubuntu:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu:22.04-1.1.1-arm64
+          push: true
+          amend: true
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu:latest
+          images: aminya/setup-cpp-ubuntu:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu:22.04-1.1.1-arm64
+          push: true
+          amend: true
 
-      - name: Create and push multi-arch manifests
-        run: |
-          TAG="22.04-1.1.1"
-          DISTRO="ubuntu"
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1
+          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-arm64
+          push: true
+          amend: true
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-llvm:latest
+          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-arm64
+          push: true
+          amend: true
 
-          # Create and push manifests for each variant
-          VARIANTS=("" "-llvm" "-gcc" "-mingw")
-          for VARIANT in "${VARIANTS[@]}"; do
-              echo "Creating manifest for setup-cpp-$DISTRO$VARIANT"
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1
+          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-arm64
+          push: true
+          amend: true
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-gcc:latest
+          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-arm64
+          push: true
+          amend: true
 
-              # Create versioned manifest
-              docker manifest create "aminya/setup-cpp-$DISTRO$VARIANT:$TAG" \
-                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-amd64" \
-                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-arm64"
-              docker manifest push "aminya/setup-cpp-$DISTRO$VARIANT:$TAG"
-
-              # Create latest manifest
-              docker manifest create "aminya/setup-cpp-$DISTRO$VARIANT:latest" \
-                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-amd64" \
-                "aminya/setup-cpp-$DISTRO$VARIANT:$TAG-arm64"
-              docker manifest push "aminya/setup-cpp-$DISTRO$VARIANT:latest"
-          done
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1
+          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-arm64
+          push: true
+          amend: true
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-mingw:latest
+          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-arm64
+          push: true
+          amend: true
 
   Release:
     if: startsWith(github.ref, 'refs/tags/')
