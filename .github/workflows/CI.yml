@@ -277,6 +277,7 @@ jobs:
           file: ./dev/docker/ci/${{ matrix.container.distro }}.dockerfile
           push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
           load: true
+          provenance: false
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:latest
@@ -307,6 +308,7 @@ jobs:
           file: ./dev/docker/ci/${{ matrix.container.distro }}-llvm.dockerfile
           push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
           load: true
+          provenance: false
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-llvm:latest
@@ -347,6 +349,7 @@ jobs:
           file: ./dev/docker/ci/${{ matrix.container.distro }}-gcc.dockerfile
           push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
           load: true
+          provenance: false
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-gcc:latest
@@ -388,6 +391,7 @@ jobs:
           file: ./dev/docker/ci/${{ matrix.container.distro }}-mingw.dockerfile
           push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
           load: true
+          provenance: false
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-mingw:latest
