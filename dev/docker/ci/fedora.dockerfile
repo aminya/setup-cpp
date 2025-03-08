@@ -7,7 +7,7 @@ RUN dnf -y install nodejs npm && \
     dnf clean all && \
     rm -rf /tmp/*
 
-FROM --platform=$BUILDPLATFORM fedora-nodejs AS setup-cpp-fedora
+FROM fedora-nodejs AS setup-cpp-fedora
 
 COPY "./dist/modern" "/usr/lib/setup-cpp/"
 

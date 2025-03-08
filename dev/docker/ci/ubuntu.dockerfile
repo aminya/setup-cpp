@@ -15,7 +15,7 @@ RUN apt-get update -qq && \
     rm -rf /tmp/*
 
 #### Base Image with Tools
-FROM --platform=$BUILDPLATFORM ubuntu-nodejs AS setup-cpp-ubuntu
+FROM ubuntu-nodejs AS setup-cpp-ubuntu
 
 COPY "./dist/modern" "/usr/lib/setup-cpp/"
 

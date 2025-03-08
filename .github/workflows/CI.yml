@@ -54,7 +54,7 @@ jobs:
             if [[ "${{ github.ref_name }}" =~ ^refs/heads/ ]]; then
               git config user.name "github-actions[bot]"
               git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-              
+
               git add dist/
               git commit -m "chore(build): update dist"
               git push
@@ -253,26 +253,46 @@ jobs:
         with:
           name: dist
 
+      - name: Define Platform Suffix
+        id: platform
+        run: |
+          if [[ "${{ matrix.platform }}" == "linux/amd64" ]]; then
+            echo "suffix=amd64" >> $GITHUB_OUTPUT
+          else
+            echo "suffix=arm64" >> $GITHUB_OUTPUT
+          fi
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
         with:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}
+        id: build_base
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}.dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
+          load: true
+          provenance: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}:latest
+          tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:latest
           cache-to: type=inline
 
+      - name: Tag latest locally
+        run: |
+          docker tag aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:latest
+
+      - name: Push latest to Docker Hub
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
+        run: docker push aminya/${{ matrix.container.image }}:latest
+
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
         uses: peter-evans/dockerhub-description@v4
         with:
           username: aminya
@@ -281,18 +301,29 @@ jobs:
           readme-filepath: ./README_DOCKER.md
 
       - name: Build setup-cpp-${{matrix.container.distro }}-llvm
+        id: build_llvm
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-llvm.dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
+          load: true
+          provenance: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-llvm:latest
+          tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-llvm:latest
           cache-to: type=inline
 
+      - name: Tag latest locally
+        run: |
+          docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
+
+      - name: Push latest to Docker Hub
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
+        run: docker push aminya/${{ matrix.container.image }}-llvm:latest
+
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-llvm
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
         uses: peter-evans/dockerhub-description@v4
         with:
           username: aminya
@@ -311,18 +342,29 @@ jobs:
           tags: aminya/test-${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-gcc
+        id: build_gcc
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-gcc.dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
+          load: true
+          provenance: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-gcc:latest
+          tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-gcc:latest
           cache-to: type=inline
 
+      - name: Tag latest locally
+        run: |
+          docker tag aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:latest
+
+      - name: Push latest to Docker Hub
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
+        run: docker push aminya/${{ matrix.container.image }}-gcc:latest
+
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-gcc
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
         uses: peter-evans/dockerhub-description@v4
         with:
           username: aminya
@@ -341,16 +383,28 @@ jobs:
           tags: aminya/test-${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-mingw
-        if: ${{ !contains(matrix.container.distro, 'fedora') }}
+        id: build_mingw
+        if: ${{ matrix.container.distro != 'fedora' }}
         uses: docker/build-push-action@v6
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-mingw.dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
+          load: true
+          provenance: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }},aminya/${{ matrix.container.image }}-mingw:latest
+          tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-mingw:latest
           cache-to: type=inline
+
+      - name: Tag latest locally
+        if: ${{ matrix.container.distro != 'fedora' }}
+        run: |
+          docker tag aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
+
+      - name: Push latest to Docker Hub
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'fedora' }}
+        run: docker push aminya/${{ matrix.container.image }}-mingw:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-mingw
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'fedora' }}
@@ -362,7 +416,7 @@ jobs:
           readme-filepath: ./README_DOCKER.md
 
       - name: Test Mingw
-        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && !contains(matrix.container.distro, 'fedora') }}
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && matrix.container.distro != 'fedora' }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -370,6 +424,72 @@ jobs:
           push: false
           platforms: ${{ matrix.platform }}
           tags: aminya/test-${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}
+
+  Docker-Manifest:
+    needs: [Docker]
+    runs-on: ubuntu-24.04
+    if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: aminya
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu:22.04-1.1.1
+          images: aminya/setup-cpp-ubuntu:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu:22.04-1.1.1-arm64
+          push: true
+          amend: true
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu:latest
+          images: aminya/setup-cpp-ubuntu:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu:22.04-1.1.1-arm64
+          push: true
+          amend: true
+
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1
+          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-arm64
+          push: true
+          amend: true
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-llvm:latest
+          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-arm64
+          push: true
+          amend: true
+
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1
+          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-arm64
+          push: true
+          amend: true
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-gcc:latest
+          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-arm64
+          push: true
+          amend: true
+
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1
+          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-arm64
+          push: true
+          amend: true
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
+          inputs: aminya/setup-cpp-ubuntu-mingw:latest
+          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-arm64
+          push: true
+          amend: true
 
   Release:
     if: startsWith(github.ref, 'refs/tags/')
