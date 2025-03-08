@@ -42,7 +42,7 @@ All the available tools:
       "build system": {
         tools: "--cmake, --ninja, --meson, --make, --task, --bazel",
       },
-      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala, --setup-cpp" },
+      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala, --git, --setup-cpp" },
       "analyzer/linter": {
         tools:
           "--clang-tidy, --clang-format, --cppcheck, --cpplint, --flawfinder, --lizard, --infer, , --cmakelang, --cmake-lint, --cmake-format",

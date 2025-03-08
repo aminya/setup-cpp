@@ -12,6 +12,7 @@ import { setupFlawfinder } from "./flawfinder/flawfinder.js"
 import { setupGcc } from "./gcc/gcc.js"
 import { setupMingw } from "./gcc/mingw.js"
 import { setupGcovr } from "./gcovr/gcovr.js"
+import { setupGit } from "./git/git.js"
 import { setupGraphviz } from "./graphviz/graphviz.js"
 import { setupInfer } from "./infer/infer.js"
 import { setupKcov } from "./kcov/kcov.js"
@@ -60,6 +61,7 @@ export const llvmTools = ["llvm", "clang", "clang++", "clang-tidy", "clang-forma
 
 /** The setup functions */
 export const setups = {
+  git: setupGit,
   nala: setupNala,
   brew: setupBrew,
   choco: setupChocolatey,
