@@ -74,6 +74,10 @@ export function getBrewBinDir() {
   return join(getBrewDir(), "bin")
 }
 
+export function getBrewBinPath() {
+  return join(getBrewBinDir(), "brew")
+}
+
 /**
  * Get the path where brew is installed
  * @returns {string} The path where brew is installed

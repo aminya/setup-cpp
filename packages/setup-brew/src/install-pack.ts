@@ -1,10 +1,11 @@
 import { join } from "path"
-import { info } from "ci-log"
+import { info, warning } from "ci-log"
 import { execaSync } from "execa"
 import which from "which"
 import type { InstallationInfo } from "./InstallationInfo.js"
 import type { BrewPackOptions } from "./install-pack-options.js"
-import { getBrewBinDir, setupBrew } from "./install.js"
+import { getBrewBinDir, getBrewBinPath, setupBrew } from "./install.js"
+import { brewPackInstallDir, brewPackNameAndVersion } from "./pack-install-dir.js"
 
 /* eslint-disable require-atomic-updates */
 let hasBrew = false
@@ -36,14 +37,13 @@ export async function installBrewPack(
     hasBrew = true
   }
 
-  const binDir = getBrewBinDir()
-  const brewPath = join(binDir, "brew")
+  const brewPath = getBrewBinPath()
 
-  // Args
   const args = [
     "install",
-    (version !== undefined && version !== "") ? `${name}@${version}` : name,
+    brewPackNameAndVersion(name, version),
   ]
+
   // Add options to args
   for (const [key, value] of Object.entries(options)) {
     if (typeof value === "boolean" && value) {
@@ -56,5 +56,12 @@ export async function installBrewPack(
   // brew is not thread-safe
   execaSync(brewPath, args, { stdio: "inherit" })
 
-  return { binDir }
+  const installDir = await brewPackInstallDir(name, version)
+
+  if (installDir === undefined) {
+    warning(`Failed to find installation directory for ${name} ${version}`)
+    return { binDir: getBrewBinDir(), installDir: undefined }
+  }
+
+  return { installDir, binDir: join(installDir, "bin") }
 }
