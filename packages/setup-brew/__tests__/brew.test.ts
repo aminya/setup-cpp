@@ -7,7 +7,10 @@ import { setupBrew } from "../src/index.js"
 
 jest.setTimeout(300000)
 describe("setup-brew", () => {
-  if (process.platform === "win32") {
+  if (
+    process.platform === "win32"
+    || process.platform === "linux" && process.arch !== "x64"
+  ) {
     it.skip("should setup brew", () => {})
     return
   }
