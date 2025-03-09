@@ -1,3 +1,5 @@
+import { existsSync } from "fs"
+import { warning } from "ci-log"
 import { addPath } from "envosman"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
@@ -14,8 +16,10 @@ export async function setupGit(version: string, _setupDir: string, _arch: string
   switch (process.platform) {
     case "win32": {
       const result = await setupChocoPack("git", version)
-      result.binDir = "C:/Program Files (x86)/Git/bin"
-      await addPath(result.binDir, rcOptions)
+      const gitDir = findWindowsGit()
+      if (gitDir !== null) {
+        await addPath(gitDir, rcOptions)
+      }
       return result
     }
     case "darwin": {
@@ -35,4 +39,19 @@ export async function setupGit(version: string, _setupDir: string, _arch: string
       throw new Error("Unsupported platform")
     }
   }
+}
+
+function findWindowsGit() {
+  const candidates = [
+    "C:/Program Files/Git/bin/git.exe",
+    "C:/Program Files (x86)/Git/bin/git.exe",
+  ]
+  for (const candidate of candidates) {
+    if (existsSync(candidate)) {
+      return candidate
+    }
+  }
+
+  warning("Git not found in the default locations. Add git to PATH manually.")
+  return null
 }
