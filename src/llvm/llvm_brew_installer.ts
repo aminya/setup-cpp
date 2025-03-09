@@ -1,5 +1,7 @@
 import { warning } from "ci-log"
+import { addPath } from "envosman"
 import { installBrewPack } from "setup-brew"
+import { rcOptions } from "../cli-options.ts"
 import { majorLLVMVersion } from "./utils.ts"
 
 export function trySetupLLVMBrew(version: string, _setupDir: string, _arch: string) {
@@ -15,7 +17,12 @@ export function trySetupLLVMBrew(version: string, _setupDir: string, _arch: stri
   }
 }
 
-export function setupLLVMBrew(version: string, _setupDir: string, _arch: string) {
+export async function setupLLVMBrew(version: string, _setupDir: string, _arch: string) {
   const majorVersion = majorLLVMVersion(version)
-  return installBrewPack("llvm", `${majorVersion}`)
+  const installInfo = await installBrewPack("llvm", `${majorVersion}`)
+
+  // add the bin directory to the PATH
+  await addPath(installInfo.binDir, rcOptions)
+
+  return installInfo
 }

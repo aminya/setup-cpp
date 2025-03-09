@@ -36,7 +36,7 @@ export async function brewPackInstallDir(name: string, version: string | undefin
 async function getBrewPackPrefix(packArg: string) {
   try {
     const brewPath = getBrewBinPath()
-    return (await execa(brewPath, ["--prefix", packArg], { stdio: ["pipe", "inherit", "inherit"] })).stdout
+    return (await execa(brewPath, ["--prefix", packArg], { stdio: "pipe" })).stdout
   } catch {
     return undefined
   }
