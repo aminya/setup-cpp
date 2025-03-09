@@ -1,5 +1,6 @@
 import { tmpdir } from "os"
 import { dirname, join } from "path"
+import { warning } from "ci-log"
 import { type AddPathOptions, addPath } from "envosman"
 import { execaSync } from "execa"
 import { DownloaderHelper } from "node-downloader-helper"
@@ -21,9 +22,20 @@ export type SetupBrewOptions = {
   arch?: never
 }
 
+/**
+ * Install brew
+ *
+ * @param options - Options for adding the brew path to the rc file
+ * @returns The path to the bin directory of brew if brew is installed, otherwise undefined if brew is not supported on the current platform
+ */
 export async function setupBrew(options: SetupBrewOptions = {}): Promise<InstallationInfo | undefined> {
-  // brew is only available on darwin and linux
-  if (!["darwin", "linux"].includes(process.platform)) {
+  if (
+    // brew is only available on darwin and linux
+    !["darwin", "linux"].includes(process.platform)
+    // brew is only supported on Linux x64
+    || (process.platform === "linux" && process.arch !== "x64")
+  ) {
+    warning(`Brew is not supported on ${process.platform} ${process.arch}`)
     return undefined
   }
 
