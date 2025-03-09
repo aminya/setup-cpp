@@ -75,18 +75,14 @@ Download the executable for your platform from [here](https://github.com/aminya/
 ```shell
 # windows x64
 curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.1.1/setup-cpp-x64-windows.exe"
-
 # linux x64
 curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.1.1/setup-cpp-x64-linux"
-chmod +x ./setup-cpp
-
+# linux arm64
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.1.1/setup-cpp-arm64-linux"
 # macos arm64
 curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.1.1/setup-cpp-arm64-macos"
-chmod +x ./setup-cpp
-
 # macos x64
 curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.1.1/setup-cpp-x64-macos"
-chmod +x ./setup-cpp
 ```
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
@@ -99,6 +95,7 @@ An example that installs llvm, cmake, ninja, ccache, and vcpkg:
 
 ```shell
 # linux/macos example
+chmod +x ./setup-cpp
 sudo ./setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
 source ~/.cpprc # activate cpp environment variables
 ```
