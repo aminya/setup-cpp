@@ -1,14 +1,18 @@
 import { info } from "console"
 import { tmpdir } from "os"
-import { join } from "path"
-import { execRoot } from "admina"
+import path, { join } from "path"
+import { fileURLToPath } from "url"
+import { execRoot, execRootSync } from "admina"
 import { addPath } from "envosman"
 import { chmod, readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
 import { aptTimeout, hasNala, installAddAptRepo, installAptPack, isAptPackRegexInstalled } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { DEFAULT_TIMEOUT } from "../installTool.js"
+import { isUbuntu } from "../utils/env/isUbuntu.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
+import { majorLLVMVersion } from "./utils.js"
+const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 export enum LLVMPackages {
   All = 0,
@@ -16,10 +20,52 @@ export enum LLVMPackages {
   Core = 2,
 }
 
+/**
+ * Try to setup LLVM via the apt package manager
+ *
+ * @param {string} version - The version of LLVM to install
+ * @param {LLVMPackages} packages - The packages to install
+ *
+ * @returns {InstallationInfo} The installation info if the installation was successful
+ * @returns {undefined} If the installation fails, it will try to remove the repository and will return undefined
+ */
+export async function trySetupLLVMApt(
+  version: string,
+  packages: LLVMPackages = LLVMPackages.All,
+): Promise<InstallationInfo | undefined> {
+  if (!isUbuntu()) {
+    return undefined
+  }
+
+  try {
+    return await setupLLVMApt(version, packages)
+  } catch (err) {
+    info(`Failed to install llvm via system package manager ${err}. Trying to remove the repository`)
+    try {
+      execRootSync(join(dirname, "llvm_repo_remove.bash"), [`${majorLLVMVersion(version)}`])
+    } catch (removeErr) {
+      info(`Failed to remove llvm repository ${removeErr}`)
+    }
+  }
+  return undefined
+}
+
+/**
+ * Setup LLVM via the apt package manager
+ *
+ * @note assumes this is running on an Ubuntu/Debian system
+ *
+ * @param {string} version - The version of LLVM to install
+ * @param {LLVMPackages} packages - The packages to install
+ *
+ * @returns {InstallationInfo} The installation info if the installation was successful
+ */
 export async function setupLLVMApt(
-  majorVersion: number,
+  version: string,
   packages: LLVMPackages = LLVMPackages.All,
 ): Promise<InstallationInfo> {
+  const majorVersion = majorLLVMVersion(version)
+
   // TODO for older versions, this also includes the minor version
   const installationFolder = `/usr/lib/llvm-${majorVersion}`
 
