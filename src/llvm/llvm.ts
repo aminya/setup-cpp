@@ -18,29 +18,26 @@ import { quoteIfHasSpace } from "../utils/std/index.js"
 import { getVersion } from "../versions/versions.js"
 import { LLVMPackages, trySetupLLVMApt } from "./llvm_apt_installer.js"
 import { setupLLVMBin } from "./llvm_bin.js"
+import { trySetupLLVMBrew } from "./llvm_brew_installer.js"
 import { majorLLVMVersion } from "./utils.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
-  const installationInfo = await setupLLVMWithoutActivation(version, setupDir, arch)
-  await activateLLVM(installationInfo.installDir ?? setupDir, version)
-  return installationInfo
-}
+  const installationInfo = await setupLLVMOnly(version, setupDir, arch)
 
-async function setupLLVMWithoutActivation_(version: string, setupDir: string, arch: string) {
-  // install LLVM
-  const [installationInfo, _1] = await Promise.all([
-    setupLLVMOnly(version, setupDir, arch),
-    addLLVMLoggingMatcher(),
-  ])
-
-  // install LLVM dependencies
+  // install gcc for LLVM (for ld, libstdc++, etc.)
   await setupGccForLLVM(arch)
 
+  // add the logging matcher
+  await addLLVMLoggingMatcher()
+
+  // activate LLVM in the end
+  if (installationInfo.installDir !== undefined) {
+    await activateLLVM(installationInfo.installDir, version)
+  }
   return installationInfo
 }
-const setupLLVMWithoutActivation = memoize(setupLLVMWithoutActivation_, { promise: true })
 
 async function setupLLVMOnly(
   version: string,
@@ -51,6 +48,11 @@ async function setupLLVMOnly(
   const aptInstallInfo = await trySetupLLVMApt(version, packages)
   if (aptInstallInfo !== undefined) {
     return aptInstallInfo
+  }
+
+  const brewInstallInfo = await trySetupLLVMBrew(version, setupDir, arch)
+  if (brewInstallInfo !== undefined) {
+    return brewInstallInfo
   }
 
   return setupLLVMBin(version, setupDir, arch)
