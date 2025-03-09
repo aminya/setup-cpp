@@ -1,5 +1,6 @@
 import { getInput } from "@actions/core"
 import { info } from "ci-log"
+import type { AddPathOptions } from "envosman"
 import mri from "mri"
 import { untildifyUser } from "untildify-user"
 import { type Inputs, inputs } from "./tool.js"
@@ -42,7 +43,7 @@ All the available tools:
       "build system": {
         tools: "--cmake, --ninja, --meson, --make, --task, --bazel",
       },
-      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala, --setup-cpp" },
+      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala, --git, --setup-cpp" },
       "analyzer/linter": {
         tools:
           "--clang-tidy, --clang-format, --cppcheck, --cpplint, --flawfinder, --lizard, --infer, , --cmakelang, --cmake-lint, --cmake-format",
@@ -88,7 +89,7 @@ export function getSuccessMessage(tool: string, installationInfo: InstallationIn
   return msg
 }
 
-export const rcOptions = {
+export const rcOptions: AddPathOptions = {
   rcPath: untildifyUser("~/.cpprc"),
   guard: "cpp",
 }
