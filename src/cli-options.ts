@@ -1,5 +1,6 @@
 import { getInput } from "@actions/core"
 import { info } from "ci-log"
+import type { AddPathOptions } from "envosman"
 import mri from "mri"
 import { untildifyUser } from "untildify-user"
 import { type Inputs, inputs } from "./tool.js"
@@ -88,7 +89,7 @@ export function getSuccessMessage(tool: string, installationInfo: InstallationIn
   return msg
 }
 
-export const rcOptions = {
+export const rcOptions: AddPathOptions = {
   rcPath: untildifyUser("~/.cpprc"),
   guard: "cpp",
 }
