@@ -22,7 +22,7 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@types/node": "22.13.8",
+    "@types/node": "22.13.10",
     "admina": "^1.0.1",
     "ci-info": "^4.0.0",
     "path-exists": "^5.0.0",
