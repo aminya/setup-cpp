@@ -128,6 +128,7 @@
     "patha": "^0.4.1",
     "prettier": "3.5.3",
     "prettier-config-atomic": "^4.0.0",
+    "randomuuid-polyfill": "^1.0.2",
     "readme-md-generator": "^1.0.0",
     "retry-as-promised": "^7.1.1",
     "rollup": "^4.34.9",
