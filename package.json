@@ -193,7 +193,8 @@
     "util.types",
     "web-streams-polyfill",
     "timers-browserify",
-    "fs-extra"
+    "fs-extra",
+    "randomuuid-polyfill"
   ],
   "engines": {
     "node": ">=12.x",
