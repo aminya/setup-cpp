@@ -4,13 +4,13 @@ import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.ts"
 import { majorLLVMVersion } from "./utils.ts"
 
-export function trySetupLLVMBrew(version: string, _setupDir: string, _arch: string) {
+export async function trySetupLLVMBrew(version: string, _setupDir: string, _arch: string) {
   if (process.platform !== "darwin") {
     return Promise.resolve(undefined)
   }
 
   try {
-    return setupLLVMBrew(version, _setupDir, _arch)
+    return await setupLLVMBrew(version, _setupDir, _arch)
   } catch (err) {
     warning(`Failed to install llvm via brew: ${err}`)
     return undefined
@@ -19,7 +19,9 @@ export function trySetupLLVMBrew(version: string, _setupDir: string, _arch: stri
 
 export async function setupLLVMBrew(version: string, _setupDir: string, _arch: string) {
   const majorVersion = majorLLVMVersion(version)
-  const installInfo = await installBrewPack("llvm", `${majorVersion}`)
+
+  // install llvm via brew if a bottle is available for it
+  const installInfo = await installBrewPack("llvm", `${majorVersion}`, { "force-bottle": true })
 
   // add the bin directory to the PATH
   await addPath(installInfo.binDir, rcOptions)
