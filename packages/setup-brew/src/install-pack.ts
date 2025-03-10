@@ -1,6 +1,6 @@
 import { join } from "path"
 import { info, warning } from "ci-log"
-import { execaSync } from "execa"
+import { execaSync } from "execa" // brew is not thread-safe
 import which from "which"
 import type { InstallationInfo } from "./InstallationInfo.js"
 import type { BrewPackOptions } from "./install-pack-options.js"
@@ -53,11 +53,21 @@ export async function installBrewPack(
     }
   }
 
-  // brew is not thread-safe
-  execaSync(brewPath, args, { stdio: "inherit" })
+  // dry run to check if the package is already installed
+  const dryRun = execaSync(brewPath, [...args, "--dry-run"], { stdio: "pipe" })
+  const isAlreadyInstalled = dryRun.exitCode === 0
+    && (new RegExp(`Warning: ${name}.* is already installed and up-to-date.[\\s\\S]*`)).test(dryRun.stderr)
 
+  if (isAlreadyInstalled) {
+    // if the package is already installed and up-to-date, skip the installation
+    info(`${name} ${version ?? ""} is already installed and up-to-date`)
+  } else {
+    // install the package if not already installed
+    execaSync(brewPath, args, { stdio: "inherit" })
+  }
+
+  // get the installation directory
   const installDir = await brewPackInstallDir(name, version)
-
   if (installDir === undefined) {
     warning(`Failed to find installation directory for ${name} ${version}`)
     return { binDir: getBrewBinDir(), installDir: undefined }
