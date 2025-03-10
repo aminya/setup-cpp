@@ -1,4 +1,4 @@
-import { warning } from "ci-log"
+import { info } from "ci-log"
 import { addPath } from "envosman"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.ts"
@@ -12,7 +12,7 @@ export async function trySetupLLVMBrew(version: string, _setupDir: string, _arch
   try {
     return await setupLLVMBrew(version, _setupDir, _arch)
   } catch (err) {
-    warning(`Failed to install llvm via brew: ${err}`)
+    info(`Failed to install llvm via brew: ${err}`)
     return undefined
   }
 }

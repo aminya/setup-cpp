@@ -33,6 +33,7 @@ const viteConfig = defineConfig({
           "util/types": "util.types/index.js",
           "timers/promises": "timers-browserify",
           diagnostics_channel: "diagnostics_channel/index.js",
+          crypto: "./src/utils/compat/crypto/index.ts",
         }
         : {}),
     },
