@@ -56,7 +56,7 @@ export async function installBrewPack(
   // dry run to check if the package is already installed
   const dryRun = execaSync(brewPath, [...args, "--dry-run"], { stdio: "pipe" })
   const isAlreadyInstalled = dryRun.exitCode === 0
-    && (new RegExp(`Warning: ${name}.* is already installed and up-to-date.[\\s\\S]*`)).test(dryRun.stderr)
+    && (new RegExp(`${name}.* is already installed and up-to-date.[\\s\\S]*`)).test(dryRun.stderr)
 
   if (isAlreadyInstalled) {
     // if the package is already installed and up-to-date, skip the installation
