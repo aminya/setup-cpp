@@ -236,13 +236,13 @@ jobs:
         platform:
           - linux/amd64
         container:
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.1.1" }
-          - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-1.1.1" }
-          - { distro: "arch", image: "setup-cpp-arch", tag: "base-1.1.1" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.2.0" }
+          - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-1.2.0" }
+          - { distro: "arch", image: "setup-cpp-arch", tag: "base-1.2.0" }
         include:
           - os: ubuntu-24.04-arm
             platform: linux/arm64
-            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.1.1" }
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.2.0" }
     steps:
       - uses: actions/checkout@v4
         with:
@@ -441,53 +441,53 @@ jobs:
 
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
-          inputs: aminya/setup-cpp-ubuntu:22.04-1.1.1
-          images: aminya/setup-cpp-ubuntu:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu:22.04-1.1.1-arm64
+          inputs: aminya/setup-cpp-ubuntu:22.04-1.2.0
+          images: aminya/setup-cpp-ubuntu:22.04-1.2.0-amd64,aminya/setup-cpp-ubuntu:22.04-1.2.0-arm64
           push: true
           amend: true
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
           inputs: aminya/setup-cpp-ubuntu:latest
-          images: aminya/setup-cpp-ubuntu:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu:22.04-1.1.1-arm64
+          images: aminya/setup-cpp-ubuntu:22.04-1.2.0-amd64,aminya/setup-cpp-ubuntu:22.04-1.2.0-arm64
           push: true
           amend: true
 
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
-          inputs: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1
-          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-arm64
+          inputs: aminya/setup-cpp-ubuntu-llvm:22.04-1.2.0
+          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.2.0-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.2.0-arm64
           push: true
           amend: true
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
           inputs: aminya/setup-cpp-ubuntu-llvm:latest
-          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.1.1-arm64
+          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.2.0-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.2.0-arm64
           push: true
           amend: true
 
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
-          inputs: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1
-          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-arm64
+          inputs: aminya/setup-cpp-ubuntu-gcc:22.04-1.2.0
+          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.2.0-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.2.0-arm64
           push: true
           amend: true
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
           inputs: aminya/setup-cpp-ubuntu-gcc:latest
-          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.1.1-arm64
+          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.2.0-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.2.0-arm64
           push: true
           amend: true
 
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
-          inputs: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1
-          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-arm64
+          inputs: aminya/setup-cpp-ubuntu-mingw:22.04-1.2.0
+          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.2.0-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.2.0-arm64
           push: true
           amend: true
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
           inputs: aminya/setup-cpp-ubuntu-mingw:latest
-          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.1.1-arm64
+          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.2.0-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.2.0-arm64
           push: true
           amend: true
 
