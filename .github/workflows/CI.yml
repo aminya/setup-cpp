@@ -280,7 +280,7 @@ jobs:
           provenance: false
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
-          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:latest
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
 
       - name: Tag latest locally
@@ -311,7 +311,7 @@ jobs:
           provenance: false
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
-          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-llvm:latest
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
 
       - name: Tag latest locally
@@ -352,7 +352,7 @@ jobs:
           provenance: false
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
-          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-gcc:latest
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
 
       - name: Tag latest locally
@@ -394,7 +394,7 @@ jobs:
           provenance: false
           platforms: ${{ matrix.platform }}
           tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
-          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-mingw:latest
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
 
       - name: Tag latest locally
