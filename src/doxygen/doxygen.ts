@@ -27,6 +27,9 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch: string): PackageInfo {
   switch (platform) {
     case "linux": {
+      if (process.arch === "arm64") {
+        throw new Error("Doxygen binaries are not available for Linux arm64")
+      }
       const folderName = `doxygen-${version}`
       return {
         binRelativeDir: "bin/",
