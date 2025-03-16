@@ -1,6 +1,7 @@
-import { execRootSync } from "admina"
+import { execRoot } from "admina"
 import { addAptKeyViaURL, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
+import { getDebArch } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
@@ -24,7 +25,7 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
       } else if (hasDnf()) {
         // https://bazel.build/install/redhat
         await setupDnfPack([{ name: "dnf-plugins-core" }])
-        execRootSync("dnf", ["copr", "enable", "vbatts/bazel"])
+        await execRoot("dnf", ["copr", "enable", "vbatts/bazel"])
         return setupDnfPack([{ name: "bazel4" }])
       } else if (isUbuntu()) {
         // https://bazel.build/install/ubuntu
@@ -32,9 +33,11 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
           fileName: "bazel-archive-keyring.gpg",
           keyUrl: "https://bazel.build/bazel-release.pub.gpg",
         })
-        execRootSync("bash", [
+        await execRoot("bash", [
           "-c",
-          `echo "deb [arch=amd64 signed-by=${keyFileName}] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list`,
+          `echo "deb [arch=${
+            getDebArch(process.arch)
+          } signed-by=${keyFileName}] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list`,
         ])
         return installAptPack([{ name: "bazel", version }], true)
       }
