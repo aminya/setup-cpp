@@ -5,7 +5,7 @@ import { addExeExt } from "patha"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { setupGraphviz } from "../graphviz/graphviz.js"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
+import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { getVersion } from "../versions/versions.js"
@@ -90,38 +90,41 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       return installationInfo
     }
     case "linux": {
-      let installationInfo: InstallationInfo
-      if (version === "" || isArch() || hasDnf()) {
-        if (isArch()) {
-          installationInfo = await setupPacmanPack("doxygen", version)
-        } else if (hasDnf()) {
-          return setupDnfPack([{ name: "doxygen", version }])
-        } else if (isUbuntu()) {
-          installationInfo = await installAptPack([{ name: "doxygen", version }])
-        } else {
-          throw new Error("Unsupported linux distributions")
-        }
-      } else if (isUbuntu()) {
-        try {
-          // doxygen on stable Ubuntu repositories is very old. So, we use get the binary from the website itself
-          installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-          try {
-            await installAptPack([{ name: "libclang-cpp9" }])
-          } catch (err) {
-            info(`Failed to download libclang-cpp9 that might be needed for running doxygen. ${err}`)
-          }
-        } catch (err) {
-          notice(`Failed to download doxygen binary. ${err}. Falling back to apt-get.`)
-          installationInfo = await installAptPack([{ name: "doxygen" }])
-        }
-      } else {
-        throw new Error("Unsupported linux distributions")
-      }
+      const installationInfo = await setupLinuxDoxygen(version, setupDir, arch)
       await setupGraphviz(getVersion("graphviz", undefined, await ubuntuVersion()), "", arch)
       return installationInfo
     }
     default: {
       throw new Error("Unsupported platform")
+    }
+  }
+}
+async function setupLinuxDoxygen(version: string, setupDir: string, arch: string) {
+  try {
+    if (isArch()) {
+      return await setupPacmanPack("doxygen", version)
+    } else if (hasDnf()) {
+      return setupDnfPack([{ name: "doxygen", version }])
+    } else if (isUbuntu()) {
+      return await installAptPack([{ name: "doxygen", version, fallBackToLatest: false }])
+    } else {
+      throw new Error("Unsupported linux distributions")
+    }
+  } catch {
+    // fallback to setupBin if the installation failed
+    try {
+      const installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
+      if (isUbuntu()) {
+        try {
+          await installAptPack([{ name: "libclang-cpp-dev" }])
+        } catch (err) {
+          info(`Failed to download libclang-cpp-dev that might be needed for running doxygen. ${err}`)
+        }
+      }
+      return installationInfo
+    } catch (err) {
+      notice(`Failed to download doxygen binary. ${err}. Falling back to installing the latest version from apt-get.`)
+      return installAptPack([{ name: "doxygen" }])
     }
   }
 }
