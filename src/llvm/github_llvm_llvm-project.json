@@ -1,6 +1,31 @@
 {
+  "llvmorg-20.1.0": [
+    "clang+llvm-20.1.0-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-20.1.0-armv7a-linux-gnueabihf.tar.gz",
+    "clang+llvm-20.1.0-aarch64-pc-windows-msvc.tar.xz",
+    "LLVM-20.1.0-woa64.exe",
+    "LLVM-20.1.0-win64.exe",
+    "LLVM-20.1.0-win32.exe",
+    "LLVM-20.1.0-macOS-ARM64.tar.xz",
+    "LLVM-20.1.0-Linux-X64.tar.xz",
+    "LLVM-20.1.0-Linux-ARM64.tar.xz"
+  ],
+  "llvmorg-19.1.7": [
+    "clang+llvm-19.1.7-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-19.1.7-armv7a-linux-gnueabihf.tar.gz",
+    "clang+llvm-19.1.7-aarch64-linux-gnu.tar.xz",
+    "LLVM-19.1.7-woa64.exe",
+    "LLVM-19.1.7-win64.exe",
+    "LLVM-19.1.7-win32.exe",
+    "LLVM-19.1.7-macOS-X64.tar.xz",
+    "LLVM-19.1.7-macOS-ARM64.tar.xz",
+    "LLVM-19.1.7-Linux-X64.tar.xz"
+  ],
   "llvmorg-19.1.6": [
     "clang+llvm-19.1.6-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-19.1.6-armv7a-linux-gnueabihf.tar.gz",
+    "clang+llvm-19.1.6-aarch64-linux-gnu.tar.xz",
+    "LLVM-19.1.6-woa64.exe",
     "LLVM-19.1.6-win64.exe",
     "LLVM-19.1.6-win32.exe",
     "LLVM-19.1.6-macOS-X64.tar.xz",

@@ -2,7 +2,7 @@ import { dirname, join } from "path"
 import { grantUserWriteAccess } from "admina"
 import { info, notice } from "ci-log"
 import { addEnv, addPath } from "envosman"
-import { execaSync } from "execa"
+import { execa } from "execa"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix } from "patha"
 import { installAptPack } from "setup-apt"
@@ -57,17 +57,17 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
     }
   }
 
-  // clone if not already exists
-  if (!(await pathExists(join(setupDir, addShExt("bootstrap-vcpkg", ".bat"))))) {
-    execaSync("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
-  } else {
+  if (await pathExists(join(setupDir, addShExt("bootstrap-vcpkg", ".bat")))) {
     notice(`Vcpkg folder already exists at ${setupDir}. Skipping the clone`)
+  } else {
+    // clone if not already exists
+    await execa("git", ["clone", "https://github.com/microsoft/vcpkg"], { cwd: dirname(setupDir), stdio: "inherit" })
   }
 
   // if version specified, checkout the version
   if (version !== "" && version !== "true") {
     info(`Checking out vcpkg version ${version}`)
-    execaSync("git", ["checkout", version], {
+    await execa("git", ["checkout", version], {
       cwd: setupDir,
       stdio: "inherit",
     })
@@ -79,7 +79,7 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
   }
 
   // bootstrap vcpkg
-  execaSync(addShExt(addShRelativePrefix("bootstrap-vcpkg"), ".bat"), {
+  await execa(addShExt(addShRelativePrefix("bootstrap-vcpkg"), ".bat"), {
     cwd: setupDir,
     shell: true,
     stdio: "inherit",

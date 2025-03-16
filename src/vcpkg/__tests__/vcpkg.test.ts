@@ -6,7 +6,9 @@ jest.setTimeout(300000)
 describe("setup-vcpkg", () => {
   let directory: string
   beforeEach(async () => {
-    directory = await setupTmpDir("vcpkg")
+    // TODO setup-vcpkg bootstrap fails on Linux arm64 with spaces in the path
+    const noSpaces = process.platform === "linux" && process.arch === "arm64"
+    directory = await setupTmpDir("vcpkg", !noSpaces)
   })
 
   it("should setup vcpkg", async () => {

@@ -86,6 +86,7 @@ jobs:
         os:
           - windows-2019
           - ubuntu-20.04
+          - ubuntu-22.04-arm
           - macos-13 # x64
           - macos-14 # arm64
     steps:
@@ -143,7 +144,9 @@ jobs:
         os:
           - windows-2022
           - windows-2019
+          - ubuntu-24.04-arm
           - ubuntu-24.04
+          - ubuntu-22.04-arm
           - ubuntu-22.04
           - ubuntu-20.04
           - macos-15 # arm64

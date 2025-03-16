@@ -5,3 +5,13 @@ export const armv7 = ["armv7", "armv7a"]
 export const powerpc64le = ["powerpc64le", "ppc64le"]
 export const sparc64 = ["sparc64"]
 export const sparcv9 = ["sparcv9"]
+
+export function getDebArch(arch: string) {
+  if (arm64.includes(arch)) {
+    return "arm64"
+  } else if (x86_64.includes(arch)) {
+    return "amd64"
+  } else {
+    return arch
+  }
+}

@@ -1,4 +1,4 @@
-import { warning } from "ci-log"
+import { info } from "ci-log"
 import escapeRegex from "escape-string-regexp"
 import { execa } from "execa"
 import { getAptEnv } from "./apt-env.js"
@@ -37,70 +37,97 @@ export async function qualifiedNeededAptPackage(pack: AptPackage, apt: string = 
   return (await isAptPackInstalled(qualified)) ? undefined : qualified
 }
 
-async function aptPackageType(apt: string, name: string, version: string | undefined): Promise<AptPackageType> {
-  if (version !== undefined && version !== "") {
-    const { stdout } = await execa("apt-cache", [
-      "search",
-      "--names-only",
-      `^${escapeRegex(name)}-${escapeRegex(version)}$`,
-    ], { env: getAptEnv(apt), stdio: "pipe" })
-    if (stdout.trim() !== "") {
+async function aptPackageType(
+  apt: string,
+  name: string,
+  version: string | undefined,
+  fallBackToLatest: boolean,
+): Promise<AptPackageType> {
+  const hasVersion = version !== undefined && version !== ""
+  const canFallBackToLatest = !hasVersion || fallBackToLatest
+
+  if (hasVersion) {
+    // check if apt-get search can find the version
+    if (await aptCacheSearchHasPackage(apt, name, version)) {
       return AptPackageType.NameDashVersion
     }
 
-    try {
-      // check if apt-get show can find the version
-      // eslint-disable-next-line @typescript-eslint/no-shadow
-      const { stdout } = await execa("apt-cache", ["show", `${name}=${version}`], { env: getAptEnv(apt) })
-      if (stdout.trim() === "") {
-        return AptPackageType.NameEqualsVersion
-      }
-    } catch {
-      // ignore
+    // check if apt-get show can find the version
+    if (await aptCacheShowHasPackage(apt, `${name}=${version}`)) {
+      return AptPackageType.NameEqualsVersion
     }
   }
 
-  try {
-    const { stdout: showStdout } = await execa("apt-cache", ["show", name], { env: getAptEnv(apt), stdio: "pipe" })
-    if (showStdout.trim() !== "") {
-      return AptPackageType.Name
+  const logFallback = () => {
+    if (hasVersion && fallBackToLatest) {
+      info(`Could not find package ${name} ${version}. Falling back to latest version.`)
     }
-  } catch {
-    // ignore
+  }
+
+  if (canFallBackToLatest && await aptCacheShowHasPackage(apt, name)) {
+    // if the version is undefined or empty, return the name as a package name
+    logFallback()
+    return AptPackageType.Name
   }
 
   // If apt-cache fails, update the repos and try again
   if (!updatedRepos) {
     updateAptReposMemoized(apt)
-    return aptPackageType(apt, name, version)
+    return aptPackageType(apt, name, version, fallBackToLatest)
   }
 
-  if (version === undefined || version === "") {
+  if (canFallBackToLatest) {
     // if the version is undefined or empty, return the name as a package name
+    logFallback()
     return AptPackageType.Name
   }
 
   return AptPackageType.None
 }
 
+async function aptCacheSearchHasPackage(apt: string, name: string, version: string) {
+  try {
+    const { stdout } = await execa("apt-cache", [
+      "search",
+      "--names-only",
+      `^${escapeRegex(name)}-${escapeRegex(version)}$`,
+    ], { env: getAptEnv(apt), stdio: "pipe" })
+    if (stdout.trim() !== "") {
+      return true
+    }
+  } catch {
+    // ignore
+  }
+  return false
+}
+
+async function aptCacheShowHasPackage(apt: string, arg: string) {
+  try {
+    const { stdout } = await execa("apt-cache", ["show", arg], {
+      env: getAptEnv(apt),
+      stdio: "pipe",
+      verbose: true,
+    })
+    if (stdout.trim() !== "") {
+      return true
+    }
+  } catch {
+    // ignore
+  }
+  return false
+}
+
 async function getAptArg(apt: string, pack: AptPackage) {
   const { name, version, fallBackToLatest = false } = pack
 
-  const package_type = await aptPackageType(apt, name, version)
+  const package_type = await aptPackageType(apt, name, version, fallBackToLatest)
   switch (package_type) {
     case AptPackageType.NameDashVersion:
       return `${name}-${version}`
     case AptPackageType.NameEqualsVersion:
       return `${name}=${version}`
     case AptPackageType.Name: {
-      if (version === undefined || version === "") {
-        return name
-      }
-      if (fallBackToLatest) {
-        warning(`Could not find package '${name}' with version '${version}'. Installing the latest version.`)
-        return name
-      }
-      throw new Error(`Could not find package '${name}' with version '${version}'`)
+      return name
     }
     default:
       throw new Error(`Could not find package '${name}' ${version ?? "with unspecified version"}`)

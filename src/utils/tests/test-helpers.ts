@@ -7,14 +7,17 @@ import { addExeExt } from "patha"
 
 import { pathExists } from "path-exists"
 
-export async function setupTmpDir(testName: string) {
-  const tempDirectory = path.join(tmpdir(), "setup cpp temp", testName)
+export async function setupTmpDir(testName: string, useSpaces: boolean = false) {
+  const tempName = useSpaces ? "setup cpp temp" : "setup-cpp-temp"
+
+  const tempDirectory = path.join(tmpdir(), tempName, testName)
   try {
     await io.rmRF(tempDirectory)
     await io.mkdirP(tempDirectory)
   } catch {
     console.log("Failed to remove test directories")
   }
+  // eslint-disable-next-line require-atomic-updates
   process.env.SETUP_CPP_DIR = tempDirectory
   return tempDirectory
 }
