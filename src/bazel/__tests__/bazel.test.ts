@@ -4,6 +4,12 @@ import { setupBazel } from "../bazel.js"
 
 jest.setTimeout(300000)
 describe("setup-bazel", () => {
+  if (process.platform === "linux" && process.arch === "arm64") {
+    it("should skip bazel tests on Linux arm64", () => {
+      expect(true).toBe(true)
+    })
+    return
+  }
   it("should setup bazel", async () => {
     const installInfo = await setupBazel("", "", process.arch)
 

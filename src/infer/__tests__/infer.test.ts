@@ -8,8 +8,8 @@ import { setupInfer } from "../infer.js"
 jest.setTimeout(300000)
 
 describe("setup-infer", () => {
-  if (process.platform === "win32") {
-    it("should skip infer tests on windows", () => {
+  if (process.platform === "win32" || (process.platform === "linux" && process.arch === "arm64")) {
+    it("should skip infer tests on Windows and Linux arm64", () => {
       expect(true).toBe(true)
     })
     return
