@@ -5,7 +5,7 @@ import { info } from "ci-log"
 import memoize from "memoizee"
 import { DownloaderHelper } from "node-downloader-helper"
 import { installAptPack } from "setup-apt"
-import { arm64, x86_64 } from "../utils/env/arch.js"
+import { getDebArch } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
@@ -17,11 +17,11 @@ import { majorLLVMVersion } from "./utils.js"
 
 export async function setupLLVMBin(version: string, setupDir: string, arch: string) {
   const installInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
-  await llvmBinaryDeps(majorLLVMVersion(version))
+  await llvmBinaryDeps(majorLLVMVersion(version), arch)
   return installInfo
 }
 
-async function llvmBinaryDeps_(_majorVersion: number) {
+async function llvmBinaryDeps_(_majorVersion: number, arch: string) {
   if (isUbuntu()) {
     for (const dep of ["libtinfo5", "libtinfo6"]) {
       /* eslint-disable no-await-in-loop */
@@ -32,14 +32,10 @@ async function llvmBinaryDeps_(_majorVersion: number) {
           if (dep === "libtinfo5") {
             // Manually install libtinfo5 if the package is not available
             info(`Failed to install ${dep}\nManually installing the package`)
-            const arch = x86_64.includes(process.arch)
-              ? "amd64"
-              : arm64.includes(process.arch)
-              ? "arm64"
-              : process.arch
 
-            const fileName = `libtinfo5_6.3-2ubuntu0.1_${arch}.deb`
-            const url = `http://launchpadlibrarian.net/666971015/${fileName}`
+            const fileName = `libtinfo5_6.3-2ubuntu0.1_${getDebArch(arch)}.deb`
+            const url = `https://launchpad.net/ubuntu/+archive/primary/+files/${fileName}`
+
             const dl = new DownloaderHelper(url, tmpdir(), { fileName })
             dl.on("error", async (dlErr) => {
               info(`Failed to download ${url}: ${dlErr}`)
