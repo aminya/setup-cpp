@@ -13,6 +13,7 @@ import { getVersion } from "../versions/versions.js"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
 import { rcOptions } from "../cli-options.js"
+import { arm64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
@@ -106,7 +107,7 @@ async function setupLinuxDoxygen(version: string, setupDir: string, arch: string
     } else if (hasDnf()) {
       return setupDnfPack([{ name: "doxygen", version }])
     } else if (isUbuntu()) {
-      return await installAptPack([{ name: "doxygen", version, fallBackToLatest: false }])
+      return await installAptPack([{ name: "doxygen", version, fallBackToLatest: arm64.includes(arch) }])
     } else {
       throw new Error("Unsupported linux distributions")
     }
