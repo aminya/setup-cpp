@@ -200,7 +200,7 @@
     "node": ">=12.x",
     "pnpm": "^10"
   },
-  "packageManager": "pnpm@10.6.3",
+  "packageManager": "pnpm@10.6.5",
   "workspaces": [
     "packages/*"
   ],
