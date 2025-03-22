@@ -137,7 +137,7 @@
     "setup-apt": "workspace:*",
     "setup-brew": "workspace:*",
     "setup-python": "github:aminya/setup-python#9700887",
-    "shx": "0.3.4",
+    "shx": "0.4.0",
     "simple-update-notifier": "^2.0.0",
     "terser": "^5.39.0",
     "terser-config-atomic": "^1.0.0",
