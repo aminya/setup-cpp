@@ -12,7 +12,7 @@ import { readdir } from "fs/promises"
 import memoize from "memoizee"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
-import { installAptPack } from "setup-apt"
+import { installAptPack, isAptPackInstalled } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
@@ -122,6 +122,12 @@ async function hasVenv(foundPython: string): Promise<boolean> {
   try {
     // check if venv module exits
     await execa(foundPython, ["-m", "venv", "-h"], { stdio: "ignore" })
+
+    // checking venv module is not enough on Ubuntu 20.04
+    if (isUbuntu()) {
+      return isAptPackInstalled("python3-venv")
+    }
+
     return true
   } catch {
     // if module not found, continue
