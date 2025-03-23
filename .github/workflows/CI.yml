@@ -244,6 +244,7 @@ jobs:
           - { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "20.04", tag: "20.04-1.3.0" }
           - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-1.3.0" }
           - { distro: "arch", image: "setup-cpp-arch", tag: "base-1.3.0" }
+          - { distro: "alpine", image: "setup-cpp-alpine", BASE_VERSION: "22-alpine3.21", tag: "22-alpine3.21-1.3.0" }
         include:
           - os: ubuntu-24.04-arm
             platform: linux/arm64
@@ -254,6 +255,10 @@ jobs:
           - os: ubuntu-24.04-arm
             platform: linux/arm64
             container: { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "20.04", tag: "20.04-1.3.0" }
+          - os: ubuntu-24.04
+            platform: linux/amd64
+            container:
+              { distro: "alpine", image: "setup-cpp-alpine", BASE_VERSION: "22-alpine3.21", tag: "22-alpine3.21-1.3.0" }
     steps:
       - uses: actions/checkout@v4
         with:
@@ -300,7 +305,7 @@ jobs:
           docker tag aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:latest
 
       - name: Push latest to Docker Hub
-        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'alpine' }}
         run: docker push aminya/${{ matrix.container.image }}:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}
@@ -331,7 +336,7 @@ jobs:
           docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
 
       - name: Push latest to Docker Hub
-        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'alpine' }}
         run: docker push aminya/${{ matrix.container.image }}-llvm:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-llvm
@@ -372,7 +377,7 @@ jobs:
           docker tag aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:latest
 
       - name: Push latest to Docker Hub
-        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' }}
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'alpine' }}
         run: docker push aminya/${{ matrix.container.image }}-gcc:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-gcc
@@ -415,7 +420,7 @@ jobs:
           docker tag aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
 
       - name: Push latest to Docker Hub
-        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'fedora' }}
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'fedora' && matrix.container.distro != 'alpine' }}
         run: docker push aminya/${{ matrix.container.image }}-mingw:latest
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-mingw
@@ -459,6 +464,11 @@ jobs:
           - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-llvm", latest: true }
           - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-gcc", latest: true }
           - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-mingw", latest: true }
+
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "22-alpine3.21-1.3.0", suffix: "", latest: true }
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "22-alpine3.21-1.3.0", suffix: "-llvm", latest: true }
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "22-alpine3.21-1.3.0", suffix: "-gcc", latest: true }
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "22-alpine3.21-1.3.0", suffix: "-mingw", latest: true }
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
