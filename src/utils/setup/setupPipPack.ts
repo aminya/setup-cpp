@@ -54,40 +54,42 @@ export async function setupPipPackWithPython(
   version?: string,
   options: SetupPipPackOptions = {},
 ): Promise<InstallationInfo> {
-  const { usePipx = true, user = true, upgrade = false, isLibrary = false } = options
+  const { usePipx: givenUsePipx = true, user = true, upgrade = false, isLibrary = false } = options
 
-  const isPipx = usePipx && !isLibrary && (await hasPipxModule(givenPython))
+  const usePipx = givenUsePipx && !isLibrary && (await hasPipxModule(givenPython))
 
-  const pip = isPipx ? "pipx" : "pip"
+  // if the package is externally managed, let the system tools handle it
+  const externallyManaged = !usePipx && (await isExternallyManaged(givenPython))
+
+  const pip = usePipx ? "pipx" : "pip"
 
   // remove `[]` extensions
   const nameOnly = getPackageName(name)
 
   // if upgrade is not requested, check if the package is already installed, and return if it is
   if (!upgrade) {
-    const installed = isPipx
+    const installed = usePipx
       ? await pipxPackageInstalled(givenPython, nameOnly)
       : await pipPackageIsInstalled(givenPython, nameOnly)
     if (installed) {
-      const binDir = isPipx
+      const binDir = usePipx
         ? await finishPipxPackageInstall()
         : await finishPipPackageInstall(givenPython, nameOnly)
       return { binDir }
     }
   }
 
-  const hasPackage = await pipHasPackage(givenPython, nameOnly)
-  if (hasPackage) {
+  if (!externallyManaged && await pipHasPackage(givenPython, nameOnly)) {
     try {
       info(`Installing ${name} ${version ?? ""} via ${pip}`)
 
       const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
-      const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
-      const userFlag = !isPipx && user ? ["--user"] : []
+      const upgradeFlag = upgrade ? (usePipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
+      const userFlag = !usePipx && user ? ["--user"] : []
 
       const env = process.env
 
-      if (isPipx && user) {
+      if (usePipx && user) {
         // install to user home
         env.PIPX_HOME = await getPipxHome()
         env.PIPX_BIN_DIR = await getPipxBinDir()
@@ -108,7 +110,7 @@ export async function setupPipPackWithPython(
     throw new Error(`Failed to install ${name} as it was not found via ${pip} or the system package manager`)
   }
 
-  const binDir = isPipx
+  const binDir = usePipx
     ? await finishPipxPackageInstall()
     : await finishPipPackageInstall(givenPython, nameOnly)
   return { binDir }
