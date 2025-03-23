@@ -4,6 +4,7 @@ import { info, warning } from "ci-log"
 import { execa } from "execa"
 import { mkdirp, move } from "fs-extra"
 import { rm } from "fs/promises"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip.js"
@@ -172,6 +173,8 @@ async function installTarDependencies(archiveType: ArchiveType) {
           await setupDnfPack([{ name: "gzip" }, { name: "tar" }])
         } else if (isUbuntu()) {
           await installAptPack([{ name: "gzip" }, { name: "tar" }])
+        } else if (await hasApk()) {
+          await installApkPack([{ name: "gzip" }, { name: "tar" }])
         }
       }
       break
@@ -185,6 +188,8 @@ async function installTarDependencies(archiveType: ArchiveType) {
           await setupDnfPack([{ name: "xz" }, { name: "tar" }])
         } else if (isUbuntu()) {
           await installAptPack([{ name: "xz-utils" }, { name: "tar" }])
+        } else if (await hasApk()) {
+          await installApkPack([{ name: "xz" }, { name: "tar" }])
         }
       }
       break
