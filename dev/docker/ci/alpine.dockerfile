@@ -26,5 +26,9 @@ RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
 # cleanup
     rm -rf /var/cache/apk/*
 
-SHELL ["/bin/bash", "-l", "-c"]
-ENTRYPOINT ["/bin/bash", "-l"]
+# Custom entrypoint due to bash -l limitations on Alpine
+RUN printf '#!/bin/bash\nsource $HOME/.cpprc\nexec "$@"\n' > /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+
+SHELL ["/entrypoint.sh", "/bin/sh", "-c"]
+ENTRYPOINT ["/entrypoint.sh", "/bin/sh"]

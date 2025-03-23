@@ -6,5 +6,5 @@ RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
 # cleanup
     rm -rf /var/cache/apk/*
 
-SHELL ["/bin/bash", "-l", "-c"]
-ENTRYPOINT ["/bin/bash", "-l"]
+SHELL ["/entrypoint.sh", "/bin/sh", "-c"]
+ENTRYPOINT ["/entrypoint.sh", "/bin/sh"]
