@@ -63,6 +63,10 @@ function getPowershellUrl(
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupPowershell(version: string, setupDir: string, arch: string) {
   try {
+    if (await hasApk()) {
+      return setupPowershellSystem(version, setupDir, arch)
+    }
+
     return await setupBin("pwsh", version, getPowerShellPackageInfo, setupDir, arch)
   } catch (err) {
     error(`Failed to setup pwsh via download: ${err}. Trying package managers...`)
@@ -115,7 +119,7 @@ export async function setupPowershellSystem(version: string | undefined, _setupD
 
         return installAptPack([{ name: "powershell", version }], true)
       } else if (await hasApk()) {
-        return installApkPack([{ name: "powershell", version }])
+        return installApkPack([{ name: "powershell", version: undefined }])
       }
       throw new Error("Unsupported linux distribution")
     }

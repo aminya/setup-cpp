@@ -47,7 +47,10 @@ export async function setupMingw(version: string, setupDir: string, arch: string
       } else if (isUbuntu()) {
         installationInfo = await installAptPack([{ name: "mingw-w64", version }])
       } else if (await hasApk()) {
-        installationInfo = await installApkPack([{ name: "mingw-w64", version }])
+        installationInfo = await installApkPack([
+          { name: "mingw-w64-gcc", version },
+          { name: "mingw-w64-crt", version },
+        ])
       } else {
         throw new Error(`Unsupported Linux distro for ${arch}`)
       }
