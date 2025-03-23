@@ -6,6 +6,7 @@ import memoize from "memoizee"
 import { mkdirp } from "mkdirp"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
+import { hasApk, installApkPackage } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { untildifyUser } from "untildify-user"
@@ -275,7 +276,7 @@ async function findBinDir(dirs: string[], name: string) {
   return dirs[dirs.length - 1]
 }
 
-export function setupPipPackSystem(name: string, addPythonPrefix = true) {
+export async function setupPipPackSystem(name: string, addPythonPrefix = true) {
   if (process.platform === "linux") {
     info(`Installing ${name} via the system package manager`)
     if (isArch()) {
@@ -284,6 +285,8 @@ export function setupPipPackSystem(name: string, addPythonPrefix = true) {
       return setupDnfPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     } else if (isUbuntu()) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
+    } else if (await hasApk()) {
+      return installApkPackage([{ name: addPythonPrefix ? `python3-${name}` : name }])
     }
   } else if (process.platform === "darwin") {
     // brew doesn't have venv
