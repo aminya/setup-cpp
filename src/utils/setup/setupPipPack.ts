@@ -1,5 +1,7 @@
 import { dirname, join } from "path"
 import { info } from "@actions/core"
+import { getExecOutput } from "@actions/exec"
+import { warning } from "ci-log"
 import { addPath } from "envosman"
 import { execa, execaSync } from "execa"
 import memoize from "memoizee"
@@ -12,15 +14,17 @@ import { installBrewPack } from "setup-brew"
 import { untildifyUser } from "untildify-user"
 import which from "which"
 import { rcOptions } from "../../cli-options.js"
-import { addPythonBaseExecPrefix, setupPython } from "../../python/python.js"
+import { setupPython } from "../../python/python.js"
 import { getVersion } from "../../versions/versions.js"
 import { hasDnf } from "../env/hasDnf.js"
 import { isArch } from "../env/isArch.js"
 import { isUbuntu } from "../env/isUbuntu.js"
 import { ubuntuVersion } from "../env/ubuntu_version.js"
+import { unique } from "../std/index.js"
 import type { InstallationInfo } from "./setupBin.js"
 import { setupDnfPack } from "./setupDnfPack.js"
 import { setupPacmanPack } from "./setupPacmanPack.js"
+import { getBinVersion } from "./version.js"
 
 export type SetupPipPackOptions = {
   /** Whether to use pipx instead of pip */
@@ -301,3 +305,70 @@ export async function setupPipPackSystem(name: string, givenAddPythonPrefix?: bo
   }
   return null
 }
+
+async function addPythonBaseExecPrefix_(python: string) {
+  const dirs: string[] = []
+
+  // detection based on the platform
+  if (process.platform === "linux") {
+    dirs.push("/home/runner/.local/bin/")
+  } else if (process.platform === "darwin") {
+    dirs.push("/usr/local/bin/")
+  }
+
+  // detection using python.sys
+  const base_exec_prefix = await getPythonBaseExecPrefix(python)
+  // any of these are possible depending on the operating system!
+  dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "Scripts", "bin"), join(base_exec_prefix, "bin"))
+
+  // remove duplicates
+  return unique(dirs)
+}
+
+/**
+ * Add the base exec prefix to the PATH. This is required for Conan, Meson, etc. to work properly.
+ *
+ * The answer is cached for subsequent calls
+ */
+export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_, { promise: true })
+
+async function getPythonBaseExecPrefix_(python: string) {
+  return (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim()
+}
+/**
+ * Get the base exec prefix of a Python installation
+ * This is the directory where the Python interpreter is installed
+ * and where the standard library is located
+ */
+export const getPythonBaseExecPrefix = memoize(getPythonBaseExecPrefix_, { promise: true })
+
+async function isExternallyManaged_(python: string) {
+  try {
+    const base_exec_prefix = await getPythonBaseExecPrefix(python)
+
+    const pythonVersion = await getBinVersion(python)
+    if (pythonVersion === undefined) {
+      warning(`Failed to get the version of ${python}`)
+      return false
+    }
+
+    const externallyManagedPath = join(
+      base_exec_prefix,
+      "lib",
+      `python${pythonVersion.major}.${pythonVersion.minor}`,
+      "EXTERNALLY-MANAGED",
+    )
+    return pathExists(externallyManagedPath)
+  } catch (err) {
+    warning(`Failed to check if ${python} is externally managed: ${err}`)
+    return false
+  }
+}
+
+/**
+ * Check if the given Python installation is externally managed
+ * This is required for Conan, Meson, etc. to work properly
+ *
+ * The answer is cached for subsequent calls
+ */
+export const isExternallyManaged = memoize(isExternallyManaged_, { promise: true })

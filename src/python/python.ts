@@ -1,7 +1,6 @@
 import assert from "assert"
 import { homedir } from "os"
 import { dirname, join, parse as pathParse } from "path"
-import { getExecOutput } from "@actions/exec"
 import ciInfo from "ci-info"
 const { GITHUB_ACTIONS } = ciInfo
 import { endGroup, startGroup } from "@actions/core"
@@ -9,7 +8,6 @@ import { info, notice, warning } from "ci-log"
 import { addPath } from "envosman"
 import { execa } from "execa"
 import { readdir } from "fs/promises"
-import memoize from "memoizee"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import { hasApk, installApkPackage } from "setup-alpine"
@@ -27,11 +25,11 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import {
   hasPipxBinary,
   hasPipxModule,
+  isExternallyManaged,
   setupPipPackSystem,
   setupPipPackWithPython,
 } from "../utils/setup/setupPipPack.js"
 import { isBinUptoDate } from "../utils/setup/version.js"
-import { unique } from "../utils/std/index.js"
 import { getVersionDefault, isMinVersion } from "../versions/versions.js"
 
 export async function setupPython(
@@ -356,6 +354,11 @@ async function setupPip(foundPython: string) {
 }
 
 async function ensurePipUpgrade(foundPython: string) {
+  if (await isExternallyManaged(foundPython)) {
+    // let system tools handle pip
+    return false
+  }
+
   try {
     await execa(foundPython, ["-m", "ensurepip", "-U", "--upgrade"], { stdio: "inherit" })
     return true
@@ -373,29 +376,3 @@ async function ensurePipUpgrade(foundPython: string) {
   // all methods failed
   return false
 }
-
-async function addPythonBaseExecPrefix_(python: string) {
-  const dirs: string[] = []
-
-  // detection based on the platform
-  if (process.platform === "linux") {
-    dirs.push("/home/runner/.local/bin/")
-  } else if (process.platform === "darwin") {
-    dirs.push("/usr/local/bin/")
-  }
-
-  // detection using python.sys
-  const base_exec_prefix = (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim()
-  // any of these are possible depending on the operating system!
-  dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "Scripts", "bin"), join(base_exec_prefix, "bin"))
-
-  // remove duplicates
-  return unique(dirs)
-}
-
-/**
- * Add the base exec prefix to the PATH. This is required for Conan, Meson, etc. to work properly.
- *
- * The answer is cached for subsequent calls
- */
-export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_, { promise: true })
