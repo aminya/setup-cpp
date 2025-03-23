@@ -293,7 +293,7 @@ export async function setupPipPackSystem(name: string, givenAddPythonPrefix?: bo
     } else if (isUbuntu()) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     } else if (await hasApk()) {
-      return installApkPackage([{ name: addPythonPrefix ? `python3-${name}` : name }])
+      return installApkPackage([{ name: addPythonPrefix ? `py3-${name}` : name }])
     }
   } else if (process.platform === "darwin") {
     // brew doesn't have venv
