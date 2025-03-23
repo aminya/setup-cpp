@@ -1,5 +1,6 @@
 export * from "./apk-repository.js"
 export * from "./has-apk.js"
+export * from "./init-apt.js"
 export * from "./install-package.js"
 export * from "./qualify-install.js"
 export * from "./update.js"

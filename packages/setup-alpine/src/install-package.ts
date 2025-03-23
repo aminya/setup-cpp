@@ -1,6 +1,7 @@
 import { execRoot } from "admina"
 import { info, warning } from "ci-log"
 import { hasApk } from "./has-apk.js"
+import { initApkMemoized } from "./init-apt.js"
 import { type ApkPackage, filterAndQualifyApkPackages, formatPackageWithVersion } from "./qualify-install.js"
 import { updateApkMemoized } from "./update.js"
 
@@ -37,6 +38,9 @@ export async function installApkPackage(packages: ApkPackage[], update = false):
     }
     // Update the repos if needed
     await updateApkMemoized()
+
+    // init the apk
+    await initApkMemoized()
 
     const packagesToInstall = await filterAndQualifyApkPackages(packages)
 
