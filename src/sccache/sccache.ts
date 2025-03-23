@@ -1,3 +1,4 @@
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { getUbuntuVersion } from "ubuntu-version"
@@ -16,6 +17,8 @@ export async function setupSccache(version: string, _setupDir: string, _arch: st
         if (ubuntuVersion[0] >= 24) {
           return installAptPack([{ name: "sccache", version }])
         }
+      } else if (await hasApk()) {
+        return installApkPack([{ name: "sccache", version }])
       }
 
       return installBrewPack("sccache", version)

@@ -1,4 +1,7 @@
+import { addPath } from "envosman"
 import { addExeExt } from "patha"
+import { enableCommunityRepository, hasApk, installApkPack } from "setup-alpine"
+import { rcOptions } from "../cli-options.js"
 import { arm64, x86, x86_64 } from "../utils/env/arch.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 
@@ -37,6 +40,25 @@ function getNinjaPackageInfo(version: string, platform: NodeJS.Platform, arch: s
   }
 }
 
-export function setupNinja(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export async function setupNinja(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+  if (await hasApk()) {
+    await enableCommunityRepository()
+    await installApkPack([
+      {
+        name: "ninja-build",
+        // version,
+      },
+      {
+        name: "ninja-is-really-ninja",
+      },
+    ])
+    await addPath("/usr/lib/ninja-build/bin", rcOptions)
+    return {
+      binDir: "/usr/lib/ninja-build/bin",
+      installDir: "/usr/lib/ninja-build/",
+      bin: "/usr/lib/ninja-build/bin/ninja",
+    }
+  }
+
   return setupBin("ninja", version, getNinjaPackageInfo, setupDir, arch)
 }

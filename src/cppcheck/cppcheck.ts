@@ -1,4 +1,5 @@
 import { addPath } from "envosman"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
@@ -27,6 +28,8 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
         return setupDnfPack([{ name: "ccache", version }])
       } else if (isUbuntu()) {
         return installAptPack([{ name: "cppcheck", version }])
+      } else if (await hasApk()) {
+        return installApkPack([{ name: "cppcheck", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

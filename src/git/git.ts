@@ -1,6 +1,7 @@
 import { existsSync } from "fs"
 import { info, warning } from "ci-log"
 import { addPath } from "envosman"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import which from "which"
@@ -39,6 +40,8 @@ export async function setupGit(version: string, _setupDir: string, _arch: string
         return setupDnfPack([{ name: "git", version }])
       } else if (isUbuntu()) {
         return installAptPack([{ name: "git", version }])
+      } else if (await hasApk()) {
+        return installApkPack([{ name: "git", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

@@ -5,6 +5,7 @@ import { addEnv, addPath } from "envosman"
 import { execa } from "execa"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix } from "patha"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
@@ -54,6 +55,18 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
         { name: "tar" },
         { name: "pkg-config" },
       ])
+    } else if (await hasApk()) {
+      const deps = [
+        { name: "curl" },
+        { name: "zip" },
+        { name: "unzip" },
+        { name: "tar" },
+        { name: "pkgconf" },
+      ]
+      if (arm64.includes(arch)) {
+        deps.push({ name: "build-base" })
+      }
+      await installApkPack(deps)
     }
   }
 
@@ -74,7 +87,7 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
   }
 
   // Add VCPKG_FORCE_SYSTEM_BINARIES=1 for Linux arm64
-  if (process.platform === "linux" && arch in arm64) {
+  if (process.platform === "linux" && arm64.includes(arch)) {
     await addEnv("VCPKG_FORCE_SYSTEM_BINARIES", "1")
   }
 

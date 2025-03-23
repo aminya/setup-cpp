@@ -1,4 +1,5 @@
 import { execRoot } from "admina"
+import { hasApk, installApkPack } from "setup-alpine"
 import { addAptKeyViaURL, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { getDebArch } from "../utils/env/arch.js"
@@ -40,6 +41,8 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
           } signed-by=${keyFileName}] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list`,
         ])
         return installAptPack([{ name: "bazel", version }], true)
+      } else if (await hasApk()) {
+        return installApkPack([{ name: "bazel", version }], true)
       }
       throw new Error("Unsupported linux distribution")
     }

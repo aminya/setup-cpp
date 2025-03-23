@@ -1,14 +1,19 @@
 {
-  "name": "envosman",
-  "version": "1.0.4",
-  "description": "Manage environment variables, PATH, and rc files",
+  "name": "setup-alpine",
+  "version": "1.0.0",
+  "description": "Setup apk packages and repositories in Alpine Linux distributions",
   "repository": "https://github.com/aminya/setup-cpp",
-  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/envosman",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-alpine",
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "main": "./dist/index.js",
   "source": "./src/index.ts",
   "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
   "scripts": {
     "build": "tsc --pretty",
     "dev": "tsc --watch --pretty",
@@ -17,36 +22,34 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@actions/core": "^1.10.1",
     "@types/node": "22.13.11",
     "admina": "^1.0.1",
     "ci-info": "^4.0.0",
-    "escape-path-with-spaces": "^1.0.2",
-    "escape-quotes": "^1.0.2",
-    "memoizee": "^0.4.17",
     "path-exists": "^5.0.0",
     "ci-log": "workspace:*",
-    "exec-powershell": "workspace:*",
-    "untildify-user": "workspace:*"
+    "envosman": "workspace:*",
+    "which": "4.0.0",
+    "execa": "7.2.0",
+    "memoizee": "^0.4.17"
   },
   "engines": {
     "node": ">=12"
   },
   "keywords": [
-    "env",
-    "path",
-    "dotenv",
-    "rc",
-    "addEnv",
-    "addPath",
-    "setEnv",
+    "setup",
+    "apk",
+    "apk-add",
+    "repository",
+    "alpine",
+    "install",
+    "setup-apk",
+    "repositories",
     "linux",
-    "windows",
-    "unix",
-    "macos"
+    "alpine-linux",
+    "package"
   ],
   "devDependencies": {
-    "@types/escape-quotes": "~1.0.0",
-    "@types/memoizee": "0.4.11"
+    "@types/memoizee": "0.4.11",
+    "@types/which": "~3.0.4"
   }
 }

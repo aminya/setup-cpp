@@ -10,6 +10,7 @@ import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import semverMajor from "semver/functions/major"
+import { hasApk, installApkPack } from "setup-alpine"
 import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
@@ -46,6 +47,8 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
           { name: "gcc-c++", version },
           { name: "libstdc++-devel" },
         ])
+      } else if (await hasApk()) {
+        installationInfo = await installApkPack([{ name: "gcc", version }, { name: "g++", version }])
       } else if (isUbuntu()) {
         if (version === "") {
           // the default version

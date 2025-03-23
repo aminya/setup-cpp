@@ -232,6 +232,9 @@ importers:
       semver:
         specifier: 7.7.1
         version: 7.7.1
+      setup-alpine:
+        specifier: workspace:*
+        version: link:packages/setup-alpine
       setup-apt:
         specifier: workspace:*
         version: link:packages/setup-apt
@@ -362,6 +365,43 @@ importers:
     devDependencies:
       '@types/which':
         specifier: ^3.0.0
+        version: 3.0.4
+
+  packages/setup-alpine:
+    dependencies:
+      '@types/node':
+        specifier: 22.13.11
+        version: 22.13.11
+      admina:
+        specifier: ^1.0.1
+        version: 1.0.1
+      ci-info:
+        specifier: ^4.0.0
+        version: 4.2.0
+      ci-log:
+        specifier: workspace:*
+        version: link:../ci-log
+      envosman:
+        specifier: workspace:*
+        version: link:../envosman
+      execa:
+        specifier: 7.2.0
+        version: 7.2.0
+      memoizee:
+        specifier: ^0.4.17
+        version: 0.4.17
+      path-exists:
+        specifier: ^5.0.0
+        version: 5.0.0
+      which:
+        specifier: 4.0.0
+        version: 4.0.0
+    devDependencies:
+      '@types/memoizee':
+        specifier: 0.4.11
+        version: 0.4.11
+      '@types/which':
+        specifier: ~3.0.4
         version: 3.0.4
 
   packages/setup-apt:

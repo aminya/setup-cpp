@@ -8,6 +8,7 @@ import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import semverCoerce from "semver/functions/coerce.js"
 import semverSatisfies from "semver/functions/satisfies.js"
+import { enableCommunityRepository, hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { rcOptions } from "../cli-options.js"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
@@ -45,6 +46,12 @@ export async function setupMingw(version: string, setupDir: string, arch: string
         installationInfo = await setupDnfPack([{ name: "mingw64-gcc", version }])
       } else if (isUbuntu()) {
         installationInfo = await installAptPack([{ name: "mingw-w64", version }])
+      } else if (await hasApk()) {
+        await enableCommunityRepository()
+        installationInfo = await installApkPack([
+          { name: "mingw-w64-gcc", version },
+          { name: "mingw-w64-crt", version },
+        ])
       } else {
         throw new Error(`Unsupported Linux distro for ${arch}`)
       }

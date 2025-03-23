@@ -1,25 +1,30 @@
 import { dirname, join } from "path"
 import { info } from "@actions/core"
+import { getExecOutput } from "@actions/exec"
+import { warning } from "ci-log"
 import { addPath } from "envosman"
 import { execa, execaSync } from "execa"
 import memoize from "memoizee"
 import { mkdirp } from "mkdirp"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { untildifyUser } from "untildify-user"
 import which from "which"
 import { rcOptions } from "../../cli-options.js"
-import { addPythonBaseExecPrefix, setupPython } from "../../python/python.js"
+import { setupPython } from "../../python/python.js"
 import { getVersion } from "../../versions/versions.js"
 import { hasDnf } from "../env/hasDnf.js"
 import { isArch } from "../env/isArch.js"
 import { isUbuntu } from "../env/isUbuntu.js"
 import { ubuntuVersion } from "../env/ubuntu_version.js"
+import { unique } from "../std/index.js"
 import type { InstallationInfo } from "./setupBin.js"
 import { setupDnfPack } from "./setupDnfPack.js"
 import { setupPacmanPack } from "./setupPacmanPack.js"
+import { getBinVersion } from "./version.js"
 
 export type SetupPipPackOptions = {
   /** Whether to use pipx instead of pip */
@@ -49,40 +54,42 @@ export async function setupPipPackWithPython(
   version?: string,
   options: SetupPipPackOptions = {},
 ): Promise<InstallationInfo> {
-  const { usePipx = true, user = true, upgrade = false, isLibrary = false } = options
+  const { usePipx: givenUsePipx = true, user = true, upgrade = false, isLibrary = false } = options
 
-  const isPipx = usePipx && !isLibrary && (await hasPipxModule(givenPython))
+  const usePipx = givenUsePipx && !isLibrary && (await hasPipxModule(givenPython))
 
-  const pip = isPipx ? "pipx" : "pip"
+  // if the package is externally managed, let the system tools handle it
+  const externallyManaged = !usePipx && (await isExternallyManaged(givenPython))
+
+  const pip = usePipx ? "pipx" : "pip"
 
   // remove `[]` extensions
   const nameOnly = getPackageName(name)
 
   // if upgrade is not requested, check if the package is already installed, and return if it is
   if (!upgrade) {
-    const installed = isPipx
+    const installed = usePipx
       ? await pipxPackageInstalled(givenPython, nameOnly)
       : await pipPackageIsInstalled(givenPython, nameOnly)
     if (installed) {
-      const binDir = isPipx
+      const binDir = usePipx
         ? await finishPipxPackageInstall()
         : await finishPipPackageInstall(givenPython, nameOnly)
       return { binDir }
     }
   }
 
-  const hasPackage = await pipHasPackage(givenPython, nameOnly)
-  if (hasPackage) {
+  if (!externallyManaged && await pipHasPackage(givenPython, nameOnly)) {
     try {
       info(`Installing ${name} ${version ?? ""} via ${pip}`)
 
       const nameAndVersion = version !== undefined && version !== "" ? `${name}==${version}` : name
-      const upgradeFlag = upgrade ? (isPipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
-      const userFlag = !isPipx && user ? ["--user"] : []
+      const upgradeFlag = upgrade ? (usePipx ? ["upgrade"] : ["install", "--upgrade"]) : ["install"]
+      const userFlag = !usePipx && user ? ["--user"] : []
 
       const env = process.env
 
-      if (isPipx && user) {
+      if (usePipx && user) {
         // install to user home
         env.PIPX_HOME = await getPipxHome()
         env.PIPX_BIN_DIR = await getPipxBinDir()
@@ -103,7 +110,7 @@ export async function setupPipPackWithPython(
     throw new Error(`Failed to install ${name} as it was not found via ${pip} or the system package manager`)
   }
 
-  const binDir = isPipx
+  const binDir = usePipx
     ? await finishPipxPackageInstall()
     : await finishPipPackageInstall(givenPython, nameOnly)
   return { binDir }
@@ -275,15 +282,20 @@ async function findBinDir(dirs: string[], name: string) {
   return dirs[dirs.length - 1]
 }
 
-export function setupPipPackSystem(name: string, addPythonPrefix = true) {
+export async function setupPipPackSystem(name: string, givenAddPythonPrefix?: boolean) {
   if (process.platform === "linux") {
     info(`Installing ${name} via the system package manager`)
+
+    const addPythonPrefix = name === "pipx" ? isArch() : (givenAddPythonPrefix ?? true)
+
     if (isArch()) {
       return setupPacmanPack(addPythonPrefix ? `python-${name}` : name)
     } else if (hasDnf()) {
       return setupDnfPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     } else if (isUbuntu()) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
+    } else if (await hasApk()) {
+      return installApkPack([{ name: addPythonPrefix ? `py3-${name}` : name }])
     }
   } else if (process.platform === "darwin") {
     // brew doesn't have venv
@@ -295,3 +307,70 @@ export function setupPipPackSystem(name: string, addPythonPrefix = true) {
   }
   return null
 }
+
+async function addPythonBaseExecPrefix_(python: string) {
+  const dirs: string[] = []
+
+  // detection based on the platform
+  if (process.platform === "linux") {
+    dirs.push("/home/runner/.local/bin/")
+  } else if (process.platform === "darwin") {
+    dirs.push("/usr/local/bin/")
+  }
+
+  // detection using python.sys
+  const base_exec_prefix = await getPythonBaseExecPrefix(python)
+  // any of these are possible depending on the operating system!
+  dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "Scripts", "bin"), join(base_exec_prefix, "bin"))
+
+  // remove duplicates
+  return unique(dirs)
+}
+
+/**
+ * Add the base exec prefix to the PATH. This is required for Conan, Meson, etc. to work properly.
+ *
+ * The answer is cached for subsequent calls
+ */
+export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_, { promise: true })
+
+async function getPythonBaseExecPrefix_(python: string) {
+  return (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim()
+}
+/**
+ * Get the base exec prefix of a Python installation
+ * This is the directory where the Python interpreter is installed
+ * and where the standard library is located
+ */
+export const getPythonBaseExecPrefix = memoize(getPythonBaseExecPrefix_, { promise: true })
+
+async function isExternallyManaged_(python: string) {
+  try {
+    const base_exec_prefix = await getPythonBaseExecPrefix(python)
+
+    const pythonVersion = await getBinVersion(python)
+    if (pythonVersion === undefined) {
+      warning(`Failed to get the version of ${python}`)
+      return false
+    }
+
+    const externallyManagedPath = join(
+      base_exec_prefix,
+      "lib",
+      `python${pythonVersion.major}.${pythonVersion.minor}`,
+      "EXTERNALLY-MANAGED",
+    )
+    return pathExists(externallyManagedPath)
+  } catch (err) {
+    warning(`Failed to check if ${python} is externally managed: ${err}`)
+    return false
+  }
+}
+
+/**
+ * Check if the given Python installation is externally managed
+ * This is required for Conan, Meson, etc. to work properly
+ *
+ * The answer is cached for subsequent calls
+ */
+export const isExternallyManaged = memoize(isExternallyManaged_, { promise: true })

@@ -89,6 +89,8 @@ async function addEnvSystem(name: string, valGiven: string | undefined, options:
         await appendFile(options.rcPath, `\nexport ${name}="${val}"\n`)
         info(`${name}="${val}" was added to "${options.rcPath}`)
       }
+      // eslint-disable-next-line require-atomic-updates
+      process.env[name] = val
       return
     }
     default: {

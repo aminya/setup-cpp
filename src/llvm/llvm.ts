@@ -16,6 +16,7 @@ import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { quoteIfHasSpace } from "../utils/std/index.js"
 import { getVersion } from "../versions/versions.js"
+import { trySetupLLVMApk } from "./llvm_apk_installer.js"
 import { LLVMPackages, trySetupLLVMApt } from "./llvm_apt_installer.js"
 import { setupLLVMBin } from "./llvm_bin.js"
 import { trySetupLLVMBrew } from "./llvm_brew_installer.js"
@@ -48,6 +49,11 @@ async function setupLLVMOnly(
   const aptInstallInfo = await trySetupLLVMApt(version, packages)
   if (aptInstallInfo !== undefined) {
     return aptInstallInfo
+  }
+
+  const apkInstallInfo = await trySetupLLVMApk(version)
+  if (apkInstallInfo !== undefined) {
+    return apkInstallInfo
   }
 
   const brewInstallInfo = await trySetupLLVMBrew(version, setupDir, arch)
