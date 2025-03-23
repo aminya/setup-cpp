@@ -4,6 +4,7 @@ import { dirname, join, parse as pathParse } from "path"
 import { getExecOutput } from "@actions/exec"
 import ciInfo from "ci-info"
 const { GITHUB_ACTIONS } = ciInfo
+import { endGroup, startGroup } from "@actions/core"
 import { info, notice, warning } from "ci-log"
 import { addPath } from "envosman"
 import { execa } from "execa"
@@ -37,21 +38,34 @@ export async function setupPython(
   setupDir: string,
   arch: string,
 ): Promise<InstallationInfo & { bin: string }> {
+  startGroup("Setup Python")
   const installInfo = await findOrSetupPython(version, setupDir, arch)
   assert(installInfo.bin !== undefined)
   const foundPython = installInfo.bin
+  endGroup()
 
   // setup venv
+  startGroup("Setup venv")
   await setupVenv(foundPython)
+  endGroup()
 
   // setup pip
+  startGroup("Setup pip")
   const foundPip = await findOrSetupPip(foundPython)
+  endGroup()
   if (foundPip === undefined) {
     throw new Error("pip was not installed correctly")
   }
 
+  // setup pipx
+  startGroup("Setup pipx")
   await setupPipx(foundPython)
+  endGroup()
+
+  // setup wheel
+  startGroup("Setup wheel")
   await setupWheel(foundPython)
+  endGroup()
 
   return installInfo as InstallationInfo & { bin: string }
 }
