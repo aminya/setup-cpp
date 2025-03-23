@@ -384,15 +384,12 @@ importers:
       envosman:
         specifier: workspace:*
         version: link:../envosman
-      escape-string-regexp:
-        specifier: ^5.0.0
-        version: 5.0.0
+      execa:
+        specifier: 7.2.0
+        version: 7.2.0
       memoizee:
         specifier: ^0.4.17
         version: 0.4.17
-      node-downloader-helper:
-        specifier: 2.1.9
-        version: 2.1.9
       path-exists:
         specifier: ^5.0.0
         version: 5.0.0

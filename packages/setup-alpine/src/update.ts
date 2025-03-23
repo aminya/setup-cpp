@@ -1,7 +1,7 @@
-import { execRoot } from "admina"
+import { execa } from "execa"
 import memoizee from "memoizee"
 
 async function updateApk() {
-  await execRoot("apk", ["update"], { stdio: "inherit" })
+  await execa("apk", ["update"], { stdio: "inherit" })
 }
 export const updateApkMemoized = memoizee(updateApk, { promise: true })

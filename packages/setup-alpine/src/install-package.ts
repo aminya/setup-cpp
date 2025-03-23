@@ -32,15 +32,15 @@ export async function installApkPackage(packages: ApkPackage[], update = false):
   try {
     // Update package index if requested
 
+    // init the apk
+    await initApkMemoized()
+
     if (update) {
       // Force update the repos
       await updateApkMemoized.clear()
     }
     // Update the repos if needed
     await updateApkMemoized()
-
-    // init the apk
-    await initApkMemoized()
 
     const packagesToInstall = await filterAndQualifyApkPackages(packages)
 
