@@ -74,7 +74,7 @@ async function setupPipx(foundPython: string) {
     if (!(await hasPipxModule(foundPython))) {
       // install pipx for the system-wide python
       try {
-        await setupPipPackSystem("pipx", false)
+        await setupPipPackSystem("pipx")
       } catch (err) {
         notice(`pipx was not installed completely for the system-wide python: ${err}`)
       }

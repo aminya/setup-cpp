@@ -286,7 +286,7 @@ export async function setupPipPackSystem(name: string, givenAddPythonPrefix?: bo
   if (process.platform === "linux") {
     info(`Installing ${name} via the system package manager`)
 
-    const addPythonPrefix = name === "pipx" ? false : (givenAddPythonPrefix ?? true)
+    const addPythonPrefix = name === "pipx" ? isArch() : (givenAddPythonPrefix ?? true)
 
     if (isArch()) {
       return setupPacmanPack(addPythonPrefix ? `python-${name}` : name)
