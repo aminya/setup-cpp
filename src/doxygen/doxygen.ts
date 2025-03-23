@@ -112,7 +112,12 @@ async function setupLinuxDoxygen(version: string, setupDir: string, arch: string
     } else if (isUbuntu()) {
       return await installAptPack([{ name: "doxygen", version, fallBackToLatest: arm64.includes(arch) }])
     } else if (await hasApk()) {
-      return installApkPack([{ name: "doxygen", version }])
+      return installApkPack([
+        {
+          name: "doxygen",
+          // version,
+        },
+      ])
     } else {
       throw new Error("Unsupported linux distributions")
     }
