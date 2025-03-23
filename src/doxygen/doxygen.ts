@@ -4,7 +4,7 @@ import { addPath } from "envosman"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import retry from "retry-as-promised"
-import { hasApk, installApkPackage } from "setup-alpine"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
@@ -112,7 +112,7 @@ async function setupLinuxDoxygen(version: string, setupDir: string, arch: string
     } else if (isUbuntu()) {
       return await installAptPack([{ name: "doxygen", version, fallBackToLatest: arm64.includes(arch) }])
     } else if (await hasApk()) {
-      return installApkPackage([{ name: "doxygen", version }])
+      return installApkPack([{ name: "doxygen", version }])
     } else {
       throw new Error("Unsupported linux distributions")
     }

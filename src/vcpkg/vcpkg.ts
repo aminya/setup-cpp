@@ -5,7 +5,7 @@ import { addEnv, addPath } from "envosman"
 import { execa } from "execa"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix } from "patha"
-import { hasApk, installApkPackage } from "setup-alpine"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
@@ -56,7 +56,7 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
         { name: "pkg-config" },
       ])
     } else if (await hasApk()) {
-      await installApkPackage([
+      await installApkPack([
         { name: "curl" },
         { name: "zip" },
         { name: "unzip" },

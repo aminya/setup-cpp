@@ -2,7 +2,7 @@ import path, { join } from "path"
 import { fileURLToPath } from "url"
 import { execRootSync } from "admina"
 import { info } from "ci-log"
-import { type InstallationInfo, hasApk, installApkPackage } from "setup-alpine"
+import { type InstallationInfo, hasApk, installApkPack } from "setup-alpine"
 import { majorLLVMVersion } from "./utils.ts"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
@@ -36,5 +36,5 @@ export async function trySetupLLVMApk(
 }
 
 export function setupLLVMApk(version: string): Promise<InstallationInfo> {
-  return installApkPackage([{ name: "llvm", version }])
+  return installApkPack([{ name: "llvm", version }])
 }

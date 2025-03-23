@@ -2,7 +2,7 @@ import { execRootSync } from "admina"
 import { error } from "ci-log"
 import { addPath } from "envosman"
 import { addExeExt } from "patha"
-import { hasApk, installApkPackage } from "setup-alpine"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
@@ -115,7 +115,7 @@ export async function setupPowershellSystem(version: string | undefined, _setupD
 
         return installAptPack([{ name: "powershell", version }], true)
       } else if (await hasApk()) {
-        return installApkPackage([{ name: "powershell", version }])
+        return installApkPack([{ name: "powershell", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

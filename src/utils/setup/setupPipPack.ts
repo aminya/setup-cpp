@@ -8,7 +8,7 @@ import memoize from "memoizee"
 import { mkdirp } from "mkdirp"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
-import { hasApk, installApkPackage } from "setup-alpine"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { untildifyUser } from "untildify-user"
@@ -295,7 +295,7 @@ export async function setupPipPackSystem(name: string, givenAddPythonPrefix?: bo
     } else if (isUbuntu()) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     } else if (await hasApk()) {
-      return installApkPackage([{ name: addPythonPrefix ? `py3-${name}` : name }])
+      return installApkPack([{ name: addPythonPrefix ? `py3-${name}` : name }])
     }
   } else if (process.platform === "darwin") {
     // brew doesn't have venv

@@ -1,4 +1,4 @@
-import { hasApk, installApkPackage } from "setup-alpine"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { hasDnf } from "../utils/env/hasDnf.js"
@@ -25,7 +25,7 @@ export async function setupCcache(version: string, _setupDir: string, _arch: str
       } else if (isUbuntu()) {
         return installAptPack([{ name: "ccache", version }])
       } else if (await hasApk()) {
-        return installApkPackage([{ name: "ccache", version }])
+        return installApkPack([{ name: "ccache", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

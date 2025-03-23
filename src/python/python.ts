@@ -10,7 +10,7 @@ import { execa } from "execa"
 import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
-import { hasApk, installApkPackage } from "setup-alpine"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack, isAptPackInstalled } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import which from "which"
@@ -234,7 +234,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
       } else if (isUbuntu()) {
         installInfo = await installAptPack([{ name: "python3", version }, { name: "python-is-python3" }])
       } else if (await hasApk()) {
-        installInfo = await installApkPackage([{ name: "python3", version }])
+        installInfo = await installApkPack([{ name: "python3", version }])
       } else {
         throw new Error("Unsupported linux distributions")
       }

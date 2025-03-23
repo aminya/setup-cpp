@@ -23,7 +23,7 @@ export type InstallationInfo = {
  * @param update Whether to update the package index before installing
  * @returns The installation information
  */
-export async function installApkPackage(packages: ApkPackage[], update = false): Promise<InstallationInfo> {
+export async function installApkPack(packages: ApkPackage[], update = false): Promise<InstallationInfo> {
   // Check if apk is available
   if (!(await hasApk())) {
     throw new Error("apk is not available on this system")

@@ -1,4 +1,4 @@
-import { hasApk, installApkPackage } from "setup-alpine"
+import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { hasDnf } from "../utils/env/hasDnf.js"
@@ -28,7 +28,7 @@ export async function setupSevenZip(version: string, _setupDir: string, _arch: s
       } else if (isUbuntu()) {
         return installAptPack([{ name: "p7zip-full", version }])
       } else if (await hasApk()) {
-        return installApkPackage([{ name: "p7zip", version }])
+        return installApkPack([{ name: "p7zip", version }])
       }
       throw new Error("Unsupported linux distribution")
     }
