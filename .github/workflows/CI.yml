@@ -432,7 +432,7 @@ jobs:
           readme-filepath: ./README_DOCKER.md
 
       - name: Test Mingw
-        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && matrix.container.distro != 'fedora' && !(matrix.container.distro == 'alpine' && matrix.platform == 'linux/arm64') }}
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && matrix.container.distro != 'fedora' && matrix.container.distro != 'alpine' }}
         uses: docker/build-push-action@v6
         with:
           context: .
