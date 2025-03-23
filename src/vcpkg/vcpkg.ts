@@ -61,7 +61,7 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
         { name: "zip" },
         { name: "unzip" },
         { name: "tar" },
-        { name: "pkg-config" },
+        { name: "pkgconf" },
       ])
     }
   }
