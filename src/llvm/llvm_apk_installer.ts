@@ -1,11 +1,6 @@
-import path, { join } from "path"
-import { fileURLToPath } from "url"
-import { execRootSync } from "admina"
 import { info } from "ci-log"
 import { type InstallationInfo, hasApk, installApkPack } from "setup-alpine"
 import { majorLLVMVersion } from "./utils.ts"
-
-const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
 /**
  * Try to setup LLVM via the apk package manager
@@ -25,16 +20,12 @@ export async function trySetupLLVMApk(
   try {
     return await setupLLVMApk(version)
   } catch (err) {
-    info(`Failed to install llvm via system package manager ${err}. Trying to remove the repository`)
-    try {
-      execRootSync(join(dirname, "llvm_repo_remove.bash"), [`${majorLLVMVersion(version)}`])
-    } catch (removeErr) {
-      info(`Failed to remove llvm repository ${removeErr}`)
-    }
+    info(`Failed to install llvm via system package manager ${err}.`)
   }
   return undefined
 }
 
 export function setupLLVMApk(version: string): Promise<InstallationInfo> {
-  return installApkPack([{ name: "llvm", version }])
+  const majorVersion = majorLLVMVersion(version)
+  return installApkPack([{ name: `llvm${majorVersion}` }])
 }
