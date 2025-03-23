@@ -228,7 +228,7 @@ jobs:
           node ./dist/legacy/setup-cpp.js --gcc true --cmake true
 
   Docker:
-    name: Docker-${{ matrix.container.image }}-${{ matrix.platform }}
+    name: Docker-${{ matrix.container.image }}-${{ matrix.platform }}-${{ matrix.container.tag }}
     needs: [Build]
     runs-on: ${{ matrix.os }}
     strategy:

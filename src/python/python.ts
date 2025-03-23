@@ -59,27 +59,35 @@ export async function setupPython(
 async function setupPipx(foundPython: string) {
   try {
     if (!(await hasPipxModule(foundPython))) {
+      // install pipx for the system-wide python
       try {
-        // first try with the system-wide pipx
         await setupPipPackSystem("pipx", isArch())
-        // then install with the system-wide pipx
-        await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
       } catch (err) {
-        throw new Error(`pipx was not installed completely: ${err}`)
+        notice(`pipx was not installed completely for the system-wide python: ${err}`)
+      }
+
+      // install pipx for the given python if the system-wide pipx is different for the given python
+      try {
+        if (!(await hasPipxModule(foundPython))) {
+          await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
+        }
+      } catch (err) {
+        notice(`pipx was not installed completely for ${foundPython}: ${err}`)
       }
     }
+
+    // install ensurepath for the given python
     if (await hasPipxModule(foundPython)) {
       await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
-      return
     } else if (await hasPipxBinary()) {
-      notice("pipx module not found. Trying to install with pipx binary...")
+      // install ensurepath with the pipx binary
+      notice(`pipx module not found for ${foundPython}. Trying to install with pipx binary...`)
       await execa("pipx", ["ensurepath"], { stdio: "inherit" })
-      return
     } else {
       throw new Error("pipx module or pipx binary not found. Corrput pipx installation.")
     }
   } catch (err) {
-    notice(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
+    notice(`Failed to install pipx completely for ${foundPython}: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
