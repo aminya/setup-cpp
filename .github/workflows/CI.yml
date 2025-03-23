@@ -445,10 +445,20 @@ jobs:
       fail-fast: false
       matrix:
         container:
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "", latest: true }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-llvm", latest: true }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-gcc", latest: true }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-mingw", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04-1.3.0", suffix: "", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04-1.3.0", suffix: "-llvm", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04-1.3.0", suffix: "-gcc", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04-1.3.0", suffix: "-mingw", latest: false }
+
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-llvm", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-gcc", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-mingw", latest: false }
+
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-llvm", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-gcc", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-mingw", latest: true }
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
