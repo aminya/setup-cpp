@@ -228,7 +228,7 @@ jobs:
           node ./dist/legacy/setup-cpp.js --gcc true --cmake true
 
   Docker:
-    name: Docker-${{ matrix.container.image }}-${{ matrix.platform }}
+    name: Docker-${{ matrix.container.image }}-${{ matrix.platform }}-${{ matrix.container.tag }}
     needs: [Build]
     runs-on: ${{ matrix.os }}
     strategy:
@@ -239,13 +239,21 @@ jobs:
         platform:
           - linux/amd64
         container:
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.2.2" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "24.04", tag: "24.04-1.2.2" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "22.04", tag: "22.04-1.2.2" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "20.04", tag: "20.04-1.2.2" }
           - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-1.2.2" }
           - { distro: "arch", image: "setup-cpp-arch", tag: "base-1.2.2" }
         include:
           - os: ubuntu-24.04-arm
             platform: linux/arm64
-            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.2.2" }
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "24.04", tag: "24.04-1.2.2" }
+          - os: ubuntu-24.04-arm
+            platform: linux/arm64
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "22.04", tag: "22.04-1.2.2" }
+          - os: ubuntu-24.04-arm
+            platform: linux/arm64
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "20.04", tag: "20.04-1.2.2" }
     steps:
       - uses: actions/checkout@v4
         with:
@@ -285,6 +293,7 @@ jobs:
           tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
+          build-args: BASE_VERSION=${{ matrix.container.BASE_VERSION || '' }}
 
       - name: Tag latest locally
         run: |
@@ -432,6 +441,14 @@ jobs:
     needs: [Docker]
     runs-on: ubuntu-24.04
     if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
+    strategy:
+      fail-fast: false
+      matrix:
+        container:
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.2.2", suffix: "", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.2.2", suffix: "-llvm", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.2.2", suffix: "-gcc", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.2.2", suffix: "-mingw", latest: true }
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -444,53 +461,16 @@ jobs:
 
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
-          inputs: aminya/setup-cpp-ubuntu:22.04-1.2.2
-          images: aminya/setup-cpp-ubuntu:22.04-1.2.2-amd64,aminya/setup-cpp-ubuntu:22.04-1.2.2-arm64
-          push: true
-          amend: true
-      - uses: Noelware/docker-manifest-action@0.4.3
-        with:
-          inputs: aminya/setup-cpp-ubuntu:latest
-          images: aminya/setup-cpp-ubuntu:22.04-1.2.2-amd64,aminya/setup-cpp-ubuntu:22.04-1.2.2-arm64
+          inputs: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}
+          images: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-amd64,aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-arm64
           push: true
           amend: true
 
       - uses: Noelware/docker-manifest-action@0.4.3
+        if: ${{ matrix.container.latest }}
         with:
-          inputs: aminya/setup-cpp-ubuntu-llvm:22.04-1.2.2
-          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.2.2-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.2.2-arm64
-          push: true
-          amend: true
-      - uses: Noelware/docker-manifest-action@0.4.3
-        with:
-          inputs: aminya/setup-cpp-ubuntu-llvm:latest
-          images: aminya/setup-cpp-ubuntu-llvm:22.04-1.2.2-amd64,aminya/setup-cpp-ubuntu-llvm:22.04-1.2.2-arm64
-          push: true
-          amend: true
-
-      - uses: Noelware/docker-manifest-action@0.4.3
-        with:
-          inputs: aminya/setup-cpp-ubuntu-gcc:22.04-1.2.2
-          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.2.2-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.2.2-arm64
-          push: true
-          amend: true
-      - uses: Noelware/docker-manifest-action@0.4.3
-        with:
-          inputs: aminya/setup-cpp-ubuntu-gcc:latest
-          images: aminya/setup-cpp-ubuntu-gcc:22.04-1.2.2-amd64,aminya/setup-cpp-ubuntu-gcc:22.04-1.2.2-arm64
-          push: true
-          amend: true
-
-      - uses: Noelware/docker-manifest-action@0.4.3
-        with:
-          inputs: aminya/setup-cpp-ubuntu-mingw:22.04-1.2.2
-          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.2.2-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.2.2-arm64
-          push: true
-          amend: true
-      - uses: Noelware/docker-manifest-action@0.4.3
-        with:
-          inputs: aminya/setup-cpp-ubuntu-mingw:latest
-          images: aminya/setup-cpp-ubuntu-mingw:22.04-1.2.2-amd64,aminya/setup-cpp-ubuntu-mingw:22.04-1.2.2-arm64
+          inputs: aminya/${{ matrix.container.image }}:latest
+          images: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-amd64,aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-arm64
           push: true
           amend: true
 

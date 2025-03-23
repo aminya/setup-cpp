@@ -4,6 +4,7 @@ import { dirname, join, parse as pathParse } from "path"
 import { getExecOutput } from "@actions/exec"
 import ciInfo from "ci-info"
 const { GITHUB_ACTIONS } = ciInfo
+import { endGroup, startGroup } from "@actions/core"
 import { info, notice, warning } from "ci-log"
 import { addPath } from "envosman"
 import { execa } from "execa"
@@ -11,7 +12,7 @@ import { readdir } from "fs/promises"
 import memoize from "memoizee"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
-import { installAptPack } from "setup-apt"
+import { installAptPack, isAptPackInstalled } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import which from "which"
 import { rcOptions } from "../cli-options.js"
@@ -37,21 +38,34 @@ export async function setupPython(
   setupDir: string,
   arch: string,
 ): Promise<InstallationInfo & { bin: string }> {
+  startGroup("Setup Python")
   const installInfo = await findOrSetupPython(version, setupDir, arch)
   assert(installInfo.bin !== undefined)
   const foundPython = installInfo.bin
+  endGroup()
 
   // setup venv
+  startGroup("Setup venv")
   await setupVenv(foundPython)
+  endGroup()
 
   // setup pip
+  startGroup("Setup pip")
   const foundPip = await findOrSetupPip(foundPython)
+  endGroup()
   if (foundPip === undefined) {
     throw new Error("pip was not installed correctly")
   }
 
+  // setup pipx
+  startGroup("Setup pipx")
   await setupPipx(foundPython)
+  endGroup()
+
+  // setup wheel
+  startGroup("Setup wheel")
   await setupWheel(foundPython)
+  endGroup()
 
   return installInfo as InstallationInfo & { bin: string }
 }
@@ -59,27 +73,35 @@ export async function setupPython(
 async function setupPipx(foundPython: string) {
   try {
     if (!(await hasPipxModule(foundPython))) {
+      // install pipx for the system-wide python
       try {
-        // first try with the system-wide pipx
         await setupPipPackSystem("pipx", isArch())
-        // then install with the system-wide pipx
-        await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
       } catch (err) {
-        throw new Error(`pipx was not installed completely: ${err}`)
+        notice(`pipx was not installed completely for the system-wide python: ${err}`)
+      }
+
+      // install pipx for the given python if the system-wide pipx is different for the given python
+      try {
+        if (!(await hasPipxModule(foundPython))) {
+          await setupPipPackWithPython(foundPython, "pipx", undefined, { upgrade: true, usePipx: false })
+        }
+      } catch (err) {
+        notice(`pipx was not installed completely for ${foundPython}: ${err}`)
       }
     }
+
+    // install ensurepath for the given python
     if (await hasPipxModule(foundPython)) {
       await execa(foundPython, ["-m", "pipx", "ensurepath"], { stdio: "inherit" })
-      return
     } else if (await hasPipxBinary()) {
-      notice("pipx module not found. Trying to install with pipx binary...")
+      // install ensurepath with the pipx binary
+      notice(`pipx module not found for ${foundPython}. Trying to install with pipx binary...`)
       await execa("pipx", ["ensurepath"], { stdio: "inherit" })
-      return
     } else {
       throw new Error("pipx module or pipx binary not found. Corrput pipx installation.")
     }
   } catch (err) {
-    notice(`Failed to install pipx: ${(err as Error).toString()}. Ignoring...`)
+    notice(`Failed to install pipx completely for ${foundPython}: ${(err as Error).toString()}. Ignoring...`)
   }
 }
 
@@ -100,6 +122,12 @@ async function hasVenv(foundPython: string): Promise<boolean> {
   try {
     // check if venv module exits
     await execa(foundPython, ["-m", "venv", "-h"], { stdio: "ignore" })
+
+    // checking venv module is not enough on Ubuntu 20.04
+    if (isUbuntu()) {
+      return isAptPackInstalled("python3-venv")
+    }
+
     return true
   } catch {
     // if module not found, continue

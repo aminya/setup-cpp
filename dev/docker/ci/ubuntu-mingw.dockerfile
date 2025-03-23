@@ -5,10 +5,8 @@ RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
     --compiler mingw \
     --powershell true && \
 # cleanup
-    nala autoremove -y && \
-    nala autopurge -y && \
-    apt-get clean && \
-    nala clean --lists && \
+    apt-get clean autoclean && \
+    apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/* && \
     rm -rf /tmp/*
 
