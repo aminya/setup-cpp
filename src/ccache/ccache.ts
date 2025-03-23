@@ -1,3 +1,4 @@
+import { hasApk, installApkPackage } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { hasDnf } from "../utils/env/hasDnf.js"
@@ -8,7 +9,7 @@ import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupCcache(version: string, _setupDir: string, _arch: string) {
+export async function setupCcache(version: string, _setupDir: string, _arch: string) {
   switch (process.platform) {
     case "win32": {
       return setupChocoPack("ccache", version)
@@ -23,6 +24,8 @@ export function setupCcache(version: string, _setupDir: string, _arch: string) {
         return setupDnfPack([{ name: "ccache", version }])
       } else if (isUbuntu()) {
         return installAptPack([{ name: "ccache", version }])
+      } else if (await hasApk()) {
+        return installApkPackage([{ name: "ccache", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

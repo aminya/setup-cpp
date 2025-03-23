@@ -1,26 +1,26 @@
 import { join } from "path"
 import { info, notice } from "ci-log"
 import { addPath } from "envosman"
+import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
+import retry from "retry-as-promised"
+import { hasApk, installApkPackage } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
-import { setupGraphviz } from "../graphviz/graphviz.js"
-import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
-import { getVersion } from "../versions/versions.js"
-
-import { pathExists } from "path-exists"
-import retry from "retry-as-promised"
 import { rcOptions } from "../cli-options.js"
+import { setupGraphviz } from "../graphviz/graphviz.js"
 import { arm64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { macosVersion } from "../utils/env/macos_version.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
+import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
+import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDmg } from "../utils/setup/setupDmg.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { getVersion } from "../versions/versions.js"
 
 /** Get the platform data for cmake */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -111,6 +111,8 @@ async function setupLinuxDoxygen(version: string, setupDir: string, arch: string
       return setupDnfPack([{ name: "doxygen", version }])
     } else if (isUbuntu()) {
       return await installAptPack([{ name: "doxygen", version, fallBackToLatest: arm64.includes(arch) }])
+    } else if (await hasApk()) {
+      return installApkPackage([{ name: "doxygen", version }])
     } else {
       throw new Error("Unsupported linux distributions")
     }

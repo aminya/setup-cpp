@@ -232,6 +232,9 @@ importers:
       semver:
         specifier: 7.7.1
         version: 7.7.1
+      setup-alpine:
+        specifier: workspace:*
+        version: link:packages/setup-alpine
       setup-apt:
         specifier: workspace:*
         version: link:packages/setup-apt

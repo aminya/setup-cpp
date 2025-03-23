@@ -1,4 +1,5 @@
 import { addPath } from "envosman"
+import { hasApk, installApkPackage } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
@@ -27,6 +28,8 @@ export async function setupGraphviz(version: string, _setupDir: string, _arch: s
         return setupDnfPack([{ name: "graphviz", version }])
       } else if (isUbuntu()) {
         return installAptPack([{ name: "graphviz", version }])
+      } else if (await hasApk()) {
+        return installApkPackage([{ name: "graphviz", version }])
       }
       throw new Error("Unsupported linux distribution")
     }

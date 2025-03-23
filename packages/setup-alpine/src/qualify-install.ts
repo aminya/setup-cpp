@@ -35,7 +35,7 @@ export async function checkPackageInstalled(pkg: ApkPackage): Promise<boolean> {
     }
 
     // If no specific version is required, we're done
-    if (pkg.version === undefined) {
+    if (pkg.version === undefined || pkg.version === "") {
       return true
     }
 
@@ -76,7 +76,7 @@ export async function filterAndQualifyApkPackages(packages: ApkPackage[]): Promi
  * @returns Formatted package string (name=version or just name)
  */
 export function formatPackageWithVersion(pkg: ApkPackage): string {
-  if (pkg.version !== undefined) {
+  if (pkg.version !== undefined && pkg.version !== "") {
     return `${pkg.name}=${pkg.version}`
   }
   return pkg.name

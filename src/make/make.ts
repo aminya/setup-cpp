@@ -1,5 +1,6 @@
 import { join } from "path"
 import { addPath } from "envosman"
+import { hasApk, installApkPackage } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { getBrewDir, installBrewPack } from "setup-brew"
 import { rcOptions } from "../cli-options.js"
@@ -30,6 +31,8 @@ export async function setupMake(version: string, _setupDir: string, _arch: strin
         return setupDnfPack([{ name: "make", version }])
       } else if (isUbuntu()) {
         return installAptPack([{ name: "make", version }])
+      } else if (await hasApk()) {
+        return installApkPackage([{ name: "make", version }])
       }
       throw new Error("Unsupported linux distribution")
     }
