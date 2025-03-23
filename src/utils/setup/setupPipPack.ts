@@ -276,9 +276,12 @@ async function findBinDir(dirs: string[], name: string) {
   return dirs[dirs.length - 1]
 }
 
-export async function setupPipPackSystem(name: string, addPythonPrefix = true) {
+export async function setupPipPackSystem(name: string, givenAddPythonPrefix?: boolean) {
   if (process.platform === "linux") {
     info(`Installing ${name} via the system package manager`)
+
+    const addPythonPrefix = name === "pipx" ? false : (givenAddPythonPrefix ?? true)
+
     if (isArch()) {
       return setupPacmanPack(addPythonPrefix ? `python-${name}` : name)
     } else if (hasDnf()) {
