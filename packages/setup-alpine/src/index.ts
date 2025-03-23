@@ -1,20 +1,10 @@
 import { execRoot } from "admina"
 import { info, warning } from "ci-log"
 import { hasApk } from "./has-apk.js"
-import { type ApkPackage, filterAndQualifyApkPackages } from "./qualify-install.js"
+import { type ApkPackage, filterAndQualifyApkPackages, formatPackageWithVersion } from "./qualify-install.js"
 import { updateApkMemoized } from "./update.js"
 
 export type { ApkPackage }
-
-/**
- * Options for installing APK packages
- */
-export interface InstallApkPackageOptions {
-  /** The package name to install */
-  package: ApkPackage
-  /** Whether to update the package index before installing */
-  update?: boolean
-}
 
 /**
  * Install a package using Alpine's apk package manager
@@ -47,13 +37,13 @@ export async function installApkPackage(packages: ApkPackage[], update = false):
     }
 
     // Install the packages
-    info(`Installing ${packagesToInstall.map((pack) => pack.name).join(" ")}`)
-    await execRoot("apk", ["add", ...packagesToInstall.map((pack) => pack.name)], { stdio: "inherit" })
+    info(`Installing ${packagesToInstall.join(" ")}`)
+    await execRoot("apk", ["add", ...packagesToInstall])
 
-    info(`Successfully installed ${packagesToInstall.map((pack) => pack.name).join(" ")}`)
+    info(`Successfully installed ${packagesToInstall.join(" ")}`)
     return true
   } catch (error) {
-    warning(`Failed to install ${packages.map((pack) => pack.name).join(" ")}: ${error}`)
+    warning(`Failed to install ${packages.map((pkg) => formatPackageWithVersion(pkg)).join(" ")}: ${error}`)
     return false
   }
 }

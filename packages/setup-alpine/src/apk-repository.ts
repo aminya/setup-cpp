@@ -25,10 +25,10 @@ export async function addApkRepository(repoUrl: string): Promise<boolean> {
 
     // Add repository to the file
     info(`Adding repository: ${repoUrl}`)
-    await execRoot("sh", ["-c", `echo "${repoUrl}" >> ${reposFile}`], { stdio: "inherit" })
+    await execRoot("sh", ["-c", `echo "${repoUrl}" >> ${reposFile}`])
 
     // Update package index after adding repository
-    await execRoot("apk", ["update"], { stdio: "inherit" })
+    await execRoot("apk", ["update"])
 
     info(`Successfully added repository: ${repoUrl}`)
     return true

@@ -17,22 +17,67 @@ export type ApkPackage = {
   fallBackToLatest?: boolean
 }
 
-export async function filterAndQualifyApkPackages(packages: ApkPackage[]) {
-  // Filter out packages that are already installed
-  const installedPackages = await Promise.all(packages.map(checkPackageInstalled))
-  return packages.filter((_pack, index) => !installedPackages[index])
-}
 /**
  * Check if a package is already installed
- * @param pack The package to check
+ * @param pkg The package to check
  * @returns Whether the package is installed
  */
-
-async function checkPackageInstalled(pack: ApkPackage): Promise<boolean> {
+export async function checkPackageInstalled(pkg: ApkPackage): Promise<boolean> {
   try {
-    const { exitCode } = await execRoot("apk", ["info", "-e", pack.name], { reject: false })
-    return exitCode === 0
+    // First check if the package is installed at all
+    const { exitCode } = await execRoot("apk", ["info", "-e", pkg.name], {
+      reject: false,
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+
+    if (exitCode !== 0) {
+      return false
+    }
+
+    // If no specific version is required, we're done
+    if (pkg.version === undefined) {
+      return true
+    }
+
+    // Check the installed version
+    const { stdout: versionOutput } = await execRoot("apk", ["info", "-v", pkg.name], {
+      stdio: ["ignore", "pipe", "ignore"],
+    })
+
+    // Parse the version from output (format is typically "package-name-version")
+    const installedVersion = versionOutput.trim().split("-").slice(-1)[0]
+
+    return installedVersion === pkg.version
   } catch (error) {
     return false
   }
+}
+
+/**
+ * Filter out packages that are already installed and qualify those that need installation
+ * @param packages List of packages to check
+ * @returns List of packages that need to be installed
+ */
+export async function filterAndQualifyApkPackages(packages: ApkPackage[]): Promise<string[]> {
+  const results = await Promise.all(
+    packages.map(async (pack) => {
+      const isInstalled = await checkPackageInstalled(pack)
+      return isInstalled ? undefined : pack
+    }),
+  )
+
+  return results.filter((pack): pack is ApkPackage => pack !== undefined)
+    .map(formatPackageWithVersion)
+}
+
+/**
+ * Format a package with its version if specified
+ * @param pkg The package object
+ * @returns Formatted package string (name=version or just name)
+ */
+export function formatPackageWithVersion(pkg: ApkPackage): string {
+  if (pkg.version !== undefined) {
+    return `${pkg.name}=${pkg.version}`
+  }
+  return pkg.name
 }
