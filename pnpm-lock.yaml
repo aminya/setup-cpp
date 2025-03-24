@@ -375,9 +375,6 @@ importers:
       admina:
         specifier: ^1.0.1
         version: 1.0.1
-      ci-info:
-        specifier: ^4.0.0
-        version: 4.2.0
       ci-log:
         specifier: workspace:*
         version: link:../ci-log

@@ -24,7 +24,6 @@
   "dependencies": {
     "@types/node": "22.13.11",
     "admina": "^1.0.1",
-    "ci-info": "^4.0.0",
     "path-exists": "^5.0.0",
     "ci-log": "workspace:*",
     "envosman": "workspace:*",
