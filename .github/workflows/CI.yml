@@ -12,6 +12,7 @@ concurrency:
 
 env:
   NODE_OPTIONS: --enable-source-maps
+  version: "1.3.0"
 
 jobs:
   Build:
@@ -239,25 +240,25 @@ jobs:
         platform:
           - linux/amd64
         container:
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "24.04", tag: "24.04-1.3.0" }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "22.04", tag: "22.04-1.3.0" }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "20.04", tag: "20.04-1.3.0" }
-          - { distro: "fedora", image: "setup-cpp-fedora", tag: "40-1.3.0" }
-          - { distro: "arch", image: "setup-cpp-arch", tag: "base-1.3.0" }
-          - { distro: "alpine", image: "setup-cpp-alpine", BASE_VERSION: "22-alpine3.21", tag: "3.21-1.3.0" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04" }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04" }
+          - { distro: "fedora", image: "setup-cpp-fedora", tag: "40" }
+          - { distro: "arch", image: "setup-cpp-arch", tag: "base" }
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", base_version: "22-alpine3.21" }
         include:
           - os: ubuntu-24.04-arm
             platform: linux/arm64
-            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "24.04", tag: "24.04-1.3.0" }
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04" }
           - os: ubuntu-24.04-arm
             platform: linux/arm64
-            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "22.04", tag: "22.04-1.3.0" }
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04" }
           - os: ubuntu-24.04-arm
             platform: linux/arm64
-            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", BASE_VERSION: "20.04", tag: "20.04-1.3.0" }
+            container: { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04" }
           - os: ubuntu-24.04-arm
             platform: linux/arm64
-            container: { distro: "alpine", image: "setup-cpp-alpine", BASE_VERSION: "22-alpine3.21", tag: "3.21-1.3.0" }
+            container: { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", base_version: "22-alpine3.21" }
     steps:
       - uses: actions/checkout@v4
         with:
@@ -294,18 +295,21 @@ jobs:
           load: true
           provenance: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
-          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
+          tags: aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }}
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
-          build-args: BASE_VERSION=${{ matrix.container.BASE_VERSION || '' }}
+          build-args: BASE_VERSION=${{ matrix.container.base_version || matrix.container.tag }}
 
       - name: Tag latest locally
         run: |
-          docker tag aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:latest
+          docker tag aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:latest
+          docker tag aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'alpine' }}
-        run: docker push aminya/${{ matrix.container.image }}:latest
+        run: |
+          docker push aminya/${{ matrix.container.image }}:latest
+          docker push aminya/${{ matrix.container.image }}:${{ matrix.container.tag }}
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}
         if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
@@ -326,17 +330,20 @@ jobs:
           load: true
           provenance: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
-          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
+          tags: aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }}
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
 
       - name: Tag latest locally
         run: |
-          docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
+          docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
+          docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'alpine' }}
-        run: docker push aminya/${{ matrix.container.image }}-llvm:latest
+        run: |
+          docker push aminya/${{ matrix.container.image }}-llvm:latest
+          docker push aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-llvm
         if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
@@ -355,7 +362,7 @@ jobs:
           file: ./dev/docker/examples/${{ matrix.container.distro }}-llvm.dockerfile
           push: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/test-${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
+          tags: aminya/test-${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ env.version }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-gcc
         id: build_gcc
@@ -367,17 +374,20 @@ jobs:
           load: true
           provenance: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
-          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
+          tags: aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }}
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
 
       - name: Tag latest locally
         run: |
-          docker tag aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:latest
+          docker tag aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:latest
+          docker tag aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}
 
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'alpine' }}
-        run: docker push aminya/${{ matrix.container.image }}-gcc:latest
+        run: |
+          docker push aminya/${{ matrix.container.image }}-gcc:latest
+          docker push aminya/${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-gcc
         if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
@@ -396,7 +406,7 @@ jobs:
           file: ./dev/docker/examples/${{ matrix.container.distro }}-gcc.dockerfile
           push: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/test-${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}
+          tags: aminya/test-${{ matrix.container.image }}-gcc:${{ matrix.container.tag }}-${{ env.version }}
 
       - name: Build setup-cpp-${{matrix.container.distro }}-mingw
         id: build_mingw
@@ -409,18 +419,20 @@ jobs:
           load: true
           provenance: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
-          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }}
+          tags: aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }}
+          cache-from: type=registry,ref=aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }}
           cache-to: type=inline
 
       - name: Tag latest locally
         if: ${{ matrix.container.distro != 'fedora' && !(matrix.container.distro == 'alpine' && matrix.platform == 'linux/arm64') }}
         run: |
-          docker tag aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
-
+          docker tag aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:latest
+          docker tag aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}
       - name: Push latest to Docker Hub
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'fedora' && matrix.container.distro != 'alpine' }}
-        run: docker push aminya/${{ matrix.container.image }}-mingw:latest
+        run: |
+          docker push aminya/${{ matrix.container.image }}-mingw:latest
+          docker push aminya/${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-mingw
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'fedora' && !(matrix.container.distro == 'alpine' && matrix.platform == 'linux/arm64') }}
@@ -439,7 +451,7 @@ jobs:
           file: ./dev/docker/examples/${{ matrix.container.distro }}-mingw.dockerfile
           push: false
           platforms: ${{ matrix.platform }}
-          tags: aminya/test-${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}
+          tags: aminya/test-${{ matrix.container.image }}-mingw:${{ matrix.container.tag }}-${{ env.version }}
 
   Docker-Manifest:
     needs: [Docker]
@@ -449,25 +461,25 @@ jobs:
       fail-fast: false
       matrix:
         container:
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04-1.3.0", suffix: "", latest: false }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04-1.3.0", suffix: "-llvm", latest: false }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04-1.3.0", suffix: "-gcc", latest: false }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04-1.3.0", suffix: "-mingw", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04", suffix: "", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04", suffix: "-llvm", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04", suffix: "-gcc", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04", suffix: "-mingw", latest: false }
 
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "", latest: false }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-llvm", latest: false }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-gcc", latest: false }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04-1.3.0", suffix: "-mingw", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04", suffix: "", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04", suffix: "-llvm", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04", suffix: "-gcc", latest: false }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04", suffix: "-mingw", latest: false }
 
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "", latest: true }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-llvm", latest: true }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-gcc", latest: true }
-          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04-1.3.0", suffix: "-mingw", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04", suffix: "", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04", suffix: "-llvm", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04", suffix: "-gcc", latest: true }
+          - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04", suffix: "-mingw", latest: true }
 
-          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21-1.3.0", suffix: "", latest: true }
-          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21-1.3.0", suffix: "-llvm", latest: true }
-          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21-1.3.0", suffix: "-gcc", latest: true }
-          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21-1.3.0", suffix: "-mingw", latest: true }
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "", latest: true }
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "-llvm", latest: true }
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "-gcc", latest: true }
+          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "-mingw", latest: true }
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -480,8 +492,15 @@ jobs:
 
       - uses: Noelware/docker-manifest-action@0.4.3
         with:
+          inputs: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}
+          images: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-amd64,aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-arm64
+          push: true
+          amend: true
+
+      - uses: Noelware/docker-manifest-action@0.4.3
+        with:
           inputs: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}
-          images: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-amd64,aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-arm64
+          images: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-amd64,aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-arm64
           push: true
           amend: true
 
@@ -489,7 +508,7 @@ jobs:
         if: ${{ matrix.container.latest }}
         with:
           inputs: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:latest
-          images: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-amd64,aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-arm64
+          images: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-amd64,aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-arm64
           push: true
           amend: true
 
