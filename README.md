@@ -209,7 +209,14 @@ When using the `setup-cpp` action in GitHub Actions, by default it will also ins
 
 To provide fast development environments, `setup-cpp` provides several prebuilt docker images that have the tools you need. You can use these images as a base image for your project.
 
-The names are in the format `aminya/setup-cpp-<platform>:<platform_version>-<setup_cpp_version>` and `aminya/setup-cpp-<platform>-<compiler>:<platform_version>-<setup_cpp_version>`.
+The tags are in the following template:
+
+- Base image: `aminya/setup-cpp-ubuntu:24.04`
+- Compiler image: `aminya/setup-cpp-ubuntu-llvm:24.04`
+- Base image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu:24.04-v1.3.0`
+- Compiler image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu-llvm:24.04-v1.3.0`
+
+The supported platforms are `ubuntu`, `alpine`, `fedora`, and `arch`. The supported compilers are `llvm`, `gcc`, and `mingw`.
 
 #### Ubuntu Images (amd64 and arm64)
 
@@ -218,43 +225,43 @@ Setup-cpp provides prebuilt images for various Ubuntu versions (20.04, 22.04, 24
 Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang` for Ubuntu 24.04:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu:24.04-1.3.0 AS builder
+FROM aminya/setup-cpp-ubuntu:24.04 AS builder
 ```
 
 Image with `llvm` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-llvm:24.04-1.3.0 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:24.04 AS builder
 ```
 
 Image with `gcc` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-gcc:24.04-1.3.0 AS builder
+FROM aminya/setup-cpp-ubuntu-gcc:24.04 AS builder
 ```
 
 Image with `mingw` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-mingw:24.04-1.3.0 AS builder
+FROM aminya/setup-cpp-ubuntu-mingw:24.04 AS builder
 ```
 
 There are also the variants for Ubuntu `22.04`
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu:22.04-1.3.0 AS builder
-FROM aminya/setup-cpp-ubuntu-llvm:22.04-1.3.0 AS builder
-FROM aminya/setup-cpp-ubuntu-gcc:22.04-1.3.0 AS builder
-FROM aminya/setup-cpp-ubuntu-mingw:22.04-1.3.0 AS builder
+FROM aminya/setup-cpp-ubuntu:22.04 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:22.04 AS builder
+FROM aminya/setup-cpp-ubuntu-gcc:22.04 AS builder
+FROM aminya/setup-cpp-ubuntu-mingw:22.04 AS builder
 ```
 
 And for Ubuntu `20.04`:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu:20.04-1.3.0 AS builder
-FROM aminya/setup-cpp-ubuntu-llvm:20.04-1.3.0 AS builder
-FROM aminya/setup-cpp-ubuntu-gcc:20.04-1.3.0 AS builder
-FROM aminya/setup-cpp-ubuntu-mingw:20.04-1.3.0 AS builder
+FROM aminya/setup-cpp-ubuntu:20.04 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:20.04 AS builder
+FROM aminya/setup-cpp-ubuntu-gcc:20.04 AS builder
+FROM aminya/setup-cpp-ubuntu-mingw:20.04 AS builder
 ```
 
 #### Fedora Images (amd64)
@@ -264,25 +271,25 @@ FROM aminya/setup-cpp-ubuntu-mingw:20.04-1.3.0 AS builder
 Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora:40-1.3.0 AS builder
+FROM aminya/setup-cpp-fedora:40 AS builder
 ```
 
 Image with `llvm` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-llvm:40-1.3.0 AS builder
+FROM aminya/setup-cpp-fedora-llvm:40 AS builder
 ```
 
 Image with `gcc` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-gcc:40-1.3.0 AS builder
+FROM aminya/setup-cpp-fedora-gcc:40 AS builder
 ```
 
 Image with `mingw` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-fedora-mingw:40-1.3.0 AS builder
+FROM aminya/setup-cpp-fedora-mingw:40 AS builder
 ```
 
 </details>
@@ -294,25 +301,25 @@ FROM aminya/setup-cpp-fedora-mingw:40-1.3.0 AS builder
 Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang`
 
 ```dockerfile
-FROM aminya/setup-cpp-arch:base-1.3.0 AS builder
+FROM aminya/setup-cpp-arch:base AS builder
 ```
 
 Image with `llvm` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-llvm:base-1.3.0 AS builder
+FROM aminya/setup-cpp-arch-llvm:base AS builder
 ```
 
 Image with `gcc` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-gcc:base-1.3.0 AS builder
+FROM aminya/setup-cpp-arch-gcc:base AS builder
 ```
 
 Image with `mingw` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-arch-mingw:base-1.3.0 AS builder
+FROM aminya/setup-cpp-arch-mingw:base AS builder
 ```
 
 </details>
