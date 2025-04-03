@@ -264,6 +264,34 @@ FROM aminya/setup-cpp-ubuntu-gcc:20.04 AS builder
 FROM aminya/setup-cpp-ubuntu-mingw:20.04 AS builder
 ```
 
+#### Alpine Images (amd64 and arm64)
+
+Setup-cpp provides prebuilt images for Alpine with support for base tools, and compilers `llvm`, `gcc`, and `mingw` available for `amd64` and `arm64` architectures.
+
+Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang` for Alpine 3.18:
+
+```dockerfile
+FROM aminya/setup-cpp-alpine:3.21 AS builder
+```
+
+Image with `llvm` and the base tools:
+
+```dockerfile
+FROM aminya/setup-cpp-alpine-llvm:3.21 AS builder
+```
+
+Image with `gcc` and the base tools:
+
+```dockerfile
+FROM aminya/setup-cpp-alpine-gcc:3.21 AS builder
+```
+
+Image with `mingw` and the base tools:
+
+```dockerfile
+FROM aminya/setup-cpp-alpine-mingw:3.21 AS builder
+```
+
 #### Fedora Images (amd64)
 
 <details>
