@@ -19,8 +19,10 @@ import { syncVersions } from "./versions/versions.js"
 
 // re-export for the setup-cpp CLI
 export { GITHUB_ACTIONS } from "ci-info"
-export { error, info, success, warning } from "ci-log"
+export * from "ci-log"
 export { packageJson }
+export { maybeGetInput, type Opts } from "./options.js"
+export { type Inputs, inputs } from "./tool.js"
 
 /**
  * The result of the setup, with the success and error messages. If the setup was successful, the error messages are empty.

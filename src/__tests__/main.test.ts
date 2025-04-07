@@ -1,5 +1,6 @@
-import { parseArgs } from "../cli-options.js"
+process.env.SETUP_CPP_SKIP_MAIN = "true"
 import { getCompilerInfo } from "../compilers.js"
+import { parseArgs } from "../setup-cpp.js"
 import { type Inputs, llvmTools } from "../tool.js"
 import { getVersion, syncVersions } from "../versions/versions.js"
 

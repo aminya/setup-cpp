@@ -2,10 +2,6 @@ import packageJson from "../../package-version.json"
 import { setupCpp } from "../lib.js"
 
 describe("setupCpp", () => {
-  it("should be a function", () => {
-    expect(setupCpp).toBeInstanceOf(Function)
-  })
-
   it("should install nothing if no tools are installed", async () => {
     const opts = {
       "setup-cpp": false,
