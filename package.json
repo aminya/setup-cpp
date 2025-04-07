@@ -1,12 +1,12 @@
 {
   "name": "setup-cpp",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Install all the tools required for building and testing C++/C projects.",
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
-  "main": "dist/legacy/lib.js",
-  "modern": "./dist/modern/lib.mjs",
+  "main": "dist/library/lib.mjs",
+  "modern": "dist/library/lib.mjs",
   "source": "./src/lib.ts",
   "bin": {
     "setup-cpp": "dist/legacy/setup-cpp.js"
@@ -46,13 +46,11 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "run-s clean && pnpm -r build && run-p build.types.modern build.types.legacy && run-p lint.root.tsc build.cli.modern build.cli.legacy build.library.modern build.library.legacy && run-p build.json build.bash",
+    "build": "run-s clean && pnpm -r build && run-p build.types.modern lint.root.tsc build.cli.modern build.cli.legacy build.library && run-p build.json build.bash",
     "build.cli.modern": "cross-env NODE_ENV=production vite build --mode cli-modern",
     "build.cli.legacy": "cross-env NODE_ENV=production vite build --mode cli-legacy",
-    "build.library.modern": "cross-env NODE_ENV=production vite build --mode library-modern",
-    "build.library.legacy": "cross-env NODE_ENV=production vite build --mode library-legacy",
+    "build.library": "cross-env NODE_ENV=production vite build --mode library",
     "build.types.modern": "tsc -p ./tsconfig.types.json",
-    "build.types.legacy": "tsc -p ./tsconfig.types.json --declarationDir ./dist/legacy",
     "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file ./dist/**/*.json",
     "build.bash": "shx cp ./src/*/*.bash ./dist/legacy/ && shx cp ./dist/legacy/*.bash ./dist/modern",
     "bump": "ncu -u -x execa,numerous,eslint,@types/eslint,which && pnpm update && pnpx typesync && pnpm run clean",

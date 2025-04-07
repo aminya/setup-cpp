@@ -1,4 +1,9 @@
-import { mri, updateNotifier } from "./cli-deps.ts"
+#!/usr/bin/env node
+/* eslint-disable node/shebang */
+
+import mri from "mri"
+import updateNotifier from "simple-update-notifier"
+import packageJson from "../package-version.json"
 import {
   GITHUB_ACTIONS,
   type Inputs,
@@ -7,7 +12,6 @@ import {
   info,
   inputs,
   maybeGetInput,
-  packageJson,
   setupCpp,
   success,
   warning,

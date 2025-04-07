@@ -24,3 +24,5 @@ coverage
 /src/llvm/assets/
 
 /build
+dist/library
+*.tgz

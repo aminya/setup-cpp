@@ -20,8 +20,8 @@ The tags are in the following template:
 
 - Base image: `aminya/setup-cpp-ubuntu:24.04`
 - Compiler image: `aminya/setup-cpp-ubuntu-llvm:24.04`
-- Base image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu:24.04-v1.5.1`
-- Compiler image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu-llvm:24.04-v1.5.1`
+- Base image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu:24.04-v1.5.2`
+- Compiler image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu-llvm:24.04-v1.5.2`
 
 The supported platforms are `ubuntu`, `alpine`, `fedora`, and `arch`. The supported compilers are `llvm`, `gcc`, and `mingw`.
 

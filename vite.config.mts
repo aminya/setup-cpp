@@ -30,14 +30,13 @@ const viteConfig = defineConfig((configEnv) => {
     }
   }
 
+  const isLibrary = configEnv.mode.includes("library")
   return {
     build: {
-      ssr: configEnv.mode.includes("cli-deps")
-        ? "./src/cli-deps.ts"
-        : configEnv.mode.includes("library")
+      ssr: isLibrary
         ? "./src/lib.ts"
         : "./src/setup-cpp.ts",
-      outDir: isLegacy ? "./dist/legacy" : "./dist/modern",
+      outDir: isLibrary ? "./dist/library" : isLegacy ? "./dist/legacy" : "./dist/modern",
       target: isLegacy ? "node12" : "node20",
       minify: process.env.NODE_ENV === "production" ? "terser" : false,
       terserOptions: terserRc as TerserOptions,
