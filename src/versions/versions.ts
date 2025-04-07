@@ -2,9 +2,11 @@ import fs from "fs"
 import path from "path"
 import { fileURLToPath } from "url"
 import memoize from "memoizee"
+import { isAlpine } from "setup-alpine"
 import type { CompilerInfo } from "../compilers.js"
 import type { Opts } from "../options.js"
 import type { Inputs, ToolName } from "../tool.js"
+import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 
@@ -21,7 +23,10 @@ type DistroVersionMap = Record<
   `${number}` | `${number}.${number}` | `${number}.${number}.${number}` | string | "else",
   ArchVersionMap | string | undefined
 >
-type DistroMap = Record<"ubuntu" | "archlinux" | string | "else", DistroVersionMap | string | undefined>
+type DistroMap = Record<
+  "ubuntu" | "archlinux" | "alpine" | "fedora" | string | "else",
+  DistroVersionMap | string | undefined
+>
 type PlatformMap = Record<NodeJS.Platform | "else", DistroMap | string | undefined>
 type Versions = Record<ToolName | "pip", PlatformMap | string | undefined>
 
@@ -62,7 +67,15 @@ export function getVersionDefault(
   const distroMap = distroMapOrVersion
 
   // check for distro-specific versions
-  const distro = isUbuntu() ? "ubuntu" : isArch() ? "archlinux" : "else"
+  const distro = isUbuntu()
+    ? "ubuntu"
+    : isArch()
+    ? "archlinux"
+    : isAlpine()
+    ? "alpine"
+    : hasDnf()
+    ? "fedora"
+    : "else"
   const distroVersionMapOrVersion = distroMap[distro] ?? distroMap.else
   if (distroVersionMapOrVersion === undefined) {
     throw new Error(`Distro "${distro}" not found in versions data for tool "${tool}"`)
