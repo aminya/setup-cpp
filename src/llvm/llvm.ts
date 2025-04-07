@@ -88,8 +88,8 @@ export async function activateLLVM(directory: string, version: string) {
     addEnv("LLVM_PATH", directory, rcOptions),
 
     // Setup LLVM as the compiler
-    addEnv("LD_LIBRARY_PATH", `${ld}${delimiter}${directory}/lib`, rcOptions),
-    addEnv("DYLD_LIBRARY_PATH", `${dyld}${delimiter}${directory}/lib`, rcOptions),
+    addEnv("LLVM_LD_LIBRARY_PATH", `${ld}${delimiter}${directory}/lib`, rcOptions),
+    addEnv("LLVM_DYLD_LIBRARY_PATH", `${dyld}${delimiter}${directory}/lib`, rcOptions),
 
     // compiler flags
     addEnv("LLVM_LDFLAGS", `-L${quoteIfHasSpace(`${directory}/lib`)}`, rcOptions),
@@ -102,7 +102,7 @@ export async function activateLLVM(directory: string, version: string) {
       ? addEnv("LLVM_CPATH", `${directory}/lib/clang/${llvmMajor}/include`, rcOptions)
       : Promise.resolve(),
 
-    addEnv("LIBRARY_PATH", `${directory}/lib`, rcOptions),
+    addEnv("LLVM_LIBRARY_PATH", `${directory}/lib`, rcOptions),
 
     // os sdks
     setupMacOSSDK(),
