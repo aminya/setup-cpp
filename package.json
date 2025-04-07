@@ -11,6 +11,26 @@
   "bin": {
     "setup-cpp": "dist/legacy/setup-cpp.js"
   },
+  "exports": {
+    ".": {
+      "types": "./dist/modern/lib.d.ts",
+      "require": "./dist/legacy/lib.js",
+      "import": "./dist/modern/lib.mjs"
+    },
+    "./bin": {
+      "types": "./dist/modern/setup-cpp.d.ts",
+      "require": "./dist/legacy/setup-cpp.js",
+      "import": "./dist/modern/setup-cpp.mjs"
+    },
+    "./lib": {
+      "types": "./dist/modern/lib.d.ts",
+      "require": "./dist/legacy/lib.js",
+      "import": "./dist/modern/lib.mjs"
+    },
+    "./src/*": {
+      "import": "./src/*/*.ts"
+    }
+  },
   "files": [
     "action.yml",
     ".dockerignore",
@@ -26,9 +46,9 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "turbo build && run-p lint.root.tsc build.vite build.vite.legacy && run-p build.json build.bash",
-    "build.vite": "cross-env NODE_ENV=production vite build",
-    "build.vite.legacy": "cross-env NODE_ENV=production TARGET=legacy vite build",
+    "build": "run-s clean && turbo build && run-p lint.root.tsc build.vite.modern build.vite.legacy && run-p build.json build.bash",
+    "build.vite.modern": "cross-env NODE_ENV=production vite build --mode cli-modern",
+    "build.vite.legacy": "cross-env NODE_ENV=production vite build --mode cli-legacy",
     "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file ./dist/**/*.json",
     "build.bash": "shx cp ./src/*/*.bash ./dist/legacy/ && shx cp ./dist/legacy/*.bash ./dist/modern",
     "bump": "ncu -u -x execa,numerous,eslint,@types/eslint,which && pnpm update && pnpx typesync && pnpm run clean",
@@ -120,7 +140,7 @@
     "mri": "^1.2.0",
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#c01f519bd995460228ed3dec4df51df92dc290fd",
     "node-downloader-helper": "2.1.9",
-    "npm-check-updates": "^17.1.15",
+    "npm-check-updates": "^17.1.16",
     "npm-run-all2": "^7.0.2",
     "numerous": "1.0.3",
     "p-timeout": "^6.1.4",

@@ -1,7 +1,7 @@
 import { getExecOutput } from "@actions/exec"
 import { error } from "ci-log"
 import { addEnv } from "envosman"
-import { rcOptions } from "../cli-options.js"
+import { rcOptions } from "../options.js"
 
 export async function setupMacOSSDK() {
   if (process.platform === "darwin") {

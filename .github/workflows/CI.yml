@@ -118,6 +118,20 @@ jobs:
           restore-keys: |
             "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 
+      - name: Cache Turbo
+        uses: rharkor/caching-for-turbo@v1.6
+
+      - name: Cache .cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ./.cache/eslint
+            ./.cache/cspell
+            /home/runner/.cache/dprint
+          key: "setupcpp-cache-OS:${{ matrix.os }}-${{ hashFiles('./*.json', './.*rc', './*.yml') }}"
+          restore-keys: |
+            "setupcpp-cache-OS:${{ matrix.os }}-"
+
       - name: Install
         run: |
           pnpm install

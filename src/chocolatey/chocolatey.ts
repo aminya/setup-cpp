@@ -3,7 +3,7 @@ import { addPath } from "envosman"
 import { execaSync } from "execa"
 import { pathExists } from "path-exists"
 import which from "which"
-import { rcOptions } from "../cli-options.js"
+import { rcOptions } from "../options.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 
 /* eslint-disable require-atomic-updates */

@@ -8,7 +8,7 @@ import { addPath } from "envosman"
 import { chmod } from "fs/promises"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
-import { maybeGetInput, rcOptions } from "../../cli-options.js"
+import { maybeGetInput, rcOptions } from "../../options.js"
 import { getArchiveType, getExtractFunction } from "./extract.js"
 
 /** A type that describes a package */

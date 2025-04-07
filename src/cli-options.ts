@@ -1,12 +1,17 @@
-import { getInput } from "@actions/core"
 import { info } from "ci-log"
-import type { AddPathOptions } from "envosman"
 import mri from "mri"
-import { untildifyUser } from "untildify-user"
+import { type Opts, maybeGetInput } from "./options.js"
 import { type Inputs, inputs } from "./tool.js"
-import type { InstallationInfo } from "./utils/setup/setupBin.js"
 
-export function parseArgs(args: string[]): Opts {
+/**
+ * The options for the setup-cpp function
+ */
+export type CliOpts = Opts & {
+  help: boolean
+  version: boolean
+}
+
+export function parseArgs(args: string[]): CliOpts {
   const defaults = Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)]))
   return mri<Record<Inputs, string | undefined> & { help: boolean; version: boolean; "setup-cpp": boolean }>(args, {
     string: [...inputs, "timeout", "node-package-manager"],
@@ -55,41 +60,4 @@ All the available tools:
     },
     ["tools"],
   )
-}
-/** Get an object from github actions */
-
-export function maybeGetInput(key: string) {
-  const value = getInput(key.toLowerCase())
-  if (value !== "false" && value !== "") {
-    return value
-  }
-  return undefined // skip installation
-}
-export type Opts = mri.Argv<
-  Record<Inputs, string | undefined> & {
-    help: boolean
-    version: boolean
-    "setup-cpp"?: boolean
-    timeout?: string
-    "node-package-manager"?: string
-  }
->
-
-export function getSuccessMessage(tool: string, installationInfo: InstallationInfo | undefined | void) {
-  let msg = `✅ ${tool} was installed successfully:`
-  if (installationInfo === undefined) {
-    return msg
-  }
-  if ("installDir" in installationInfo) {
-    msg += `\n- The installation directory is ${installationInfo.installDir}`
-  }
-  if (installationInfo.binDir !== "") {
-    msg += `\n- The binary directory is ${installationInfo.binDir}`
-  }
-  return msg
-}
-
-export const rcOptions: AddPathOptions = {
-  rcPath: untildifyUser("~/.cpprc"),
-  guard: "cpp",
 }

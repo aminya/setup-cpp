@@ -191,7 +191,7 @@ importers:
         specifier: 2.1.9
         version: 2.1.9
       npm-check-updates:
-        specifier: ^17.1.15
+        specifier: ^17.1.16
         version: 17.1.16
       npm-run-all2:
         specifier: ^7.0.2

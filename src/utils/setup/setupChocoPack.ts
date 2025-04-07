@@ -4,7 +4,7 @@ import { addPath } from "envosman"
 import { execaSync } from "execa"
 import which from "which"
 import { setupChocolatey } from "../../chocolatey/chocolatey.js"
-import { rcOptions } from "../../cli-options.js"
+import { rcOptions } from "../../options.js"
 import type { InstallationInfo } from "./setupBin.js"
 
 let hasChoco = false

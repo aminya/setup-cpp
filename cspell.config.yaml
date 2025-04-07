@@ -100,6 +100,7 @@ words:
   - pygments
   - pypy
   - qlplugindir
+  - rharkor
   - Sccache
   - setupcpp
   - setx
