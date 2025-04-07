@@ -4,7 +4,7 @@ import { info } from "ci-log"
 import { addEnv } from "envosman"
 import { setupMSVCDevCmd } from "msvc-dev-cmd/lib.js"
 import { pathExists } from "path-exists"
-import { rcOptions } from "../cli-options.js"
+import { rcOptions } from "../options.js"
 
 function getArch(arch: string): string {
   switch (arch) {

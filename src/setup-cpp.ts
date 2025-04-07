@@ -1,25 +1,17 @@
-#!/usr/bin/env node
-/* eslint-disable node/shebang */
-
-import { GITHUB_ACTIONS, isCI } from "ci-info"
-import { error, info, success, warning } from "ci-log"
-import { finalizeRC } from "envosman"
-import numerous from "numerous"
-import numerousLocale from "numerous/locales/en.js"
-import timeDelta from "time-delta"
-import timeDeltaLocale from "time-delta/locales/en.js"
-import { untildifyUser } from "untildify-user"
-import packageJson from "../package-version.json"
-import { checkUpdates } from "./check-updates.js"
-import { parseArgs, printHelp, rcOptions } from "./cli-options.js"
-import { getCompilerInfo, installCompiler } from "./compilers.js"
-import { installTool } from "./installTool.js"
-import { installSetupCpp } from "./setup-cpp-installer.js"
-import { type Inputs, llvmTools, tools } from "./tool.js"
-import { isArch } from "./utils/env/isArch.js"
-import { ubuntuVersion } from "./utils/env/ubuntu_version.js"
-import { setupPacmanPack } from "./utils/setup/setupPacmanPack.js"
-import { syncVersions } from "./versions/versions.js"
+import { mri, updateNotifier } from "./cli-deps.ts"
+import {
+  GITHUB_ACTIONS,
+  type Inputs,
+  type Opts,
+  error,
+  info,
+  inputs,
+  maybeGetInput,
+  packageJson,
+  setupCpp,
+  success,
+  warning,
+} from "./lib.ts"
 
 /** The main entry function */
 async function main(args: string[]): Promise<number> {
@@ -31,113 +23,16 @@ async function main(args: string[]): Promise<number> {
   // print help
   if (opts.help) {
     printHelp()
+    return 0
   }
 
   // print version
   if (opts.version) {
     info(`${packageJson.version}`)
+    return 0
   }
 
-  // cpu architecture
-  const arch = opts.architecture ?? process.arch
-
-  // the installation dir for the tools that are downloaded directly
-  const setupCppDir = process.env.SETUP_CPP_DIR ?? untildifyUser("~")
-
-  // report messages
-  const successMessages: string[] = []
-  const errorMessages: string[] = []
-
-  const timeFormatter = timeDelta.create({ autoloadLocales: true })
-  timeDelta.addLocale(timeDeltaLocale as timeDelta.Locale)
-  numerous.addLocale(numerousLocale as numerous.Locale)
-  let time1: number
-  let time2: number
-
-  // installing the specified tools
-
-  const osVersion = await ubuntuVersion()
-
-  const compilerInfo = opts.compiler !== undefined ? getCompilerInfo(opts.compiler) : undefined
-
-  // sync the version for the llvm tools
-  if (!syncVersions(opts, [...llvmTools, "compiler"] as Inputs[], compilerInfo)) {
-    error("The same version must be used for llvm, clang-format and clang-tidy")
-    return 1
-  }
-
-  if (isArch() && typeof opts.cppcheck === "string" && typeof opts.gcovr === "string") {
-    info("installing python-pygments to avoid conflicts with cppcheck and gcovr on Arch linux")
-    await setupPacmanPack("python-pygments")
-  }
-
-  // loop over the tools and run their setup function
-
-  let failedFast = false
-  for (const tool of tools) { // get the version or "true" or undefined for this tool from the options
-    const version = opts[tool]
-
-    // skip if undefined or false
-    if (version === undefined || version === "false") {
-      continue
-    }
-
-    const timeout = opts.timeout !== undefined ? Number.parseFloat(opts.timeout) * 60 * 1000 : undefined
-    // running the setup function for this tool
-    time1 = Date.now()
-
-    // eslint-disable-next-line no-await-in-loop
-    await installTool(
-      tool,
-      version,
-      osVersion,
-      arch,
-      setupCppDir,
-      successMessages,
-      errorMessages,
-      timeout,
-    )
-    time2 = Date.now()
-    info(`took ${timeFormatter.format(time1, time2) || "0 seconds"}`)
-
-    // fail fast inside CI when any tool fails
-    if (errorMessages.length !== 0 && isCI) {
-      failedFast = true
-      break
-    }
-  }
-
-  if (!failedFast && compilerInfo !== undefined) {
-    // install the specified compiler
-    const time1Compiler = Date.now()
-    await installCompiler(
-      compilerInfo.compiler,
-      compilerInfo.version,
-      osVersion,
-      setupCppDir,
-      arch,
-      successMessages,
-      errorMessages,
-    )
-    const time2Compiler = Date.now()
-    info(`took ${timeFormatter.format(time1Compiler, time2Compiler) || "0 seconds"}`)
-  }
-
-  await finalizeRC(rcOptions)
-
-  const noTool = successMessages.length === 0 && errorMessages.length === 0
-
-  // if setup-cpp option is not passed, install setup-cpp by default unless only help or version is passed
-  // So that --help and --version are immutable
-  if (opts["setup-cpp"] === undefined) {
-    opts["setup-cpp"] = !(noTool && (opts.version || opts.help))
-  }
-
-  const installSetupCppPromise = opts["setup-cpp"]
-    ? installSetupCpp(packageJson.version, opts["node-package-manager"])
-    : Promise.resolve()
-
-  await Promise.all([checkUpdatePromise, installSetupCppPromise])
+  const { successMessages, errorMessages } = await setupCpp(opts)
 
   // report the messages in the end
   for (const tool of successMessages) {
@@ -167,16 +62,89 @@ async function main(args: string[]): Promise<number> {
       }
     }
   }
-  return errorMessages.length === 0 ? 0 : 1 // exit with non-zero if any error message
+
+  await checkUpdatePromise
+
+  return errorMessages.length === 0 ? 0 : 1
+}
+
+// auto self update notifier
+async function checkUpdates() {
+  try {
+    await updateNotifier({ pkg: packageJson })
+  } catch (err) {
+    warning(`Failed to check for updates: ${err instanceof Error ? err.message + err.stack : err}`)
+  }
+}
+
+/**
+ * The options for the setup-cpp function
+ */
+type CliOpts = Opts & {
+  help: boolean
+  version: boolean
+}
+
+export function parseArgs(args: string[]): CliOpts {
+  const defaults = Object.fromEntries(inputs.map((inp) => [inp, maybeGetInput(inp)]))
+  return mri<Record<Inputs, string | undefined> & { help: boolean; version: boolean; "setup-cpp": boolean }>(args, {
+    string: [...inputs, "timeout", "node-package-manager"],
+    default: defaults,
+    alias: { h: "help", v: "version" },
+    boolean: ["help", "version", "setup-cpp"],
+  })
+}
+
+function printHelp() {
+  info(`
+setup-cpp [options]
+setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
+
+Install all the tools required for building and testing C++/C projects.
+
+--architecture\t the cpu architecture to install the tools for. By default it uses the current CPU architecture.
+--timeout\t the timeout for the installation of each tool in minutes. By default it is 10 minutes.
+--compiler\t the <compiler> to install.
+          \t You can specify the version instead of specifying just the name e.g: --compiler 'llvm-13.0.0'
+--tool_name\t pass "true" or pass the <version> you would like to install for this tool. e.g. --conan true or --conan "1.42.1"
+--nodePackageManager\t the node package manager to use (npm/yarn/pnpm) when installing setup-cpp globally
+--help\t show this help message
+--version\t show the version of setup-cpp
+
+All the available tools:
+`)
+
+  console.table(
+    {
+      "compiler and analyzer": {
+        tools: "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall",
+      },
+      "build system": {
+        tools: "--cmake, --ninja, --meson, --make, --task, --bazel",
+      },
+      "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --nala, --git, --setup-cpp" },
+      "analyzer/linter": {
+        tools:
+          "--clang-tidy, --clang-format, --cppcheck, --cpplint, --flawfinder, --lizard, --infer, , --cmakelang, --cmake-lint, --cmake-format",
+      },
+      cache: { tools: "--ccache, --sccache" },
+      documentation: { tools: "--doxygen, --graphviz" },
+      coverage: { tools: "--gcovr, --opencppcoverage, --kcov" },
+      other: { tools: "--python, --powershell, --sevenzip" },
+    },
+    ["tools"],
+  )
 }
 
 // Run main
-main(process.argv)
-  .then((ret) => {
-    process.exitCode = ret
-  })
-  .catch((err) => {
-    error("main() panicked!")
-    error(err as string | Error)
-    process.exitCode = 1
-  })
+if (process.env.SETUP_CPP_SKIP_MAIN !== "true") {
+  main(process.argv)
+    .then((ret) => {
+      process.exitCode = ret
+    })
+    .catch((err) => {
+      error("main() panicked!")
+      error(err as string | Error)
+      process.exitCode = 1
+    })
+}

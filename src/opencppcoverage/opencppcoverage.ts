@@ -1,5 +1,5 @@
 import { addPath } from "envosman"
-import { rcOptions } from "../cli-options.js"
+import { rcOptions } from "../options.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

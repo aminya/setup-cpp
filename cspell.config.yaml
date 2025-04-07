@@ -62,6 +62,7 @@ words:
   - inja
   - isci
   - isroot
+  - jsonify
   - kcov
   - LDFLAGS
   - lefticus
@@ -100,6 +101,7 @@ words:
   - pygments
   - pypy
   - qlplugindir
+  - rharkor
   - Sccache
   - setupcpp
   - setx

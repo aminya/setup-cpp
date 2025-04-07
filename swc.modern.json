@@ -1,0 +1,29 @@
+{
+  "$schema": "https://swc.rs/schema.json",
+  "sourceMaps": true,
+  "jsc": {
+    "target": "esnext",
+    "transform": {
+      "optimizer": {
+        "simplify": true,
+        "jsonify": {
+          "minCost": 1000
+        }
+      }
+    },
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "dynamicImport": true
+    },
+    "baseUrl": ".",
+    "paths": {
+      "./lib.js": ["./lib.mjs"]
+    }
+  },
+  "minify": true,
+  "module": {
+    "type": "nodenext",
+    "outFileExtension": "mjs"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://swc.rs/schema.json",
+  "sourceMaps": true,
+  "jsc": {
+    "target": "es2019",
+    "transform": {
+      "optimizer": {
+        "simplify": true,
+        "jsonify": {
+          "minCost": 1000
+        }
+      }
+    },
+    "parser": {
+      "syntax": "typescript",
+      "tsx": false,
+      "dynamicImport": true
+    }
+  },
+  "minify": true,
+  "module": {
+    "type": "commonjs"
+  }
+}

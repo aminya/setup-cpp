@@ -1,10 +1,10 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["OS", "RUNNER_OS"],
+  "globalEnv": ["OS", "RUNNER_OS", "NODE_ENV"],
+  "cacheDir": ".cache/turbo",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "outputs": ["dist/"]
+      "dependsOn": ["^build"]
     },
     "dev": {
       "persistent": true,

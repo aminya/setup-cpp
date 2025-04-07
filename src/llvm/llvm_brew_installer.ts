@@ -1,7 +1,7 @@
 import { info } from "ci-log"
 import { addPath } from "envosman"
 import { installBrewPack } from "setup-brew"
-import { rcOptions } from "../cli-options.ts"
+import { rcOptions } from "../options.ts"
 import { majorLLVMVersion } from "./utils.ts"
 
 export async function trySetupLLVMBrew(version: string, _setupDir: string, _arch: string) {

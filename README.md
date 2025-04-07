@@ -505,6 +505,37 @@ test_linux_gcc:
     - *test
 ```
 
+### As a Library in Nodejs
+
+```ts
+import { setupCpp, success, error } from "setup-cpp"
+
+async function main() {
+  const { errorMessages, successMessages } = await setupCpp({
+    compiler: "llvm",
+    cmake: true,
+    ninja: true,
+    vcpkg: true,
+  })
+
+  for (const message of errorMessages) {
+    error(message)
+  }
+  for (const message of successMessages) {
+    success(message)
+  }
+
+  if (errorMessages.length !== 0) {
+    process.exit(1)
+  }
+}
+
+main().catch(err => {
+  console.error(err)
+  process.exit(1)
+})
+```
+
 ## Articles
 
 [Setup-Cpp on Dev.to](https://dev.to/aminya/setup-cpp-3ia4)
