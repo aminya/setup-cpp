@@ -7,7 +7,7 @@ import type { InstallationInfo } from "./utils/setup/setupBin.ts"
 /**
  * The options for the setup-cpp function
  */
-export type Opts = Record<Inputs, string | undefined> & {
+export type Opts = Partial<Record<Inputs, string | undefined>> & {
   "setup-cpp"?: boolean
   timeout?: string
   "node-package-manager"?: string

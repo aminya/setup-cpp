@@ -1,4 +1,4 @@
-import { error, info } from "ci-log"
+import { info } from "ci-log"
 import { execa } from "execa"
 import which from "which"
 /**
@@ -11,7 +11,7 @@ export async function installSetupCpp(version: string, packageManager: string = 
     // check if `setup-cpp` is available in the shell, if so, skip the installation to avoid overwriting the existing version
     const setupCppPath = await which("setup-cpp", { nothrow: true })
     if (setupCppPath !== null) {
-      return
+      return `setup-cpp@${version} already installed`
     }
 
     // Install setup-cpp globally
@@ -21,7 +21,8 @@ export async function installSetupCpp(version: string, packageManager: string = 
       // 1 minutes timeout
       timeout: 1000 * 60 * 1,
     })
+    return `setup-cpp@${version} installed successfully`
   } catch (err) {
-    error(`Failed to install the setup-cpp@${version} CLI: ${err}. Ignoring...`)
+    return new Error(`Failed to install the setup-cpp@${version} CLI: ${err}. Ignoring...`)
   }
 }

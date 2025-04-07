@@ -1,12 +1,9 @@
 #!/usr/bin/env node
 /* eslint-disable node/shebang */
 
-import { GITHUB_ACTIONS } from "ci-info"
-import { error, info } from "ci-log"
-import packageJson from "../package-version.json"
 import { checkUpdates } from "./check-updates.ts"
 import { parseArgs, printHelp } from "./cli-options.ts"
-import { setupCpp } from "./lib.ts"
+import { GITHUB_ACTIONS, error, info, packageJson, setupCpp, success, warning } from "./lib.ts"
 
 /** The main entry function */
 async function main(args: string[]): Promise<number> {
@@ -27,7 +24,38 @@ async function main(args: string[]): Promise<number> {
     return 0
   }
 
-  await Promise.all([checkUpdatePromise, setupCpp(opts)])
+  const { successMessages, errorMessages } = await setupCpp(opts)
+
+  // report the messages in the end
+  for (const tool of successMessages) {
+    success(tool)
+  }
+  for (const tool of errorMessages) {
+    error(tool)
+  }
+
+  if (successMessages.length !== 0 || errorMessages.length !== 0) {
+    info("setup-cpp finished")
+
+    if (!GITHUB_ACTIONS) {
+      switch (process.platform) {
+        case "win32": {
+          warning("Run `RefreshEnv.cmd` or restart your shell to update the environment.")
+          break
+        }
+        case "linux":
+        case "darwin": {
+          warning("Run `source ~/.cpprc` or restart your shell to update the environment.")
+          break
+        }
+        default: {
+          // nothing
+        }
+      }
+    }
+  }
+
+  await checkUpdatePromise
 
   return 0
 }
