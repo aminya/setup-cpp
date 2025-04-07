@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.21...3.28)
 
 project(
     setup_cpp_tests
-    VERSION 1.5.2
+    VERSION 1.5.3
     DESCRIPTION "Tests for setup-cpp"
     HOMEPAGE_URL "https://github.com/aminya/setup-cpp"
     LANGUAGES CXX C)

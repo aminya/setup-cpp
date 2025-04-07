@@ -1,6 +1,6 @@
 {
   "name": "setup-cpp",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Install all the tools required for building and testing C++/C projects.",
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
@@ -10,26 +10,6 @@
   "source": "./src/lib.ts",
   "bin": {
     "setup-cpp": "dist/legacy/setup-cpp.js"
-  },
-  "exports": {
-    ".": {
-      "types": "./dist/modern/lib.d.ts",
-      "require": "./dist/legacy/lib.js",
-      "import": "./dist/modern/lib.mjs"
-    },
-    "./bin": {
-      "types": "./dist/modern/setup-cpp.d.ts",
-      "require": "./dist/legacy/setup-cpp.js",
-      "import": "./dist/modern/setup-cpp.mjs"
-    },
-    "./lib": {
-      "types": "./dist/modern/lib.d.ts",
-      "require": "./dist/legacy/lib.js",
-      "import": "./dist/modern/lib.mjs"
-    },
-    "./src/*": {
-      "import": "./src/*/*.ts"
-    }
   },
   "files": [
     "action.yml",

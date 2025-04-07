@@ -12,7 +12,7 @@ concurrency:
 
 env:
   NODE_OPTIONS: --enable-source-maps
-  version: "1.5.2"
+  version: "1.5.3"
 
 jobs:
   Build:
