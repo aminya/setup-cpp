@@ -12,13 +12,6 @@ patchedDependencies:
 importers:
 
   .:
-    dependencies:
-      mri:
-        specifier: ^1.2.0
-        version: 1.2.0
-      simple-update-notifier:
-        specifier: ^2.0.0
-        version: 2.0.0
     devDependencies:
       '@actions/cache':
         specifier: ^4.0.2
@@ -191,6 +184,9 @@ importers:
       mkdirp:
         specifier: ^3.0.1
         version: 3.0.1
+      mri:
+        specifier: ^1.2.0
+        version: 1.2.0
       msvc-dev-cmd:
         specifier: github:aminya/msvc-dev-cmd#c01f519bd995460228ed3dec4df51df92dc290fd
         version: https://codeload.github.com/aminya/msvc-dev-cmd/tar.gz/c01f519bd995460228ed3dec4df51df92dc290fd
@@ -254,6 +250,9 @@ importers:
       shx:
         specifier: 0.4.0
         version: 0.4.0
+      simple-update-notifier:
+        specifier: ^2.0.0
+        version: 2.0.0
       terser:
         specifier: ^5.39.0
         version: 5.39.0

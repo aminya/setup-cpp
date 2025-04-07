@@ -6,7 +6,6 @@ import babelConfig from "./babel.config.mts"
 
 const viteConfig = defineConfig((configEnv) => {
   const isLegacy = configEnv.mode.includes("legacy")
-  const isLibrary = configEnv.mode.includes("library")
 
   const plugins = []
   if (isLegacy) {
@@ -33,7 +32,11 @@ const viteConfig = defineConfig((configEnv) => {
 
   return {
     build: {
-      ssr: isLibrary ? "./src/lib.ts" : "./src/setup-cpp.ts",
+      ssr: configEnv.mode.includes("cli-deps")
+        ? "./src/cli-deps.ts"
+        : configEnv.mode.includes("library")
+        ? "./src/lib.ts"
+        : "./src/setup-cpp.ts",
       outDir: isLegacy ? "./dist/legacy" : "./dist/modern",
       target: isLegacy ? "node12" : "node20",
       minify: process.env.NODE_ENV === "production" ? "terser" : false,

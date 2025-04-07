@@ -1,5 +1,4 @@
-import mri from "mri"
-import updateNotifier from "simple-update-notifier"
+import { mri, updateNotifier } from "./cli-deps.ts"
 import {
   GITHUB_ACTIONS,
   type Inputs,
