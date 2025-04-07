@@ -65,7 +65,7 @@ async function main(args: string[]): Promise<number> {
 
   await checkUpdatePromise
 
-  return 0
+  return errorMessages.length === 0 ? 0 : 1
 }
 
 // auto self update notifier
