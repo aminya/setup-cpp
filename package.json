@@ -46,11 +46,13 @@
     "tsconfig.json"
   ],
   "scripts": {
-    "build": "run-s clean && turbo build && run-p lint.root.tsc build.cli.modern build.cli.legacy build.library.modern build.library.legacy && run-p build.json build.bash",
+    "build": "run-s clean && pnpm -r build && run-p build.types.modern build.types.legacy && run-p lint.root.tsc build.cli.modern build.cli.legacy build.library.modern build.library.legacy && run-p build.json build.bash",
     "build.cli.modern": "vite build --mode cli-deps-modern && swc ./src/setup-cpp.ts --out-file ./dist/modern/setup-cpp.mjs --config-file ./swc.modern.json && sed -i 's|.ts\"|.mjs\"|g' ./dist/modern/setup-cpp.mjs",
     "build.cli.legacy": "vite build --mode cli-deps-legacy && swc ./src/setup-cpp.ts --out-file ./dist/legacy/setup-cpp.js --config-file ./swc.legacy.json && sed -i 's|.ts\"|.js\"|g' ./dist/legacy/setup-cpp.js",
     "build.library.modern": "cross-env NODE_ENV=production vite build --mode library-modern",
     "build.library.legacy": "cross-env NODE_ENV=production vite build --mode library-legacy",
+    "build.types.modern": "tsc -p ./tsconfig.types.json",
+    "build.types.legacy": "tsc -p ./tsconfig.types.json --declarationDir ./dist/legacy",
     "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file ./dist/**/*.json",
     "build.bash": "shx cp ./src/*/*.bash ./dist/legacy/ && shx cp ./dist/legacy/*.bash ./dist/modern",
     "bump": "ncu -u -x execa,numerous,eslint,@types/eslint,which && pnpm update && pnpx typesync && pnpm run clean",
