@@ -1,6 +1,6 @@
 {
   "name": "setup-cpp",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "Install all the tools required for building and testing C++/C projects.",
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
@@ -47,8 +47,8 @@
   ],
   "scripts": {
     "build": "run-s clean && pnpm -r build && run-p build.types.modern build.types.legacy && run-p lint.root.tsc build.cli.modern build.cli.legacy build.library.modern build.library.legacy && run-p build.json build.bash",
-    "build.cli.modern": "vite build --mode cli-deps-modern && swc ./src/setup-cpp.ts --out-file ./dist/modern/setup-cpp.mjs --config-file ./swc.modern.json && sed -i 's|.ts\"|.mjs\"|g' ./dist/modern/setup-cpp.mjs",
-    "build.cli.legacy": "vite build --mode cli-deps-legacy && swc ./src/setup-cpp.ts --out-file ./dist/legacy/setup-cpp.js --config-file ./swc.legacy.json && sed -i 's|.ts\"|.js\"|g' ./dist/legacy/setup-cpp.js",
+    "build.cli.modern": "cross-env NODE_ENV=production vite build --mode cli-modern",
+    "build.cli.legacy": "cross-env NODE_ENV=production vite build --mode cli-legacy",
     "build.library.modern": "cross-env NODE_ENV=production vite build --mode library-modern",
     "build.library.legacy": "cross-env NODE_ENV=production vite build --mode library-legacy",
     "build.types.modern": "tsc -p ./tsconfig.types.json",
