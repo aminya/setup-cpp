@@ -1,7 +1,6 @@
 import module from "module"
-import { type AliasOptions, type TerserOptions, defineConfig } from "vite"
+import { type AliasOptions, defineConfig } from "vite"
 import babel from "vite-plugin-babel"
-import terserRc from "./.terserrc.mjs"
 import babelConfig from "./babel.config.cjs"
 
 const viteConfig = defineConfig((configEnv) => {
@@ -38,8 +37,7 @@ const viteConfig = defineConfig((configEnv) => {
         : "./src/setup-cpp.ts",
       outDir: isLibrary ? "./dist/library" : isLegacy ? "./dist/legacy" : "./dist/modern",
       target: isLegacy ? "node12" : "node20",
-      minify: process.env.NODE_ENV === "production" ? "terser" : false,
-      terserOptions: terserRc as TerserOptions,
+      minify: "esbuild",
       sourcemap: true,
       rollupOptions: {
         output: {

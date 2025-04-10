@@ -256,12 +256,15 @@ importers:
       simple-update-notifier:
         specifier: ^2.0.0
         version: 2.0.0
+<<<<<<< HEAD
       terser:
         specifier: ^5.39.0
         version: 5.43.1
       terser-config-atomic:
         specifier: ^1.0.0
         version: 1.0.0
+=======
+>>>>>>> 94f7139d (build: use esbuild for minification)
       time-delta:
         specifier: github:aminya/time-delta#69d91a4
         version: https://codeload.github.com/aminya/time-delta/tar.gz/69d91a4
@@ -5825,11 +5828,16 @@ packages:
     resolution: {integrity: sha512-wK0Ri4fOGjv/XPy8SBHZChl8CM7uMc5VML7SqiQ0zG7+J5Vr+RMQDoHa2CNT6KHUnTGIXH34UDMkPzAUyapBZg==}
     engines: {node: '>=8'}
 
+<<<<<<< HEAD
   terser-config-atomic@1.0.0:
     resolution: {integrity: sha512-WlhyFd4+honI08iaMxLg5P1eSg7RknCHzMI+AOwTNtMWkflGRrLHb7enbYmtpirUi05Tdun9wi/TNinNj4mrSg==}
 
   terser@5.43.1:
     resolution: {integrity: sha512-+6erLbBm0+LROX2sPXlUYx/ux5PyE9K/a92Wrt6oA+WDAoFTdpHE5tCYCI5PNzq2y8df4rA+QgHLJuR4jNymsg==}
+=======
+  terser@5.39.0:
+    resolution: {integrity: sha512-LBAhFyLho16harJoWMg/nZsQYgTrg5jXOn2nCYjRUcZZEdE3qa2zb8QEDRUGVZBW4rlazf2fxkg8tztybTaqWw==}
+>>>>>>> 94f7139d (build: use esbuild for minification)
     engines: {node: '>=10'}
     hasBin: true
 
@@ -7503,8 +7511,14 @@ snapshots:
 
   '@jridgewell/source-map@0.3.10':
     dependencies:
+<<<<<<< HEAD
       '@jridgewell/gen-mapping': 0.3.12
       '@jridgewell/trace-mapping': 0.3.29
+=======
+      '@jridgewell/gen-mapping': 0.3.8
+      '@jridgewell/trace-mapping': 0.3.25
+    optional: true
+>>>>>>> 94f7139d (build: use esbuild for minification)
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
@@ -8980,7 +8994,8 @@ snapshots:
 
   commander@14.0.0: {}
 
-  commander@2.20.3: {}
+  commander@2.20.3:
+    optional: true
 
   commander@6.2.1: {}
 
@@ -12334,6 +12349,7 @@ snapshots:
     dependencies:
       buffer-from: 1.1.2
       source-map: 0.6.1
+    optional: true
 
   source-map@0.6.1: {}
 
@@ -12529,14 +12545,19 @@ snapshots:
 
   term-size@2.2.1: {}
 
+<<<<<<< HEAD
   terser-config-atomic@1.0.0: {}
 
   terser@5.43.1:
+=======
+  terser@5.39.0:
+>>>>>>> 94f7139d (build: use esbuild for minification)
     dependencies:
       '@jridgewell/source-map': 0.3.10
       acorn: 8.15.0
       commander: 2.20.3
       source-map-support: 0.5.21
+    optional: true
 
   test-exclude@6.0.0:
     dependencies:
