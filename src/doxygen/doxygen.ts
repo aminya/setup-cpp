@@ -74,7 +74,7 @@ export async function setupDoxygen({ version, setupDir, arch }: SetupOptions) {
       )
       const binDir = await activateWinDoxygen()
       const installationInfo = { binDir }
-      await setupGraphviz({ version: getVersion("graphviz", undefined), setupDir, arch })
+      await setupGraphviz({ version: getVersion("graphviz", undefined) })
       return installationInfo
     }
     case "darwin": {
@@ -89,13 +89,13 @@ export async function setupDoxygen({ version, setupDir, arch }: SetupOptions) {
 
       // only install graphviz if the macOS version is greater than 11
       if (macosVersion()[0] > 11) {
-        await setupGraphviz({ version: getVersion("graphviz", undefined), setupDir, arch })
+        await setupGraphviz({ version: getVersion("graphviz", undefined) })
       }
       return installationInfo
     }
     case "linux": {
       const installationInfo = await setupLinuxDoxygen({ version, setupDir, arch })
-      await setupGraphviz({ version: getVersion("graphviz", undefined, await ubuntuVersion()), setupDir, arch })
+      await setupGraphviz({ version: getVersion("graphviz", undefined, await ubuntuVersion()) })
       return installationInfo
     }
     default: {

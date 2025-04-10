@@ -8,8 +8,6 @@ describe("setup-meson", () => {
   it("should setup meson", async () => {
     const installInfo = await setupMeson({
       version: getVersion("meson", "true", await ubuntuVersion()),
-      setupDir: "",
-      arch: process.arch,
     })
 
     await testBin("meson", ["--version"], installInfo.binDir)

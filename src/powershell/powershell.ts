@@ -63,17 +63,17 @@ function getPowershellUrl(
 export async function setupPowershell({ version, setupDir, arch }: SetupOptions) {
   try {
     if (await hasApk()) {
-      return setupPowershellSystem({ version, setupDir, arch })
+      return setupPowershellSystem({ version })
     }
 
     return await setupBin("pwsh", version, getPowerShellPackageInfo, setupDir, arch)
   } catch (err) {
     error(`Failed to setup pwsh via download: ${err}. Trying package managers...`)
-    return setupPowershellSystem({ version, setupDir, arch })
+    return setupPowershellSystem({ version })
   }
 }
 
-export async function setupPowershellSystem({ version }: SetupOptions) {
+export async function setupPowershellSystem({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("powershell-core", version)

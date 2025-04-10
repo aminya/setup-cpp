@@ -4,19 +4,9 @@
 import mri from "mri"
 import updateNotifier from "simple-update-notifier"
 import packageJson from "../package-version.json"
-import {
-  GITHUB_ACTIONS,
-  type Inputs,
-  type Opts,
-  error,
-  info,
-  inputs,
-  maybeGetInput,
-  setupCpp,
-  success,
-  warning,
-} from "./lib.ts"
-
+import { maybeGetInput } from "./actions-input.js"
+import { GITHUB_ACTIONS, type Inputs, error, info, inputs, setupCpp, success, warning } from "./lib.ts"
+import type { Opts } from "./options.js"
 /** The main entry function */
 async function main(args: string[]): Promise<number> {
   const checkUpdatePromise = GITHUB_ACTIONS ? Promise.resolve() : checkUpdates()

@@ -56,7 +56,7 @@ async function setupLLVMOnly(
     return apkInstallInfo
   }
 
-  const brewInstallInfo = await trySetupLLVMBrew({ version, setupDir, arch })
+  const brewInstallInfo = await trySetupLLVMBrew({ version })
   if (brewInstallInfo !== undefined) {
     return brewInstallInfo
   }

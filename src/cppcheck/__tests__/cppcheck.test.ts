@@ -9,8 +9,6 @@ describe("setup-cppcheck", () => {
     if (process.platform !== "win32") {
       const installInfo = await setupCppcheck({
         version: getVersion("cppcheck", undefined),
-        setupDir: "",
-        arch: process.arch,
       })
 
       await testBin("cppcheck", ["--version"], installInfo.binDir)

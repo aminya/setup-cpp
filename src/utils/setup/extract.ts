@@ -137,7 +137,7 @@ async function run7zip(file: string, dest: string) {
 async function getSevenZip() {
   if (sevenZip === undefined) {
     if (which.sync("7z", { nothrow: true }) === null) {
-      await setupSevenZip({ version: "", setupDir: "", arch: process.arch })
+      await setupSevenZip({ version: "" })
     }
     // eslint-disable-next-line require-atomic-updates
     sevenZip = "7z"

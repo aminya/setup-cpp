@@ -5,7 +5,7 @@ import { getUbuntuVersion } from "ubuntu-version"
 import type { SetupOptions } from "../setup-options.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
-export async function setupSccache({ version }: SetupOptions) {
+export async function setupSccache({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   switch (process.platform) {
     case "win32": {
       return setupChocoPack("sccache", version)

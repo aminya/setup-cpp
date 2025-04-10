@@ -8,8 +8,6 @@ describe("setup-gcovr", () => {
   it("should setup gcovr", async () => {
     const installInfo = await setupGcovr({
       version: getVersion("gcovr", "true", await ubuntuVersion()),
-      setupDir: "",
-      arch: process.arch,
     })
     await testBin("gcovr", ["--version"], installInfo.binDir)
   })

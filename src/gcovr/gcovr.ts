@@ -6,7 +6,7 @@ import { rcOptions } from "../options.js"
 import type { SetupOptions } from "../setup-options.js"
 import { setupPipPack } from "../utils/setup/setupPipPack.js"
 
-export function setupGcovr({ version }: SetupOptions) {
+export function setupGcovr({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   if (hasAptGet() && (version === undefined || version === "")) {
     // use apt on Ubuntu/Debian if version is not specified
     return installAptPack([{ name: "gcovr", version }])

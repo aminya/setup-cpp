@@ -8,7 +8,7 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
-export async function setupSevenZip({ version }: SetupOptions) {
+export async function setupSevenZip({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   switch (process.platform) {
     case "win32": {
       return setupChocoPack("7zip", version)

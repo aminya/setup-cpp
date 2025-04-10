@@ -10,7 +10,7 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
-export async function setupCppcheck({ version }: SetupOptions) {
+export async function setupCppcheck({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("cppcheck", version)
