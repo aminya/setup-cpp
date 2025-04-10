@@ -6,7 +6,11 @@ import { setupMeson } from "../meson.js"
 jest.setTimeout(300000)
 describe("setup-meson", () => {
   it("should setup meson", async () => {
-    const installInfo = await setupMeson(getVersion("meson", "true", await ubuntuVersion()), "", process.arch)
+    const installInfo = await setupMeson({
+      version: getVersion("meson", "true", await ubuntuVersion()),
+      setupDir: "",
+      arch: process.arch,
+    })
 
     await testBin("meson", ["--version"], installInfo.binDir)
   })

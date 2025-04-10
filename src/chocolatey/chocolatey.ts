@@ -4,19 +4,13 @@ import { execaSync } from "execa"
 import { pathExists } from "path-exists"
 import which from "which"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 
 /* eslint-disable require-atomic-updates */
 let binDir: string | undefined
 
-export async function setupChocolatey(
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _version: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _setupDir: string,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  _arch: string,
-): Promise<InstallationInfo | undefined> {
+export async function setupChocolatey(_opts?: SetupOptions): Promise<InstallationInfo | undefined> {
   if (process.platform !== "win32") {
     return undefined
   }

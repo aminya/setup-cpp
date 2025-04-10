@@ -2,6 +2,7 @@ import path, { basename, join } from "path"
 import { fileURLToPath } from "url"
 import { info } from "ci-log"
 import { addExeExt } from "patha"
+import type { SetupOptions } from "../setup-options.js"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
 import { arm64, x86_64 } from "../utils/env/arch.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
@@ -41,7 +42,7 @@ async function getInferPackageInfo(version: string, platform: NodeJS.Platform, a
 }
 
 /** Setup infer */
-export function setupInfer(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export function setupInfer({ version, setupDir, arch }: SetupOptions): Promise<InstallationInfo> {
   return setupBin("infer", version, getInferPackageInfo, setupDir, arch)
 }
 

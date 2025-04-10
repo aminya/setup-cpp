@@ -13,13 +13,17 @@ describe("setup-vcpkg", () => {
 
   it("should setup vcpkg", async () => {
     console.log(!("true" in ["", "true"]))
-    const { binDir } = await setupVcpkg("", directory, "")
+    const { binDir } = await setupVcpkg({ version: "", setupDir: directory, arch: process.arch })
     await testBin("vcpkg", ["--version"], binDir)
     return binDir
   })
 
   it("should setup vcpkg with specific version", async () => {
-    const { binDir } = await setupVcpkg("e590c2b30c08caf1dd8d612ec602a003f9784b7d", directory, "")
+    const { binDir } = await setupVcpkg({
+      version: "e590c2b30c08caf1dd8d612ec602a003f9784b7d",
+      setupDir: directory,
+      arch: process.arch,
+    })
     await testBin("vcpkg", ["--version"], binDir)
     return binDir
   })

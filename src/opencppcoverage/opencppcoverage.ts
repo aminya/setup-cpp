@@ -1,9 +1,9 @@
 import { addPath } from "envosman"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupOpencppcoverage(version: string | undefined, _setupDir: string, _arch: string) {
+export async function setupOpencppcoverage({ version }: SetupOptions) {
   if (process.platform !== "win32") {
     return
   }

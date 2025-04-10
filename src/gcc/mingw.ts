@@ -11,6 +11,7 @@ import semverSatisfies from "semver/functions/satisfies.js"
 import { enableCommunityRepository, hasApk, installApkPack } from "setup-alpine"
 import { hasAptGet, installAptPack } from "setup-apt"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
@@ -23,7 +24,7 @@ import { addGccLoggingMatcher } from "./gccMatcher.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
-export async function setupMingw(version: string, setupDir: string, arch: string) {
+export async function setupMingw({ version, setupDir, arch }: SetupOptions) {
   let installationInfo: InstallationInfo | undefined
   switch (process.platform) {
     case "win32": {

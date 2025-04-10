@@ -21,7 +21,7 @@ describe("setup-gcc", () => {
   it("should setup gcc", async () => {
     const ubuntuVersionOutput = await ubuntuVersion()
     const version = getVersion("gcc", undefined, ubuntuVersionOutput)
-    const installInfo = await setupGcc(version, directory, process.arch)
+    const installInfo = await setupGcc({ version, setupDir: directory, arch: process.arch })
 
     let gpp = "g++"
     if (hasAptGet()) {

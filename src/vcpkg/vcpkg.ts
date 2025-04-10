@@ -10,6 +10,7 @@ import { hasAptGet, installAptPack } from "setup-apt"
 import which from "which"
 import { setupGit } from "../git/git.js"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { arm64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
@@ -19,7 +20,7 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 let hasVCPKG = false
 
-export async function setupVcpkg(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export async function setupVcpkg({ version, setupDir, arch }: SetupOptions): Promise<InstallationInfo> {
   const vcpkg = await which("vcpkg", { nothrow: true })
 
   if (hasVCPKG && vcpkg !== null) {
@@ -27,7 +28,7 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
   }
 
   // vcpkg dependencies
-  await setupGit("", setupDir, arch)
+  await setupGit({ version: "", setupDir, arch })
 
   if (process.platform === "linux") {
     if (isArch()) {

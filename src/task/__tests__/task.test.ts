@@ -13,13 +13,13 @@ describe("setup-task", () => {
   })
 
   it("should setup task", async () => {
-    const { binDir } = await setupTask(getVersion("task", "true"), directory, process.arch)
+    const { binDir } = await setupTask({ version: getVersion("task", "true"), setupDir: directory, arch: process.arch })
 
     await testBin("task", ["--version"], binDir)
   })
 
   it("should find task in the cache", async () => {
-    const { binDir } = await setupTask(getVersion("task", "true"), directory, process.arch)
+    const { binDir } = await setupTask({ version: getVersion("task", "true"), setupDir: directory, arch: process.arch })
     if (GITHUB_ACTIONS) {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")
     }

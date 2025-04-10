@@ -11,7 +11,7 @@ describe("setup-msvc", () => {
   }
   it("should setup the pre-installed msvc", async () => {
     try {
-      await setupMSVC("", "", process.arch)
+      await setupMSVC({ version: "", setupDir: "", arch: process.arch })
       console.log(which.sync("cl"))
     } catch (err) {
       if (err instanceof Error) {
@@ -27,7 +27,7 @@ describe("setup-msvc", () => {
     }
     it(`should setup msvc ${version}`, async () => {
       try {
-        await setupMSVC(`${version}`, "", process.arch)
+        await setupMSVC({ version: `${version}`, setupDir: "", arch: process.arch })
         console.log(which.sync("cl"))
       } catch (err) {
         if (err instanceof Error) {

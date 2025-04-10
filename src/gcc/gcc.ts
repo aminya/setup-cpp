@@ -15,6 +15,7 @@ import { addUpdateAlternativesToRc, hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
@@ -26,11 +27,11 @@ import { setupMingw } from "./mingw.js"
 
 export const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
-export async function setupGcc(version: string, setupDir: string, arch: string, priority: number = 40) {
+export async function setupGcc({ version, setupDir, arch, priority = 40 }: SetupOptions & { priority?: number }) {
   let installationInfo: InstallationInfo | undefined
   switch (process.platform) {
     case "win32": {
-      installationInfo = await setupMingw(version, setupDir, arch)
+      installationInfo = await setupMingw({ version, setupDir, arch })
       break
     }
     case "darwin": {

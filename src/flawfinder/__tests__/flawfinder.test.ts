@@ -6,7 +6,11 @@ import { setupFlawfinder } from "../flawfinder.js"
 jest.setTimeout(300000)
 describe("setup-flawfinder", () => {
   it("should setup flawfinder", async () => {
-    const installInfo = await setupFlawfinder(getVersion("flawfinder", "true", await ubuntuVersion()), "", process.arch)
+    const installInfo = await setupFlawfinder({
+      version: getVersion("flawfinder", "true", await ubuntuVersion()),
+      setupDir: "",
+      arch: process.arch,
+    })
     await testBin("flawfinder", ["--version"], installInfo.binDir)
   })
 })

@@ -47,7 +47,7 @@ async function installToolImpl(
   let installationInfo: InstallationInfo | undefined | void
   if (tool === "vcvarsall") {
     // eslint-disable-next-line no-await-in-loop
-    await setupVCVarsall(getVersion(tool, version, osVersion), undefined, arch, undefined, undefined, false, false)
+    await setupVCVarsall({ version: getVersion(tool, version, osVersion), arch, uwp: false, spectre: false })
   } else if (tool === "brew") {
     // eslint-disable no-await-in-loop
     installationInfo = await setupBrew({ rcOptions })
@@ -61,7 +61,7 @@ async function installToolImpl(
     const setupFunction = setups[tool]
 
     // eslint-disable no-await-in-loop
-    installationInfo = await setupFunction(setupVersion, setupDir, arch)
+    installationInfo = await setupFunction({ version: setupVersion, setupDir, arch })
   }
   // preparing a report string
   successMessages.push(getSuccessMessage(tool, installationInfo))

@@ -3,10 +3,10 @@ import semverMajor from "semver/functions/major"
 import semverValid from "semver/functions/valid"
 import { hasAptGet, installAptPack } from "setup-apt"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { setupPipPack } from "../utils/setup/setupPipPack.js"
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupGcovr(version: string | undefined, _setupDir: string, _arch: string) {
+export function setupGcovr({ version }: SetupOptions) {
   if (hasAptGet() && (version === undefined || version === "")) {
     // use apt on Ubuntu/Debian if version is not specified
     return installAptPack([{ name: "gcovr", version }])

@@ -13,7 +13,7 @@ describe("setup-Kcov", () => {
 
   it("should build and setup kcov-41", async () => {
     const directory = await setupTmpDir("kcov-v41")
-    const { binDir } = (await setupKcov("41", directory, "")) as InstallationInfo
+    const { binDir } = (await setupKcov({ version: "41", setupDir: directory, arch: process.arch })) as InstallationInfo
     // the prebuild binary only works on ubuntu 20.04
     try {
       await testBin("kcov", ["--version"], binDir)
@@ -25,7 +25,8 @@ describe("setup-Kcov", () => {
 
   it("should setup Kcov v40 via downloading the binaries", async () => {
     const directory = await setupTmpDir("kcov-v40")
-    const { binDir } = (await setupKcov("40-binary", directory, "")) as InstallationInfo
+    const { binDir } =
+      (await setupKcov({ version: "40-binary", setupDir: directory, arch: process.arch })) as InstallationInfo
     // the prebuild binary only works on ubuntu 20.04
     try {
       await testBin("kcov", ["--version"], binDir)
@@ -37,7 +38,7 @@ describe("setup-Kcov", () => {
 
   it("should build and setup Kcov v40", async () => {
     const directory = await setupTmpDir("kcov-v40")
-    const { binDir } = (await setupKcov("40", directory, "")) as InstallationInfo
+    const { binDir } = (await setupKcov({ version: "40", setupDir: directory, arch: process.arch })) as InstallationInfo
     await testBin("kcov", ["--version"], binDir)
     await cleanupTmpDir("kcov-v40")
   })
@@ -46,7 +47,7 @@ describe("setup-Kcov", () => {
     try {
       const directory2 = await setupTmpDir("kcov-v38")
 
-      await setupKcov("38", directory2, "")
+      await setupKcov({ version: "38", setupDir: directory2, arch: process.arch })
 
       expect(which.sync("kcov", { nothrow: true })).toBeTruthy()
 
