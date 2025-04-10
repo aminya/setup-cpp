@@ -14,12 +14,20 @@ describe("setup-cmake", () => {
   })
 
   it("should setup CMake", async () => {
-    const { binDir } = await setupCmake(getVersion("cmake", "true"), directory, process.arch)
+    const { binDir } = await setupCmake({
+      version: getVersion("cmake", "true"),
+      setupDir: directory,
+      arch: process.arch,
+    })
     await testBin("cmake", ["--version"], binDir)
   })
 
   it("should find CMake in the cache", async () => {
-    const { binDir } = await setupCmake(getVersion("cmake", "true"), directory, process.arch)
+    const { binDir } = await setupCmake({
+      version: getVersion("cmake", "true"),
+      setupDir: directory,
+      arch: process.arch,
+    })
     await testBin("cmake", ["--version"], binDir)
     if (GITHUB_ACTIONS) {
       expect(binDir).toMatch(process.env.RUNNER_TOOL_CACHE ?? "hostedtoolcache")

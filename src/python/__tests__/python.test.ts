@@ -27,7 +27,11 @@ describe("setup-python", () => {
     process.env.CI = "false"
     process.env.GITHUB_ACTIONS = "false"
 
-    const installInfo = await setupPython(getVersion("python", "true", await ubuntuVersion()), directory, process.arch)
+    const installInfo = await setupPython({
+      version: getVersion("python", "true", await ubuntuVersion()),
+      setupDir: directory,
+      arch: process.arch,
+    })
 
     const python = process.platform === "darwin" ? "python3" : "python"
     await testBin(python, ["--version"], installInfo.binDir)

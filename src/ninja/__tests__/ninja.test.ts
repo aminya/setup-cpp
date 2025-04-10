@@ -6,7 +6,7 @@ import { setupNinja } from "../ninja.js"
 
 jest.setTimeout(300000)
 async function testNinja(directory: string) {
-  const { binDir } = await setupNinja(getVersion("ninja", "true"), directory, process.arch)
+  const { binDir } = await setupNinja({ version: getVersion("ninja", "true"), setupDir: directory, arch: process.arch })
   await testBin("ninja", ["--version"], binDir)
   return binDir
 }

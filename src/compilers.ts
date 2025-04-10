@@ -74,26 +74,26 @@ export async function installCompiler(
     // install the compiler. We allow some aliases for the compiler name
     startGroup(`Installing ${compiler} ${version ?? ""}`)
     if (compiler in llvmSetups) {
-      installationInfo = await setupLLVM(
-        getVersion("llvm", version, osVersion),
-        join(setupCppDir, "llvm"),
+      installationInfo = await setupLLVM({
+        version: getVersion("llvm", version, osVersion),
+        setupDir: join(setupCppDir, "llvm"),
         arch,
-      )
+      })
       await activateGcovLLVM()
     } else if (compiler in gccSetups) {
       const gccVersion = getVersion("gcc", version, osVersion)
-      installationInfo = await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
+      installationInfo = await setupGcc({ version: gccVersion, setupDir: join(setupCppDir, "gcc"), arch })
       await activateGcovGCC(gccVersion)
     } else if (compiler in mingwSetups) {
       const gccVersion = getVersion("mingw", version, osVersion)
-      installationInfo = await setupMingw(gccVersion, join(setupCppDir, "gcc"), arch)
+      installationInfo = await setupMingw({ version: gccVersion, setupDir: join(setupCppDir, "gcc"), arch })
       await activateGcovGCC(gccVersion)
     } else if (compiler in msvcSetups) {
-      installationInfo = await setupMSVC(
-        getVersion("msvc", version, osVersion),
-        join(setupCppDir, "msvc"),
+      installationInfo = await setupMSVC({
+        version: getVersion("msvc", version, osVersion),
+        setupDir: join(setupCppDir, "msvc"),
         arch,
-      )
+      })
     } else if (compiler in appleClangSetups) {
       await setupAppleClang()
     } else {

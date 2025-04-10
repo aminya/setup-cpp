@@ -1,4 +1,4 @@
-import { setupBrew } from "setup-brew"
+import { type SetupBrewOptions, setupBrew } from "setup-brew"
 import { setupBazel } from "./bazel/bazel.js"
 import { setupCcache } from "./ccache/ccache.js"
 import { setupChocolatey } from "./chocolatey/chocolatey.js"
@@ -21,17 +21,19 @@ import { setupAppleClang } from "./llvm/apple-clang.js"
 import { setupClangFormat, setupClangTools, setupLLVM } from "./llvm/llvm.js"
 import { setupMake } from "./make/make.js"
 import { setupMeson } from "./meson/meson.js"
-import { setupMSVC } from "./msvc/msvc.js"
+import { type SetupMSVCOptions, setupMSVC } from "./msvc/msvc.js"
 import { setupNala } from "./nala/nala.js"
 import { setupNinja } from "./ninja/ninja.js"
 import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage.js"
 import { setupPowershell } from "./powershell/powershell.js"
 import { setupPython } from "./python/python.js"
 import { setupSccache } from "./sccache/sccache.js"
+import type { SetupOptions } from "./setup-options.js"
 import { setupSevenZip } from "./sevenzip/sevenzip.js"
 import { setupTask } from "./task/task.js"
+import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { setupVcpkg } from "./vcpkg/vcpkg.js"
-import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
+import { type SetupVCVarsallOptions, setupVCVarsall } from "./vcvarsall/vcvarsall.js"
 
 export const llvmSetups = { llvm: setupLLVM, clang: setupLLVM, "clang++": setupLLVM } as const
 export const gccSetups = { gcc: setupGcc, "g++": setupGcc } as const
@@ -103,7 +105,13 @@ export const setups = {
   sevenzip: setupSevenZip,
   "7zip": setupSevenZip,
   "7z": setupSevenZip,
-} as const
+} as const satisfies
+  | Record<string, () => Promise<InstallationInfo | undefined>>
+  | Record<string, (opts: SetupOptions) => Promise<InstallationInfo | undefined>>
+  | Record<"vcvarsall", (opts: SetupVCVarsallOptions) => Promise<void>>
+  | Record<"msvc", (opts: SetupMSVCOptions) => Promise<void>>
+  | Record<"gcc", (opts: SetupOptions) => Promise<InstallationInfo | undefined>>
+  | Record<"brew", (opts: SetupBrewOptions) => Promise<InstallationInfo | undefined>>
 
 export type ToolName = keyof typeof setups
 

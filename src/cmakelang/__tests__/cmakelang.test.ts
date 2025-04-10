@@ -6,7 +6,11 @@ import { setupCmakelang } from "../cmakelang.js"
 jest.setTimeout(300000)
 describe("setup-cmakelang", () => {
   it("should setup cmakelang", async () => {
-    const installInfo = await setupCmakelang(getVersion("cmakelang", "true", await ubuntuVersion()), "", process.arch)
+    const installInfo = await setupCmakelang({
+      version: getVersion("cmakelang", "true", await ubuntuVersion()),
+      setupDir: "",
+      arch: process.arch,
+    })
     await testBin("cmake-lint", ["--version"], installInfo.binDir)
     await testBin("cmake-format", ["--version"], installInfo.binDir)
   })

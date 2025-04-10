@@ -2,11 +2,11 @@ import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { getUbuntuVersion } from "ubuntu-version"
+import type { SetupOptions } from "../setup-options.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupSccache(version: string, _setupDir: string, _arch: string) {
+export async function setupSccache({ version }: SetupOptions) {
   switch (process.platform) {
     case "win32": {
       return setupChocoPack("sccache", version)

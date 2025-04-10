@@ -3,6 +3,7 @@ import { addExeExt } from "patha"
 import semverCoerce from "semver/functions/coerce"
 import semverLte from "semver/functions/lte"
 import { hasApk, installApkPack } from "setup-alpine"
+import type { SetupOptions } from "../setup-options.js"
 import { arm64, x86, x86_64 } from "../utils/env/arch.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 
@@ -67,7 +68,7 @@ function getCmakePackageInfo(version: string, platform: NodeJS.Platform, arch: s
 }
 
 /** Setup cmake */
-export async function setupCmake(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export async function setupCmake({ version, setupDir, arch }: SetupOptions): Promise<InstallationInfo> {
   if (await hasApk()) {
     return installApkPack([
       {

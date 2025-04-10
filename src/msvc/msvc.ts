@@ -14,13 +14,17 @@ const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURL
 
 type MSVCVersion = "2022" | "17.0" | "2019" | "16.0" | "2017" | "15.0" | "2015" | "14.0" | "2013" | "12.0" | string
 
+export type SetupMSVCOptions = {
+  version: MSVCVersion
+  setupDir: string
+  arch: string
+  sdk?: string
+  uwp?: boolean
+  spectre?: boolean
+}
+
 export async function setupMSVC(
-  versionGiven: MSVCVersion,
-  _setupDir: string,
-  arch: string,
-  sdk?: string,
-  uwp?: boolean,
-  spectre?: boolean,
+  { version: versionGiven, setupDir: _setupDir, arch, sdk, uwp, spectre }: SetupMSVCOptions,
 ) {
   if (process.platform !== "win32") {
     return
@@ -67,7 +71,7 @@ export async function setupMSVC(
     }
   }
   // run vcvarsall.bat environment variables
-  await setupVCVarsall(version, VCTargetsPath, arch, toolset, sdk, uwp, spectre)
+  await setupVCVarsall({ version, VCTargetsPath, arch, toolset, sdk, uwp, spectre, setupDir: _setupDir })
 
   if (GITHUB_ACTIONS) {
     await addMSVCLoggingMatcher()

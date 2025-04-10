@@ -28,7 +28,11 @@ describe("setup-infer", () => {
       return
     }
 
-    const { binDir } = await setupInfer(getVersion("infer", "true"), directory, process.arch)
+    const { binDir } = await setupInfer({
+      version: getVersion("infer", "true"),
+      setupDir: directory,
+      arch: process.arch,
+    })
     await testBin("infer", ["--version"], binDir)
   })
 

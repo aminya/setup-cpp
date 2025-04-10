@@ -6,7 +6,11 @@ import { setupCpplint } from "../cpplint.js"
 jest.setTimeout(300000)
 describe("setup-cpplint", () => {
   it("should setup cpplint", async () => {
-    const installInfo = await setupCpplint(getVersion("cpplint", "true", await ubuntuVersion()), "", process.arch)
+    const installInfo = await setupCpplint({
+      version: getVersion("cpplint", "true", await ubuntuVersion()),
+      setupDir: "",
+      arch: process.arch,
+    })
     await testBin("cpplint", ["--version"], installInfo.binDir)
   })
 })

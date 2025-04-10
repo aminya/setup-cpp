@@ -65,7 +65,11 @@ describe("setup-llvm", () => {
 
     const osVersion = await ubuntuVersion()
     {
-      const { binDir } = await setupLLVM(getVersion("llvm", "true", osVersion), directory, process.arch)
+      const { binDir } = await setupLLVM({
+        version: getVersion("llvm", "true", osVersion),
+        setupDir: directory,
+        arch: process.arch,
+      })
       await testBin("clang++", ["--version"], binDir)
 
       expect(process.env.CC?.includes("clang")).toBeTruthy()
@@ -82,12 +86,20 @@ describe("setup-llvm", () => {
     }
 
     {
-      const { binDir } = await setupClangFormat(getVersion("llvm", "true", osVersion), directory, process.arch)
+      const { binDir } = await setupClangFormat({
+        version: getVersion("llvm", "true", osVersion),
+        setupDir: directory,
+        arch: process.arch,
+      })
       await testBin("clang-format", ["--version"], binDir)
     }
 
     {
-      const { binDir } = await setupClangTools(getVersion("llvm", "true", osVersion), directory, process.arch)
+      const { binDir } = await setupClangTools({
+        version: getVersion("llvm", "true", osVersion),
+        setupDir: directory,
+        arch: process.arch,
+      })
       await testBin("clang-tidy", ["--version"], binDir)
       await testBin("clang-format", ["--version"], binDir)
     }
@@ -98,7 +110,7 @@ describe("setup-llvm", () => {
   it("should setup LLVM 5 from llvm.org", async () => {
     const directory = await setupTmpDir("llvm")
 
-    const { binDir } = await setupLLVM("5", directory, process.arch)
+    const { binDir } = await setupLLVM({ version: "5", setupDir: directory, arch: process.arch })
     await testBin("clang++", ["--version"], binDir)
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
@@ -126,7 +138,7 @@ describe("setup-llvm", () => {
     it(`should setup LLVM ${version} on Linux`, async () => {
       const directory = await setupTmpDir("llvm")
 
-      const { binDir } = await setupLLVM(`${version}`, directory, process.arch)
+      const { binDir } = await setupLLVM({ version: `${version}`, setupDir: directory, arch: process.arch })
       await testBin("clang++", ["--version"], binDir)
 
       expect(process.env.CC?.includes("clang")).toBeTruthy()

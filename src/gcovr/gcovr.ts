@@ -2,10 +2,10 @@ import { addEnv } from "envosman"
 import semverMajor from "semver/functions/major"
 import semverValid from "semver/functions/valid"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { setupPipPack } from "../utils/setup/setupPipPack.js"
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupGcovr(version: string | undefined, _setupDir: string, _arch: string) {
+export function setupGcovr({ version }: SetupOptions) {
   return setupPipPack("gcovr", version)
 }
 

@@ -51,6 +51,9 @@ const viteConfig = defineConfig((configEnv) => {
     resolve: {
       alias: aliasOpts,
     },
+    esbuild: {
+      minifyWhitespace: !isLibrary,
+    },
     ssr: {
       target: "node",
       noExternal: true,

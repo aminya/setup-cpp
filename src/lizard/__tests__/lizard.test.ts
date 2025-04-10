@@ -6,7 +6,11 @@ import { setupLizard } from "../lizard.js"
 jest.setTimeout(300000)
 describe("setup-lizard", () => {
   it("should setup lizard", async () => {
-    const installInfo = await setupLizard(getVersion("lizard", "true", await ubuntuVersion()), "", process.arch)
+    const installInfo = await setupLizard({
+      version: getVersion("lizard", "true", await ubuntuVersion()),
+      setupDir: "",
+      arch: process.arch,
+    })
     await testBin("lizard", ["--version"], installInfo.binDir)
   })
 })

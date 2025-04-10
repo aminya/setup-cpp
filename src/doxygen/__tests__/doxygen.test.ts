@@ -19,11 +19,11 @@ describe("setup-doxygen", () => {
   })
 
   it("should setup doxygen and dot", async () => {
-    const installInfo = await setupDoxygen(
-      getVersion("doxygen", undefined, await ubuntuVersion()),
-      directory,
-      process.arch,
-    )
+    const installInfo = await setupDoxygen({
+      version: getVersion("doxygen", undefined, await ubuntuVersion()),
+      setupDir: directory,
+      arch: process.arch,
+    })
 
     await testBin("doxygen", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
 

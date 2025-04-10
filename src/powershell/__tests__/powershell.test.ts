@@ -18,7 +18,11 @@ describe("setup-powershell", () => {
       return
     }
 
-    const installInfo = await setupPowershell(getVersion("powershell", undefined), directory, process.arch)
+    const installInfo = await setupPowershell({
+      version: getVersion("powershell", undefined),
+      setupDir: directory,
+      arch: process.arch,
+    })
 
     await testBin("pwsh", ["--version"], installInfo.binDir)
   })

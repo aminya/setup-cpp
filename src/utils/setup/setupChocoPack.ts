@@ -14,7 +14,7 @@ export async function setupChocoPack(name: string, version?: string, args: strin
   info(`Installing ${name} ${version ?? ""} via chocolatey`)
 
   if (!hasChoco || which.sync("choco", { nothrow: true }) === null) {
-    await setupChocolatey("", "", process.arch)
+    await setupChocolatey()
     hasChoco = true
   }
 

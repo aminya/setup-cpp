@@ -6,6 +6,7 @@ import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { isUbuntu } from "../utils/env/isUbuntu.js"
@@ -60,22 +61,20 @@ function getPowershellUrl(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupPowershell(version: string, setupDir: string, arch: string) {
+export async function setupPowershell({ version, setupDir, arch }: SetupOptions) {
   try {
     if (await hasApk()) {
-      return setupPowershellSystem(version, setupDir, arch)
+      return setupPowershellSystem({ version, setupDir, arch })
     }
 
     return await setupBin("pwsh", version, getPowerShellPackageInfo, setupDir, arch)
   } catch (err) {
     error(`Failed to setup pwsh via download: ${err}. Trying package managers...`)
-    return setupPowershellSystem(version, setupDir, arch)
+    return setupPowershellSystem({ version, setupDir, arch })
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupPowershellSystem(version: string | undefined, _setupDir: string, _arch: string) {
+export async function setupPowershellSystem({ version }: SetupOptions) {
   switch (process.platform) {
     case "win32": {
       await setupChocoPack("powershell-core", version)

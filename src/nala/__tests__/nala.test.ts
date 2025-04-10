@@ -10,7 +10,7 @@ describe("setup-nala", () => {
     return
   }
   it("should setup nala", async () => {
-    const installInfo = await setupNala("", "", process.arch)
+    const installInfo = await setupNala({ version: "", setupDir: "", arch: process.arch })
     await testBin("nala", ["--version"], installInfo?.binDir)
   })
 

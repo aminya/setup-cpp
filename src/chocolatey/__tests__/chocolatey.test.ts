@@ -9,7 +9,7 @@ describe("setup-chocolatey", () => {
     return
   }
   it("should setup chocolatey", async () => {
-    const { binDir } = (await setupChocolatey("", "", process.arch)) as InstallationInfo
+    const { binDir } = (await setupChocolatey({ version: "", setupDir: "", arch: process.arch })) as InstallationInfo
     await testBin("choco", ["--version"], binDir)
   })
 })

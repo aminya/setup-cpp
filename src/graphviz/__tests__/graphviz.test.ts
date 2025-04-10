@@ -18,11 +18,11 @@ describe("setup-graphviz", () => {
   })
 
   it("should setup graphviz", async () => {
-    const installInfo = await setupGraphviz(
-      getVersion("graphviz", undefined, await ubuntuVersion()),
-      directory,
-      process.arch,
-    )
+    const installInfo = await setupGraphviz({
+      version: getVersion("graphviz", undefined, await ubuntuVersion()),
+      setupDir: directory,
+      arch: process.arch,
+    })
 
     await testBin("dot", ["-V"], (installInfo as InstallationInfo | undefined)?.binDir)
   })

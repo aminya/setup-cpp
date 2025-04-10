@@ -5,7 +5,7 @@ import { setupSevenZip } from "../sevenzip.js"
 jest.setTimeout(300000)
 describe("setup-7z", () => {
   it("should setup 7z", async () => {
-    const installInfo = await setupSevenZip("", "", process.arch)
+    const installInfo = await setupSevenZip({ version: "", setupDir: "", arch: process.arch })
 
     await testBin("7z", ["--help"], (installInfo as InstallationInfo | undefined)?.binDir)
   })
