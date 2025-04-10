@@ -5,7 +5,7 @@ import { rcOptions } from "../options.js"
 import type { SetupOptions } from "../setup-options.js"
 import { setupPipPack } from "../utils/setup/setupPipPack.js"
 
-export function setupGcovr({ version }: SetupOptions) {
+export function setupGcovr({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   return setupPipPack("gcovr", version)
 }
 

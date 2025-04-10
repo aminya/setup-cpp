@@ -11,7 +11,7 @@ import { isUbuntu } from "../utils/env/isUbuntu.js"
 
 let binDir: string | undefined
 
-export async function setupNala({ version }: SetupOptions) {
+export async function setupNala({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   if (!isUbuntu()) {
     return undefined
   }

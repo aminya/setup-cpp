@@ -8,7 +8,7 @@ describe("setup-OpenCppCoverage", () => {
     return
   }
   it("should setup OpenCppCoverage", async () => {
-    const installationInfo = await setupOpencppcoverage({ version: "", setupDir: "", arch: process.arch })
+    const installationInfo = await setupOpencppcoverage()
 
     await testBin("OpenCppCoverage", null, installationInfo?.binDir) // OpenCppCoverage exits with non-zero even with --help
   })

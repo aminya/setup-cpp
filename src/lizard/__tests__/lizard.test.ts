@@ -8,8 +8,6 @@ describe("setup-lizard", () => {
   it("should setup lizard", async () => {
     const installInfo = await setupLizard({
       version: getVersion("lizard", "true", await ubuntuVersion()),
-      setupDir: "",
-      arch: process.arch,
     })
     await testBin("lizard", ["--version"], installInfo.binDir)
   })

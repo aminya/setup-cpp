@@ -10,7 +10,7 @@ import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 
-export async function setupBazel({ version }: SetupOptions) {
+export async function setupBazel({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   switch (process.platform) {
     case "win32": {
       // install bazelisk because it contains both

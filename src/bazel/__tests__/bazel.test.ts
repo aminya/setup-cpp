@@ -11,7 +11,7 @@ describe("setup-bazel", () => {
     return
   }
   it("should setup bazel", async () => {
-    const installInfo = await setupBazel({ version: "", setupDir: "", arch: process.arch })
+    const installInfo = await setupBazel()
 
     await testBin("bazel", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })

@@ -14,7 +14,7 @@ import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
-export async function setupGit({ version }: SetupOptions) {
+export async function setupGit({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   const git = await which("git", { nothrow: true })
   if (git !== null) {
     info(`Git already installed at ${git}`)

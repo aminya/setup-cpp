@@ -5,7 +5,7 @@ import { setupGit } from "../git.js"
 jest.setTimeout(300000)
 describe("setup-git", () => {
   it("should setup git", async () => {
-    const installInfo = await setupGit({ version: "", setupDir: "", arch: process.arch })
+    const installInfo = await setupGit()
 
     await testBin("git", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })

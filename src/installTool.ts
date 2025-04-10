@@ -2,7 +2,7 @@ import { join } from "path"
 import { endGroup, startGroup } from "@actions/core"
 import { error } from "ci-log"
 import { setupBrew } from "setup-brew"
-import { getSuccessMessage, rcOptions } from "./options.js"
+import { rcOptions } from "./options.js"
 import { type ToolName, llvmTools, setups } from "./tool.js"
 import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
@@ -65,4 +65,18 @@ async function installToolImpl(
   }
   // preparing a report string
   successMessages.push(getSuccessMessage(tool, installationInfo))
+}
+
+export function getSuccessMessage(tool: string, installationInfo: InstallationInfo | undefined | void) {
+  let msg = `✅ ${tool} was installed successfully:`
+  if (installationInfo === undefined) {
+    return msg
+  }
+  if ("installDir" in installationInfo) {
+    msg += `\n- The installation directory is ${installationInfo.installDir}`
+  }
+  if (installationInfo.binDir !== "") {
+    msg += `\n- The binary directory is ${installationInfo.binDir}`
+  }
+  return msg
 }

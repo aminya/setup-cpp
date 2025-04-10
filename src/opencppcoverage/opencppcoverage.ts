@@ -3,7 +3,7 @@ import { rcOptions } from "../options.js"
 import type { SetupOptions } from "../setup-options.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
-export async function setupOpencppcoverage({ version }: SetupOptions) {
+export async function setupOpencppcoverage({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   if (process.platform !== "win32") {
     return
   }

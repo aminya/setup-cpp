@@ -5,7 +5,7 @@ import { setupMake } from "../make.js"
 jest.setTimeout(300000)
 describe("setup-make", () => {
   it("should setup make", async () => {
-    const installInfo = await setupMake({ version: "", setupDir: "", arch: process.arch })
+    const installInfo = await setupMake()
 
     await testBin("make", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })

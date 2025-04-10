@@ -107,6 +107,7 @@ export const setups = {
   "7z": setupSevenZip,
 } as const satisfies
   | Record<string, () => Promise<InstallationInfo | undefined>>
+  | Record<string, (opts: Partial<SetupOptions>) => Promise<InstallationInfo | undefined>>
   | Record<string, (opts: SetupOptions) => Promise<InstallationInfo | undefined>>
   | Record<"vcvarsall", (opts: SetupVCVarsallOptions) => Promise<void>>
   | Record<"msvc", (opts: SetupMSVCOptions) => Promise<void>>

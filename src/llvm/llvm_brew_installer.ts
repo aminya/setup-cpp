@@ -5,20 +5,20 @@ import { rcOptions } from "../options.ts"
 import type { SetupOptions } from "../setup-options.ts"
 import { majorLLVMVersion } from "./utils.ts"
 
-export async function trySetupLLVMBrew({ version, setupDir, arch }: SetupOptions) {
+export async function trySetupLLVMBrew({ version }: Pick<SetupOptions, "version">) {
   if (process.platform !== "darwin") {
     return Promise.resolve(undefined)
   }
 
   try {
-    return await setupLLVMBrew({ version, setupDir, arch })
+    return await setupLLVMBrew({ version })
   } catch (err) {
     info(`Failed to install llvm via brew: ${err}`)
     return undefined
   }
 }
 
-export async function setupLLVMBrew({ version }: SetupOptions) {
+export async function setupLLVMBrew({ version }: Pick<SetupOptions, "version">) {
   const majorVersion = majorLLVMVersion(version)
 
   // install llvm via brew if a bottle is available for it

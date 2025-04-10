@@ -29,7 +29,7 @@ export async function setupVcpkg({ version, setupDir, arch }: SetupOptions): Pro
   }
 
   // vcpkg dependencies
-  await setupGit({ version: "", setupDir, arch })
+  await setupGit()
 
   if (process.platform === "linux") {
     if (isArch()) {

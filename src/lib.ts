@@ -20,7 +20,6 @@ import { syncVersions } from "./versions/versions.js"
 // re-export for the setup-cpp CLI
 export { GITHUB_ACTIONS } from "ci-info"
 export * from "ci-log"
-export { maybeGetInput, type Opts } from "./options.js"
 export { type Inputs, inputs } from "./tool.js"
 
 /**
