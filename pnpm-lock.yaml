@@ -50,20 +50,20 @@ importers:
         specifier: ^6.1.4
         version: 6.1.4
       '@octokit/openapi-types':
-        specifier: ^24.0.0
-        version: 24.2.0
+        specifier: ^25.0.0
+        version: 25.0.0
       '@octokit/plugin-paginate-rest':
-        specifier: ^11.4.3
-        version: 11.6.0(@octokit/core@6.1.4)
+        specifier: ^12.0.0
+        version: 12.0.0(@octokit/core@6.1.4)
       '@octokit/plugin-rest-endpoint-methods':
-        specifier: ^13.3.1
-        version: 13.5.0(@octokit/core@6.1.4)
+        specifier: ^14.0.0
+        version: 14.0.0(@octokit/core@6.1.4)
       '@octokit/rest':
         specifier: ^21.1.1
         version: 21.1.1
       '@octokit/types':
-        specifier: ^13.8.0
-        version: 13.10.0
+        specifier: ^14.0.0
+        version: 14.0.0
       '@shockpkg/archive-files':
         specifier: 3.2.5
         version: 3.2.5
@@ -194,8 +194,8 @@ importers:
         specifier: 2.1.9
         version: 2.1.9
       npm-check-updates:
-        specifier: ^17.1.16
-        version: 17.1.16
+        specifier: ^18.0.0
+        version: 18.0.0
       npm-run-all2:
         specifier: ^7.0.2
         version: 7.0.2
@@ -1725,8 +1725,17 @@ packages:
   '@octokit/openapi-types@24.2.0':
     resolution: {integrity: sha512-9sIH3nSUttelJSXUrmGzl7QUBFul0/mB8HRYl3fOlgHbIWG+WnYDXU3v/2zMtAvuzZ/ed00Ei6on975FhBfzrg==}
 
+  '@octokit/openapi-types@25.0.0':
+    resolution: {integrity: sha512-FZvktFu7HfOIJf2BScLKIEYjDsw6RKc7rBJCdvCTfKsVnx2GEB/Nbzjr29DUdb7vQhlzS/j8qDzdditP0OC6aw==}
+
   '@octokit/plugin-paginate-rest@11.6.0':
     resolution: {integrity: sha512-n5KPteiF7pWKgBIBJSk8qzoZWcUkza2O6A0za97pMGVrGfPdltxrfmfF5GucHYvHGZD8BdaZmmHGz5cX/3gdpw==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@octokit/core': '>=6'
+
+  '@octokit/plugin-paginate-rest@12.0.0':
+    resolution: {integrity: sha512-MPd6WK1VtZ52lFrgZ0R2FlaoiWllzgqFHaSZxvp72NmoDeZ0m8GeJdg4oB6ctqMTYyrnDYp592Xma21mrgiyDA==}
     engines: {node: '>= 18'}
     peerDependencies:
       '@octokit/core': '>=6'
@@ -1739,6 +1748,12 @@ packages:
 
   '@octokit/plugin-rest-endpoint-methods@13.5.0':
     resolution: {integrity: sha512-9Pas60Iv9ejO3WlAX3maE1+38c5nqbJXV5GrncEfkndIpZrJ/WPMRd2xYDcPPEt5yzpxcjw9fWNoPhsSGzqKqw==}
+    engines: {node: '>= 18'}
+    peerDependencies:
+      '@octokit/core': '>=6'
+
+  '@octokit/plugin-rest-endpoint-methods@14.0.0':
+    resolution: {integrity: sha512-iQt6ovem4b7zZYZQtdv+PwgbL5VPq37th1m2x2TdkgimIDJpsi2A6Q/OI/23i/hR6z5mL0EgisNR4dcbmckSZQ==}
     engines: {node: '>= 18'}
     peerDependencies:
       '@octokit/core': '>=6'
@@ -1757,6 +1772,9 @@ packages:
 
   '@octokit/types@13.10.0':
     resolution: {integrity: sha512-ifLaO34EbbPj0Xgro4G5lP5asESjwHracYJvVaPIyXMuiuXLlhic3S47cBdTb+jfODkTE5YtGCLt3Ay3+J97sA==}
+
+  '@octokit/types@14.0.0':
+    resolution: {integrity: sha512-VVmZP0lEhbo2O1pdq63gZFiGCKkm8PPp8AUOijlwPO6hojEVjspA0MWKP7E4hbvGxzFKNqKr6p0IYtOH/Wf/zA==}
 
   '@pkgr/core@0.1.1':
     resolution: {integrity: sha512-cq8o4cWH0ibXh9VGi5P20Tu9XF/0fFXl9EUinr9QfTM7a7p0oTA4iJRCQWppXR1Pg8dSM0UCItCkPwsk9qWWYA==}
@@ -4937,8 +4955,8 @@ packages:
     resolution: {integrity: sha512-IO9QvjUMWxPQQhs60oOu10CRkWCiZzSUkzbXGGV9pviYl1fXYcvkzQ5jV9z8Y6un8ARoVRl4EtC6v6jNqbaJ/w==}
     engines: {node: '>=14.16'}
 
-  npm-check-updates@17.1.16:
-    resolution: {integrity: sha512-9nohkfjLRzLfsLVGbO34eXBejvrOOTuw5tvNammH73KEFG5XlFoi3G2TgjTExHtnrKWCbZ+mTT+dbNeSjASIPw==}
+  npm-check-updates@18.0.0:
+    resolution: {integrity: sha512-ymh9KF/xcGypQuCr5NQw1pAMRh5mHnQQDgHwM8gQBG8siG9XAKvcP9OtoARxFRgOjzEfjD6YtU/7KB2jJqGGlQ==}
     engines: {node: ^18.18.0 || >=20.0.0, npm: '>=8.12.1'}
     hasBin: true
 
@@ -7627,10 +7645,17 @@ snapshots:
 
   '@octokit/openapi-types@24.2.0': {}
 
+  '@octokit/openapi-types@25.0.0': {}
+
   '@octokit/plugin-paginate-rest@11.6.0(@octokit/core@6.1.4)':
     dependencies:
       '@octokit/core': 6.1.4
       '@octokit/types': 13.10.0
+
+  '@octokit/plugin-paginate-rest@12.0.0(@octokit/core@6.1.4)':
+    dependencies:
+      '@octokit/core': 6.1.4
+      '@octokit/types': 14.0.0
 
   '@octokit/plugin-request-log@5.3.1(@octokit/core@6.1.4)':
     dependencies:
@@ -7640,6 +7665,11 @@ snapshots:
     dependencies:
       '@octokit/core': 6.1.4
       '@octokit/types': 13.10.0
+
+  '@octokit/plugin-rest-endpoint-methods@14.0.0(@octokit/core@6.1.4)':
+    dependencies:
+      '@octokit/core': 6.1.4
+      '@octokit/types': 14.0.0
 
   '@octokit/request-error@6.1.7':
     dependencies:
@@ -7663,6 +7693,10 @@ snapshots:
   '@octokit/types@13.10.0':
     dependencies:
       '@octokit/openapi-types': 24.2.0
+
+  '@octokit/types@14.0.0':
+    dependencies:
+      '@octokit/openapi-types': 25.0.0
 
   '@pkgr/core@0.1.1': {}
 
@@ -11578,7 +11612,7 @@ snapshots:
 
   normalize-url@8.0.1: {}
 
-  npm-check-updates@17.1.16: {}
+  npm-check-updates@18.0.0: {}
 
   npm-normalize-package-bin@4.0.0: {}
 
