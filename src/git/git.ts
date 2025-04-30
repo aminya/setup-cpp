@@ -12,6 +12,7 @@ import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { join } from "path"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupGit(version: string, _setupDir: string, _arch: string) {
@@ -53,11 +54,11 @@ export async function setupGit(version: string, _setupDir: string, _arch: string
 
 function findWindowsGit() {
   const candidates = [
-    "C:/Program Files/Git/bin/git.exe",
-    "C:/Program Files (x86)/Git/bin/git.exe",
+    "C:/Program Files/Git/bin/",
+    "C:/Program Files (x86)/Git/bin/",
   ]
   for (const candidate of candidates) {
-    if (existsSync(candidate)) {
+    if (existsSync(join(candidate, "git.exe"))) {
       return candidate
     }
   }
