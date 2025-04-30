@@ -30,6 +30,9 @@ words:
   - choco
   - clangd
   - cmake
+  - cmakelang
+  - cmakelint
+  - llvmorg
   - cmakeformat
   - cobertura
   - copr
