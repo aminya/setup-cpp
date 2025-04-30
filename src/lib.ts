@@ -132,8 +132,6 @@ export async function setupCpp(opts: Opts = {}): Promise<SetupCppResult> {
   const installSetupCppResult = await installSetupCppPromise
   if (typeof installSetupCppResult === "string") {
     successMessages.push(installSetupCppResult)
-  } else if (installSetupCppResult instanceof Error) {
-    errorMessages.push(installSetupCppResult.message)
   }
 
   await finalizeRC(rcOptions)
