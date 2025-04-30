@@ -163,6 +163,9 @@ inputs:
   node-package-manager:
     description: "The node package manager to use (npm/yarn/pnpm) when installing setup-cpp globally"
     required: false
+  git:
+    description: "Wether to install git (true/false) or the specific version to install."
+    required: false
 
 runs:
   using: "node20"
