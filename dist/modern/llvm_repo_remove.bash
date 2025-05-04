@@ -143,5 +143,5 @@ if [[ "${VERSION_CODENAME}" == "bookworm" ]]; then
     add-apt-repository -y "${REPO_NAME}"
 fi
 
-add-apt-repository -y --no-update --remove "${REPO_NAME}"
+add-apt-repository -y --remove "${REPO_NAME}"
 apt-get update
