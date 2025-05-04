@@ -124,7 +124,7 @@
     "msvc-dev-cmd": "github:aminya/msvc-dev-cmd#c01f519bd995460228ed3dec4df51df92dc290fd",
     "node-downloader-helper": "2.1.9",
     "npm-check-updates": "^18.0.0",
-    "npm-run-all2": "^7.0.2",
+    "npm-run-all2": "^8.0.0",
     "numerous": "1.0.3",
     "p-timeout": "^6.1.4",
     "path-exists": "^5.0.0",
