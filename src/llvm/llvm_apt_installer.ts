@@ -133,7 +133,7 @@ function nonInteractiveScript(script: string) {
   // make the scirpt non-interactive and fix broken packages
   return script.replace(
     /add-apt-repository\s*(-y)?\s*"\${REPO_NAME}"/g,
-    `add-apt-repository -y -n "\${REPO_NAME}"
+    `add-apt-repository -y "\${REPO_NAME}"
 apt-get update -o ${aptTimeout}`,
   )
 }
