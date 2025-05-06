@@ -87,76 +87,76 @@
       "else": {
         "else": {
           "x64": "15.0.7",
-          "else": "18.1.8"
+          "else": "20.1.2"
         }
       }
     },
-    "else": "19.1.6"
+    "else": "20.1.2"
   },
   "clang": {
     "darwin": {
       "else": {
         "else": {
           "x64": "15.0.7",
-          "else": "18.1.8"
+          "else": "20.1.2"
         }
       }
     },
-    "else": "19.1.6"
+    "else": "20.1.2"
   },
   "clang++": {
     "darwin": {
       "else": {
         "else": {
           "x64": "15.0.7",
-          "else": "18.1.8"
+          "else": "20.1.2"
         }
       }
     },
-    "else": "19.1.6"
+    "else": "20.1.2"
   },
   "clang-tidy": {
     "darwin": {
       "else": {
         "else": {
           "x64": "15.0.7",
-          "else": "18.1.8"
+          "else": "20.1.2"
         }
       }
     },
-    "else": "19.1.6"
+    "else": "20.1.2"
   },
   "clangtidy": {
     "darwin": {
       "else": {
         "else": {
           "x64": "15.0.7",
-          "else": "18.1.8"
+          "else": "20.1.2"
         }
       }
     },
-    "else": "19.1.6"
+    "else": "20.1.2"
   },
   "clang-format": {
     "darwin": {
       "else": {
         "else": {
           "x64": "15.0.7",
-          "else": "18.1.8"
+          "else": "20.1.2"
         }
       }
     },
-    "else": "19.1.6"
+    "else": "20.1.2"
   },
   "clangformat": {
     "darwin": {
       "else": {
         "else": {
           "x64": "15.0.7",
-          "else": "18.1.8"
+          "else": "20.1.2"
         }
       }
     },
-    "else": "19.1.6"
+    "else": "20.1.2"
   }
 }
