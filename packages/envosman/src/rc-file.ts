@@ -1,4 +1,5 @@
 import { promises } from "fs"
+import { resolve } from "path"
 import { grantUserWriteAccess } from "admina"
 import { info, warning } from "ci-log"
 import memoize from "memoizee"
@@ -6,7 +7,7 @@ import { pathExists } from "path-exists"
 import { untildifyUser } from "untildify-user"
 const { appendFile, readFile, writeFile } = promises
 
-export const defaultRcPath = untildifyUser("~/.bashrc")
+export const defaultRcPath = untildifyUser("~/.envosmanrc")
 
 /**
  * Options for adding an rc file
@@ -20,15 +21,25 @@ export type RcOptions = {
 }
 
 async function sourceRCInRc_(options: RcOptions) {
+  const bashrc = untildifyUser("~/.bashrc")
+  const profile = untildifyUser("~/.profile")
+
+  const rcPath = resolve(options.rcPath)
+
+  // avoid source loops
+  if (rcPath === bashrc || rcPath === profile) {
+    return
+  }
+
   const sourceRcString = options.guard === undefined
-    ? `\nsource "${options.rcPath}"\n`
-    : `\n# ${options.guard}\nif [[ "$SOURCE_${options.guard.toUpperCase()}RC" != 0 && -f "${options.rcPath}" ]]; then source "${options.rcPath}"; fi\n`
+    ? `\nsource "${rcPath}"\n`
+    : `\n# ${options.guard}\nif [[ "$SOURCE_${options.guard.toUpperCase()}RC" != 0 && -f "${rcPath}" ]]; then source "${rcPath}"; fi\n`
 
   try {
     await Promise.all([
       addRCHeader(options),
-      addSourceToTargetRc(sourceRcString, untildifyUser("~/.bashrc")),
-      addSourceToTargetRc(sourceRcString, untildifyUser("~/.profile")),
+      addSourceToTargetRc(sourceRcString, bashrc),
+      addSourceToTargetRc(sourceRcString, profile),
     ])
   } catch (err) {
     warning(`Failed to add ${sourceRcString} to .profile or .bashrc. You should add it manually: ${err}`)
