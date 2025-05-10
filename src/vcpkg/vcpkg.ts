@@ -88,7 +88,7 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
 
   // Add VCPKG_FORCE_SYSTEM_BINARIES=1 for Linux arm64
   if (process.platform === "linux" && arm64.includes(arch)) {
-    await addEnv("VCPKG_FORCE_SYSTEM_BINARIES", "1")
+    await addEnv("VCPKG_FORCE_SYSTEM_BINARIES", "1", rcOptions)
   }
 
   // bootstrap vcpkg

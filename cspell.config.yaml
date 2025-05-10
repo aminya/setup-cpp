@@ -30,10 +30,9 @@ words:
   - choco
   - clangd
   - cmake
+  - cmakeformat
   - cmakelang
   - cmakelint
-  - llvmorg
-  - cmakeformat
   - cobertura
   - copr
   - CPATH
@@ -51,6 +50,7 @@ words:
   - dyld
   - eabi
   - envosman
+  - envosmanrc
   - esac
   - esbuild
   - esmodule
@@ -75,6 +75,7 @@ words:
   - libstdc
   - libtinfo
   - liuli
+  - llvmorg
   - mdimporterdir
   - memoizee
   - mkdirp
