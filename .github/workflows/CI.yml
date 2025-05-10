@@ -336,6 +336,7 @@ jobs:
 
       - name: Build setup-cpp-${{matrix.container.distro }}-llvm
         id: build_llvm
+        if: ${{ matrix.container.distro != 'arch' }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -349,18 +350,19 @@ jobs:
           cache-to: type=inline
 
       - name: Tag latest locally
+        if: ${{ matrix.container.distro != 'arch' }}
         run: |
           docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:latest
           docker tag aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}-${{ env.version }}-${{ steps.platform.outputs.suffix }} aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
 
       - name: Push latest to Docker Hub
-        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'alpine' }}
+        if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'ubuntu' && matrix.container.distro != 'alpine' && matrix.container.distro != 'arch' }}
         run: |
           docker push aminya/${{ matrix.container.image }}-llvm:latest
           docker push aminya/${{ matrix.container.image }}-llvm:${{ matrix.container.tag }}
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-llvm
-        if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
+        if: ${{ (github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]')) && matrix.container.distro != 'arch' }}
         uses: peter-evans/dockerhub-description@v4
         with:
           username: aminya
@@ -369,7 +371,7 @@ jobs:
           readme-filepath: ./README_DOCKER.md
 
       - name: Test LLVM
-        if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
+        if: ${{ !contains(github.event.head_commit.message, '[skip test]') && matrix.container.distro != 'arch' }}
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -493,7 +495,7 @@ jobs:
           - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "", latest: true }
           - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "-llvm", latest: true }
           - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "-gcc", latest: true }
-          - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "-mingw", latest: true }
+          # - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", suffix: "-mingw", latest: true }
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
