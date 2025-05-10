@@ -55,7 +55,7 @@
     "apt-key"
   ],
   "devDependencies": {
-    "@types/memoizee": "0.4.11",
+    "@types/memoizee": "0.4.12",
     "@types/which": "~3.0.4"
   }
 }
