@@ -70,19 +70,19 @@ NOTE: setup-cpp requires Nodejs 12 or higher. If Nodejs shipped with your distri
 
 #### With executable
 
-Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v1.5.3), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
+Download the executable for your platform from [here](https://github.com/aminya/setup-cpp/releases/tag/v1.5.4), and run it with the available options. You can also automate downloading using `curl`, or other similar tools.
 
 ```shell
 # windows x64
-curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.3/setup-cpp-x64-windows.exe"
+curl -o ./setup-cpp.exe -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.4/setup-cpp-x64-windows.exe"
 # linux x64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.3/setup-cpp-x64-linux"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.4/setup-cpp-x64-linux"
 # linux arm64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.3/setup-cpp-arm64-linux"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.4/setup-cpp-arm64-linux"
 # macos arm64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.3/setup-cpp-arm64-macos"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.4/setup-cpp-arm64-macos"
 # macos x64
-curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.3/setup-cpp-x64-macos"
+curl -o ./setup-cpp -LJ "https://github.com/aminya/setup-cpp/releases/download/v1.5.4/setup-cpp-x64-macos"
 ```
 
 An example that installs llvm, cmake, ninja, ccache, and vcpkg:
@@ -213,8 +213,8 @@ The tags are in the following template:
 
 - Base image: `aminya/setup-cpp-ubuntu:24.04`
 - Compiler image: `aminya/setup-cpp-ubuntu-llvm:24.04`
-- Base image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu:24.04-v1.5.3`
-- Compiler image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu-llvm:24.04-v1.5.3`
+- Base image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu:24.04-v1.5.4`
+- Compiler image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu-llvm:24.04-v1.5.4`
 
 The supported platforms are `ubuntu`, `alpine`, `fedora`, and `arch`. The supported compilers are `llvm`, `gcc`, and `mingw`.
 
@@ -366,7 +366,7 @@ RUN apt-get update -qq && \
     # install nodejs
     apt-get install -y --no-install-recommends nodejs npm && \
     # install setup-cpp
-    npm install -g setup-cpp@v1.5.3 && \
+    npm install -g setup-cpp@v1.5.4 && \
     # install the compiler and tools
     NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \
@@ -476,7 +476,7 @@ stages:
   apt-get install -y --no-install-recommends nodejs npm
 
   # install setup-cpp
-  npm install -g setup-cpp@v1.5.3
+  npm install -g setup-cpp@v1.5.4
 
   # install the compiler and tools
   ./setup-cpp-x64-linux --compiler $compiler --cmake true --ninja true --ccache true --vcpkg true

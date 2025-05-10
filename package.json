@@ -1,6 +1,6 @@
 {
   "name": "setup-cpp",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "description": "Install all the tools required for building and testing C++/C projects.",
   "repository": "https://github.com/aminya/setup-cpp",
   "license": "Apache-2.0",
