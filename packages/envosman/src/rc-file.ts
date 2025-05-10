@@ -7,16 +7,17 @@ import { pathExists } from "path-exists"
 import { untildifyUser } from "untildify-user"
 const { appendFile, readFile, writeFile } = promises
 
+export const defaultGuard = "envosman"
 export const defaultRcPath = untildifyUser("~/.envosmanrc")
 
 /**
  * Options for adding an rc file
  */
 export type RcOptions = {
-  /** The path to the RC file that the env variables should be added to. */
+  /** The path to the RC file that the env variables should be added to. (Default to "~/.envosmanrc") */
   rcPath: string
 
-  /** Provide a name (your tool) to add a variable guard for sourcing your rc file */
+  /** Provide a name (your tool) to add a variable guard for sourcing your rc file (Default to "envosman") */
   guard?: string
 }
 
@@ -31,9 +32,9 @@ async function sourceRCInRc_(options: RcOptions) {
     return
   }
 
-  const sourceRcString = options.guard === undefined
-    ? `\nsource "${rcPath}"\n`
-    : `\n# ${options.guard}\nif [[ "$SOURCE_${options.guard.toUpperCase()}RC" != 0 && -f "${rcPath}" ]]; then source "${rcPath}"; fi\n`
+  const guard = options.guard ?? defaultGuard
+  const sourceRcString =
+    `\n# ${guard}\nif [[ "$SOURCE_${guard.toUpperCase()}RC" != 0 && -f "${rcPath}" ]]; then source "${rcPath}"; fi\n`
 
   try {
     await Promise.all([
