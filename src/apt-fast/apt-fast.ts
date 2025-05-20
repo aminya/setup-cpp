@@ -4,6 +4,7 @@ import { execRootSync } from "admina"
 import { error } from "ci-log"
 import { readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
+import { installAptPack } from "setup-apt"
 import which from "which"
 import { hasAptGet } from "../utils/env/hasAptGet.js"
 
@@ -33,6 +34,8 @@ export async function setupAptFast(_version: string, _setupDir: string, _arch: s
 }
 
 async function setupAptFastViaInstaller() {
+  const depP = installAptPack([{ name: "bash" }, { name: "wget" }])
+
   const installer = new DownloaderHelper(
     "https://git.io/vokNn",
     tmpdir(),
@@ -49,10 +52,24 @@ async function setupAptFastViaInstaller() {
   const script = await readFile(installerPath, "utf8")
   await writeFile(installerPath, script.replace(/sudo/g, ""))
 
+  await depP
+
   try {
     execRootSync("bash", [installerPath])
   } catch (err) {
     error(`Failed to install apt-fast via installer: ${err}`)
-    execRootSync("apt", ["install", "-y", "-t", "apt-fast", "apt-fast"])
   }
+
+  // Update the apt-fast config
+  const aptFastConfigPath = "/etc/apt-fast.conf"
+  let aptFastConfig = await readFile(aptFastConfigPath, "utf8")
+
+  // enable default suggested configs
+  const opts = ["_APTMGR", "DOWNLOADBEFORE"]
+  for (const opt of opts) {
+    aptFastConfig = aptFastConfig.replace(new RegExp(`^#\\s*${opt}`, "m"), opt)
+  }
+
+  // write the config
+  await writeFile(aptFastConfigPath, aptFastConfig)
 }
