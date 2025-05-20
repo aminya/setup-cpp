@@ -1,4 +1,3 @@
-import { execRootSync } from "admina"
 import { hasAptGet, setupAptFast } from "../src/index.js"
 import { testBin } from "./testBin.js"
 

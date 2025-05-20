@@ -69,6 +69,8 @@ async function setupAptFastViaInstaller() {
     aptFastConfig = aptFastConfig.replace(new RegExp(`^#\\s*${opt}`, "m"), opt)
   }
 
-  // write the config
-  await writeFile(aptFastConfigPath, aptFastConfig)
+  // write the config using execRootSync
+  const tempAptFast = join(tmpdir(), "apt-fast.conf")
+  await writeFile(tempAptFast, aptFastConfig)
+  execRootSync("mv", [tempAptFast, aptFastConfigPath])
 }
