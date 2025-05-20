@@ -9,7 +9,7 @@ import { DownloaderHelper } from "node-downloader-helper"
 import { aptTimeout, hasNala, installAddAptRepo, installAptPack, isAptPackRegexInstalled } from "setup-apt"
 import { DEFAULT_TIMEOUT } from "../installTool.js"
 import { rcOptions } from "../options.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { majorLLVMVersion } from "./utils.js"
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
@@ -33,7 +33,7 @@ export async function trySetupLLVMApt(
   version: string,
   packages: LLVMPackages = LLVMPackages.All,
 ): Promise<InstallationInfo | undefined> {
-  if (!isUbuntu()) {
+  if (!hasAptGet()) {
     return undefined
   }
 

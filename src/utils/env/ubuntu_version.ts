@@ -4,11 +4,11 @@ import memoize from "memoizee"
 import { installAptPack } from "setup-apt"
 import { getUbuntuVersion } from "ubuntu-version"
 import which from "which"
-import { isUbuntu } from "./isUbuntu.js"
+import { hasAptGet } from "./hasAptGet.js"
 
 async function ubuntuVersion_(): Promise<number[] | null> {
   try {
-    if (isUbuntu()) {
+    if (hasAptGet()) {
       try {
         if (which.sync("lsb_release", { nothrow: true }) === null) {
           await installAptPack([{ name: "lsb-release" }])

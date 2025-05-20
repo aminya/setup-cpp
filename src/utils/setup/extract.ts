@@ -8,9 +8,9 @@ import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip.js"
+import { hasAptGet } from "../env/hasAptGet.js"
 import { hasDnf } from "../env/hasDnf.js"
 import { isArch } from "../env/isArch.js"
-import { isUbuntu } from "../env/isUbuntu.js"
 import { setupDnfPack } from "./setupDnfPack.js"
 import { setupPacmanPack } from "./setupPacmanPack.js"
 export { extractTar, extractXar } from "@actions/tool-cache"
@@ -171,7 +171,7 @@ async function installTarDependencies(archiveType: ArchiveType) {
           await setupPacmanPack("tar")
         } else if (hasDnf()) {
           await setupDnfPack([{ name: "gzip" }, { name: "tar" }])
-        } else if (isUbuntu()) {
+        } else if (hasAptGet()) {
           await installAptPack([{ name: "gzip" }, { name: "tar" }])
         } else if (await hasApk()) {
           await installApkPack([{ name: "gzip" }, { name: "tar" }])
@@ -186,7 +186,7 @@ async function installTarDependencies(archiveType: ArchiveType) {
           await setupPacmanPack("tar")
         } else if (hasDnf()) {
           await setupDnfPack([{ name: "xz" }, { name: "tar" }])
-        } else if (isUbuntu()) {
+        } else if (hasAptGet()) {
           await installAptPack([{ name: "xz-utils" }, { name: "tar" }])
         } else if (await hasApk()) {
           await installApkPack([{ name: "xz" }, { name: "tar" }])

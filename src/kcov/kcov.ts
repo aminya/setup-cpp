@@ -8,9 +8,9 @@ import { untildifyUser } from "untildify-user"
 import which from "which"
 import { setupCmake } from "../cmake/cmake.js"
 import { setupNinja } from "../ninja/ninja.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import { extractTarByExe } from "../utils/setup/extract.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
@@ -51,7 +51,7 @@ async function buildKcov(file: string, dest: string) {
       await Promise.all([setupPacmanPack("libdwarf"), setupPacmanPack("libcurl-openssl")])
     } else if (hasDnf()) {
       await setupDnfPack([{ name: "libdwarf-devel" }, { name: "libcurl-devel" }])
-    } else if (isUbuntu()) {
+    } else if (hasAptGet()) {
       await installAptPack([{ name: "libdw-dev" }, { name: "libcurl4-openssl-dev" }])
     }
   }
@@ -119,7 +119,7 @@ export async function setupKcov(versionGiven: string, setupDir: string, arch: st
       await setupPacmanPack("binutils")
     } else if (hasDnf()) {
       await setupDnfPack([{ name: "binutils" }])
-    } else if (isUbuntu()) {
+    } else if (hasAptGet()) {
       await installAptPack([{ name: "libbinutils" }])
     }
     return installationInfo

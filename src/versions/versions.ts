@@ -6,9 +6,9 @@ import { isAlpine } from "setup-alpine"
 import type { CompilerInfo } from "../compilers.js"
 import type { Opts } from "../options.js"
 import type { Inputs, ToolName } from "../tool.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 
 export function getVersion(name: ToolName, version: string | undefined, distroVersion: number[] | null = null) {
   if (isVersionDefault(version)) {
@@ -67,7 +67,7 @@ export function getVersionDefault(
   const distroMap = distroMapOrVersion
 
   // check for distro-specific versions
-  const distro = isUbuntu()
+  const distro = hasAptGet()
     ? "ubuntu"
     : isArch()
     ? "archlinux"

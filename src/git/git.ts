@@ -7,9 +7,9 @@ import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import which from "which"
 import { rcOptions } from "../options.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -39,7 +39,7 @@ export async function setupGit(version: string, _setupDir: string, _arch: string
         return setupPacmanPack("git", version)
       } else if (hasDnf()) {
         return setupDnfPack([{ name: "git", version }])
-      } else if (isUbuntu()) {
+      } else if (hasAptGet()) {
         return installAptPack([{ name: "git", version }])
       } else if (await hasApk()) {
         return installApkPack([{ name: "git", version }])

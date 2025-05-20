@@ -6,13 +6,13 @@ import { readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
 import { hasNala, installAptPack, qualifiedNeededAptPackage } from "setup-apt"
 import which from "which"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 
 let binDir: string | undefined
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupNala(version: string, _setupDir: string, _arch: string) {
-  if (!isUbuntu()) {
+  if (!hasAptGet()) {
     return undefined
   }
   if (typeof binDir === "string") {

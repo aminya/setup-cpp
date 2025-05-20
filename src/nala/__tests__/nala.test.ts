@@ -1,11 +1,11 @@
 import { execRootSync } from "admina"
-import { isUbuntu } from "../../utils/env/isUbuntu.js"
+import { hasAptGet } from "../../utils/env/hasAptGet.js"
 import { testBin } from "../../utils/tests/test-helpers.js"
 import { setupNala } from "../nala.js"
 
 jest.setTimeout(300000)
 describe("setup-nala", () => {
-  if (!isUbuntu()) {
+  if (!hasAptGet()) {
     test.skip("should setup nala", () => {})
     return
   }

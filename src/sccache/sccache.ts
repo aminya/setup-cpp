@@ -2,7 +2,7 @@ import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { getUbuntuVersion } from "ubuntu-version"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -12,7 +12,7 @@ export async function setupSccache(version: string, _setupDir: string, _arch: st
       return setupChocoPack("sccache", version)
     }
     case "linux": {
-      if (isUbuntu()) {
+      if (hasAptGet()) {
         const ubuntuVersion = await getUbuntuVersion()
         if (ubuntuVersion[0] >= 24) {
           return installAptPack([{ name: "sccache", version }])

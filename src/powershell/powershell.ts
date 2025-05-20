@@ -6,9 +6,9 @@ import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../options.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
@@ -96,7 +96,7 @@ export async function setupPowershellSystem(version: string | undefined, _setupD
           "curl https://packages.microsoft.com/config/rhel/8/prod.repo | sudo tee /etc/yum.repos.d/microsoft.repo",
         ])
         return setupDnfPack([{ name: "powershell", version }])
-      } else if (isUbuntu()) {
+      } else if (hasAptGet()) {
         await installAptPack([{ name: "curl" }])
         const ubuntuVerSplitted = (await ubuntuVersion())!
         const ubuntuVersionString = `${ubuntuVerSplitted[0]}.0${ubuntuVerSplitted[1]}`

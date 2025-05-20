@@ -12,9 +12,9 @@ import { enableCommunityRepository, hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { rcOptions } from "../options.js"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { extract7Zip } from "../utils/setup/extract.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
@@ -44,7 +44,7 @@ export async function setupMingw(version: string, setupDir: string, arch: string
         installationInfo = await setupPacmanPack("mingw-w64-gcc", version)
       } else if (hasDnf()) {
         installationInfo = await setupDnfPack([{ name: "mingw64-gcc", version }])
-      } else if (isUbuntu()) {
+      } else if (hasAptGet()) {
         installationInfo = await installAptPack([{ name: "mingw-w64", version }])
       } else if (await hasApk()) {
         await enableCommunityRepository()

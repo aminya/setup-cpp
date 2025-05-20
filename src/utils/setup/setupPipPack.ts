@@ -16,9 +16,9 @@ import which from "which"
 import { rcOptions } from "../../options.js"
 import { setupPython } from "../../python/python.js"
 import { getVersion } from "../../versions/versions.js"
+import { hasAptGet } from "../env/hasAptGet.js"
 import { hasDnf } from "../env/hasDnf.js"
 import { isArch } from "../env/isArch.js"
-import { isUbuntu } from "../env/isUbuntu.js"
 import { ubuntuVersion } from "../env/ubuntu_version.js"
 import { unique } from "../std/index.js"
 import type { InstallationInfo } from "./setupBin.js"
@@ -292,7 +292,7 @@ export async function setupPipPackSystem(name: string, givenAddPythonPrefix?: bo
       return setupPacmanPack(addPythonPrefix ? `python-${name}` : name)
     } else if (hasDnf()) {
       return setupDnfPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
-    } else if (isUbuntu()) {
+    } else if (hasAptGet()) {
       return installAptPack([{ name: addPythonPrefix ? `python3-${name}` : name }])
     } else if (await hasApk()) {
       return installApkPack([{ name: addPythonPrefix ? `py3-${name}` : name }])

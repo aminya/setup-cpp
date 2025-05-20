@@ -3,9 +3,9 @@ import { hasApk, installApkPack } from "setup-alpine"
 import { installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../options.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
@@ -26,7 +26,7 @@ export async function setupGraphviz(version: string, _setupDir: string, _arch: s
         return setupPacmanPack("graphviz", version)
       } else if (hasDnf()) {
         return setupDnfPack([{ name: "graphviz", version }])
-      } else if (isUbuntu()) {
+      } else if (hasAptGet()) {
         return installAptPack([{ name: "graphviz", version }])
       } else if (await hasApk()) {
         return installApkPack([{ name: "graphviz", version }])

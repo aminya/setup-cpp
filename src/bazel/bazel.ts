@@ -3,9 +3,9 @@ import { hasApk, installApkPack } from "setup-alpine"
 import { addAptKeyViaURL, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { getDebArch } from "../utils/env/arch.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 
@@ -28,7 +28,7 @@ export async function setupBazel(version: string, _setupDir: string, _arch: stri
         await setupDnfPack([{ name: "dnf-plugins-core" }])
         await execRoot("dnf", ["copr", "enable", "vbatts/bazel"])
         return setupDnfPack([{ name: "bazel4" }])
-      } else if (isUbuntu()) {
+      } else if (hasAptGet()) {
         // https://bazel.build/install/ubuntu
         const keyFileName = await addAptKeyViaURL({
           fileName: "bazel-archive-keyring.gpg",

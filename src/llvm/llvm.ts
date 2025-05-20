@@ -11,7 +11,7 @@ import { addUpdateAlternativesToRc } from "setup-apt"
 import { setupGcc } from "../gcc/gcc.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { rcOptions } from "../options.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
+import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { quoteIfHasSpace } from "../utils/std/index.js"
@@ -108,7 +108,7 @@ export async function activateLLVM(directory: string, version: string) {
     setupMacOSSDK(),
   ]
 
-  if (isUbuntu()) {
+  if (hasAptGet()) {
     const priority = 60
     actPromises.push(
       addUpdateAlternativesToRc("cc", `${directory}/bin/clang`, rcOptions, priority),
