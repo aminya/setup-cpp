@@ -1,8 +1,8 @@
-import type spawn from "cross-spawn"
+import spawn from "cross-spawn"
 import { pathExists } from "path-exists"
 import { join } from "path/posix"
 import { addExeExt } from "patha"
-import type which from "which"
+import which from "which"
 
 export async function testBin(
   name: string,
