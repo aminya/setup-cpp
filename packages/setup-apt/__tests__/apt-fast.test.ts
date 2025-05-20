@@ -12,9 +12,4 @@ describe("setup-apt-fast", () => {
     const installInfo = await setupAptFast()
     await testBin("apt-fast", ["--version"], installInfo?.binDir)
   })
-
-  afterAll(() => {
-    // remove apt-fast to run the rest of the tests with apt-get
-    execRootSync("apt-get", ["remove", "-y", "apt-fast"])
-  })
 })
