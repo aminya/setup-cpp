@@ -1,2 +1,7 @@
-// eslint-disable-next-line import/no-unassigned-import
-import "../src/index.js"
+import { untildifyUser } from "../src/index.js"
+
+describe("untildify-user", () => {
+  it("should be a function", () => {
+    expect(untildifyUser).toBeInstanceOf(Function)
+  })
+})
