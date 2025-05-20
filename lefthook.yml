@@ -4,4 +4,4 @@ pre-commit:
     test.lint:
       run: pnpm run test.lint
     build:
-      run: pnpm run clean && pnpm run build -- --no-color && git add ./dist
+      run: pnpm run build -- --no-color && git add ./dist
