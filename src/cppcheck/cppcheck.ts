@@ -1,11 +1,10 @@
 import { addPath } from "envosman"
 import { hasApk, installApkPack } from "setup-alpine"
-import { installAptPack } from "setup-apt"
+import { hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -26,7 +25,7 @@ export async function setupCppcheck(version: string | undefined, _setupDir: stri
         return setupPacmanPack("cppcheck", version)
       } else if (hasDnf()) {
         return setupDnfPack([{ name: "ccache", version }])
-      } else if (isUbuntu()) {
+      } else if (hasAptGet()) {
         return installAptPack([{ name: "cppcheck", version }])
       } else if (await hasApk()) {
         return installApkPack([{ name: "cppcheck", version }])

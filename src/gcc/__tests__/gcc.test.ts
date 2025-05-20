@@ -3,7 +3,7 @@ import { fileURLToPath } from "url"
 import { execaSync } from "execa"
 import { chmod } from "fs/promises"
 import { addExeExt } from "patha"
-import { isUbuntu } from "../../utils/env/isUbuntu.js"
+import { hasAptGet } from "setup-apt"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
 import { getVersion } from "../../versions/versions.js"
@@ -24,7 +24,7 @@ describe("setup-gcc", () => {
     const installInfo = await setupGcc(version, directory, process.arch)
 
     let gpp = "g++"
-    if (isUbuntu()) {
+    if (hasAptGet()) {
       const ubuntuMajorVersion = ubuntuVersionOutput?.[0]
       // https://packages.ubuntu.com/search?keywords=gcc
       switch (ubuntuMajorVersion) {

@@ -1,5 +1,5 @@
 import { info } from "ci-log"
-import { isUbuntu } from "../../utils/env/isUbuntu.js"
+import { hasAptGet } from "setup-apt"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
 import { getVersion } from "../../versions/versions.js"
@@ -23,7 +23,7 @@ describe("setup-infer", () => {
 
   it("should setup infer", async () => {
     /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-    if (isUbuntu() && (await ubuntuVersion())?.[0]! <= 20) {
+    if (hasAptGet() && (await ubuntuVersion())?.[0]! <= 20) {
       info("Skipping infer test on ubuntu 20 and below")
       return
     }

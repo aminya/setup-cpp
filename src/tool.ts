@@ -1,3 +1,4 @@
+import { setupAptFast, setupNala } from "setup-apt"
 import { setupBrew } from "setup-brew"
 import { setupBazel } from "./bazel/bazel.js"
 import { setupCcache } from "./ccache/ccache.js"
@@ -22,7 +23,6 @@ import { setupClangFormat, setupClangTools, setupLLVM } from "./llvm/llvm.js"
 import { setupMake } from "./make/make.js"
 import { setupMeson } from "./meson/meson.js"
 import { setupMSVC } from "./msvc/msvc.js"
-import { setupNala } from "./nala/nala.js"
 import { setupNinja } from "./ninja/ninja.js"
 import { setupOpencppcoverage } from "./opencppcoverage/opencppcoverage.js"
 import { setupPowershell } from "./powershell/powershell.js"
@@ -61,8 +61,10 @@ export const llvmTools = ["llvm", "clang", "clang++", "clang-tidy", "clang-forma
 
 /** The setup functions */
 export const setups = {
-  git: setupGit,
+  "apt-fast": setupAptFast,
+  aptfast: setupAptFast,
   nala: setupNala,
+  git: setupGit,
   brew: setupBrew,
   choco: setupChocolatey,
   python: setupPython,

@@ -6,14 +6,13 @@ import { execa } from "execa"
 import { pathExists } from "path-exists"
 import { addShExt, addShRelativePrefix } from "patha"
 import { hasApk, installApkPack } from "setup-alpine"
-import { installAptPack } from "setup-apt"
+import { hasAptGet, installAptPack } from "setup-apt"
 import which from "which"
 import { setupGit } from "../git/git.js"
 import { rcOptions } from "../options.js"
 import { arm64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -47,7 +46,7 @@ export async function setupVcpkg(version: string, setupDir: string, arch: string
         { name: "tar" },
         { name: "pkg-config" },
       ])
-    } else if (isUbuntu()) {
+    } else if (hasAptGet()) {
       await installAptPack([
         { name: "curl" },
         { name: "zip" },

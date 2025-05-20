@@ -11,10 +11,13 @@
       "cache": false
     },
     "lint.tsc": {
-      "dependsOn": ["build", "^lint.tsc"]
+      "dependsOn": ["build", "^lint.tsc", "lint.tsc.test"]
+    },
+    "lint.tsc.test": {
+      "dependsOn": ["^lint.tsc.test"]
     },
     "lint.eslint": {
-      "dependsOn": ["build", "^lint.eslint"]
+      "dependsOn": ["^lint.eslint"]
     },
     "lint": {
       "dependsOn": ["lint.tsc", "lint.eslint"]

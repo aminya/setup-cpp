@@ -5,14 +5,13 @@ import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import retry from "retry-as-promised"
 import { hasApk, installApkPack } from "setup-alpine"
-import { installAptPack } from "setup-apt"
+import { hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { setupGraphviz } from "../graphviz/graphviz.js"
 import { rcOptions } from "../options.js"
 import { arm64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { macosVersion } from "../utils/env/macos_version.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
@@ -109,7 +108,7 @@ async function setupLinuxDoxygen(version: string, setupDir: string, arch: string
       return await setupPacmanPack("doxygen", version)
     } else if (hasDnf()) {
       return setupDnfPack([{ name: "doxygen", version }])
-    } else if (isUbuntu()) {
+    } else if (hasAptGet()) {
       return await installAptPack([{ name: "doxygen", version, fallBackToLatest: arm64.includes(arch) }])
     } else if (await hasApk()) {
       return installApkPack([
@@ -125,7 +124,7 @@ async function setupLinuxDoxygen(version: string, setupDir: string, arch: string
     // fallback to setupBin if the installation failed
     try {
       const installationInfo = await setupBin("doxygen", version, getDoxygenPackageInfo, setupDir, arch)
-      if (isUbuntu()) {
+      if (hasAptGet()) {
         try {
           await installAptPack([{ name: "libclang-cpp-dev" }])
         } catch (err) {

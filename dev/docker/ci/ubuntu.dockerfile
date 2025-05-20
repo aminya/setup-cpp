@@ -23,6 +23,7 @@ COPY "./dist/modern" "/usr/lib/setup-cpp/"
 
 # install the cpp tools
 RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
+        --apt-fast true \
         --cmake true \
         --ninja true \
         --task true \

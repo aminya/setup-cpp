@@ -2,10 +2,10 @@ import path, { join } from "path"
 import { fileURLToPath } from "url"
 import { info } from "ci-log"
 import { addExeExt } from "patha"
+import { hasAptGet } from "setup-apt"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
 import { arm64, armv7, powerpc64le, sparc64, sparcv9, x86, x86_64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import { extractTarByExe, getArchiveType, getExtractFunction } from "../utils/setup/extract.js"
 import type { PackageInfo } from "../utils/setup/setupBin.js"
@@ -105,7 +105,7 @@ async function getAssetKeywords(platform: string, arch: string) {
     case "linux": {
       const osKeywordsChoice = ["linux", "Linux"]
 
-      if (isUbuntu()) {
+      if (hasAptGet()) {
         optionalKeywords.push("ubuntu")
 
         const ubuntuVer = await ubuntuVersion()

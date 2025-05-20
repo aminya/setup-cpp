@@ -11,13 +11,12 @@ import { readdir } from "fs/promises"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import { hasApk, installApkPack } from "setup-alpine"
-import { installAptPack, isAptPackInstalled } from "setup-apt"
+import { hasAptGet, installAptPack, isAptPackInstalled } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import which from "which"
 import { rcOptions } from "../options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
@@ -123,7 +122,7 @@ async function hasVenv(foundPython: string): Promise<boolean> {
     await execa(foundPython, ["-m", "venv", "-h"], { stdio: "ignore" })
 
     // checking venv module is not enough on Ubuntu 20.04
-    if (isUbuntu()) {
+    if (hasAptGet()) {
       return isAptPackInstalled("python3-venv")
     }
 
@@ -231,7 +230,7 @@ async function setupPythonSystem(setupDir: string, version: string) {
         installInfo = await setupPacmanPack("python", version)
       } else if (hasDnf()) {
         installInfo = await setupDnfPack([{ name: "python3", version }])
-      } else if (isUbuntu()) {
+      } else if (hasAptGet()) {
         installInfo = await installAptPack([{ name: "python3", version }, { name: "python-is-python3" }])
       } else if (await hasApk()) {
         installInfo = await installApkPack([{ name: "python3", version }])

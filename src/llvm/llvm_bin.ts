@@ -4,11 +4,10 @@ import { execRootSync } from "admina"
 import { info } from "ci-log"
 import memoize from "memoizee"
 import { DownloaderHelper } from "node-downloader-helper"
-import { installAptPack } from "setup-apt"
+import { hasAptGet, installAptPack } from "setup-apt"
 import { getDebArch } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import { setupBin } from "../utils/setup/setupBin.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -22,7 +21,7 @@ export async function setupLLVMBin(version: string, setupDir: string, arch: stri
 }
 
 async function llvmBinaryDeps_(_majorVersion: number, arch: string) {
-  if (isUbuntu()) {
+  if (hasAptGet()) {
     for (const dep of ["libtinfo5", "libtinfo6"]) {
       /* eslint-disable no-await-in-loop */
       try {

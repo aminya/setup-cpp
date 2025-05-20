@@ -1,16 +1,16 @@
 import { execRootSync } from "admina"
-import { isUbuntu } from "../../utils/env/isUbuntu.js"
-import { testBin } from "../../utils/tests/test-helpers.js"
-import { setupNala } from "../nala.js"
+import { hasAptGet } from "../src/get-apt.js"
+import { setupNala } from "../src/nala.js"
+import { testBin } from "./testBin.js"
 
 jest.setTimeout(300000)
 describe("setup-nala", () => {
-  if (!isUbuntu()) {
+  if (!hasAptGet()) {
     test.skip("should setup nala", () => {})
     return
   }
   it("should setup nala", async () => {
-    const installInfo = await setupNala("", "", process.arch)
+    const installInfo = await setupNala()
     await testBin("nala", ["--version"], installInfo?.binDir)
   })
 

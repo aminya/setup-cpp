@@ -11,13 +11,12 @@ import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import semverMajor from "semver/functions/major"
 import { hasApk, installApkPack } from "setup-alpine"
-import { addUpdateAlternativesToRc, installAptPack } from "setup-apt"
+import { addUpdateAlternativesToRc, hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { rcOptions } from "../options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { isUbuntu } from "../utils/env/isUbuntu.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
@@ -49,7 +48,7 @@ export async function setupGcc(version: string, setupDir: string, arch: string, 
         ])
       } else if (await hasApk()) {
         installationInfo = await installApkPack([{ name: "gcc", version }, { name: "g++", version }])
-      } else if (isUbuntu()) {
+      } else if (hasAptGet()) {
         if (version === "") {
           // the default version
           installationInfo = await installAptPack([{ name: "gcc" }, { name: "g++" }])
@@ -156,7 +155,7 @@ async function activateGcc(givenVersion: string, binDir: string, priority: numbe
       addEnv("CXX", gxxPath, rcOptions),
     )
 
-    if (isUbuntu()) {
+    if (hasAptGet()) {
       promises.push(
         addUpdateAlternativesToRc("cc", gccPath, rcOptions, priority),
         addUpdateAlternativesToRc("cxx", gxxPath, rcOptions, priority),

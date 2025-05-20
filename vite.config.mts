@@ -48,7 +48,7 @@ const viteConfig = defineConfig((configEnv) => {
             : "es",
         },
       },
-      emptyOutDir: false,
+      emptyOutDir: true,
     },
     resolve: {
       alias: aliasOpts,
