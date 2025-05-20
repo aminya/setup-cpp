@@ -1,7 +1,6 @@
 import { hasApk, installApkPack } from "setup-alpine"
-import { installAptPack } from "setup-apt"
+import { hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
-import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"

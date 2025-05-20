@@ -1,8 +1,7 @@
 import { hasApk, installApkPack } from "setup-alpine"
-import { installAptPack } from "setup-apt"
+import { hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { getUbuntuVersion } from "ubuntu-version"
-import { hasAptGet } from "../utils/env/hasAptGet.js"
 import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

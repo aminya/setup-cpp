@@ -8,15 +8,40 @@ export function hasNala() {
 }
 
 /**
+ * Check if apt-fast is installed
+ */
+export function hasAptFast() {
+  return which.sync("apt-fast", { nothrow: true }) !== null
+}
+
+/**
+ * Check if apt is installed
+ */
+export function hasApt() {
+  return which.sync("apt", { nothrow: true }) !== null
+}
+
+/**
+ * Check if apt-get is installed
+ */
+export function hasAptGet() {
+  return which.sync("apt-get", { nothrow: true }) !== null
+}
+
+/**
  * Get the apt command to use
  * If nala is installed, use that, otherwise use apt-get
  */
 export function getApt() {
-  let apt: string
   if (hasNala()) {
-    apt = "nala"
+    return "nala"
+  } else if (hasAptFast()) {
+    return "apt-fast"
+  } else if (hasApt()) {
+    return "apt"
+  } else if (hasAptGet()) {
+    return "apt-get"
   } else {
-    apt = "apt-get"
+    throw new Error("No apt command found")
   }
-  return apt
 }

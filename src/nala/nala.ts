@@ -4,9 +4,8 @@ import { execRootSync } from "admina"
 import { error, info } from "ci-log"
 import { readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
-import { hasNala, installAptPack, qualifiedNeededAptPackage } from "setup-apt"
+import { hasAptGet, hasNala, installAptPack, qualifiedNeededAptPackage } from "setup-apt"
 import which from "which"
-import { hasAptGet } from "../utils/env/hasAptGet.js"
 
 let binDir: string | undefined
 
