@@ -1,4 +1,5 @@
 import { setupBrew } from "setup-brew"
+import { setupAptFast } from "./apt-fast/apt-fast.js"
 import { setupBazel } from "./bazel/bazel.js"
 import { setupCcache } from "./ccache/ccache.js"
 import { setupChocolatey } from "./chocolatey/chocolatey.js"
@@ -61,8 +62,10 @@ export const llvmTools = ["llvm", "clang", "clang++", "clang-tidy", "clang-forma
 
 /** The setup functions */
 export const setups = {
-  git: setupGit,
+  "apt-fast": setupAptFast,
+  aptfast: setupAptFast,
   nala: setupNala,
+  git: setupGit,
   brew: setupBrew,
   choco: setupChocolatey,
   python: setupPython,

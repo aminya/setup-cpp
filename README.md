@@ -31,7 +31,7 @@ Setting up a **cross-platform** environment for building and testing C++/C proje
 | --------------- | ----------------------------------------------------------------------------------------------------------- |
 | compiler        | llvm, gcc, msvc, apple-clang, vcvarsall                                                                     |
 | build system    | cmake, ninja, meson, make, task, bazel                                                                      |
-| package manager | vcpkg, conan, choco, brew, nala, git, setup-cpp                                                             |
+| package manager | vcpkg, conan, choco, brew, apt-fast, nala, git, setup-cpp                                                   |
 | analyzer/linter | clang-tidy, clang-format, cppcheck, cpplint, flawfinder, lizard, infer, cmakelang, cmake-format, cmake-lint |
 | cache           | ccache, sccache                                                                                             |
 | documentation   | doxygen, graphviz                                                                                           |
