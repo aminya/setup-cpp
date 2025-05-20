@@ -37,8 +37,8 @@ export function getApt() {
     return "nala"
   } else if (hasAptFast()) {
     return "apt-fast"
-  } else if (hasApt()) {
-    return "apt"
+    // } else if (hasApt()) {
+    //   return "apt"
   } else if (hasAptGet()) {
     return "apt-get"
   } else {
