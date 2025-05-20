@@ -1,5 +1,5 @@
 import { info } from "ci-log"
-import { hasAptGet } from "../../utils/env/hasAptGet.js"
+import { hasAptGet } from "setup-apt"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
 import { getVersion } from "../../versions/versions.js"

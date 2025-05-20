@@ -1,4 +1,5 @@
 export * from "./alternatives.js"
+export * from "./apt-fast.js"
 export * from "./apt-key.js"
 export * from "./apt-repository.js"
 export * from "./apt-timeout.js"

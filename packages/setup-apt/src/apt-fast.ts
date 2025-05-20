@@ -4,8 +4,9 @@ import { execRootSync } from "admina"
 import { error } from "ci-log"
 import { readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
-import { hasAptGet, installAptPack } from "setup-apt"
 import which from "which"
+import { hasAptGet } from "./get-apt.js"
+import { installAptPack } from "./install.js"
 
 let binDir: string | undefined
 

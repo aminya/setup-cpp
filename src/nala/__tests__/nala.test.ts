@@ -1,5 +1,5 @@
 import { execRootSync } from "admina"
-import { hasAptGet } from "../../utils/env/hasAptGet.js"
+import { hasAptGet } from "setup-apt"
 import { testBin } from "../../utils/tests/test-helpers.js"
 import { setupNala } from "../nala.js"
 

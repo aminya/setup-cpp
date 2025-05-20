@@ -1,5 +1,5 @@
+import { setupAptFast } from "setup-apt"
 import { setupBrew } from "setup-brew"
-import { setupAptFast } from "./apt-fast/apt-fast.js"
 import { setupBazel } from "./bazel/bazel.js"
 import { setupCcache } from "./ccache/ccache.js"
 import { setupChocolatey } from "./chocolatey/chocolatey.js"

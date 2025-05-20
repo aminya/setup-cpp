@@ -19,20 +19,21 @@
     "dev": "tsc --watch --pretty",
     "lint.tsc": "tsc --noEmit --pretty",
     "lint.eslint": "eslint '**/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml}' --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
-    "prepublishOnly": "pnpm run build"
+    "prepublishOnly": "pnpm run build",
+    "test": "jest --coverage"
   },
   "dependencies": {
     "@types/node": "22.15.3",
     "admina": "^1.0.1",
     "ci-info": "^4.0.0",
-    "path-exists": "^5.0.0",
     "ci-log": "workspace:*",
     "envosman": "workspace:*",
-    "which": "4.0.0",
-    "execa": "7.2.0",
     "escape-string-regexp": "^5.0.0",
+    "execa": "7.2.0",
+    "memoizee": "^0.4.17",
     "node-downloader-helper": "2.1.9",
-    "memoizee": "^0.4.17"
+    "path-exists": "^5.0.0",
+    "which": "4.0.0"
   },
   "engines": {
     "node": ">=12"
@@ -56,6 +57,8 @@
   ],
   "devDependencies": {
     "@types/memoizee": "0.4.11",
-    "@types/which": "~3.0.4"
+    "@types/which": "~3.0.4",
+    "cross-spawn": "^7.0.6",
+    "patha": "^0.4.1"
   }
 }
