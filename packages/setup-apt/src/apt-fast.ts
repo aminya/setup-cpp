@@ -10,8 +10,7 @@ import { installAptPack } from "./install.js"
 
 let binDir: string | undefined
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupAptFast(_version: string, _setupDir: string, _arch: string) {
+export async function setupAptFast() {
   if (!hasAptGet()) {
     return undefined
   }

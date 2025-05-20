@@ -4,13 +4,14 @@ import { execRootSync } from "admina"
 import { error, info } from "ci-log"
 import { readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
-import { hasAptGet, hasNala, installAptPack, qualifiedNeededAptPackage } from "setup-apt"
 import which from "which"
+import { hasAptGet, hasNala } from "./get-apt.js"
+import { installAptPack } from "./install.js"
+import { qualifiedNeededAptPackage } from "./qualify-install.js"
 
 let binDir: string | undefined
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupNala(version: string, _setupDir: string, _arch: string) {
+export async function setupNala(version?: string) {
   if (!hasAptGet()) {
     return undefined
   }

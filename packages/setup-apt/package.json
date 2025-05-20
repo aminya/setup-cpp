@@ -53,7 +53,9 @@
     "ubuntu",
     "debian",
     "package",
-    "apt-key"
+    "apt-key",
+    "apt-fast",
+    "nala"
   ],
   "devDependencies": {
     "@types/memoizee": "0.4.11",
