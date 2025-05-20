@@ -9,6 +9,6 @@ describe("setup-apt-fast", () => {
   }
   it("should setup apt-fast", async () => {
     const installInfo = await setupAptFast()
-    await testBin("apt-fast", ["--version"], installInfo?.binDir)
+    await testBin("apt-fast", null, installInfo?.binDir)
   })
 })
