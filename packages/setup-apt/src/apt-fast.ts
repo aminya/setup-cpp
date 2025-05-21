@@ -48,8 +48,15 @@ async function setupAptFastViaInstaller() {
   const installerPath = join(tmpdir(), "install-apt-fast.sh")
 
   // Patch the installer script to not use sudo explicitly
-  const script = await readFile(installerPath, "utf8")
-  await writeFile(installerPath, script.replace(/sudo/g, ""))
+  let script = await readFile(installerPath, "utf8")
+  script = script
+    .replace(/sudo/g, "")
+    .replace(
+      "https://raw.githubusercontent.com/ilikenwf/apt-fast/master",
+      "https://raw.githubusercontent.com/Rongronggg9/apt-fast/ac82051792f764220e5e303d4560de0f1952826b",
+    )
+
+  await writeFile(installerPath, script)
 
   await depP
 
