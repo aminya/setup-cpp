@@ -506,21 +506,21 @@ jobs:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - uses: Noelware/docker-manifest-action@1.0.0
+      - uses: Noelware/docker-manifest-action@0.4.3
         with:
           inputs: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}
           images: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-amd64,aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-arm64
           push: true
           amend: true
 
-      - uses: Noelware/docker-manifest-action@1.0.0
+      - uses: Noelware/docker-manifest-action@0.4.3
         with:
           inputs: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}
           images: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-amd64,aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:${{ matrix.container.tag }}-${{ env.version }}-arm64
           push: true
           amend: true
 
-      - uses: Noelware/docker-manifest-action@1.0.0
+      - uses: Noelware/docker-manifest-action@0.4.3
         if: ${{ matrix.container.latest }}
         with:
           inputs: aminya/${{ matrix.container.image }}${{ matrix.container.suffix }}:latest
