@@ -317,8 +317,8 @@ importers:
         specifier: ^1.10.1
         version: 1.11.1
       '@types/node':
-        specifier: 22.15.3
-        version: 22.15.3
+        specifier: 22.15.21
+        version: 22.15.21
       admina:
         specifier: ^1.0.1
         version: 1.0.1
@@ -373,8 +373,8 @@ importers:
   packages/setup-alpine:
     dependencies:
       '@types/node':
-        specifier: 22.15.3
-        version: 22.15.3
+        specifier: 22.15.21
+        version: 22.15.21
       admina:
         specifier: ^1.0.1
         version: 1.0.1
@@ -407,8 +407,8 @@ importers:
   packages/setup-apt:
     dependencies:
       '@types/node':
-        specifier: 22.15.3
-        version: 22.15.3
+        specifier: 22.15.21
+        version: 22.15.21
       admina:
         specifier: ^1.0.1
         version: 1.0.1
@@ -456,8 +456,8 @@ importers:
   packages/setup-brew:
     dependencies:
       '@types/node':
-        specifier: 22.15.3
-        version: 22.15.3
+        specifier: 22.15.21
+        version: 22.15.21
       ci-log:
         specifier: workspace:*
         version: link:../ci-log
@@ -2190,9 +2190,6 @@ packages:
 
   '@types/node@22.15.21':
     resolution: {integrity: sha512-EV/37Td6c+MgKAbkcLG6vqZ2zEYHD7bvSrzqqs2RIhbA6w3x+Dqz8MZM3sP6kGTeLrdoOgKZe+Xja7tUB2DNkQ==}
-
-  '@types/node@22.15.3':
-    resolution: {integrity: sha512-lX7HFZeHf4QG/J7tBZqrCAXwz9J5RD56Y6MpP0eJkka8p+K0RY/yBTW7CYFJ4VGCclxqOLKmiGP5juQc6MKgcw==}
 
   '@types/normalize-package-data@2.4.4':
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
@@ -8012,7 +8009,7 @@ snapshots:
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 22.15.3
+      '@types/node': 22.15.21
 
   '@types/graceful-fs@4.1.9':
     dependencies:
@@ -8063,10 +8060,6 @@ snapshots:
     optional: true
 
   '@types/node@22.15.21':
-    dependencies:
-      undici-types: 6.21.0
-
-  '@types/node@22.15.3':
     dependencies:
       undici-types: 6.21.0
 
