@@ -1,6 +1,6 @@
 {
   "name": "setup-apt",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "Setup apt packages and repositories in Debian/Ubuntu-based distributions",
   "repository": "https://github.com/aminya/setup-cpp",
   "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-apt",

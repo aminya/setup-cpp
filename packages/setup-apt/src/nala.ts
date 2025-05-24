@@ -61,8 +61,9 @@ export async function setupNala(version?: string) {
 }
 
 async function setupNalaViaInstaller() {
+  // https://gitlab.com/volian/volian-archive
   const installer = new DownloaderHelper(
-    "https://gitlab.com/volian/volian-archive/-/raw/main/install-nala.sh",
+    "https://gitlab.com/volian/volian-archive/-/raw/1939afc3f80638dca2bbedde74bbd86731703cc8/install-nala.sh",
     tmpdir(),
     { fileName: "install-nala.sh" },
   )
