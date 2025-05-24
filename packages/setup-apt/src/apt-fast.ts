@@ -35,8 +35,9 @@ export async function setupAptFast() {
 async function setupAptFastViaInstaller() {
   const depP = installAptPack([{ name: "bash" }, { name: "wget" }])
 
+  // https://github.com/ilikenwf/apt-fast
   const installer = new DownloaderHelper(
-    "https://git.io/vokNn",
+    "https://raw.githubusercontent.com/ilikenwf/apt-fast/c2cd0a0420d3f2d647dc82cf749bfd58c4697dac/quick-install.sh",
     tmpdir(),
     { fileName: "install-apt-fast.sh" },
   )
