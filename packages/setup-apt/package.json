@@ -59,7 +59,7 @@
     "nala"
   ],
   "devDependencies": {
-    "@types/memoizee": "0.4.11",
+    "@types/memoizee": "0.4.12",
     "@types/which": "~3.0.4",
     "cross-spawn": "^7.0.6",
     "patha": "^0.4.1"
