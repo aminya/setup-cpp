@@ -11,20 +11,6 @@
   "bin": {
     "setup-cpp": "dist/legacy/setup-cpp.js"
   },
-  "files": [
-    "action.yml",
-    ".dockerignore",
-    "dist",
-    "src",
-    "packages",
-    "dev/docker",
-    "README.md",
-    "LICENSE.txt",
-    "LICENSE.dependencies.txt",
-    "package.json",
-    "package-version.json",
-    "tsconfig.json"
-  ],
   "scripts": {
     "build": "turbo build && run-p build.types.modern lint.root.tsc build.cli.modern build.cli.legacy build.library && run-p build.json build.bash",
     "build.cli.modern": "cross-env NODE_ENV=production vite build --mode cli-modern",
