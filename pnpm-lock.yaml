@@ -32,8 +32,8 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2
       '@aminya/minijson':
-        specifier: 1.1.2
-        version: 1.1.2
+        specifier: 1.1.1
+        version: 1.1.1
       '@babel/core':
         specifier: ^7.26.9
         version: 7.27.1
@@ -533,8 +533,8 @@ packages:
     resolution: {integrity: sha512-0VdfoicL+dorb0WrbbhsFsH8xH+8X2Y6CrO/3br68kimkMNOJB/5DFGRraVDYHfCIQgMnlv5Q9GX1yI7V4GcgQ==}
     engines: {node: '>=6'}
 
-  '@aminya/minijson@1.1.2':
-    resolution: {integrity: sha512-mcaImq7RQMQoVj9xt3lZOWos0rJZWTgZ4GrBJ2tCSJbB78xrWrnh0Uwm2QjTwr410O3emwvvfiWUkl7e8X8caQ==}
+  '@aminya/minijson@1.1.1':
+    resolution: {integrity: sha512-wNvH8Ik8W+AjT80PvZwhfBIbUKYl6lAmRiiecUth0ZOE3MIQfDDw+VBoVGq8wrgmFS+edKS3ZeMIWuon74FNBA==}
     hasBin: true
 
   '@ampproject/remapping@2.3.0':
@@ -6410,7 +6410,7 @@ snapshots:
 
   '@aminya/eslint-plugin-only-warn@1.2.2': {}
 
-  '@aminya/minijson@1.1.2':
+  '@aminya/minijson@1.1.1':
     dependencies:
       jsonminify: 0.4.2
 
@@ -8012,7 +8012,7 @@ snapshots:
   '@types/glob@7.2.0':
     dependencies:
       '@types/minimatch': 5.1.2
-      '@types/node': 22.15.21
+      '@types/node': 22.15.3
 
   '@types/graceful-fs@4.1.9':
     dependencies:

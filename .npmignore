@@ -11,7 +11,7 @@ Thumbs.db
 **/.cache
 **/coverage
 **/.turbo
-**/assets
+src/llvm/assets/
 **/build
 **/__tests__
 **/dev/cpp_vcpkg_project
