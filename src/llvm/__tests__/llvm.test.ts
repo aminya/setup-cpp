@@ -31,6 +31,7 @@ describe("setup-llvm", () => {
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
+        "20",
         "19",
         "18",
         "17",
