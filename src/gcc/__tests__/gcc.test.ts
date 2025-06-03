@@ -49,8 +49,8 @@ describe("setup-gcc", () => {
       }
     } else if (process.platform === "darwin") {
       // https://formulae.brew.sh/formula/gcc
-      // As of 3, Sep, 2024
-      gpp = "g++-14"
+      // As of 3, Jun, 2025
+      gpp = "g++-15"
     }
 
     await testBin(gpp, ["--version"], installInfo?.binDir)

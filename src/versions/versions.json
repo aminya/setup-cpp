@@ -53,11 +53,11 @@
     "else": "1.13.2"
   },
   "gcc": {
-    "win32": "14.2.0posix-18.1.8-12.0.0-ucrt-r1",
+    "win32": "15.1.0posix-12.0.0-ucrt-r1",
     "else": ""
   },
   "mingw": {
-    "win32": "14.2.0posix-18.1.8-12.0.0-ucrt-r1",
+    "win32": "15.1.0posix-12.0.0-ucrt-r1",
     "else": ""
   },
   "gcovr": {
