@@ -1,4 +1,24 @@
 {
+  "15.1.0posix-12.0.0-ucrt-r1": [
+    "winlibs-x86_64-posix-seh-gcc-15.1.0-mingw-w64ucrt-12.0.0-r1.7z",
+    "winlibs-i686-posix-dwarf-gcc-15.1.0-mingw-w64ucrt-12.0.0-r1.7z"
+  ],
+  "15.1.0posix-12.0.0-msvcrt-r1": [
+    "winlibs-x86_64-posix-seh-gcc-15.1.0-mingw-w64msvcrt-12.0.0-r1.7z",
+    "winlibs-i686-posix-dwarf-gcc-15.1.0-mingw-w64msvcrt-12.0.0-r1.7z"
+  ],
+  "15.1.0mcf-12.0.0-ucrt-r1": [
+    "winlibs-x86_64-mcf-seh-gcc-15.1.0-mingw-w64ucrt-12.0.0-r1.7z",
+    "winlibs-i686-mcf-dwarf-gcc-15.1.0-mingw-w64ucrt-12.0.0-r1.7z"
+  ],
+  "14.3.0posix-12.0.0-ucrt-r1": [
+    "winlibs-x86_64-posix-seh-gcc-14.3.0-mingw-w64ucrt-12.0.0-r1.7z",
+    "winlibs-i686-posix-dwarf-gcc-14.3.0-mingw-w64ucrt-12.0.0-r1.7z"
+  ],
+  "14.3.0posix-12.0.0-msvcrt-r1": [
+    "winlibs-x86_64-posix-seh-gcc-14.3.0-mingw-w64msvcrt-12.0.0-r1.7z",
+    "winlibs-i686-posix-dwarf-gcc-14.3.0-mingw-w64msvcrt-12.0.0-r1.7z"
+  ],
   "14.2.0win32-12.0.0-msvcrt-r1": [
     "winlibs-x86_64-win32-seh-gcc-14.2.0-mingw-w64msvcrt-12.0.0-r1.7z",
     "winlibs-x86_64-win32-seh-gcc-14.2.0-llvm-19.1.3-mingw-w64msvcrt-12.0.0-r1.7z"
