@@ -5,18 +5,6 @@
   "powershell": "7.4.5",
   "pip": ">=22.2.0",
   "python": ">=3.7.9",
-  "vcpkg": {
-    "linux": {
-      "alpine": {
-        "else": {
-          "arm64": "d172727ef04337ef0021640302a9a3a91ad17414",
-          "else": ""
-        }
-      },
-      "else": ""
-    },
-    "else": ""
-  },
   "meson": {
     "linux": {
       "ubuntu": {
