@@ -83,8 +83,8 @@ async function getAssetKeywords(platform: string, arch: string) {
 
   switch (platform) {
     case "win32": {
-      // prefer exe over tar.xz for windows
-      optionalKeywords.push(".exe", ".exe")
+      // prefer tar.xz packages of LLVM over exe as they provide a more complete LLVM package
+      optionalKeywords.push(".tar.xz", ".tar.xz")
       const osKeywordsChoice: string[] = []
       if (x86_64.includes(arch)) {
         osKeywordsChoice.push("win64")

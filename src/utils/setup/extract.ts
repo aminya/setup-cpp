@@ -176,7 +176,7 @@ async function installTarDependencies(archiveType: ArchiveType) {
           await installApkPack([{ name: "gzip" }, { name: "tar" }])
         }
       }
-      break
+      return
     }
     case ArchiveType.TarXz: {
       if (process.platform === "linux") {
@@ -191,7 +191,7 @@ async function installTarDependencies(archiveType: ArchiveType) {
           await installApkPack([{ name: "xz" }, { name: "tar" }])
         }
       }
-      break
+      return
     }
     default:
       throw new Error(`Unsupported archive type: ${archiveType} for tar extraction`)
