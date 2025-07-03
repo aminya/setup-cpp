@@ -60,6 +60,7 @@ words:
   - gcovr
   - ghes
   - Graphviz
+  - gtar
   - hadolint
   - iarna
   - inja

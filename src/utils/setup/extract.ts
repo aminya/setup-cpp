@@ -4,14 +4,9 @@ import { info, warning } from "ci-log"
 import { execa } from "execa"
 import { mkdirp, move } from "fs-extra"
 import { rm } from "fs/promises"
-import { hasApk, installApkPack } from "setup-alpine"
-import { hasAptGet, installAptPack } from "setup-apt"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip.js"
-import { hasDnf } from "../env/hasDnf.js"
-import { isArch } from "../env/isArch.js"
-import { setupDnfPack } from "./setupDnfPack.js"
-import { setupPacmanPack } from "./setupPacmanPack.js"
+import { setupTar } from "../../tar/tar.js"
 export { extractTar, extractXar } from "@actions/tool-cache"
 
 export enum ArchiveType {
@@ -133,7 +128,7 @@ export async function extractZip(file: string, dest: string) {
 }
 
 export async function extractTarByExe(file: string, dest: string, stripComponents: number = 0, flags: string[] = []) {
-  await installTarDependencies(getArchiveType(file))
+  await setupTar("", "", process.arch)
 
   try {
     await mkdirp(dest)
@@ -156,44 +151,4 @@ export async function extractTarByExe(file: string, dest: string, stripComponent
 
   await grantUserWriteAccess(dest)
   return dest
-}
-
-async function installTarDependencies(archiveType: ArchiveType) {
-  if (process.platform !== "linux") {
-    return
-  }
-
-  info("Installing tar extraction dependencies")
-
-  switch (archiveType) {
-    case ArchiveType.TarGz: {
-      if (isArch()) {
-        await setupPacmanPack("gzip")
-        await setupPacmanPack("tar")
-      } else if (hasDnf()) {
-        await setupDnfPack([{ name: "gzip" }, { name: "tar" }])
-      } else if (hasAptGet()) {
-        await installAptPack([{ name: "gzip" }, { name: "tar" }])
-      } else if (await hasApk()) {
-        await installApkPack([{ name: "gzip" }, { name: "tar" }])
-      }
-
-      return
-    }
-    case ArchiveType.TarXz: {
-      if (isArch()) {
-        await setupPacmanPack("xz")
-        await setupPacmanPack("tar")
-      } else if (hasDnf()) {
-        await setupDnfPack([{ name: "xz" }, { name: "tar" }])
-      } else if (hasAptGet()) {
-        await installAptPack([{ name: "xz-utils" }, { name: "tar" }])
-      } else if (await hasApk()) {
-        await installApkPack([{ name: "xz" }, { name: "tar" }])
-      }
-      return
-    }
-    default:
-      throw new Error(`Unsupported archive type: ${archiveType} for tar extraction`)
-  }
 }
