@@ -134,7 +134,7 @@ All the available tools:
       cache: { tools: "--ccache, --sccache" },
       documentation: { tools: "--doxygen, --graphviz" },
       coverage: { tools: "--gcovr, --opencppcoverage, --kcov" },
-      other: { tools: "--python, --powershell, --sevenzip" },
+      other: { tools: "--python, --powershell, --sevenzip, --tar" },
     },
     ["tools"],
   )

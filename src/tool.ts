@@ -29,6 +29,7 @@ import { setupPowershell } from "./powershell/powershell.js"
 import { setupPython } from "./python/python.js"
 import { setupSccache } from "./sccache/sccache.js"
 import { setupSevenZip } from "./sevenzip/sevenzip.js"
+import { setupTar } from "./tar/tar.js"
 import { setupTask } from "./task/task.js"
 import { setupVcpkg } from "./vcpkg/vcpkg.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
@@ -105,6 +106,7 @@ export const setups = {
   sevenzip: setupSevenZip,
   "7zip": setupSevenZip,
   "7z": setupSevenZip,
+  tar: setupTar,
 } as const
 
 export type ToolName = keyof typeof setups

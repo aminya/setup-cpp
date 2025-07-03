@@ -7,7 +7,13 @@ import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
 import { arm64, armv7, powerpc64le, sparc64, sparcv9, x86, x86_64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
-import { extractTarByExe, getArchiveType, getExtractFunction } from "../utils/setup/extract.js"
+import {
+  ArchiveType,
+  extract7Zip,
+  extractTarByExe,
+  getArchiveType,
+  getExtractFunction,
+} from "../utils/setup/extract.js"
 import type { PackageInfo } from "../utils/setup/setupBin.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
@@ -20,16 +26,20 @@ export async function getLLVMPackageInfo(
   const url = await getLLVMAssetURL(platform, arch, version)
   info(`Downloading LLVM from ${url}`)
 
+  const archiveType = getArchiveType(url)
   return {
     url,
     extractedFolderName: "",
     binRelativeDir: "bin",
     binFileName: addExeExt("clang"),
-    extractFunction: platform === "win32"
-      ? getExtractFunction(getArchiveType(url))
-      : (file: string, dest: string) => {
-        return extractTarByExe(file, dest, 1)
-      },
+    extractFunction:
+      (archiveType === ArchiveType.Tar || archiveType === ArchiveType.TarGz || archiveType === ArchiveType.TarXz)
+        ? (file: string, dest: string) => {
+          return process.platform === "win32"
+            ? extract7Zip(file, dest, true)
+            : extractTarByExe(file, dest, 1)
+        }
+        : getExtractFunction(archiveType),
   }
 }
 
@@ -83,8 +93,8 @@ async function getAssetKeywords(platform: string, arch: string) {
 
   switch (platform) {
     case "win32": {
-      // prefer exe over tar.xz for windows
-      optionalKeywords.push(".exe", ".exe")
+      // prefer tar.xz packages of LLVM over exe as they provide a more complete LLVM package
+      optionalKeywords.push(".tar.xz", ".tar.xz")
       const osKeywordsChoice: string[] = []
       if (x86_64.includes(arch)) {
         osKeywordsChoice.push("win64")

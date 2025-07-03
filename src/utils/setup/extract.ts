@@ -2,16 +2,10 @@ import { basename, dirname, join } from "path"
 import { grantUserWriteAccess } from "admina"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
-import { mkdirp, move } from "fs-extra"
-import { rm } from "fs/promises"
-import { hasApk, installApkPack } from "setup-alpine"
-import { hasAptGet, installAptPack } from "setup-apt"
+import { mkdirp, move, readdir, remove, stat } from "fs-extra"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip.js"
-import { hasDnf } from "../env/hasDnf.js"
-import { isArch } from "../env/isArch.js"
-import { setupDnfPack } from "./setupDnfPack.js"
-import { setupPacmanPack } from "./setupPacmanPack.js"
+import { setupTar } from "../../tar/tar.js"
 export { extractTar, extractXar } from "@actions/tool-cache"
 
 export enum ArchiveType {
@@ -54,9 +48,8 @@ export function getExtractFunction(archiveType: ArchiveType) {
   switch (archiveType) {
     case ArchiveType.Tar:
     case ArchiveType.TarGz:
-      return extractTarByExe
     case ArchiveType.TarXz:
-      return extractTarByExe
+      return process.platform === "win32" ? extract7Zip : extractTarByExe
     case ArchiveType.Zip:
       return extractZip
     default:
@@ -67,29 +60,71 @@ export function getExtractFunction(archiveType: ArchiveType) {
 let sevenZip: string | undefined
 
 /// Extract 7z using 7z
-export async function extract7Zip(file: string, dest: string) {
+export async function extract7Zip(file: string, dest: string, stripComponents: boolean = false) {
   const name = basename(file)
 
   if (/.*\.tar\..+$/.test(name)) {
-    // if the file is tar.*, extract the compression first
-    const tarDir = dirname(file)
-    await run7zip(file, tarDir)
-    // extract the tar
-    const tarName = name.slice(0, -3)
-    const tarFile = join(tarDir, tarName)
-    await run7zip(tarFile, tarDir)
-    await rm(tarFile)
-    // Move the extracted files to the destination
-    const folderName = tarName.slice(0, -4)
-    const folderPath = join(tarDir, folderName)
-    info(`Moving ${folderPath} to ${dest}`)
-    await move(folderPath, dest, { overwrite: true })
+    await extractTarXzBy7zip(file, name, dest, stripComponents)
   } else {
     // extract the 7z file directly
     await run7zip(file, dest)
   }
 
   return dest
+}
+
+async function extractTarXzBy7zip(file: string, name: string, dest: string, stripComponents: boolean) {
+  if (!/.*\.tar\..+$/.test(name)) {
+    throw new Error(`Invalid tar file: ${name}`)
+  }
+  // extract the compression first
+  const tarDir = join(dirname(file), "sevenzip-temp")
+  await run7zip(file, tarDir)
+  // extract the tar
+  const tarName = name.slice(0, -3)
+  const tarFile = join(tarDir, tarName)
+  await run7zip(tarFile, tarDir)
+  await remove(tarFile)
+  // move the extracted files to the destination
+  info(`Moving ${tarDir} to ${dest}`)
+  const files = await readdir(tarDir)
+  await Promise.all(
+    files.map(async (file) => {
+      await move(join(tarDir, file), join(dest, file), { overwrite: true })
+    }),
+  )
+  await remove(tarDir)
+
+  if (stripComponents) {
+    await stripPathComponents(dest)
+  }
+}
+
+async function stripPathComponents(dest: string) {
+  info(`Stripping path components from ${dest}`)
+
+  // get all subfolders in the folder
+  const toStrip = await readdir(dest)
+  if (toStrip.length !== 1) {
+    throw new Error(`Expected 1 folder in ${dest}, got ${toStrip.length}`)
+  }
+  const subFolder = toStrip[0]
+  const subFolderPath = join(dest, subFolder)
+  const subFolderStat = await stat(subFolderPath)
+  if (!subFolderStat.isDirectory()) {
+    // if the subfolder is not a directory, do nothing
+    warning(`Expected ${subFolderPath} to be a directory, got ${subFolderStat}.`)
+    return
+  }
+  // for each child of the subfolder, move all files to the destination
+  const subFiles = await readdir(subFolderPath)
+  await Promise.all(
+    subFiles.map((subFile) => {
+      return move(join(subFolderPath, subFile), join(dest, subFile), { overwrite: true })
+    }),
+  )
+  // remove the subfolder
+  await remove(subFolderPath)
 }
 
 async function run7zip(file: string, dest: string) {
@@ -134,7 +169,7 @@ export async function extractZip(file: string, dest: string) {
 }
 
 export async function extractTarByExe(file: string, dest: string, stripComponents: number = 0, flags: string[] = []) {
-  await installTarDependencies(getArchiveType(file))
+  await setupTar("", "", process.arch)
 
   try {
     await mkdirp(dest)
@@ -157,43 +192,4 @@ export async function extractTarByExe(file: string, dest: string, stripComponent
 
   await grantUserWriteAccess(dest)
   return dest
-}
-
-async function installTarDependencies(archiveType: ArchiveType) {
-  info("Installing tar extraction dependencies")
-
-  switch (archiveType) {
-    case ArchiveType.TarGz: {
-      if (process.platform === "linux") {
-        if (isArch()) {
-          await setupPacmanPack("gzip")
-          await setupPacmanPack("tar")
-        } else if (hasDnf()) {
-          await setupDnfPack([{ name: "gzip" }, { name: "tar" }])
-        } else if (hasAptGet()) {
-          await installAptPack([{ name: "gzip" }, { name: "tar" }])
-        } else if (await hasApk()) {
-          await installApkPack([{ name: "gzip" }, { name: "tar" }])
-        }
-      }
-      break
-    }
-    case ArchiveType.TarXz: {
-      if (process.platform === "linux") {
-        if (isArch()) {
-          await setupPacmanPack("xz")
-          await setupPacmanPack("tar")
-        } else if (hasDnf()) {
-          await setupDnfPack([{ name: "xz" }, { name: "tar" }])
-        } else if (hasAptGet()) {
-          await installAptPack([{ name: "xz-utils" }, { name: "tar" }])
-        } else if (await hasApk()) {
-          await installApkPack([{ name: "xz" }, { name: "tar" }])
-        }
-      }
-      break
-    }
-    default:
-      throw new Error(`Unsupported archive type: ${archiveType} for tar extraction`)
-  }
 }
