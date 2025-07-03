@@ -85,7 +85,7 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - windows-2019
+          - windows-2022
           - ubuntu-22.04
           - ubuntu-22.04-arm
           - macos-13 # x64
@@ -158,7 +158,6 @@ jobs:
       matrix:
         os:
           - windows-2022
-          - windows-2019
           - ubuntu-24.04-arm
           - ubuntu-24.04
           - ubuntu-22.04-arm
