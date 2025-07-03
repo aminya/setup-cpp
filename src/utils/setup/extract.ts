@@ -54,7 +54,6 @@ export function getExtractFunction(archiveType: ArchiveType) {
   switch (archiveType) {
     case ArchiveType.Tar:
     case ArchiveType.TarGz:
-      return extractTarByExe
     case ArchiveType.TarXz:
       return extractTarByExe
     case ArchiveType.Zip:
@@ -160,36 +159,37 @@ export async function extractTarByExe(file: string, dest: string, stripComponent
 }
 
 async function installTarDependencies(archiveType: ArchiveType) {
+  if (process.platform !== "linux") {
+    return
+  }
+
   info("Installing tar extraction dependencies")
 
   switch (archiveType) {
     case ArchiveType.TarGz: {
-      if (process.platform === "linux") {
-        if (isArch()) {
-          await setupPacmanPack("gzip")
-          await setupPacmanPack("tar")
-        } else if (hasDnf()) {
-          await setupDnfPack([{ name: "gzip" }, { name: "tar" }])
-        } else if (hasAptGet()) {
-          await installAptPack([{ name: "gzip" }, { name: "tar" }])
-        } else if (await hasApk()) {
-          await installApkPack([{ name: "gzip" }, { name: "tar" }])
-        }
+      if (isArch()) {
+        await setupPacmanPack("gzip")
+        await setupPacmanPack("tar")
+      } else if (hasDnf()) {
+        await setupDnfPack([{ name: "gzip" }, { name: "tar" }])
+      } else if (hasAptGet()) {
+        await installAptPack([{ name: "gzip" }, { name: "tar" }])
+      } else if (await hasApk()) {
+        await installApkPack([{ name: "gzip" }, { name: "tar" }])
       }
+
       return
     }
     case ArchiveType.TarXz: {
-      if (process.platform === "linux") {
-        if (isArch()) {
-          await setupPacmanPack("xz")
-          await setupPacmanPack("tar")
-        } else if (hasDnf()) {
-          await setupDnfPack([{ name: "xz" }, { name: "tar" }])
-        } else if (hasAptGet()) {
-          await installAptPack([{ name: "xz-utils" }, { name: "tar" }])
-        } else if (await hasApk()) {
-          await installApkPack([{ name: "xz" }, { name: "tar" }])
-        }
+      if (isArch()) {
+        await setupPacmanPack("xz")
+        await setupPacmanPack("tar")
+      } else if (hasDnf()) {
+        await setupDnfPack([{ name: "xz" }, { name: "tar" }])
+      } else if (hasAptGet()) {
+        await installAptPack([{ name: "xz-utils" }, { name: "tar" }])
+      } else if (await hasApk()) {
+        await installApkPack([{ name: "xz" }, { name: "tar" }])
       }
       return
     }
