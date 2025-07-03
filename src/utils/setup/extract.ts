@@ -2,8 +2,7 @@ import { basename, dirname, join } from "path"
 import { grantUserWriteAccess } from "admina"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
-import { mkdirp, move } from "fs-extra"
-import { rm } from "fs/promises"
+import { mkdirp, move, readdir, remove, stat } from "fs-extra"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip.js"
 import { setupTar } from "../../tar/tar.js"
@@ -50,7 +49,7 @@ export function getExtractFunction(archiveType: ArchiveType) {
     case ArchiveType.Tar:
     case ArchiveType.TarGz:
     case ArchiveType.TarXz:
-      return extractTarByExe
+      return process.platform === "win32" ? extract7Zip : extractTarByExe
     case ArchiveType.Zip:
       return extractZip
     default:
@@ -61,29 +60,64 @@ export function getExtractFunction(archiveType: ArchiveType) {
 let sevenZip: string | undefined
 
 /// Extract 7z using 7z
-export async function extract7Zip(file: string, dest: string) {
+export async function extract7Zip(file: string, dest: string, stripComponents: boolean = false) {
   const name = basename(file)
 
   if (/.*\.tar\..+$/.test(name)) {
-    // if the file is tar.*, extract the compression first
-    const tarDir = dirname(file)
-    await run7zip(file, tarDir)
-    // extract the tar
-    const tarName = name.slice(0, -3)
-    const tarFile = join(tarDir, tarName)
-    await run7zip(tarFile, tarDir)
-    await rm(tarFile)
-    // Move the extracted files to the destination
-    const folderName = tarName.slice(0, -4)
-    const folderPath = join(tarDir, folderName)
-    info(`Moving ${folderPath} to ${dest}`)
-    await move(folderPath, dest, { overwrite: true })
+    await extractTarXzBy7zip(file, name, dest, stripComponents)
   } else {
     // extract the 7z file directly
     await run7zip(file, dest)
   }
 
   return dest
+}
+
+async function extractTarXzBy7zip(file: string, name: string, dest: string, stripComponents: boolean) {
+  if (!/.*\.tar\..+$/.test(name)) {
+    throw new Error(`Invalid tar file: ${name}`)
+  }
+  // extract the compression first
+  const tarDir = dirname(file)
+  await run7zip(file, tarDir)
+  // extract the tar
+  const tarName = name.slice(0, -3)
+  const tarFile = join(tarDir, tarName)
+  await run7zip(tarFile, tarDir)
+  await remove(tarFile)
+  // move the extracted files to the destination
+  const folderName = tarName.slice(0, -4)
+  const folderPath = join(tarDir, folderName)
+  info(`Moving ${folderPath} to ${dest}`)
+  await move(folderPath, dest, { overwrite: true })
+
+  if (stripComponents) {
+    await stripPathComponents(dest, folderName)
+  }
+}
+
+async function stripPathComponents(dest: string, folderName: string) {
+  // get all subfolders in the folder
+  const subFolders = await readdir(join(dest, folderName))
+  await Promise.all(
+    subFolders.map(async (subFolder) => {
+      const subFolderPath = join(dest, subFolder)
+      if (!(await stat(subFolderPath)).isDirectory()) {
+        // if the subfolder is not a directory, do nothing
+        return
+      }
+      // for each subfolder, move all files to the destination
+      const subFiles = await readdir(subFolderPath)
+      await Promise.all(
+        subFiles.map((subFile) => {
+          return move(join(subFolderPath, subFile), join(dest, subFile), { overwrite: true })
+        }),
+      )
+      // remove the subfolder
+      await remove(subFolderPath)
+      return
+    }),
+  )
 }
 
 async function run7zip(file: string, dest: string) {
