@@ -78,7 +78,7 @@ async function extractTarXzBy7zip(file: string, name: string, dest: string, stri
     throw new Error(`Invalid tar file: ${name}`)
   }
   // extract the compression first
-  const tarDir = dirname(file)
+  const tarDir = join(dirname(file), "sevenzip-temp")
   await run7zip(file, tarDir)
   // extract the tar
   const tarName = name.slice(0, -3)
@@ -86,38 +86,45 @@ async function extractTarXzBy7zip(file: string, name: string, dest: string, stri
   await run7zip(tarFile, tarDir)
   await remove(tarFile)
   // move the extracted files to the destination
-  const folderName = tarName.slice(0, -4)
-  const folderPath = join(tarDir, folderName)
-  info(`Moving ${folderPath} to ${dest}`)
-  await move(folderPath, dest, { overwrite: true })
+  info(`Moving ${tarDir} to ${dest}`)
+  const files = await readdir(tarDir)
+  await Promise.all(
+    files.map(async (file) => {
+      await move(join(tarDir, file), join(dest, file), { overwrite: true })
+    }),
+  )
+  await remove(tarDir)
 
   if (stripComponents) {
-    await stripPathComponents(dest, folderName)
+    await stripPathComponents(dest)
   }
 }
 
-async function stripPathComponents(dest: string, folderName: string) {
+async function stripPathComponents(dest: string) {
+  info(`Stripping path components from ${dest}`)
+
   // get all subfolders in the folder
-  const subFolders = await readdir(join(dest, folderName))
+  const toStrip = await readdir(dest)
+  if (toStrip.length !== 1) {
+    throw new Error(`Expected 1 folder in ${dest}, got ${toStrip.length}`)
+  }
+  const subFolder = toStrip[0]
+  const subFolderPath = join(dest, subFolder)
+  const subFolderStat = await stat(subFolderPath)
+  if (!subFolderStat.isDirectory()) {
+    // if the subfolder is not a directory, do nothing
+    warning(`Expected ${subFolderPath} to be a directory, got ${subFolderStat}.`)
+    return
+  }
+  // for each child of the subfolder, move all files to the destination
+  const subFiles = await readdir(subFolderPath)
   await Promise.all(
-    subFolders.map(async (subFolder) => {
-      const subFolderPath = join(dest, subFolder)
-      if (!(await stat(subFolderPath)).isDirectory()) {
-        // if the subfolder is not a directory, do nothing
-        return
-      }
-      // for each subfolder, move all files to the destination
-      const subFiles = await readdir(subFolderPath)
-      await Promise.all(
-        subFiles.map((subFile) => {
-          return move(join(subFolderPath, subFile), join(dest, subFile), { overwrite: true })
-        }),
-      )
-      // remove the subfolder
-      await remove(subFolderPath)
-      return
+    subFiles.map((subFile) => {
+      return move(join(subFolderPath, subFile), join(dest, subFile), { overwrite: true })
     }),
   )
+  // remove the subfolder
+  await remove(subFolderPath)
 }
 
 async function run7zip(file: string, dest: string) {
