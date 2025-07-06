@@ -2,7 +2,7 @@ import module from "module"
 import { type AliasOptions, type TerserOptions, defineConfig } from "vite"
 import babel from "vite-plugin-babel"
 import terserRc from "./.terserrc.mjs"
-import babelConfig from "./babel.config.mts"
+import babelConfig from "./babel.config.cjs"
 
 const viteConfig = defineConfig((configEnv) => {
   const isLegacy = configEnv.mode.includes("legacy")
