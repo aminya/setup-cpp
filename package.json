@@ -115,7 +115,7 @@
     "p-timeout": "^6.1.4",
     "path-exists": "^5.0.0",
     "patha": "^0.4.1",
-    "prettier": "3.5.3",
+    "prettier": "3.6.2",
     "prettier-config-atomic": "^4.0.0",
     "randomuuid-polyfill": "^1.0.2",
     "readme-md-generator": "^1.0.0",
