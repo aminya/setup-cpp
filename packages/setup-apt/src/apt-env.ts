@@ -4,7 +4,7 @@
  * @private Used internally
  */
 
-export function getAptEnv(apt: string) {
+export function getAptEnv(apt: string = "apt-get") {
   const env: NodeJS.ProcessEnv = { ...process.env, DEBIAN_FRONTEND: "noninteractive" }
 
   if (apt === "nala") {

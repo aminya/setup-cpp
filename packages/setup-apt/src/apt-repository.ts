@@ -7,24 +7,38 @@ import { initAptMemoized } from "./init-apt.js"
 import { isAptPackInstalled } from "./is-installed.js"
 import { updateAptReposMemoized } from "./update.js"
 
-function hasNoUpdateFlag_(apt: string) {
-  const { stdout } = execRootSync("add-apt-repository", ["--help"], {
-    ...defaultExecOptions,
-    env: getAptEnv(apt),
-    stdio: "pipe",
-  })
-  return stdout.includes("--no-update")
+function hasNoUpdateFlag_(apt: string = "apt-get") {
+  try {
+    const { stdout } = execRootSync("add-apt-repository", ["--help"], {
+      ...defaultExecOptions,
+      env: getAptEnv(apt),
+      stdio: "pipe",
+    })
+    return stdout.includes("--no-update")
+  } catch (err) {
+    return false
+  }
 }
-const hasNoUpdateFlag = memoize(hasNoUpdateFlag_)
+export const addAptHasNoUpdateFlag = memoize(hasNoUpdateFlag_)
 
 export async function addAptRepository(repo: string, apt = getApt()) {
   await initAptMemoized(apt)
   await installAddAptRepo()
-  execRootSync(
-    "add-apt-repository",
-    ["-y", hasNoUpdateFlag(apt) ? "--no-update" : undefined, repo].filter(a => a !== undefined),
-    { ...defaultExecOptions, env: getAptEnv(apt) },
-  )
+
+  try {
+    execRootSync(
+      "add-apt-repository",
+      ["-y", addAptHasNoUpdateFlag(apt) ? "--no-update" : undefined, repo].filter(a => a !== undefined),
+      { ...defaultExecOptions, env: getAptEnv(apt) },
+    )
+  } catch (err) {
+    // try without the no-update flag
+    execRootSync(
+      "add-apt-repository",
+      ["-y", repo],
+      { ...defaultExecOptions, env: getAptEnv(apt) },
+    )
+  }
 
   // Update the repos
   updateAptReposMemoized.clear() // ensure update is called
@@ -48,7 +62,7 @@ export async function removeAptRepository(repo: string, apt = getApt()) {
   await installAddAptRepo()
   execRootSync(
     "add-apt-repository",
-    ["-y", "--remove", hasNoUpdateFlag(apt) ? undefined : "--no-update", repo].filter(a => a !== undefined),
+    ["-y", "--remove", addAptHasNoUpdateFlag(apt) ? undefined : "--no-update", repo].filter(a => a !== undefined),
     { ...defaultExecOptions, env: getAptEnv(apt) },
   )
 

@@ -6,7 +6,15 @@ import { execRoot, execRootSync } from "admina"
 import { addPath } from "envosman"
 import { chmod, readFile, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
-import { aptTimeout, hasAptGet, hasNala, installAddAptRepo, installAptPack, isAptPackRegexInstalled } from "setup-apt"
+import {
+  addAptHasNoUpdateFlag,
+  aptTimeout,
+  hasAptGet,
+  hasNala,
+  installAddAptRepo,
+  installAptPack,
+  isAptPackRegexInstalled,
+} from "setup-apt"
 import { DEFAULT_TIMEOUT } from "../installTool.js"
 import { rcOptions } from "../options.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
@@ -70,7 +78,7 @@ export async function setupLLVMApt(
 
   // download the installation script
   await installAptPack([{ name: "ca-certificates" }])
-  const dl = new DownloaderHelper("https://apt.llvm.org/llvm.sh", tmpdir(), { fileName: "llvm.sh" })
+  const dl = new DownloaderHelper("https://apt.llvm.org/llvm.sh", tmpdir(), { fileName: "llvm.sh", override: true })
   dl.on("error", (err) => {
     throw new Error(`Failed to download the LLVM installer script: ${err}`)
   })
@@ -116,7 +124,7 @@ async function patchAptLLVMScript(
   script = nonInteractiveScript(script)
   script = choosePackages(packages, script, majorVersion)
   script = await removeConflictingPackages(script)
-  script = useNalaScript(script)
+  script = mayUseNalaScript(script)
 
   await writeFile(target_path, script)
 }
@@ -130,9 +138,10 @@ function debugScript(script: string) {
 
 function nonInteractiveScript(script: string) {
   // make the scirpt non-interactive and fix broken packages
+  const hasNoUpdate = addAptHasNoUpdateFlag()
   return script.replace(
     /add-apt-repository\s*(-y)?\s*"\${REPO_NAME}"/g,
-    `add-apt-repository -y "\${REPO_NAME}"
+    `add-apt-repository -y ${hasNoUpdate ? "--no-update" : ""} "\${REPO_NAME}"
 apt-get update -o ${aptTimeout}`,
   )
 }
@@ -158,7 +167,7 @@ async function removeConflictingPackages(givenScript: string) {
   return script
 }
 
-function useNalaScript(script: string) {
+function mayUseNalaScript(script: string) {
   // use nala if it is available
   if (hasNala()) {
     return script.replace(/apt-get/g, "nala")
