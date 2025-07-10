@@ -5,7 +5,7 @@ import { setupCcache } from "../ccache.js"
 jest.setTimeout(300000)
 describe("setup-ccache", () => {
   it("should setup ccache", async () => {
-    const installInfo = await setupCcache("", "", process.arch)
+    const installInfo = await setupCcache()
 
     await testBin("ccache", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })

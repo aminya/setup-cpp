@@ -193,7 +193,7 @@ async function getPython(givenPythonVersion?: string): Promise<string> {
   const pythonVersion = givenPythonVersion
     ?? getVersion("python", undefined, await ubuntuVersion())
 
-  pythonBin = (await setupPython(pythonVersion, "", process.arch)).bin
+  pythonBin = (await setupPython({ version: pythonVersion, setupDir: "", arch: process.arch })).bin
   return pythonBin
 }
 

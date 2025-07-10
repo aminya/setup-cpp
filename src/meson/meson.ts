@@ -1,6 +1,6 @@
+import type { SetupOptions } from "../setup-options.js"
 import { setupPipPack } from "../utils/setup/setupPipPack.js"
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export function setupMeson(version: string | undefined, _setupDir: string, _arch: string) {
+export function setupMeson({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   return setupPipPack("meson", version)
 }

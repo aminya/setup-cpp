@@ -1,16 +1,16 @@
-import { info } from "ci-log"
+import { info, warning } from "ci-log"
 import { hasApk, installApkPack } from "setup-alpine"
-import { hasAptGet, installAptPack } from "setup-apt"
+import { type SetupOptions, hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import which from "which"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
-import { setupBin } from "../utils/setup/setupBin.js"
+import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
 import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupTar(version: string, setupDir: string, arch: string) {
+export async function setupTar({ version, arch, setupDir }: SetupOptions) {
   const tar = await which("tar", { nothrow: true })
   if (tar !== null) {
     info(`tar already installed at ${tar}`)
@@ -23,15 +23,8 @@ export async function setupTar(version: string, setupDir: string, arch: string) 
       // https://phoenixnap.dl.sourceforge.net/project/gnuwin32/tar/1.13-1/tar-1.13-1-bin.zip?viasf=1
       return setupBin(
         "tar",
-        "1.13-1",
-        () => {
-          return {
-            url: "https://phoenixnap.dl.sourceforge.net/project/gnuwin32/tar/1.13-1/tar-1.13-1-bin.zip?viasf=1",
-            extractedFolderName: "",
-            binRelativeDir: "bin",
-            binFileName: "tar.exe",
-          }
-        },
+        version,
+        getGnuWinTarPackageInfo,
         setupDir,
         arch,
       )
@@ -57,5 +50,20 @@ export async function setupTar(version: string, setupDir: string, arch: string) 
     default: {
       throw new Error("Unsupported platform")
     }
+  }
+}
+
+function getGnuWinTarPackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {
+  if (platform !== "win32") {
+    throw new Error("Unsupported platform")
+  }
+  if (arch !== "x64") {
+    warning(`Unsupported architecture ${arch} for tar on Windows. Using x64.`)
+  }
+  return {
+    url: `https://phoenixnap.dl.sourceforge.net/project/gnuwin32/tar/${version}/tar-${version}-bin.zip?viasf=1`,
+    extractedFolderName: "",
+    binRelativeDir: "bin",
+    binFileName: "tar.exe",
   }
 }

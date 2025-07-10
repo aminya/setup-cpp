@@ -1,4 +1,5 @@
 import { addExeExt } from "patha"
+import type { SetupOptions } from "../setup-options.js"
 import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
 
 /** Get the platform name task uses in their download links */
@@ -39,6 +40,6 @@ function getTaskPackageInfo(version: string, platform: NodeJS.Platform, arch: st
   }
 }
 
-export function setupTask(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export function setupTask({ version, setupDir, arch }: SetupOptions): Promise<InstallationInfo> {
   return setupBin("task", version, getTaskPackageInfo, setupDir, arch)
 }

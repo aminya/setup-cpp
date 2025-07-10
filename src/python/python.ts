@@ -15,6 +15,7 @@ import { hasAptGet, installAptPack, isAptPackInstalled } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import which from "which"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
@@ -32,9 +33,7 @@ import { isBinUptoDate } from "../utils/setup/version.js"
 import { getVersionDefault, isMinVersion } from "../versions/versions.js"
 
 export async function setupPython(
-  version: string,
-  setupDir: string,
-  arch: string,
+  { version, setupDir, arch }: SetupOptions,
 ): Promise<InstallationInfo & { bin: string }> {
   startGroup("Setup Python")
   const installInfo = await findOrSetupPython(version, setupDir, arch)

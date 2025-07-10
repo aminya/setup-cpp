@@ -13,7 +13,7 @@ describe("setup-sccache", () => {
       return
     }
 
-    const installInfo = await setupSccache("", "", process.arch)
+    const installInfo = await setupSccache()
 
     await testBin("sccache", ["--version"], (installInfo as InstallationInfo | undefined)?.binDir)
   })

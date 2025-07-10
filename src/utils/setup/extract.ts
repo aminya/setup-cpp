@@ -3,6 +3,7 @@ import { grantUserWriteAccess } from "admina"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
 import { mkdirp, move, readdir, remove, stat } from "fs-extra"
+import { untildifyUser } from "untildify-user"
 import which from "which"
 import { setupSevenZip } from "../../sevenzip/sevenzip.js"
 import { setupTar } from "../../tar/tar.js"
@@ -87,10 +88,10 @@ async function extractTarXzBy7zip(file: string, name: string, dest: string, stri
   await remove(tarFile)
   // move the extracted files to the destination
   info(`Moving ${tarDir} to ${dest}`)
-  const files = await readdir(tarDir)
+  const tarDirFiles = await readdir(tarDir)
   await Promise.all(
-    files.map(async (file) => {
-      await move(join(tarDir, file), join(dest, file), { overwrite: true })
+    tarDirFiles.map(async (tarDirFile) => {
+      await move(join(tarDir, tarDirFile), join(dest, tarDirFile), { overwrite: true })
     }),
   )
   await remove(tarDir)
@@ -137,7 +138,7 @@ async function run7zip(file: string, dest: string) {
 async function getSevenZip() {
   if (sevenZip === undefined) {
     if (which.sync("7z", { nothrow: true }) === null) {
-      await setupSevenZip("", "", process.arch)
+      await setupSevenZip({ version: "" })
     }
     // eslint-disable-next-line require-atomic-updates
     sevenZip = "7z"
@@ -169,7 +170,7 @@ export async function extractZip(file: string, dest: string) {
 }
 
 export async function extractTarByExe(file: string, dest: string, stripComponents: number = 0, flags: string[] = []) {
-  await setupTar("", "", process.arch)
+  await setupTar({ version: "", arch: process.arch, setupDir: untildifyUser("~/tar") })
 
   try {
     await mkdirp(dest)

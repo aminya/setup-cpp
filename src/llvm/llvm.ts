@@ -11,6 +11,7 @@ import { addUpdateAlternativesToRc, hasAptGet } from "setup-apt"
 import { setupGcc } from "../gcc/gcc.js"
 import { setupMacOSSDK } from "../macos-sdk/macos-sdk.js"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { quoteIfHasSpace } from "../utils/std/index.js"
@@ -23,7 +24,7 @@ import { majorLLVMVersion } from "./utils.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
-export async function setupLLVM(version: string, setupDir: string, arch: string): Promise<InstallationInfo> {
+export async function setupLLVM({ version, setupDir, arch }: SetupOptions): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMOnly(version, setupDir, arch)
 
   // install gcc for LLVM (for ld, libstdc++, etc.)
@@ -55,19 +56,19 @@ async function setupLLVMOnly(
     return apkInstallInfo
   }
 
-  const brewInstallInfo = await trySetupLLVMBrew(version, setupDir, arch)
+  const brewInstallInfo = await trySetupLLVMBrew({ version })
   if (brewInstallInfo !== undefined) {
     return brewInstallInfo
   }
 
-  return setupLLVMBin(version, setupDir, arch)
+  return setupLLVMBin({ version, setupDir, arch })
 }
 
 async function setupGccForLLVM_(arch: string) {
   if (process.platform === "linux") {
     // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first,
     // but with a lower priority than the one used by activateLLVM()
-    await setupGcc(getVersion("gcc", undefined, await ubuntuVersion()), "", arch, 40)
+    await setupGcc({ version: getVersion("gcc", undefined, await ubuntuVersion()), setupDir: "", arch, priority: 40 })
   }
 }
 const setupGccForLLVM = memoize(setupGccForLLVM_, { promise: true })
@@ -139,11 +140,11 @@ async function addLLVMLoggingMatcher() {
  *
  * This uses the LLVM installer on Ubuntu, and the LLVM binaries on other platforms
  */
-export function setupClangFormat(version: string, setupDir: string, arch: string) {
+export function setupClangFormat({ version, setupDir, arch }: SetupOptions) {
   return setupLLVMOnly(version, setupDir, arch, LLVMPackages.ClangFormat)
 }
 
 /** Setup llvm tools (clang tidy, etc.) without activating llvm and using it as the compiler */
-export function setupClangTools(version: string, setupDir: string, arch: string) {
+export function setupClangTools({ version, setupDir, arch }: SetupOptions) {
   return setupLLVMOnly(version, setupDir, arch)
 }

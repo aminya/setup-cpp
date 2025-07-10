@@ -5,6 +5,7 @@ import { info } from "ci-log"
 import memoize from "memoizee"
 import { DownloaderHelper } from "node-downloader-helper"
 import { hasAptGet, installAptPack } from "setup-apt"
+import type { SetupOptions } from "../setup-options.js"
 import { getDebArch } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
@@ -14,7 +15,7 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { getLLVMPackageInfo } from "./llvm_url.js"
 import { majorLLVMVersion } from "./utils.js"
 
-export async function setupLLVMBin(version: string, setupDir: string, arch: string) {
+export async function setupLLVMBin({ version, setupDir, arch }: SetupOptions) {
   const installInfo = await setupBin("llvm", version, getLLVMPackageInfo, setupDir, arch)
   await llvmBinaryDeps(majorLLVMVersion(version), arch)
   return installInfo

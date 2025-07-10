@@ -5,10 +5,10 @@ import semverValid from "semver/functions/valid"
 import { setupGcc } from "./gcc/gcc.js"
 import { setupMingw } from "./gcc/mingw.js"
 import { activateGcovGCC, activateGcovLLVM } from "./gcovr/gcovr.js"
+import { getSuccessMessage } from "./installTool.js"
 import { setupAppleClang } from "./llvm/apple-clang.js"
 import { setupLLVM } from "./llvm/llvm.js"
 import { setupMSVC } from "./msvc/msvc.js"
-import { getSuccessMessage } from "./options.js"
 import { appleClangSetups, gccSetups, llvmSetups, mingwSetups, msvcSetups } from "./tool.js"
 import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { getVersion } from "./versions/versions.js"
@@ -74,26 +74,26 @@ export async function installCompiler(
     // install the compiler. We allow some aliases for the compiler name
     startGroup(`Installing ${compiler} ${version ?? ""}`)
     if (compiler in llvmSetups) {
-      installationInfo = await setupLLVM(
-        getVersion("llvm", version, osVersion),
-        join(setupCppDir, "llvm"),
+      installationInfo = await setupLLVM({
+        version: getVersion("llvm", version, osVersion),
+        setupDir: join(setupCppDir, "llvm"),
         arch,
-      )
+      })
       await activateGcovLLVM()
     } else if (compiler in gccSetups) {
       const gccVersion = getVersion("gcc", version, osVersion)
-      installationInfo = await setupGcc(gccVersion, join(setupCppDir, "gcc"), arch)
+      installationInfo = await setupGcc({ version: gccVersion, setupDir: join(setupCppDir, "gcc"), arch })
       await activateGcovGCC(gccVersion)
     } else if (compiler in mingwSetups) {
       const gccVersion = getVersion("mingw", version, osVersion)
-      installationInfo = await setupMingw(gccVersion, join(setupCppDir, "gcc"), arch)
+      installationInfo = await setupMingw({ version: gccVersion, setupDir: join(setupCppDir, "gcc"), arch })
       await activateGcovGCC(gccVersion)
     } else if (compiler in msvcSetups) {
-      installationInfo = await setupMSVC(
-        getVersion("msvc", version, osVersion),
-        join(setupCppDir, "msvc"),
+      installationInfo = await setupMSVC({
+        version: getVersion("msvc", version, osVersion),
+        setupDir: join(setupCppDir, "msvc"),
         arch,
-      )
+      })
     } else if (compiler in appleClangSetups) {
       await setupAppleClang()
     } else {

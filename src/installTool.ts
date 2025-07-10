@@ -2,7 +2,7 @@ import { join } from "path"
 import { endGroup, startGroup } from "@actions/core"
 import { error } from "ci-log"
 import { setupBrew } from "setup-brew"
-import { getSuccessMessage, rcOptions } from "./options.js"
+import { rcOptions } from "./options.js"
 import { type ToolName, llvmTools, setups } from "./tool.js"
 import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
@@ -47,7 +47,7 @@ async function installToolImpl(
   let installationInfo: InstallationInfo | undefined | void
   if (tool === "vcvarsall") {
     // eslint-disable-next-line no-await-in-loop
-    await setupVCVarsall(getVersion(tool, version, osVersion), undefined, arch, undefined, undefined, false, false)
+    await setupVCVarsall({ version: getVersion(tool, version, osVersion), arch, uwp: false, spectre: false })
   } else if (tool === "brew") {
     // eslint-disable no-await-in-loop
     installationInfo = await setupBrew({ rcOptions })
@@ -61,8 +61,22 @@ async function installToolImpl(
     const setupFunction = setups[tool]
 
     // eslint-disable no-await-in-loop
-    installationInfo = await setupFunction(setupVersion, setupDir, arch)
+    installationInfo = await setupFunction({ version: setupVersion, setupDir, arch })
   }
   // preparing a report string
   successMessages.push(getSuccessMessage(tool, installationInfo))
+}
+
+export function getSuccessMessage(tool: string, installationInfo: InstallationInfo | undefined | void) {
+  let msg = `✅ ${tool} was installed successfully:`
+  if (installationInfo === undefined) {
+    return msg
+  }
+  if ("installDir" in installationInfo) {
+    msg += `\n- The installation directory is ${installationInfo.installDir}`
+  }
+  if (installationInfo.binDir !== "") {
+    msg += `\n- The binary directory is ${installationInfo.binDir}`
+  }
+  return msg
 }

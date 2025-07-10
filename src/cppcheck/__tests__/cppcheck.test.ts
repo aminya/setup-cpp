@@ -7,7 +7,9 @@ describe("setup-cppcheck", () => {
   it("should setup cppcheck", async () => {
     // TODO: choco fails abnormally on windows
     if (process.platform !== "win32") {
-      const installInfo = await setupCppcheck(getVersion("cppcheck", undefined), "", process.arch)
+      const installInfo = await setupCppcheck({
+        version: getVersion("cppcheck", undefined),
+      })
 
       await testBin("cppcheck", ["--version"], installInfo.binDir)
     }

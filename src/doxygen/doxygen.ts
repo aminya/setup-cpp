@@ -9,6 +9,7 @@ import { hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { setupGraphviz } from "../graphviz/graphviz.js"
 import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
 import { arm64 } from "../utils/env/arch.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
@@ -22,7 +23,7 @@ import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 import { getVersion } from "../versions/versions.js"
 
 /** Get the platform data for cmake */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+
 function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch: string): PackageInfo {
   switch (platform) {
     case "linux": {
@@ -61,7 +62,7 @@ function getDoxygenPackageInfo(version: string, platform: NodeJS.Platform, _arch
   }
 }
 
-export async function setupDoxygen(version: string, setupDir: string, arch: string) {
+export async function setupDoxygen({ version, setupDir, arch }: SetupOptions) {
   switch (process.platform) {
     case "win32": {
       // try to download the package 4 times with 2 seconds delay
@@ -73,7 +74,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
       )
       const binDir = await activateWinDoxygen()
       const installationInfo = { binDir }
-      await setupGraphviz(getVersion("graphviz", undefined), "", arch)
+      await setupGraphviz({ version: getVersion("graphviz", undefined) })
       return installationInfo
     }
     case "darwin": {
@@ -88,13 +89,13 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
 
       // only install graphviz if the macOS version is greater than 11
       if (macosVersion()[0] > 11) {
-        await setupGraphviz(getVersion("graphviz", undefined), "", arch)
+        await setupGraphviz({ version: getVersion("graphviz", undefined) })
       }
       return installationInfo
     }
     case "linux": {
-      const installationInfo = await setupLinuxDoxygen(version, setupDir, arch)
-      await setupGraphviz(getVersion("graphviz", undefined, await ubuntuVersion()), "", arch)
+      const installationInfo = await setupLinuxDoxygen({ version, setupDir, arch })
+      await setupGraphviz({ version: getVersion("graphviz", undefined, await ubuntuVersion()) })
       return installationInfo
     }
     default: {
@@ -102,7 +103,7 @@ export async function setupDoxygen(version: string, setupDir: string, arch: stri
     }
   }
 }
-async function setupLinuxDoxygen(version: string, setupDir: string, arch: string) {
+async function setupLinuxDoxygen({ version, setupDir, arch }: SetupOptions) {
   try {
     if (isArch()) {
       return await setupPacmanPack("doxygen", version)

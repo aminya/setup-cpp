@@ -8,6 +8,7 @@ import { untildifyUser } from "untildify-user"
 import which from "which"
 import { setupCmake } from "../cmake/cmake.js"
 import { setupNinja } from "../ninja/ninja.js"
+import type { SetupOptions } from "../setup-options.js"
 import { hasDnf } from "../utils/env/hasDnf.js"
 import { isArch } from "../utils/env/isArch.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
@@ -29,21 +30,21 @@ function getDownloadKcovPackageInfo(version: string): PackageInfo {
   }
 }
 
-function getBuildKcovPackageInfo(version: string): PackageInfo {
+function getBuildKcovPackageInfo(version: string, _platform: NodeJS.Platform, arch: string): PackageInfo {
   return {
     url: `https://github.com/SimonKagstrom/kcov/archive/refs/tags/${version}.tar.gz`,
     extractedFolderName: "",
     binRelativeDir: "build/src",
     binFileName: addExeExt("kcov"),
-    extractFunction: buildKcov,
+    extractFunction: (file, dest) => buildKcov(file, dest, arch),
   }
 }
 
-async function buildKcov(file: string, dest: string) {
+async function buildKcov(file: string, dest: string, arch: string) {
   const out = await extractTarByExe(file, dest, 1)
 
   // build after extraction using CMake
-  const cmake = await getCmake()
+  const cmake = await getCmake(arch)
 
   if (process.platform === "linux") {
     if (isArch()) {
@@ -78,24 +79,28 @@ async function buildKcov(file: string, dest: string) {
   return out
 }
 
-async function getCmake() {
+async function getCmake(arch: string) {
   let cmake = which.sync("cmake", { nothrow: true })
   if (cmake === null) {
-    const { binDir } = await setupCmake(
-      getVersion("cmake", undefined, await ubuntuVersion()),
-      join(untildifyUser("~"), "cmake"),
-      "",
-    )
+    const { binDir } = await setupCmake({
+      version: getVersion("cmake", undefined, await ubuntuVersion()),
+      setupDir: join(untildifyUser("~"), "cmake"),
+      arch,
+    })
     cmake = join(binDir, "cmake")
   }
   const ninja = which.sync("ninja", { nothrow: true })
   if (ninja === null) {
-    await setupNinja(getVersion("ninja", undefined, await ubuntuVersion()), join(untildifyUser("~"), "ninja"), "")
+    await setupNinja({
+      version: getVersion("ninja", undefined, await ubuntuVersion()),
+      setupDir: join(untildifyUser("~"), "ninja"),
+      arch,
+    })
   }
   return cmake
 }
 
-export async function setupKcov(versionGiven: string, setupDir: string, arch: string) {
+export async function setupKcov({ version: versionGiven, setupDir, arch }: SetupOptions) {
   if (process.platform !== "linux") {
     info("Kcov is not supported on non-linux")
     return

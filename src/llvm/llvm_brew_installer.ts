@@ -2,22 +2,23 @@ import { info } from "ci-log"
 import { addPath } from "envosman"
 import { installBrewPack } from "setup-brew"
 import { rcOptions } from "../options.ts"
+import type { SetupOptions } from "../setup-options.ts"
 import { majorLLVMVersion } from "./utils.ts"
 
-export async function trySetupLLVMBrew(version: string, _setupDir: string, _arch: string) {
+export async function trySetupLLVMBrew({ version }: Pick<SetupOptions, "version">) {
   if (process.platform !== "darwin") {
     return Promise.resolve(undefined)
   }
 
   try {
-    return await setupLLVMBrew(version, _setupDir, _arch)
+    return await setupLLVMBrew({ version })
   } catch (err) {
     info(`Failed to install llvm via brew: ${err}`)
     return undefined
   }
 }
 
-export async function setupLLVMBrew(version: string, _setupDir: string, _arch: string) {
+export async function setupLLVMBrew({ version }: Pick<SetupOptions, "version">) {
   const majorVersion = majorLLVMVersion(version)
 
   // install llvm via brew if a bottle is available for it

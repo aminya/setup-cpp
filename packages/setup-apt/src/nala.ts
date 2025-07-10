@@ -11,7 +11,13 @@ import { qualifiedNeededAptPackage } from "./qualify-install.js"
 
 let binDir: string | undefined
 
-export async function setupNala(version?: string) {
+export type SetupOptions = {
+  version: string
+  setupDir: string
+  arch: string
+}
+
+export async function setupNala({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   if (!hasAptGet()) {
     return undefined
   }
