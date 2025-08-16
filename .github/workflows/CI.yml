@@ -24,7 +24,7 @@ jobs:
         os:
           - ubuntu-22.04
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
@@ -91,7 +91,7 @@ jobs:
           - macos-13 # x64
           - macos-14 # arm64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Download Artifacts
         uses: actions/download-artifact@v4
@@ -170,7 +170,7 @@ jobs:
           # - macos-14-xlarge #arm64
           - macos-13 # x64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
@@ -273,7 +273,7 @@ jobs:
             platform: linux/arm64
             container: { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", base_version: "22-alpine3.21" }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           submodules: true
 
