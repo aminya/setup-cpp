@@ -24,7 +24,7 @@
     "test": "jest --coverage --runInBand"
   },
   "dependencies": {
-    "@types/node": "22.16.0",
+    "@types/node": "22.17.2",
     "admina": "^1.0.1",
     "ci-info": "^4.0.0",
     "ci-log": "workspace:*",

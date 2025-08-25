@@ -24,7 +24,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@types/node": "22.16.0",
+    "@types/node": "22.17.2",
     "ci-log": "workspace:*",
     "envosman": "workspace:*",
     "which": "4.0.0",
