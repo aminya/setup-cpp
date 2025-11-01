@@ -1,4 +1,4 @@
-ARG BASE_VERSION=22-alpine3.21
+ARG BASE_VERSION=24-alpine3.21
 
 #### Base Image with Node.js
 FROM --platform=$BUILDPLATFORM node:${BASE_VERSION} AS alpine-nodejs
