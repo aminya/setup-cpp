@@ -1,7 +1,7 @@
 import module from "module"
 import { type AliasOptions, defineConfig } from "vite"
 import babel from "vite-plugin-babel"
-import babelConfig from "./babel.config.cjs"
+import babelConfig from "./babel.config.mjs"
 
 const viteConfig = defineConfig((configEnv) => {
   const isLegacy = configEnv.mode.includes("legacy")
