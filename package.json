@@ -17,12 +17,12 @@
     "build.cli.legacy": "cross-env NODE_ENV=production vite build --mode cli-legacy",
     "build.library": "cross-env NODE_ENV=production vite build --mode library",
     "build.types.modern": "tsc -p ./tsconfig.types.json",
-    "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file ./dist/**/*.json",
+    "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file \"dist/**/*.json\"",
     "build.bash": "shx cp ./src/*/*.bash ./dist/legacy/ && shx cp ./dist/legacy/*.bash ./dist/modern",
     "bump": "ncu -u -x execa,numerous,eslint,@types/eslint,which && pnpm update && pnpx typesync && pnpm run clean",
-    "bump.llvm": "GITHUB_TOKEN=$(gh auth token) tsx ./src/llvm/assets-list.ts",
-    "bump.gcc": "GITHUB_TOKEN=$(gh auth token) tsx ./src/gcc/assets-list.ts",
-    "bump.infer": "GITHUB_TOKEN=$(gh auth token) tsx ./src/infer/assets-list.ts",
+    "bump.llvm": "tsx ./src/llvm/assets-list.ts",
+    "bump.gcc": "tsx ./src/gcc/assets-list.ts",
+    "bump.infer": "tsx ./src/infer/assets-list.ts",
     "bump.versions": "run-p bump.llvm bump.gcc bump.infer && run-s format",
     "clean": "shx rm -rf ./dist ./packages/*/dist ./exe ./.parcel-cache && shx mkdir -p ./dist/legacy ./dist/modern ./dist/modern ",
     "dev.vite": "cross-env NODE_ENV=development vite build --watch",
@@ -191,7 +191,7 @@
     "node": ">=12.x",
     "pnpm": "^10"
   },
-  "packageManager": "pnpm@10.15.0",
+  "packageManager": "pnpm@10.20.0",
   "workspaces": [
     "packages/*"
   ],
