@@ -326,7 +326,7 @@ jobs:
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}
         if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
-        uses: peter-evans/dockerhub-description@v4
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -362,7 +362,7 @@ jobs:
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-llvm
         if: ${{ (github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]')) && matrix.container.distro != 'arch' }}
-        uses: peter-evans/dockerhub-description@v4
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -406,7 +406,7 @@ jobs:
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-gcc
         if: ${{ github.event_name != 'pull_request' || contains(github.event.head_commit.message, '[push docker]') }}
-        uses: peter-evans/dockerhub-description@v4
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -451,7 +451,7 @@ jobs:
 
       - name: Docker Readme for setup-cpp-${{matrix.container.distro }}-mingw
         if: ${{ github.event_name != 'pull_request' && matrix.container.distro != 'fedora' && !(matrix.container.distro == 'alpine' && matrix.platform == 'linux/arm64') }}
-        uses: peter-evans/dockerhub-description@v4
+        uses: peter-evans/dockerhub-description@v5
         with:
           username: aminya
           password: ${{ secrets.DOCKERHUB_TOKEN }}
