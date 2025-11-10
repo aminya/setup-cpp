@@ -1,5 +1,5 @@
 ## base image
-FROM --platform=$BUILDPLATFORM fedora:40 AS fedora-nodejs
+FROM --platform=$BUILDPLATFORM fedora:44 AS fedora-nodejs
 
 # install nodejs
 RUN dnf -y install nodejs npm && \
