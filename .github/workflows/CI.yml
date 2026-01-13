@@ -90,7 +90,7 @@ jobs:
           - windows-2022
           - ubuntu-22.04
           - ubuntu-22.04-arm
-          - macos-13 # x64
+          - macos-14-large # x64
           - macos-14 # arm64
     steps:
       - uses: actions/checkout@v5
@@ -169,9 +169,8 @@ jobs:
           - macos-15 # arm64
           # - macos-15-large # x64
           - macos-14 # arm64
-          # - macos-14-large # x64
+          - macos-14-large # x64
           # - macos-14-xlarge #arm64
-          - macos-13 # x64
     steps:
       - uses: actions/checkout@v5
         with:
