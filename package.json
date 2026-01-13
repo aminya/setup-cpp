@@ -17,7 +17,7 @@
     "build.cli.legacy": "cross-env NODE_ENV=production vite build --mode cli-legacy",
     "build.library": "cross-env NODE_ENV=production vite build --mode library",
     "build.types.modern": "tsc -p ./tsconfig.types.json",
-    "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && minijson --file \"dist/**/*.json\"",
+    "build.json": "shx cp ./src/*/*.json ./dist/legacy/ && shx cp ./dist/legacy/*.json ./dist/modern && bun ./node_modules/@aminya/minijson/dist/cli.js --file \"dist/**/*.json\"",
     "build.bash": "shx cp ./src/*/*.bash ./dist/legacy/ && shx cp ./dist/legacy/*.bash ./dist/modern",
     "bump": "ncu -u -x execa,numerous,eslint,@types/eslint,which && pnpm update && pnpx typesync && pnpm run clean",
     "bump.llvm": "tsx ./src/llvm/assets-list.ts",
