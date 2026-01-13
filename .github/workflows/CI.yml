@@ -28,26 +28,23 @@ jobs:
         with:
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Setup Node
-        uses: actions/setup-node@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version-file: "./.nvmrc"
-
-      - name: Setup Pnpm
-        uses: pnpm/action-setup@v4
+          bun-version-file: "package.json"
 
       - name: Install
         run: |
-          pnpm install
+          bun install
 
       - name: Build
         run: |
-          pnpm build
-          pnpm build.docker-ci
+          bun build
+          bun build.docker-ci
 
       - name: Lint
         run: |
-          pnpm run test.lint
+          bun run test.lint
 
       - name: Update Dist
         run: |
@@ -103,18 +100,19 @@ jobs:
         with:
           node-version-file: "./.nvmrc"
 
-      - name: Setup Pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: "package.json"
 
       - name: Cache node_modules
         if: ${{ !contains(matrix.os, 'windows') }}
         uses: actions/cache@v4
         with:
           path: |
-            ~/.pnpm-store
-            D:\.pnpm-store
+            ~/.bun
             ./node_modules
-          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', './.nvmrc', './pnpm-*.yaml') }}"
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', './.nvmrc', './bun.lock') }}"
           restore-keys: |
             "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 
@@ -134,12 +132,12 @@ jobs:
 
       - name: Install
         run: |
-          pnpm install
+          bun install
 
       # Create self-contained executable that bundles Nodejs
       - name: Create Executable
         run: |
-          pnpm run pack.exe
+          bun run pack.exe
 
       - name: Upload Executables
         uses: actions/upload-artifact@v4
@@ -184,24 +182,25 @@ jobs:
         with:
           node-version-file: "./.nvmrc"
 
-      - name: Setup Pnpm
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: "package.json"
 
       - name: Cache node_modules
         if: ${{ !contains(matrix.os, 'windows') }}
         uses: actions/cache@v4
         with:
           path: |
-            ~/.pnpm-store
-            D:\.pnpm-store
+            ~/.bun
             ./node_modules
-          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', './.nvmrc', './pnpm-*.yaml') }}"
+          key: "setupcpp-node_modules-cache-OS:${{ matrix.os }}-${{ hashFiles('./.npmrc', './package.json', './.nvmrc', './bun.lock') }}"
           restore-keys: |
             "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 
       - name: Install
         run: |
-          pnpm install
+          bun install
 
       # - name: Setup SSH debugging session
       #   uses: mxschmitt/action-tmate@v3
@@ -209,7 +208,7 @@ jobs:
       - name: Tests
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
         run: |
-          pnpm run test
+          bun run test
         env:
           RUNNER_OS_NAME: ${{ matrix.os }}
 

@@ -2,6 +2,6 @@ pre-commit:
   parallel: false
   commands:
     test.lint:
-      run: pnpm run test.lint
+      run: bun run test.lint
     build:
-      run: pnpm run build -- --no-color && git add ./dist
+      run: bun run build -- --no-color && git add ./dist

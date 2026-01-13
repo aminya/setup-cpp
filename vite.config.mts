@@ -1,5 +1,5 @@
 import module from "module"
-import { type AliasOptions, defineConfig } from "vite"
+import { type AliasOptions, type UserConfig, defineConfig } from "vite"
 import babel from "vite-plugin-babel"
 import babelConfig from "./babel.config.mjs"
 
@@ -30,7 +30,7 @@ const viteConfig = defineConfig((configEnv) => {
   }
 
   const isLibrary = configEnv.mode.includes("library")
-  return {
+  const config: UserConfig = {
     build: {
       ssr: isLibrary
         ? "./src/lib.ts"
@@ -52,6 +52,7 @@ const viteConfig = defineConfig((configEnv) => {
       alias: aliasOpts,
     },
     esbuild: {
+      // @ts-ignore undocumented option
       minifyWhitespace: !isLibrary,
     },
     ssr: {
@@ -61,6 +62,7 @@ const viteConfig = defineConfig((configEnv) => {
     },
     plugins,
   }
+  return config
 })
 
 export default viteConfig

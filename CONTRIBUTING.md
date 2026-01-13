@@ -1,9 +1,9 @@
 # Contributing
 
-You will need [`pnpm`](https://pnpm.io/installation) to build and test `setup-cpp`:
+You will need [`bun`](https://bun.com/) to build and test `setup-cpp`:
 
 ```shell
-pnpm install
+bun install
 ```
 
 To avoid permenant changes to your system, you can use the test docker images under `./dev/docker/__tests__`.
