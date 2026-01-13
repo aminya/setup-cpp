@@ -39,8 +39,8 @@ jobs:
 
       - name: Build
         run: |
-          bun build
-          bun build.docker-ci
+          bun run build
+          bun run build.docker-ci
 
       - name: Lint
         run: |
