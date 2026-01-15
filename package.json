@@ -191,7 +191,7 @@
     "node": ">=12.x",
     "pnpm": "^10"
   },
-  "packageManager": "pnpm@10.21.0",
+  "packageManager": "pnpm@10.28.0",
   "workspaces": [
     "packages/*"
   ],
