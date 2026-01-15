@@ -1,6 +1,41 @@
 {
+  "llvmorg-21.1.8": [
+    "clang+llvm-21.1.8-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-21.1.8-armv7a-linux-gnueabihf.tar.gz",
+    "clang+llvm-21.1.8-aarch64-pc-windows-msvc.tar.xz",
+    "LLVM-21.1.8-woa64.exe",
+    "LLVM-21.1.8-win64.exe",
+    "LLVM-21.1.8-win32.exe",
+    "LLVM-21.1.8-macOS-ARM64.tar.xz",
+    "LLVM-21.1.8-Linux-X64.tar.xz",
+    "LLVM-21.1.8-Linux-ARM64.tar.xz"
+  ],
+  "llvmorg-21.1.7": [
+    "clang+llvm-21.1.7-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-21.1.7-armv7a-linux-gnueabihf.tar.gz",
+    "clang+llvm-21.1.7-aarch64-pc-windows-msvc.tar.xz",
+    "LLVM-21.1.7-woa64.exe",
+    "LLVM-21.1.7-win64.exe",
+    "LLVM-21.1.7-win32.exe",
+    "LLVM-21.1.7-Linux-X64.tar.xz",
+    "LLVM-21.1.7-Linux-ARM64.tar.xz"
+  ],
+  "llvmorg-21.1.6": [
+    "clang+llvm-21.1.6-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-21.1.6-armv7a-linux-gnueabihf.tar.gz",
+    "clang+llvm-21.1.6-aarch64-pc-windows-msvc.tar.xz",
+    "LLVM-21.1.6-woa64.exe",
+    "LLVM-21.1.6-win64.exe",
+    "LLVM-21.1.6-win32.exe",
+    "LLVM-21.1.6-macOS-ARM64.tar.xz",
+    "LLVM-21.1.6-Linux-X64.tar.xz",
+    "LLVM-21.1.6-Linux-ARM64.tar.xz"
+  ],
   "llvmorg-21.1.5": [
     "clang+llvm-21.1.5-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-21.1.5-armv7a-linux-gnueabihf.tar.gz",
+    "clang+llvm-21.1.5-aarch64-pc-windows-msvc.tar.xz",
+    "LLVM-21.1.5-woa64.exe",
     "LLVM-21.1.5-win64.exe",
     "LLVM-21.1.5-win32.exe",
     "LLVM-21.1.5-Linux-X64.tar.xz",
