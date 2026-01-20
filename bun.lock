@@ -116,7 +116,7 @@
       "version": "1.0.5",
       "dependencies": {
         "@actions/core": "^1.10.1",
-        "@types/node": "22.17.2",
+        "@types/node": "22.19.7",
         "admina": "^1.0.1",
         "ci-info": "^4.0.0",
         "ci-log": "workspace:*",
@@ -148,7 +148,7 @@
       "name": "setup-alpine",
       "version": "1.1.0",
       "dependencies": {
-        "@types/node": "22.17.2",
+        "@types/node": "22.19.7",
         "admina": "^1.0.1",
         "ci-log": "workspace:*",
         "envosman": "workspace:*",
@@ -166,7 +166,7 @@
       "name": "setup-apt",
       "version": "3.1.3",
       "dependencies": {
-        "@types/node": "22.17.2",
+        "@types/node": "22.19.7",
         "admina": "^1.0.1",
         "ci-info": "^4.0.0",
         "ci-log": "workspace:*",
@@ -174,7 +174,7 @@
         "escape-string-regexp": "^5.0.0",
         "execa": "7.2.0",
         "memoizee": "^0.4.17",
-        "node-downloader-helper": "2.1.9",
+        "node-downloader-helper": "2.1.10",
         "path-exists": "^5.0.0",
         "which": "4.0.0",
       },
@@ -189,11 +189,11 @@
       "name": "setup-brew",
       "version": "1.1.1",
       "dependencies": {
-        "@types/node": "22.17.2",
+        "@types/node": "22.19.7",
         "ci-log": "workspace:*",
         "envosman": "workspace:*",
         "execa": "7.2.0",
-        "node-downloader-helper": "2.1.9",
+        "node-downloader-helper": "2.1.10",
         "setup-apt": "workspace:*",
         "which": "4.0.0",
       },
@@ -2909,6 +2909,8 @@
 
     "encoding/iconv-lite": ["iconv-lite@0.6.3", "", { "dependencies": { "safer-buffer": "2.1.2" } }, "sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw=="],
 
+    "envosman/@types/node": ["@types/node@22.19.7", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-MciR4AKGHWl7xwxkBa6xUGxQJ4VBOmPTF7sL+iGzuahOFaO0jHCsuEfS80pan1ef4gWId1oWOweIhrDEYLuaOw=="],
+
     "escape-quotes/escape-string-regexp": ["escape-string-regexp@1.0.5", "", {}, "sha512-vbRorB5FUQWvla16U8R/qgaFIya2qGzwDrNmCZuYKrbdSUMG6I1ZCGQRefkRVhuOkIGVne7BQ35DSfo1qvJqFg=="],
 
     "eslint/chalk": ["chalk@4.1.2", "", { "dependencies": { "ansi-styles": "4.3.0", "supports-color": "7.2.0" } }, "sha512-oKnbhFyRIXpUuez8iBMmyEa4nbj4IOQyuhc/wy9kY7/WVPcwIO9VA668Pu8RkO7+0G76SLROeyw9CpQ061i4mA=="],
@@ -2986,6 +2988,8 @@
     "eslint-utils/eslint-visitor-keys": ["eslint-visitor-keys@1.3.0", "", {}, "sha512-6J72N8UNa462wa/KFODt/PJ3IU60SDpC3QXC1Hjc1BXXpfL2C9R5+AU7jhe0F6GREqVMh4Juu+NY7xn+6dipUQ=="],
 
     "espree/acorn": ["acorn@8.15.0", "", { "bin": { "acorn": "bin/acorn" } }, "sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg=="],
+
+    "exec-powershell/@types/node": ["@types/node@22.19.7", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-MciR4AKGHWl7xwxkBa6xUGxQJ4VBOmPTF7sL+iGzuahOFaO0jHCsuEfS80pan1ef4gWId1oWOweIhrDEYLuaOw=="],
 
     "fast-glob/glob-parent": ["glob-parent@5.1.2", "", { "dependencies": { "is-glob": "4.0.3" } }, "sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow=="],
 
@@ -3143,9 +3147,11 @@
 
     "semver-truncate/semver": ["semver@7.7.2", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA=="],
 
-    "setup-apt/node-downloader-helper": ["node-downloader-helper@2.1.9", "", { "bin": { "ndh": "bin/ndh" } }, "sha512-FSvAol2Z8UP191sZtsUZwHIN0eGoGue3uEXGdWIH5228e9KH1YHXT7fN8Oa33UGf+FbqGTQg3sJfrRGzmVCaJA=="],
+    "setup-alpine/@types/node": ["@types/node@22.19.7", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-MciR4AKGHWl7xwxkBa6xUGxQJ4VBOmPTF7sL+iGzuahOFaO0jHCsuEfS80pan1ef4gWId1oWOweIhrDEYLuaOw=="],
 
-    "setup-brew/node-downloader-helper": ["node-downloader-helper@2.1.9", "", { "bin": { "ndh": "bin/ndh" } }, "sha512-FSvAol2Z8UP191sZtsUZwHIN0eGoGue3uEXGdWIH5228e9KH1YHXT7fN8Oa33UGf+FbqGTQg3sJfrRGzmVCaJA=="],
+    "setup-apt/@types/node": ["@types/node@22.19.7", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-MciR4AKGHWl7xwxkBa6xUGxQJ4VBOmPTF7sL+iGzuahOFaO0jHCsuEfS80pan1ef4gWId1oWOweIhrDEYLuaOw=="],
+
+    "setup-brew/@types/node": ["@types/node@22.19.7", "", { "dependencies": { "undici-types": "~6.21.0" } }, "sha512-MciR4AKGHWl7xwxkBa6xUGxQJ4VBOmPTF7sL+iGzuahOFaO0jHCsuEfS80pan1ef4gWId1oWOweIhrDEYLuaOw=="],
 
     "setup-python/@actions/cache": ["@actions/cache@3.3.0", "", { "dependencies": { "@actions/core": "1.11.1", "@actions/exec": "1.1.1", "@actions/glob": "0.1.2", "@actions/http-client": "2.2.3", "@actions/io": "1.1.3", "@azure/abort-controller": "1.1.0", "@azure/ms-rest-js": "2.7.0", "@azure/storage-blob": "12.27.0", "semver": "6.3.1" } }, "sha512-+eCsMTIZUEm+QA9GqjollOhCdvRrZ1JV8d9Rp34zVNizBkYITO8dhKczP5Xps1dFzc5n59p7vYVtZrGt18bb5Q=="],
 
