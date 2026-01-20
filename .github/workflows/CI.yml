@@ -259,7 +259,7 @@ jobs:
           - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "24.04" }
           - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "22.04" }
           - { distro: "ubuntu", image: "setup-cpp-ubuntu", tag: "20.04" }
-          - { distro: "fedora", image: "setup-cpp-fedora", tag: "40" }
+          - { distro: "fedora", image: "setup-cpp-fedora", tag: "44" }
           - { distro: "arch", image: "setup-cpp-arch", tag: "base" }
           - { distro: "alpine", image: "setup-cpp-alpine", tag: "3.21", base_version: "22-alpine3.21" }
         include:
