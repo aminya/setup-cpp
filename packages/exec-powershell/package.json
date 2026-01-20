@@ -21,7 +21,7 @@
   "dependencies": {
     "execa": "7.2.0",
     "which": "^4.0.0",
-    "@types/node": "^22.0.0"
+    "@types/node": "^25.0.0"
   },
   "devDependencies": {
     "@types/which": "^3.0.0"
