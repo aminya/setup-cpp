@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@actions/core": "^2.0.0",
-    "@types/node": "25.0.9",
+    "@types/node": "25.1.0",
     "admina": "^1.0.1",
     "ci-info": "^4.0.0",
     "escape-path-with-spaces": "^1.0.2",
