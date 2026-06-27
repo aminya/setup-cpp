@@ -303,7 +303,7 @@ jobs:
 
       - name: Build setup-cpp-${{matrix.container.distro }}
         id: build_base
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}.dockerfile
@@ -339,7 +339,7 @@ jobs:
       - name: Build setup-cpp-${{matrix.container.distro }}-llvm
         id: build_llvm
         if: ${{ matrix.container.distro != 'arch' }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-llvm.dockerfile
@@ -374,7 +374,7 @@ jobs:
 
       - name: Test LLVM
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') && matrix.container.distro != 'arch' }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./dev/docker/examples/${{ matrix.container.distro }}-llvm.dockerfile
@@ -384,7 +384,7 @@ jobs:
 
       - name: Build setup-cpp-${{matrix.container.distro }}-gcc
         id: build_gcc
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-gcc.dockerfile
@@ -418,7 +418,7 @@ jobs:
 
       - name: Test gcc
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./dev/docker/examples/${{ matrix.container.distro }}-gcc.dockerfile
@@ -429,7 +429,7 @@ jobs:
       - name: Build setup-cpp-${{matrix.container.distro }}-mingw
         id: build_mingw
         if: ${{ matrix.container.distro != 'fedora' && !(matrix.container.distro == 'alpine' && matrix.platform == 'linux/arm64') }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./dev/docker/ci/${{ matrix.container.distro }}-mingw.dockerfile
@@ -463,7 +463,7 @@ jobs:
 
       - name: Test Mingw
         if: ${{ !contains(github.event.head_commit.message, '[skip test]') && matrix.container.distro != 'fedora' && matrix.container.distro != 'alpine' }}
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./dev/docker/examples/${{ matrix.container.distro }}-mingw.dockerfile
