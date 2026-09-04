@@ -1,7 +1,8 @@
 FROM aminya/setup-cpp-alpine:latest AS setup-cpp-alpine-llvm
 
 # install llvm
-RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
+RUN setup-cpp \
+    --autoreconf true \
     --compiler llvm && \
 # cleanup
     rm -rf /var/cache/apk/*

@@ -15,6 +15,7 @@ RUN apt-get update -qq && \
 # install the compiler and tools
     NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \
+        --autoreconf true \
         --nala true \
         --compiler mingw \
         --cmake true \
