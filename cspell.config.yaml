@@ -44,6 +44,7 @@ words:
   - dearmor
   - deps
   - devel
+  - dists
   - dpkg
   - dprint
   - DVCPKG

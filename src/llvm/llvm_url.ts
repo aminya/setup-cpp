@@ -135,7 +135,7 @@ async function getAssetKeywords(platform: string, arch: string) {
       } else if (x86.includes(arch)) {
         keywords.push("x86")
       } else if (arm64.includes(arch)) {
-        keywords.push("aarch64")
+        keywords.push(["aarch64", "arm64", "ARM64"])
       } else if (armv7.includes(arch)) {
         keywords.push("armv7a")
       } else if (powerpc64le.includes(arch)) {

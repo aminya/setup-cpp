@@ -1,0 +1,2 @@
+import{r as s,g as f}from"../setup-cpp.mjs";function g(t,a){for(var o=0;o<a.length;o++){const e=a[o];if(typeof e!="string"&&!Array.isArray(e)){for(const r in e)if(r!=="default"&&!(r in t)){const n=Object.getOwnPropertyDescriptor(e,r);n&&Object.defineProperty(t,r,n.get?n:{enumerable:!0,get:()=>e[r]})}}}return Object.freeze(Object.defineProperty(t,Symbol.toStringTag,{value:"Module"}))}var p=s();const c=f(p),u=g({__proto__:null,default:c},[p]);export{u as p};
+//# sourceMappingURL=proxy-agent-D7Xf98H4.mjs.map
