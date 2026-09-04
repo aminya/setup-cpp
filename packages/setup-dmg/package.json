@@ -1,0 +1,39 @@
+{
+  "name": "setup-dmg",
+  "version": "1.0.0",
+  "description": "Setup DMG files on macOS",
+  "repository": "https://github.com/aminya/setup-cpp",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-dmg",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint.tsc.test": "tsc --noEmit --pretty -p ./__tests__/tsconfig.json",
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint '**/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml}' --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
+    "prepublishOnly": "pnpm run build",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@shockpkg/archive-files": "3.2.5",
+    "@types/node": "25.9.5"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "setup",
+    "dmg",
+    "macos",
+    "install"
+  ]
+}
