@@ -19,7 +19,7 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@actions/core": "^2.0.0",
+    "@actions/core": "^3.0.0",
     "ci-info": "^4.0.0"
   },
   "keywords": [
