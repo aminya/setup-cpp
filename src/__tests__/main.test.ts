@@ -1,6 +1,6 @@
 process.env.SETUP_CPP_SKIP_MAIN = "true"
 import { getCompilerInfo } from "../compilers.js"
-import { parseArgs } from "../setup-cpp.js"
+import { parseArgs, printHelp } from "../setup-cpp.js"
 import { type Inputs, llvmTools } from "../tool.js"
 import { getVersion, syncVersions } from "../versions/versions.js"
 
@@ -105,6 +105,22 @@ describe("syncVersion", () => {
     expect(opts5.compiler).toBe("gcc-13")
     expect(opts5.clangtidy).toBe("true")
     expect(opts5.clangformat).toBe(undefined)
+  })
+})
+
+describe("CLI help", () => {
+  it("lists autoreconf among build system tools", () => {
+    const table = jest.spyOn(console, "table").mockImplementation(() => undefined)
+
+    printHelp()
+
+    expect(table).toHaveBeenCalledWith(
+      expect.objectContaining({
+        "build system": { tools: "--cmake, --ninja, --meson, --make, --autoreconf, --task, --bazel" },
+      }),
+      ["tools"],
+    )
+    table.mockRestore()
   })
 })
 

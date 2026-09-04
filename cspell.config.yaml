@@ -33,6 +33,7 @@ words:
   - cmakeformat
   - cmakelang
   - cmakelint
+  - autoreconf
   - cobertura
   - copr
   - CPATH
