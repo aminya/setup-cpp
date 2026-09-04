@@ -1,5 +1,5 @@
 #### Base Image
-FROM ubuntu:22.04 AS setup-cpp-ubuntu-mingw
+FROM ubuntu:26.04 AS setup-cpp-ubuntu-mingw
 
 # install latest nodejs
 RUN apt-get update -qq && \

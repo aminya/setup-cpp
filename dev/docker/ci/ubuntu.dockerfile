@@ -1,4 +1,4 @@
-ARG BASE_VERSION=22.04
+ARG BASE_VERSION=26.04
 
 #### Base Image with Node.js
 FROM --platform=$BUILDPLATFORM ubuntu:${BASE_VERSION} AS ubuntu-nodejs

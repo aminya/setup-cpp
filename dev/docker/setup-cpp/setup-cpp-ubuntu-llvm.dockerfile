@@ -1,5 +1,5 @@
 #### Base Image
-FROM ubuntu:22.04 AS setup-cpp-ubuntu
+FROM ubuntu:26.04 AS setup-cpp-ubuntu
 
 # install latest nodejs
 RUN apt-get update -qq && \
