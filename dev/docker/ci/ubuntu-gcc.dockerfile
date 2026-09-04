@@ -1,7 +1,8 @@
 FROM aminya/setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-gcc
 
 # install gcc
-RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
+RUN setup-cpp \
+    --autoreconf true \
     --compiler gcc && \
 # cleanup
     apt-get clean autoclean && \

@@ -8,8 +8,14 @@ FROM alpine-nodejs AS setup-cpp-alpine
 
 COPY "./dist/modern" "/usr/lib/setup-cpp/"
 
+ENV NODE_OPTIONS="--enable-source-maps"
+
+RUN chmod +x /usr/lib/setup-cpp/setup-cpp.mjs && \
+    ln -s /usr/lib/setup-cpp/setup-cpp.mjs /usr/local/bin/setup-cpp
+
 # install the cpp tools
-RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
+RUN setup-cpp \
+        --autoreconf true \
         --cmake true \
         --ninja true \
         --task true \

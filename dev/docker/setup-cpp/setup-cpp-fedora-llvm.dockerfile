@@ -8,6 +8,7 @@ RUN dnf -y install nodejs npm && \
 # install the compiler and tools
     NODE_OPTIONS="--enable-source-maps" \
     setup-cpp \
+        --autoreconf true \
         --compiler llvm \
         --cmake true \
         --ninja true \

@@ -1,7 +1,8 @@
 FROM aminya/setup-cpp-arch:latest AS setup-cpp-arch-gcc
 
 # install llvm
-RUN node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs \
+RUN setup-cpp \
+    --autoreconf true \
     --compiler gcc && \
 # arch cleanup
     pacman -Scc --noconfirm && \

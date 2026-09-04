@@ -7,8 +7,10 @@ async function main() {
       const dockerFileContent = await readFile(`./dev/docker/setup-cpp/setup-cpp-${name}.dockerfile`, "utf-8")
       const modifiedDockerFile = dockerFileContent
         // load the externally built setup-cpp
-        .replace(/FROM (.*)/g, `FROM $1\n\nCOPY "./dist/modern" "/usr/lib/setup-cpp/"`)
-        .replace("setup-cpp ", "node --enable-source-maps /usr/lib/setup-cpp/setup-cpp.mjs ")
+        .replace(
+          /FROM (.*)/g,
+          `FROM $1\n\nCOPY "./dist/modern" "/usr/lib/setup-cpp/"\n\nENV NODE_OPTIONS="--enable-source-maps"\n\nRUN chmod +x /usr/lib/setup-cpp/setup-cpp.mjs && \\\n    ln -s /usr/lib/setup-cpp/setup-cpp.mjs /usr/local/bin/setup-cpp`,
+        )
         // remove the npm install line
         .replace(/# install setup-cpp\n\s*npm install -g setup-cpp.*\n/, "")
 
