@@ -28,6 +28,14 @@ describe("setup-llvm", () => {
     )
   })
 
+  it("Finds the LLVM 21 Linux ARM64 asset", async () => {
+    expect(
+      await getLLVMAssetURL("linux", "arm64", "21.1.8"),
+    ).toStrictEqual(
+      "https://github.com/llvm/llvm-project/releases/download/llvmorg-21.1.8/LLVM-21.1.8-Linux-ARM64.tar.xz",
+    )
+  })
+
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
