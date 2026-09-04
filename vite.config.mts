@@ -24,7 +24,7 @@ const viteConfig = defineConfig((configEnv) => {
       "stream/web": "web-streams-polyfill/dist/ponyfill.mjs",
       "util/types": "util.types/index.js",
       "timers/promises": "timers-browserify",
-      diagnostics_channel: "diagnostics_channel/index.js",
+      diagnostics_channel: "node_modules/diagnostics_channel/index.js",
       crypto: "./src/utils/compat/crypto/index.ts",
     }
   }
