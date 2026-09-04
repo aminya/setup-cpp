@@ -207,10 +207,13 @@ export async function extractTarByExe(
     ? dependencies
     : stripComponentsOrDependencies
 
-  if (which.sync("tar", { nothrow: true }) === null && archiveDependencies?.setupTar === undefined) {
-    throw new Error("Unable to extract archive: setupTar dependency is not configured")
+  const tar = which.sync("tar", { nothrow: true })
+  if (tar === null) {
+    if (archiveDependencies?.setupTar === undefined) {
+      throw new Error("Unable to extract archive: setupTar dependency is not configured")
+    }
+    await archiveDependencies.setupTar()
   }
-  await archiveDependencies?.setupTar?.()
 
   try {
     await mkdirp(dest)
