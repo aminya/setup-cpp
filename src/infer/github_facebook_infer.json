@@ -1,4 +1,8 @@
 {
+  "v1.3.0": [
+    "infer-osx-arm64-v1.3.0.tar.xz",
+    "infer-linux-x86_64-v1.3.0.tar.xz"
+  ],
   "v1.2.0": [
     "infer-osx-x86_64-v1.2.0.tar.xz",
     "infer-osx-arm64-v1.2.0.tar.xz",

@@ -1,6 +1,14 @@
 {
+  "llvmorg-23.1.0": [
+    "clang+llvm-23.1.0-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-23.1.0-armv7a-linux-gnueabihf.tar.gz",
+    "clang+llvm-23.1.0-aarch64-pc-windows-msvc.tar.xz",
+    "LLVM-23.1.0-Linux-X64.tar.xz",
+    "LLVM-23.1.0-Linux-ARM64.tar.xz"
+  ],
   "llvmorg-22.1.8": [
     "clang+llvm-22.1.8-x86_64-pc-windows-msvc.tar.xz",
+    "clang+llvm-22.1.8-armv7a-linux-gnueabihf.tar.gz",
     "clang+llvm-22.1.8-aarch64-pc-windows-msvc.tar.xz",
     "LLVM-22.1.8-woa64.exe",
     "LLVM-22.1.8-win64.exe",
