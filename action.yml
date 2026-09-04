@@ -106,6 +106,9 @@ inputs:
   make:
     description: "Wether to install make (true/false) or the specific version to install."
     required: false
+  autoreconf:
+    description: "Wether to install autoreconf (true/false) or the specific version to install."
+    required: false
   task:
     description: "Wether to install task (true/false) or the specific version to install."
     required: false

@@ -89,7 +89,7 @@ export function parseArgs(args: string[]): CliOpts {
   })
 }
 
-function printHelp() {
+export function printHelp() {
   info(`
 setup-cpp [options]
 setup-cpp --compiler llvm --cmake true --ninja true --ccache true --vcpkg true
@@ -114,7 +114,7 @@ All the available tools:
         tools: "--llvm, --gcc, --msvc, --apple-clang, --vcvarsall",
       },
       "build system": {
-        tools: "--cmake, --ninja, --meson, --make, --task, --bazel",
+        tools: "--cmake, --ninja, --meson, --make, --autoreconf, --task, --bazel",
       },
       "package manager": { tools: "--vcpkg, --conan, --choco, --brew, --apt-fast, --nala, --git, --setup-cpp" },
       "analyzer/linter": {

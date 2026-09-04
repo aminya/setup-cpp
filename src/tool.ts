@@ -1,5 +1,6 @@
 import { type InstallationInfo, setupAptFast, setupNala } from "setup-apt"
 import { type SetupBrewOptions, setupBrew } from "setup-brew"
+import { setupAutoreconf } from "./autoreconf/autoreconf.js"
 import { setupBazel } from "./bazel/bazel.js"
 import { setupCcache } from "./ccache/ccache.js"
 import { setupChocolatey } from "./chocolatey/chocolatey.js"
@@ -79,6 +80,7 @@ export const setups = {
   ...appleClangSetups,
   ...cmakeLangSetups,
   cmake: setupCmake,
+  autoreconf: setupAutoreconf,
   ninja: setupNinja,
   vcpkg: setupVcpkg,
   bazel: setupBazel,
