@@ -31,8 +31,11 @@ export async function setupBazel({ version }: Partial<Pick<SetupOptions, "versio
         // https://bazel.build/install/ubuntu
         const keyFileName = await addAptKeyViaURL({
           fileName: "bazel-archive-keyring.gpg",
-          keyUrl: "https://bazel.build/bazel-release.pub.gpg",
+          keyUrl: "https://releases.bazel.build/bazel-release.pub.gpg",
         })
+        if (keyFileName === undefined) {
+          throw new Error("Failed to add the Bazel apt key")
+        }
         await execRoot("bash", [
           "-c",
           `echo "deb [arch=${
