@@ -74,6 +74,17 @@
     },
     "else": ""
   },
+  "infer": {
+    "darwin": {
+      "else": {
+        "else": {
+          "x64": "1.2.0",
+          "else": ""
+        }
+      }
+    },
+    "else": ""
+  },
   "llvm": {
     "darwin": {
       "else": {
