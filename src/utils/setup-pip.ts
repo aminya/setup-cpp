@@ -1,8 +1,4 @@
-import {
-  type SetupPipPackDependencies,
-  type SetupPipPackOptions,
-  setupPipPack as setupPipPackPackage,
-} from "setup-pip"
+import { type SetupPipPackDependencies, type SetupPipPackOptions, setupPipPack as setupPipPackPackage } from "setup-pip"
 import { rcOptions } from "../options.js"
 import { setupPython } from "../python/python.js"
 import type { SetupOptions } from "../setup-options.js"
