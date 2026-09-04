@@ -1,6 +1,6 @@
 import { info } from "@actions/core"
+import type { InstallationInfo } from "setup-bin"
 import which from "which"
-import type { InstallationInfo } from "../../utils/setup/setupBin.js"
 import { cleanupTmpDir, setupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
 import { setupKcov } from "../kcov.js"
 

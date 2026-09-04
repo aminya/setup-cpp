@@ -3,18 +3,19 @@ import { fileURLToPath } from "url"
 import { info } from "ci-log"
 import { addExeExt } from "patha"
 import { hasAptGet } from "setup-apt"
-import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
-import { arm64, armv7, powerpc64le, sparc64, sparcv9, x86, x86_64 } from "../utils/env/arch.js"
-import { hasDnf } from "../utils/env/hasDnf.js"
-import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
+import type { PackageInfo } from "setup-bin"
+import { hasDnf } from "setup-dnf"
 import {
+  type ArchiveToolDependencies,
   ArchiveType,
   extract7Zip,
   extractTarByExe,
   getArchiveType,
   getExtractFunction,
-} from "../utils/setup/extract.js"
-import type { PackageInfo } from "../utils/setup/setupBin.js"
+} from "setup-extract"
+import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
+import { arm64, armv7, powerpc64le, sparc64, sparcv9, x86, x86_64 } from "../utils/env/arch.js"
+import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 
@@ -34,10 +35,10 @@ export async function getLLVMPackageInfo(
     binFileName: addExeExt("clang"),
     extractFunction:
       (archiveType === ArchiveType.Tar || archiveType === ArchiveType.TarGz || archiveType === ArchiveType.TarXz)
-        ? (file: string, dest: string) => {
+        ? (file: string, dest: string, dependencies?: ArchiveToolDependencies) => {
           return process.platform === "win32"
-            ? extract7Zip(file, dest, true)
-            : extractTarByExe(file, dest, 1)
+            ? extract7Zip(file, dest, true, dependencies)
+            : extractTarByExe(file, dest, 1, [], dependencies)
         }
         : getExtractFunction(archiveType),
   }

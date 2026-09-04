@@ -2,12 +2,11 @@ import { execRoot } from "admina"
 import { hasApk, installApkPack } from "setup-alpine"
 import { addAptKeyViaURL, hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
+import { hasDnf, setupDnfPack } from "setup-dnf"
+import { isArch } from "setup-pacman"
 import type { SetupOptions } from "../setup-options.js"
 import { getDebArch } from "../utils/env/arch.js"
-import { hasDnf } from "../utils/env/hasDnf.js"
-import { isArch } from "../utils/env/isArch.js"
-import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
-import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
+import { setupChocoPack } from "../utils/setup-choco.js"
 
 export async function setupBazel({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   switch (process.platform) {

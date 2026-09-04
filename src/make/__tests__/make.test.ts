@@ -1,4 +1,4 @@
-import type { InstallationInfo } from "../../utils/setup/setupBin.js"
+import type { InstallationInfo } from "setup-bin"
 import { testBin } from "../../utils/tests/test-helpers.js"
 import { setupMake } from "../make.js"
 

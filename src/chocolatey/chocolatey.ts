@@ -2,10 +2,10 @@ import { dirname } from "path"
 import { addPath } from "envosman"
 import { execaSync } from "execa"
 import { pathExists } from "path-exists"
+import type { InstallationInfo } from "setup-bin"
 import which from "which"
 import { rcOptions } from "../options.js"
 import type { SetupOptions } from "../setup-options.js"
-import type { InstallationInfo } from "../utils/setup/setupBin.js"
 
 /* eslint-disable require-atomic-updates */
 let binDir: string | undefined

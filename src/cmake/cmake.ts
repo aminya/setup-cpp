@@ -2,10 +2,11 @@ import { info } from "ci-log"
 import { addExeExt } from "patha"
 import semverLte from "semver/functions/lte"
 import { hasApk, installApkPack } from "setup-alpine"
+import type { PackageInfo } from "setup-bin"
+import { semverCoerceIfInvalid } from "setup-version"
 import type { SetupOptions } from "../setup-options.js"
 import { arm64, x86, x86_64 } from "../utils/env/arch.js"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { semverCoerceIfInvalid } from "../utils/setup/version.js"
+import { type InstallationInfo, setupBin } from "../utils/setup-bin.js"
 
 /** Get the platform data for cmake */
 function getCmakePackageInfo(version: string, platform: NodeJS.Platform, arch: string): PackageInfo {

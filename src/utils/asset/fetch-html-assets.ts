@@ -3,7 +3,7 @@ import { join } from "path"
 import { mkdir, readFile, readdir, writeFile } from "fs/promises"
 import { DownloaderHelper } from "node-downloader-helper"
 import JsonStringify from "safe-stable-stringify"
-import { compareVersion } from "../setup/version.ts"
+import { compareVersion } from "setup-version"
 
 type Options = {
   /**

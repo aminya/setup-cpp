@@ -1,6 +1,7 @@
 import { addExeExt } from "patha"
+import type { InstallationInfo, PackageInfo } from "setup-bin"
 import type { SetupOptions } from "../setup-options.js"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
+import { setupBin } from "../utils/setup-bin.js"
 
 /** Get the platform name task uses in their download links */
 function getTaskPlatform(platform: NodeJS.Platform) {

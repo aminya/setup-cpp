@@ -1,7 +1,7 @@
 import { Octokit } from "@octokit/rest"
 import { writeFile } from "fs/promises"
 import JsonStringify from "safe-stable-stringify"
-import { compareVersion } from "../setup/version.ts"
+import { compareVersion } from "setup-version"
 import type { Assets } from "./load-assets.ts"
 
 /**

@@ -1,13 +1,11 @@
 import { info, warning } from "ci-log"
 import { hasApk, installApkPack } from "setup-alpine"
 import { type SetupOptions, hasAptGet, installAptPack } from "setup-apt"
+import { type PackageInfo, setupBin } from "setup-bin"
 import { installBrewPack } from "setup-brew"
+import { hasDnf, setupDnfPack } from "setup-dnf"
+import { isArch, setupPacmanPack } from "setup-pacman"
 import which from "which"
-import { hasDnf } from "../utils/env/hasDnf.js"
-import { isArch } from "../utils/env/isArch.js"
-import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export async function setupTar({ version, arch, setupDir }: SetupOptions) {

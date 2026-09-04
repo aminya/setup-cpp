@@ -1,5 +1,5 @@
+import type { InstallationInfo } from "setup-bin"
 import { untildifyUser } from "untildify-user"
-import type { InstallationInfo } from "../../utils/setup/setupBin.js"
 import { testBin } from "../../utils/tests/test-helpers.js"
 import { setupTar } from "../tar.js"
 

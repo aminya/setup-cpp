@@ -1,6 +1,6 @@
 import { hasAptGet } from "setup-apt"
+import type { InstallationInfo } from "setup-bin"
 import { getUbuntuVersion } from "ubuntu-version"
-import type { InstallationInfo } from "../../utils/setup/setupBin.js"
 import { testBin } from "../../utils/tests/test-helpers.js"
 import { setupSccache } from "../sccache.js"
 

@@ -18,9 +18,9 @@ import {
   installAptPack,
   isAptPackRegexInstalled,
 } from "setup-apt"
+import type { InstallationInfo } from "setup-bin"
 import { DEFAULT_TIMEOUT } from "../installTool.js"
 import { rcOptions } from "../options.js"
-import type { InstallationInfo } from "../utils/setup/setupBin.js"
 import { majorLLVMVersion } from "./utils.js"
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 const LLVM_APT_REPOSITORY_TIMEOUT = 15_000

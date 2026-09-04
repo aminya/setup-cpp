@@ -3,7 +3,7 @@ import { hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
 import { getUbuntuVersion } from "ubuntu-version"
 import type { SetupOptions } from "../setup-options.js"
-import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupChocoPack } from "../utils/setup-choco.js"
 
 export async function setupSccache({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   switch (process.platform) {
