@@ -28,8 +28,6 @@ const defaultRcOptions: AddPathOptions = {
   guard: "cpp",
 }
 
-let hasChoco = false
-
 /** A function that installs a package using Chocolatey. */
 export async function setupChocoPack(
   name: string,
@@ -39,12 +37,11 @@ export async function setupChocoPack(
 ): Promise<InstallationInfo> {
   info(`Installing ${name} ${version ?? ""} via chocolatey`)
 
-  if (!hasChoco || which.sync("choco", { nothrow: true }) === null) {
+  if (which.sync("choco", { nothrow: true }) === null) {
     if (dependencies?.setupChocolatey === undefined) {
       throw new Error("Unable to install Chocolatey package: setupChocolatey dependency is not configured")
     }
     await dependencies.setupChocolatey()
-    hasChoco = true
   }
 
   // https://github.com/jberezanski/ChocolateyPackages/issues/97#issuecomment-986825694
