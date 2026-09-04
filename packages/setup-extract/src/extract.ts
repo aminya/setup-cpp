@@ -5,7 +5,6 @@ import { grantUserWriteAccess } from "admina"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
 import { mkdirp, move, readdir, remove, stat } from "fs-extra"
-import { untildifyUser } from "untildify-user"
 import which from "which"
 
 export { extractTar, extractXar }

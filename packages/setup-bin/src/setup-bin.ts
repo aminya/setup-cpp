@@ -11,7 +11,7 @@ import retry from "retry-as-promised"
 import { untildifyUser } from "untildify-user"
 
 import type { AddPathOptions } from "envosman"
-import { type ArchiveToolDependencies, getArchiveType, getExtractFunction } from "./extract.js"
+import { type ArchiveToolDependencies, getArchiveType, getExtractFunction } from "setup-extract"
 
 const { GITHUB_ACTIONS } = ciInfo
 

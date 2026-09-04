@@ -1,9 +1,9 @@
 {
-  "name": "setup-bin",
+  "name": "setup-extract",
   "version": "1.0.0",
-  "description": "Download, extract, and configure binary tools",
+  "description": "Extract archive files for setup utilities",
   "repository": "https://github.com/aminya/setup-cpp",
-  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-bin",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-extract",
   "license": "Apache-2.0",
   "author": "Amin Yahyaabadi",
   "main": "./dist/index.js",
@@ -26,23 +26,25 @@
   "dependencies": {
     "@actions/tool-cache": "^2.0.2",
     "@types/node": "25.9.5",
-    "ci-info": "^4.1.0",
+    "admina": "^1.0.1",
     "ci-log": "workspace:*",
-    "envosman": "workspace:*",
-    "path-exists": "^5.0.0",
-    "retry-as-promised": "^7.1.1",
-    "setup-extract": "workspace:*",
-    "untildify-user": "workspace:*"
+    "execa": "7.2.0",
+    "fs-extra": "^11.3.0",
+    "which": "4.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/which": "~3.0.4"
   },
   "engines": {
     "node": ">=12"
   },
   "keywords": [
     "setup",
-    "download",
     "extract",
-    "binary",
-    "archive"
-  ],
-  "devDependencies": {}
+    "archive",
+    "tar",
+    "zip",
+    "7zip"
+  ]
 }
