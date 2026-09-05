@@ -1,5 +1,5 @@
 ## base image
-FROM fedora:44 AS setup-cpp-fedora-mingw
+FROM fedora:46 AS setup-cpp-fedora-mingw
 
 COPY "./dist/modern" "/usr/lib/setup-cpp/"
 
