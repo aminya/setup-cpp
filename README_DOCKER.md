@@ -18,42 +18,51 @@ To provide fast development environments, `setup-cpp` provides several prebuilt 
 
 The tags are in the following template:
 
-- Base image: `aminya/setup-cpp-ubuntu:24.04`
-- Compiler image: `aminya/setup-cpp-ubuntu-llvm:24.04`
-- Base image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu:24.04-v1.9.1`
-- Compiler image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu-llvm:24.04-v1.9.1`
+- Base image: `aminya/setup-cpp-ubuntu:26.04`
+- Compiler image: `aminya/setup-cpp-ubuntu-llvm:26.04`
+- Base image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu:26.04-v1.9.1`
+- Compiler image with pinned setup-cpp version: `aminya/setup-cpp-ubuntu-llvm:26.04-v1.9.1`
 
 The supported platforms are `ubuntu`, `alpine`, `fedora`, and `arch`. The supported compilers are `llvm`, `gcc`, and `mingw`.
 
 #### Ubuntu Images (amd64 and arm64)
 
-Setup-cpp provides prebuilt images for various Ubuntu versions (20.04, 22.04, 24.04) with support for base tools, and compilers `llvm`, `gcc`, and `mingw` available for `amd64` and `arm64` architectures.
+Setup-cpp provides prebuilt images for various Ubuntu versions (20.04, 22.04, 24.04, 26.04) with support for base tools, and compilers `llvm`, `gcc`, and `mingw` available for `amd64` and `arm64` architectures.
 
-Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang` for Ubuntu 24.04:
+Base image with `cmake, ninja, task, vcpkg, python, make, cppcheck, gcovr, doxygen, ccache, conan, meson, cmakelang` for Ubuntu 26.04:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu:24.04 AS builder
+FROM aminya/setup-cpp-ubuntu:26.04 AS builder
 ```
 
 Image with `llvm` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-llvm:24.04 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:26.04 AS builder
 ```
 
 Image with `gcc` and the base tools:
 
 ```dockerfile
-FROM aminya/setup-cpp-ubuntu-gcc:24.04 AS builder
+FROM aminya/setup-cpp-ubuntu-gcc:26.04 AS builder
 ```
 
 Image with `mingw` and the base tools:
 
 ```dockerfile
+FROM aminya/setup-cpp-ubuntu-mingw:26.04 AS builder
+```
+
+There are also the variants for Ubuntu `24.04`
+
+```dockerfile
+FROM aminya/setup-cpp-ubuntu:24.04 AS builder
+FROM aminya/setup-cpp-ubuntu-llvm:24.04 AS builder
+FROM aminya/setup-cpp-ubuntu-gcc:24.04 AS builder
 FROM aminya/setup-cpp-ubuntu-mingw:24.04 AS builder
 ```
 
-There are also the variants for Ubuntu `22.04`
+Ubuntu `22.04`
 
 ```dockerfile
 FROM aminya/setup-cpp-ubuntu:22.04 AS builder
@@ -62,7 +71,7 @@ FROM aminya/setup-cpp-ubuntu-gcc:22.04 AS builder
 FROM aminya/setup-cpp-ubuntu-mingw:22.04 AS builder
 ```
 
-And for Ubuntu `20.04`:
+And Ubuntu `20.04`:
 
 ```dockerfile
 FROM aminya/setup-cpp-ubuntu:20.04 AS builder
