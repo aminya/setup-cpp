@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@shockpkg/archive-files": "3.2.5",
-    "@types/node": "25.9.5"
+    "@types/node": "26.4.1"
   },
   "engines": {
     "node": ">=12"

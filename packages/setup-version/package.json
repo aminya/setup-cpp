@@ -24,8 +24,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@actions/exec": "^1.1.1",
-    "@types/node": "25.9.5",
+    "@actions/exec": "^3.0.0",
+    "@types/node": "26.4.1",
     "ci-log": "workspace:*",
     "is-url-online": "^1.5.0",
     "semver": "7.8.5"
