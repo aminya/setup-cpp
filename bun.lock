@@ -83,8 +83,16 @@
         "semver": "7.8.5",
         "setup-alpine": "workspace:*",
         "setup-apt": "workspace:*",
+        "setup-bin": "workspace:*",
         "setup-brew": "workspace:*",
+        "setup-choco": "workspace:*",
+        "setup-dmg": "workspace:*",
+        "setup-dnf": "workspace:*",
+        "setup-extract": "workspace:*",
+        "setup-pacman": "workspace:*",
+        "setup-pip": "workspace:*",
         "setup-python": "github:aminya/setup-python",
+        "setup-version": "workspace:*",
         "shx": "0.4.0",
         "simple-update-notifier": "^2.0.0",
         "time-delta": "github:aminya/time-delta",
@@ -185,6 +193,21 @@
         "patha": "^0.4.1",
       },
     },
+    "packages/setup-bin": {
+      "name": "setup-bin",
+      "version": "1.0.0",
+      "dependencies": {
+        "@actions/tool-cache": "^2.0.2",
+        "@types/node": "25.9.5",
+        "ci-info": "^4.1.0",
+        "ci-log": "workspace:*",
+        "envosman": "workspace:*",
+        "path-exists": "^5.0.0",
+        "retry-as-promised": "^7.1.1",
+        "setup-extract": "workspace:*",
+        "untildify-user": "workspace:*",
+      },
+    },
     "packages/setup-brew": {
       "name": "setup-brew",
       "version": "1.1.1",
@@ -203,6 +226,116 @@
         "cross-spawn": "7.0.6",
         "path-exists": "5.0.0",
         "patha": "0.4.1",
+      },
+    },
+    "packages/setup-choco": {
+      "name": "setup-choco",
+      "version": "1.0.0",
+      "dependencies": {
+        "@types/node": "25.9.5",
+        "ci-log": "workspace:*",
+        "envosman": "workspace:*",
+        "execa": "7.2.0",
+        "untildify-user": "workspace:*",
+        "which": "4.0.0",
+      },
+      "devDependencies": {
+        "@types/which": "~3.0.4",
+      },
+    },
+    "packages/setup-dmg": {
+      "name": "setup-dmg",
+      "version": "1.0.0",
+      "dependencies": {
+        "@shockpkg/archive-files": "3.2.5",
+        "@types/node": "25.9.5",
+      },
+    },
+    "packages/setup-dnf": {
+      "name": "setup-dnf",
+      "version": "1.0.0",
+      "dependencies": {
+        "@types/node": "25.9.5",
+        "admina": "^1.0.1",
+        "ci-log": "workspace:*",
+        "execa": "7.2.0",
+        "which": "4.0.0",
+      },
+      "devDependencies": {
+        "@types/which": "~3.0.4",
+      },
+    },
+    "packages/setup-extract": {
+      "name": "setup-extract",
+      "version": "1.0.0",
+      "dependencies": {
+        "@actions/tool-cache": "^2.0.2",
+        "@types/node": "25.9.5",
+        "admina": "^1.0.1",
+        "ci-log": "workspace:*",
+        "execa": "7.2.0",
+        "fs-extra": "^11.3.0",
+        "which": "4.0.0",
+      },
+      "devDependencies": {
+        "@types/fs-extra": "^11.0.4",
+        "@types/which": "~3.0.4",
+      },
+    },
+    "packages/setup-pacman": {
+      "name": "setup-pacman",
+      "version": "1.0.0",
+      "dependencies": {
+        "@types/node": "25.9.5",
+        "admina": "^1.0.1",
+        "ci-log": "workspace:*",
+        "execa": "7.2.0",
+        "which": "4.0.0",
+      },
+      "devDependencies": {
+        "@types/which": "~3.0.4",
+      },
+    },
+    "packages/setup-pip": {
+      "name": "setup-pip",
+      "version": "1.0.0",
+      "dependencies": {
+        "@actions/core": "^2.0.0",
+        "@actions/exec": "^1.1.1",
+        "@types/node": "25.9.5",
+        "ci-log": "workspace:*",
+        "envosman": "workspace:*",
+        "execa": "7.2.0",
+        "memoizee": "^0.4.17",
+        "mkdirp": "^3.0.1",
+        "path-exists": "^5.0.0",
+        "patha": "^0.4.1",
+        "setup-alpine": "workspace:*",
+        "setup-apt": "workspace:*",
+        "setup-brew": "workspace:*",
+        "setup-dnf": "workspace:*",
+        "setup-pacman": "workspace:*",
+        "setup-version": "workspace:*",
+        "untildify-user": "workspace:*",
+        "which": "4.0.0",
+      },
+      "devDependencies": {
+        "@types/memoizee": "0.4.12",
+        "@types/which": "~3.0.4",
+      },
+    },
+    "packages/setup-version": {
+      "name": "setup-version",
+      "version": "1.0.0",
+      "dependencies": {
+        "@actions/exec": "^1.1.1",
+        "@types/node": "25.9.5",
+        "ci-log": "workspace:*",
+        "is-url-online": "^1.5.0",
+        "semver": "7.8.5",
+      },
+      "devDependencies": {
+        "@types/semver": "^7.5.8",
       },
     },
     "packages/untildify-user": {
@@ -2385,9 +2518,25 @@
 
     "setup-apt": ["setup-apt@workspace:packages/setup-apt"],
 
+    "setup-bin": ["setup-bin@workspace:packages/setup-bin"],
+
     "setup-brew": ["setup-brew@workspace:packages/setup-brew"],
 
+    "setup-choco": ["setup-choco@workspace:packages/setup-choco"],
+
+    "setup-dmg": ["setup-dmg@workspace:packages/setup-dmg"],
+
+    "setup-dnf": ["setup-dnf@workspace:packages/setup-dnf"],
+
+    "setup-extract": ["setup-extract@workspace:packages/setup-extract"],
+
+    "setup-pacman": ["setup-pacman@workspace:packages/setup-pacman"],
+
+    "setup-pip": ["setup-pip@workspace:packages/setup-pip"],
+
     "setup-python": ["setup-python@github:aminya/setup-python#9700887", { "dependencies": { "@actions/cache": "^3.2.4", "@actions/core": "^1.10.0", "@actions/exec": "^1.1.0", "@actions/glob": "^0.4.0", "@actions/http-client": "^2.2.1", "@actions/io": "^1.0.2", "@actions/tool-cache": "^2.0.1", "@iarna/toml": "^3.0.0", "semver": "^7.6.0" } }, "aminya-setup-python-9700887", "sha512-xqfZzhN29zOGmScloi/vGpKq26+4IeqShzTJdvWnQYEm+uuOZTs6NA0Y0atM1yf8Nyq1ljDmQyD697K+4naL9g=="],
+
+    "setup-version": ["setup-version@workspace:packages/setup-version"],
 
     "shebang-command": ["shebang-command@2.0.0", "", { "dependencies": { "shebang-regex": "3.0.0" } }, "sha512-kHxr2zZpYtdmrN1qDjrrX/Z1rR1kG8Dx+gkpK1G4eXmvXswmcE1hTWBWYUzlraYw1/yZp6YuDY77YtvbN0dmDA=="],
 
@@ -3201,7 +3350,23 @@
 
     "setup-apt/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
 
+    "setup-bin/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
+
     "setup-brew/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
+
+    "setup-choco/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
+
+    "setup-dmg/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
+
+    "setup-dnf/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
+
+    "setup-extract/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
+
+    "setup-pacman/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
+
+    "setup-pip/@actions/core": ["@actions/core@2.0.2", "", { "dependencies": { "@actions/exec": "^2.0.0", "@actions/http-client": "^3.0.1" } }, "sha512-Ast1V7yHbGAhplAsuVlnb/5J8Mtr/Zl6byPPL+Qjq3lmfIgWF1ak1iYfF/079cRERiuTALTXkSuEUdZeDCfGtA=="],
+
+    "setup-pip/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
 
     "setup-python/@actions/cache": ["@actions/cache@3.3.0", "", { "dependencies": { "@actions/core": "1.11.1", "@actions/exec": "1.1.1", "@actions/glob": "0.1.2", "@actions/http-client": "2.2.3", "@actions/io": "1.1.3", "@azure/abort-controller": "1.1.0", "@azure/ms-rest-js": "2.7.0", "@azure/storage-blob": "12.27.0", "semver": "6.3.1" } }, "sha512-+eCsMTIZUEm+QA9GqjollOhCdvRrZ1JV8d9Rp34zVNizBkYITO8dhKczP5Xps1dFzc5n59p7vYVtZrGt18bb5Q=="],
 
@@ -3210,6 +3375,8 @@
     "setup-python/@iarna/toml": ["@iarna/toml@3.0.0", "", {}, "sha512-td6ZUkz2oS3VeleBcN+m//Q6HlCFCPrnI0FZhrt/h4XqLEdOyYp2u21nd8MdsR+WJy5r9PTDaHTDDfhf4H4l6Q=="],
 
     "setup-python/semver": ["semver@7.7.2", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA=="],
+
+    "setup-version/@types/node": ["@types/node@25.9.5", "", { "dependencies": { "undici-types": ">=7.24.0 <7.24.7" } }, "sha512-OScDchr2fwuUmWdf4kZ9h7PcJiYDVInhJizG/biAq3cAvqwYktuy/TYGGdZNMtNTFUP7rnb0NU4TUdm82kt4Rg=="],
 
     "shelljs/execa": ["execa@1.0.0", "", { "dependencies": { "cross-spawn": "6.0.6", "get-stream": "4.1.0", "is-stream": "1.1.0", "npm-run-path": "2.0.2", "p-finally": "1.0.0", "signal-exit": "3.0.7", "strip-eof": "1.0.0" } }, "sha512-adbxcyWV46qiHyvSp50TKt05tB4tK3HcmF7/nxfAdhnox83seTDbwnaqKO4sXRy7roHAIFqJP/Rw/AuEbX61LA=="],
 
@@ -3537,13 +3704,33 @@
 
     "setup-apt/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
 
+    "setup-bin/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
+
     "setup-brew/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
+
+    "setup-choco/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
+
+    "setup-dmg/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
+
+    "setup-dnf/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
+
+    "setup-extract/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
+
+    "setup-pacman/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
+
+    "setup-pip/@actions/core/@actions/exec": ["@actions/exec@2.0.0", "", { "dependencies": { "@actions/io": "^2.0.0" } }, "sha512-k8ngrX2voJ/RIN6r9xB82NVqKpnMRtxDoiO+g3olkIUpQNqjArXrCQceduQZCQj3P3xm32pChRLqRrtXTlqhIw=="],
+
+    "setup-pip/@actions/core/@actions/http-client": ["@actions/http-client@3.0.1", "", { "dependencies": { "tunnel": "^0.0.6", "undici": "^5.28.5" } }, "sha512-SbGS8c/vySbNO3kjFgSW77n83C4MQx/Yoe+b1hAdpuvfHxnkHzDq2pWljUpAA56Si1Gae/7zjeZsV0CYjmLo/w=="],
+
+    "setup-pip/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
 
     "setup-python/@actions/cache/@actions/glob": ["@actions/glob@0.1.2", "", { "dependencies": { "@actions/core": "1.11.1", "minimatch": "3.1.2" } }, "sha512-SclLR7Ia5sEqjkJTPs7Sd86maMDw43p769YxBOxvPvEWuPEhpAnBsQfENOpXjFYMmhCqd127bmf+YdvJqVqR4A=="],
 
     "setup-python/@actions/cache/semver": ["semver@6.3.1", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA=="],
 
     "setup-python/@actions/glob/minimatch": ["minimatch@3.1.2", "", { "dependencies": { "brace-expansion": "1.1.11" } }, "sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw=="],
+
+    "setup-version/@types/node/undici-types": ["undici-types@7.24.6", "", {}, "sha512-WRNW+sJgj5OBN4/0JpHFqtqzhpbnV0GuB+OozA9gCL7a993SmU+1JBZCzLNxYsbMfIeDL+lTsphD5jN5N+n0zg=="],
 
     "shelljs/execa/cross-spawn": ["cross-spawn@6.0.6", "", { "dependencies": { "nice-try": "1.0.5", "path-key": "2.0.1", "semver": "5.7.2", "shebang-command": "1.2.0", "which": "1.3.1" } }, "sha512-VqCUuhcd1iB+dsv8gxPttb5iZh/D0iubSP21g36KXdEuf6I5JiioesUVjpCdHV9MZRUfVFlvwtIUyPfxo5trtw=="],
 
@@ -3670,6 +3857,8 @@
     "pkg-dir/find-up/locate-path/p-locate": ["p-locate@4.1.0", "", { "dependencies": { "p-limit": "2.3.0" } }, "sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A=="],
 
     "read-pkg-up/find-up/locate-path/p-locate": ["p-locate@4.1.0", "", { "dependencies": { "p-limit": "2.3.0" } }, "sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A=="],
+
+    "setup-pip/@actions/core/@actions/exec/@actions/io": ["@actions/io@2.0.0", "", {}, "sha512-Jv33IN09XLO+0HS79aaODsvIRyduiF7NY/F6LYeK5oeUmrsz7aFdRphQjFoESF4jS7lMauDOttKALcpapVDIAg=="],
 
     "setup-python/@actions/cache/@actions/glob/minimatch": ["minimatch@3.1.2", "", { "dependencies": { "brace-expansion": "1.1.11" } }, "sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw=="],
 

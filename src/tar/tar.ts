@@ -1,16 +1,16 @@
 import { info, warning } from "ci-log"
 import { hasApk, installApkPack } from "setup-alpine"
 import { type SetupOptions, hasAptGet, installAptPack } from "setup-apt"
+import { type InstallationInfo, type PackageInfo, setupBin } from "setup-bin"
 import { installBrewPack } from "setup-brew"
+import { hasDnf, setupDnfPack } from "setup-dnf"
+import { isArch, setupPacmanPack } from "setup-pacman"
 import which from "which"
-import { hasDnf } from "../utils/env/hasDnf.js"
-import { isArch } from "../utils/env/isArch.js"
-import { type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { setupSevenZip } from "../sevenzip/sevenzip.js"
+import { getLegacyArchiveSetupOptions, shouldCacheTools } from "../utils/archive-bootstrap.js"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export async function setupTar({ version, arch, setupDir }: SetupOptions) {
+export async function setupTar({ version, arch, setupDir }: SetupOptions): Promise<InstallationInfo | undefined> {
   const tar = await which("tar", { nothrow: true })
   if (tar !== null) {
     info(`tar already installed at ${tar}`)
@@ -21,12 +21,18 @@ export async function setupTar({ version, arch, setupDir }: SetupOptions) {
     case "win32": {
       // install tar from GnuWin
       // https://phoenixnap.dl.sourceforge.net/project/gnuwin32/tar/1.13-1/tar-1.13-1-bin.zip?viasf=1
+      const archiveSetupOptions = getLegacyArchiveSetupOptions()
       return setupBin(
         "tar",
         version,
         getGnuWinTarPackageInfo,
         setupDir,
         arch,
+        {
+          cacheTools: shouldCacheTools(),
+          setupSevenZip: () => setupSevenZip(archiveSetupOptions.setupSevenZip),
+          setupTar: () => setupTar(archiveSetupOptions.setupTar),
+        },
       )
     }
     case "darwin": {

@@ -1,10 +1,10 @@
 import { join } from "path"
 import { endGroup, startGroup } from "@actions/core"
 import { error } from "ci-log"
+import type { InstallationInfo } from "setup-bin"
 import { setupBrew } from "setup-brew"
 import { rcOptions } from "./options.js"
 import { type ToolName, llvmTools, setups } from "./tool.js"
-import type { InstallationInfo } from "./utils/setup/setupBin.js"
 import { setupVCVarsall } from "./vcvarsall/vcvarsall.js"
 import { getVersion } from "./versions/versions.js"
 

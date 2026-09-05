@@ -1,6 +1,6 @@
+import type { InstallationInfo } from "setup-bin"
 import { macosVersion } from "../../utils/env/macos_version.js"
 import { ubuntuVersion } from "../../utils/env/ubuntu_version.js"
-import type { InstallationInfo } from "../../utils/setup/setupBin.js"
 import { cleanupTmpDir, testBin } from "../../utils/tests/test-helpers.js"
 import { getVersion } from "../../versions/versions.js"
 import { setupGraphviz } from "../graphviz.js"

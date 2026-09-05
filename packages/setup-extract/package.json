@@ -1,0 +1,50 @@
+{
+  "name": "setup-extract",
+  "version": "1.0.0",
+  "description": "Extract archive files for setup utilities",
+  "repository": "https://github.com/aminya/setup-cpp",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-extract",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint.tsc.test": "tsc --noEmit --pretty -p ./__tests__/tsconfig.json",
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint '**/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml}' --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
+    "prepublishOnly": "pnpm run build",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@actions/tool-cache": "^2.0.2",
+    "@types/node": "25.9.5",
+    "admina": "^1.0.1",
+    "ci-log": "workspace:*",
+    "execa": "7.2.0",
+    "fs-extra": "^11.3.0",
+    "which": "4.0.0"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/which": "~3.0.4"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "setup",
+    "extract",
+    "archive",
+    "tar",
+    "zip",
+    "7zip"
+  ]
+}

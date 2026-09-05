@@ -1,8 +1,10 @@
 import { dirname, join } from "path"
+
 import { info } from "@actions/core"
 import { getExecOutput } from "@actions/exec"
 import { warning } from "ci-log"
 import { addPath } from "envosman"
+import type { AddPathOptions } from "envosman"
 import { execa, execaSync } from "execa"
 import memoize from "memoizee"
 import { mkdirp } from "mkdirp"
@@ -11,49 +13,69 @@ import { addExeExt } from "patha"
 import { hasApk, installApkPack } from "setup-alpine"
 import { hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
+import { hasDnf, setupDnfPack } from "setup-dnf"
+import { isArch, setupPacmanPack } from "setup-pacman"
+import { getBinVersion } from "setup-version"
 import { untildifyUser } from "untildify-user"
 import which from "which"
-import { rcOptions } from "../../options.js"
-import { setupPython } from "../../python/python.js"
-import { getVersion } from "../../versions/versions.js"
-import { hasDnf } from "../env/hasDnf.js"
-import { isArch } from "../env/isArch.js"
-import { ubuntuVersion } from "../env/ubuntu_version.js"
-import { unique } from "../std/index.js"
-import type { InstallationInfo } from "./setupBin.js"
-import { setupDnfPack } from "./setupDnfPack.js"
-import { setupPacmanPack } from "./setupPacmanPack.js"
-import { getBinVersion } from "./version.js"
 
+/** Options for installing a package with pip or pipx. */
 export type SetupPipPackOptions = {
-  /** Whether to use pipx instead of pip */
+  /** Whether to use pipx instead of pip. */
   usePipx?: boolean
-  /** Whether to install the package as a user */
+  /** Whether to install the package as a user. */
   user?: boolean
-  /** Whether to upgrade the package */
+  /** Whether to upgrade the package. */
   upgrade?: boolean
-  /** Whether the package is a library */
+  /** Whether the package is a library. */
   isLibrary?: boolean
-  /** python version (e.g. >=3.8.0) */
+  /** Python version (e.g. >=3.8.0). */
   pythonVersion?: string
 }
 
-/** A function that installs a package using pip */
+/** Optional root-provided behavior and PATH configuration. */
+export type SetupPipPackDependencies = {
+  /** Resolve a Python version through the host application's setup pipeline. */
+  getPython?: (version?: string) => Promise<string>
+  /** Options for adding installed package directories to PATH. */
+  rcOptions?: AddPathOptions
+}
+
+type InstallationInfo = {
+  installDir?: string
+  binDir: string
+  bin?: string
+}
+
+const defaultRcOptions: AddPathOptions = {
+  rcPath: untildifyUser("~/.cpprc"),
+  guard: "cpp",
+}
+
+/** Install a Python package using pip or pipx. */
 export async function setupPipPack(
   name: string,
   version?: string,
   options: SetupPipPackOptions = {},
+  dependencies: SetupPipPackDependencies = {},
 ): Promise<InstallationInfo> {
-  return setupPipPackWithPython(await getPython(options.pythonVersion), name, version, options)
+  const python = dependencies.getPython === undefined
+    ? await getAvailablePython()
+    : await dependencies.getPython(options.pythonVersion)
+
+  return setupPipPackWithPython(python, name, version, options, dependencies)
 }
 
+/** Install a Python package using an explicitly selected Python binary. */
 export async function setupPipPackWithPython(
   givenPython: string,
   name: string,
   version?: string,
   options: SetupPipPackOptions = {},
+  dependencies: SetupPipPackDependencies = {},
 ): Promise<InstallationInfo> {
   const { usePipx: givenUsePipx = true, user = true, upgrade = false, isLibrary = false } = options
+  const rcOptions = dependencies.rcOptions ?? defaultRcOptions
 
   const usePipx = givenUsePipx && !isLibrary && (await hasPipxModule(givenPython))
 
@@ -72,8 +94,8 @@ export async function setupPipPackWithPython(
       : await pipPackageIsInstalled(givenPython, nameOnly)
     if (installed) {
       const binDir = usePipx
-        ? await finishPipxPackageInstall()
-        : await finishPipPackageInstall(givenPython, nameOnly)
+        ? await finishPipxPackageInstall(rcOptions)
+        : await finishPipPackageInstall(givenPython, nameOnly, rcOptions)
       return { binDir }
     }
   }
@@ -91,7 +113,7 @@ export async function setupPipPackWithPython(
       if (usePipx && user) {
         // install to user home
         env.PIPX_HOME = await getPipxHome()
-        env.PIPX_BIN_DIR = await getPipxBinDir()
+        env.PIPX_BIN_DIR = await getPipxBinDir(rcOptions)
       }
 
       execaSync(givenPython, ["-m", pip, ...upgradeFlag, ...userFlag, nameAndVersion], {
@@ -110,26 +132,28 @@ export async function setupPipPackWithPython(
   }
 
   const binDir = usePipx
-    ? await finishPipxPackageInstall()
-    : await finishPipPackageInstall(givenPython, nameOnly)
+    ? await finishPipxPackageInstall(rcOptions)
+    : await finishPipPackageInstall(givenPython, nameOnly, rcOptions)
   return { binDir }
 }
 
-function finishPipxPackageInstall() {
-  return getPipxBinDir()
+function finishPipxPackageInstall(rcOptions: AddPathOptions) {
+  return getPipxBinDir(rcOptions)
 }
 
-async function finishPipPackageInstall(givenPython: string, name: string) {
+async function finishPipPackageInstall(givenPython: string, name: string, rcOptions: AddPathOptions) {
   const pythonBaseExecPrefix = await addPythonBaseExecPrefix(givenPython)
   const binDir = await findBinDir(pythonBaseExecPrefix, name)
   await addPath(binDir, rcOptions)
   return binDir
 }
 
+/** Check whether the pipx executable is available. */
 export async function hasPipxBinary() {
   return (await which("pipx", { nothrow: true })) !== null
 }
 
+/** Check whether pipx is available as a module for the given Python binary. */
 export async function hasPipxModule(givenPython: string) {
   const res = await execa(givenPython, ["-m", "pipx", "--help"], { stdio: "ignore", reject: false })
   return res.exitCode === 0
@@ -170,7 +194,7 @@ async function getPipxHome_() {
 }
 const getPipxHome = memoize(getPipxHome_, { promise: true })
 
-async function getPipxBinDir_() {
+async function getPipxBinDir_(rcOptions: AddPathOptions) {
   if (process.env.PIPX_BIN_DIR !== undefined) {
     return process.env.PIPX_BIN_DIR
   }
@@ -182,26 +206,18 @@ async function getPipxBinDir_() {
 }
 const getPipxBinDir = memoize(getPipxBinDir_, { promise: true })
 
-/* eslint-disable require-atomic-updates */
-let pythonBin: string | undefined
-
-async function getPython(givenPythonVersion?: string): Promise<string> {
-  if (pythonBin !== undefined) {
-    return pythonBin
+function getAvailablePython() {
+  for (const candidate of ["python", "python3"]) {
+    const foundPython = which.sync(candidate, { nothrow: true })
+    if (foundPython !== null) {
+      return Promise.resolve(foundPython)
+    }
   }
 
-  const pythonVersion = givenPythonVersion
-    ?? getVersion("python", undefined, await ubuntuVersion())
-
-  pythonBin = (await setupPython({ version: pythonVersion, setupDir: "", arch: process.arch })).bin
-  return pythonBin
+  throw new Error("No available Python binary found; provide dependencies.getPython")
 }
 
-/**
- * Get the actual name of a pip package from the given string
- * @param pkg the given name that might contain extensions in `[]`.
- * @returns stirped down name of the package
- */
+/** Get the actual name of a pip package from a string that may contain extras. */
 function getPackageName(pkg: string) {
   return pkg.replace(/\[.*]/g, "").trim()
 }
@@ -241,11 +257,9 @@ async function pipxPackageInstalled(python: string, name: string) {
     }
 
     const pipxOut = JSON.parse(result.stdout) as PipxShowType
-    // search among the venvs
     if (name in pipxOut.venvs) {
       return true
     }
-    // search among the urls
     for (const venv of Object.values(pipxOut.venvs)) {
       if (venv.metadata.main_package.package_or_url === name || venv.metadata.main_package.package === name) {
         return true
@@ -281,6 +295,7 @@ async function findBinDir(dirs: string[], name: string) {
   return dirs[dirs.length - 1]
 }
 
+/** Install a package using the platform's system package manager. */
 export async function setupPipPackSystem(name: string, givenAddPythonPrefix?: boolean) {
   if (process.platform === "linux") {
     info(`Installing ${name} via the system package manager`)
@@ -323,24 +338,17 @@ async function addPythonBaseExecPrefix_(python: string) {
   dirs.push(join(base_exec_prefix, "Scripts"), join(base_exec_prefix, "Scripts", "bin"), join(base_exec_prefix, "bin"))
 
   // remove duplicates
-  return unique(dirs)
+  return [...new Set(dirs)]
 }
 
-/**
- * Add the base exec prefix to the PATH. This is required for Conan, Meson, etc. to work properly.
- *
- * The answer is cached for subsequent calls
- */
+/** Add Python's base exec prefix candidates to the PATH. */
 export const addPythonBaseExecPrefix = memoize(addPythonBaseExecPrefix_, { promise: true })
 
 async function getPythonBaseExecPrefix_(python: string) {
   return (await getExecOutput(`${python} -c "import sys;print(sys.base_exec_prefix);"`)).stdout.trim()
 }
-/**
- * Get the base exec prefix of a Python installation
- * This is the directory where the Python interpreter is installed
- * and where the standard library is located
- */
+
+/** Get the base exec prefix of a Python installation. */
 export const getPythonBaseExecPrefix = memoize(getPythonBaseExecPrefix_, { promise: true })
 
 async function isExternallyManaged_(python: string) {
@@ -366,10 +374,5 @@ async function isExternallyManaged_(python: string) {
   }
 }
 
-/**
- * Check if the given Python installation is externally managed
- * This is required for Conan, Meson, etc. to work properly
- *
- * The answer is cached for subsequent calls
- */
+/** Check whether the given Python installation is externally managed. */
 export const isExternallyManaged = memoize(isExternallyManaged_, { promise: true })

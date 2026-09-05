@@ -1,7 +1,7 @@
 import { addPath } from "envosman"
 import { rcOptions } from "../options.js"
 import type { SetupOptions } from "../setup-options.js"
-import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupChocoPack } from "../utils/setup-choco.js"
 
 export async function setupOpencppcoverage({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   if (process.platform !== "win32") {

@@ -4,7 +4,7 @@ import semverValid from "semver/functions/valid"
 import { hasAptGet, installAptPack } from "setup-apt"
 import { rcOptions } from "../options.js"
 import type { SetupOptions } from "../setup-options.js"
-import { setupPipPack } from "../utils/setup/setupPipPack.js"
+import { setupPipPack } from "../utils/setup-pip.js"
 
 export function setupGcovr({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   if (hasAptGet() && (version === undefined || version === "")) {

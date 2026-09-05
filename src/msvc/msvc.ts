@@ -7,7 +7,7 @@ const { GITHUB_ACTIONS } = ciInfo
 import { error, info, warning } from "ci-log"
 import { findVcvarsall, vsversion_to_versionnumber } from "msvc-dev-cmd/lib.js"
 import { pathExists } from "path-exists"
-import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
+import { setupChocoPack } from "../utils/setup-choco.js"
 import { setupVCVarsall } from "../vcvarsall/vcvarsall.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))

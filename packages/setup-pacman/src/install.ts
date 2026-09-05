@@ -1,16 +1,26 @@
 import { tmpdir } from "os"
 import { join } from "path"
+
 import { execRootSync, isRoot } from "admina"
 import { info, warning } from "ci-log"
 import { execa, execaSync } from "execa"
 import which from "which"
-import type { InstallationInfo } from "./setupBin.js"
+
+/** The information about an installation result. */
+export type InstallationInfo = {
+  /** The install dir of the package (Defaults to `undefined`). */
+  installDir?: string
+  /** The bin dir of the package. */
+  binDir: string
+  /** The path to the package binary (Defaults to `undefined`). */
+  bin?: string
+}
 
 /* eslint-disable require-atomic-updates */
 let didUpdate: boolean = false
 let didInit: boolean = false
 
-/** A function that installs a package using pacman */
+/** A function that installs a package using pacman. */
 export async function setupPacmanPack(name: string, version?: string, aur?: string): Promise<InstallationInfo> {
   info(`Installing ${name} ${version ?? ""} via pacman`)
 
@@ -70,7 +80,7 @@ export async function setupPacmanPack(name: string, version?: string, aur?: stri
 
 const pacmanSiVersionRegex = /Version\s*:\s*(.*)/g
 
-/** Query pacman for available versions */
+/** Query pacman for available versions. */
 async function availablePacmanVersions(pacman: string, name: string) {
   const availableVersions = []
   try {

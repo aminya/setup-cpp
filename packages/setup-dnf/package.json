@@ -1,0 +1,46 @@
+{
+  "name": "setup-dnf",
+  "version": "1.0.0",
+  "description": "Setup dnf packages in Linux distributions",
+  "repository": "https://github.com/aminya/setup-cpp",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-dnf",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint.tsc.test": "tsc --noEmit --pretty -p ./__tests__/tsconfig.json",
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint '**/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml}' --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
+    "prepublishOnly": "pnpm run build",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@types/node": "25.9.5",
+    "admina": "^1.0.1",
+    "ci-log": "workspace:*",
+    "execa": "7.2.0",
+    "which": "4.0.0"
+  },
+  "devDependencies": {
+    "@types/which": "~3.0.4"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "setup",
+    "dnf",
+    "install",
+    "package",
+    "linux"
+  ]
+}

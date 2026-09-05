@@ -4,11 +4,11 @@ import { fileURLToPath } from "url"
 import memoize from "memoizee"
 import { isAlpine } from "setup-alpine"
 import { hasAptGet } from "setup-apt"
+import { hasDnf } from "setup-dnf"
+import { isArch } from "setup-pacman"
 import type { CompilerInfo } from "../compilers.js"
 import type { Opts } from "../options.js"
 import type { Inputs, ToolName } from "../tool.js"
-import { hasDnf } from "../utils/env/hasDnf.js"
-import { isArch } from "../utils/env/isArch.js"
 
 export function getVersion(name: ToolName, version: string | undefined, distroVersion: number[] | null = null) {
   if (isVersionDefault(version)) {

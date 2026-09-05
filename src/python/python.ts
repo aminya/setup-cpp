@@ -12,24 +12,22 @@ import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
 import { hasApk, installApkPack } from "setup-alpine"
 import { hasAptGet, installAptPack, isAptPackInstalled } from "setup-apt"
+import type { InstallationInfo } from "setup-bin"
 import { installBrewPack } from "setup-brew"
-import which from "which"
-import { rcOptions } from "../options.js"
-import type { SetupOptions } from "../setup-options.js"
-import { hasDnf } from "../utils/env/hasDnf.js"
-import { isArch } from "../utils/env/isArch.js"
-import type { InstallationInfo } from "../utils/setup/setupBin.js"
-import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
-import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { hasDnf, setupDnfPack } from "setup-dnf"
+import { isArch, setupPacmanPack } from "setup-pacman"
 import {
   hasPipxBinary,
   hasPipxModule,
   isExternallyManaged,
   setupPipPackSystem,
   setupPipPackWithPython,
-} from "../utils/setup/setupPipPack.js"
-import { isBinUptoDate } from "../utils/setup/version.js"
+} from "setup-pip"
+import { isBinUptoDate } from "setup-version"
+import which from "which"
+import { rcOptions } from "../options.js"
+import type { SetupOptions } from "../setup-options.js"
+import { setupChocoPack } from "../utils/setup-choco.js"
 import { getVersionDefault, isMinVersion } from "../versions/versions.js"
 
 export async function setupPython(

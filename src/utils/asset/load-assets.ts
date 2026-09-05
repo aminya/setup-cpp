@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises"
 import semverSatisfies from "semver/functions/satisfies.js"
-import { semverCoercedRangeIfInvalid } from "../setup/version.ts"
+import { semverCoercedRangeIfInvalid } from "setup-version"
 
 /**
  * The list of assets

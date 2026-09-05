@@ -1,16 +1,19 @@
 import { tmpdir } from "os"
 import { basename, join } from "path"
+
 import { cacheDir, downloadTool, find } from "@actions/tool-cache"
 import ciInfo from "ci-info"
-const { GITHUB_ACTIONS } = ciInfo
 import { info, warning } from "ci-log"
 import { addPath } from "envosman"
 import { chmod } from "fs/promises"
 import { pathExists } from "path-exists"
 import retry from "retry-as-promised"
-import { maybeGetInput } from "../../actions-input.js"
-import { rcOptions } from "../../options.js"
-import { getArchiveType, getExtractFunction } from "./extract.js"
+import { untildifyUser } from "untildify-user"
+
+import type { AddPathOptions } from "envosman"
+import { type ArchiveToolDependencies, getArchiveType, getExtractFunction } from "setup-extract"
+
+const { GITHUB_ACTIONS } = ciInfo
 
 /** A type that describes a package */
 export type PackageInfo = {
@@ -23,7 +26,7 @@ export type PackageInfo = {
   /** The main binary file. */
   binFileName: string
   /** The function to extract the downloaded archive. It can be `undefined`, if the binary itself is downloaded directly. */
-  extractFunction?: (file: string, dest: string) => Promise<unknown>
+  extractFunction?: (file: string, dest: string, dependencies?: ArchiveToolDependencies) => Promise<unknown>
 }
 
 export type InstallationInfo = {
@@ -31,6 +34,18 @@ export type InstallationInfo = {
   installDir?: string
   binDir: string
   bin?: string
+}
+
+export type SetupBinOptions = {
+  rcOptions?: AddPathOptions
+  cacheTools?: boolean
+  setupSevenZip?: () => Promise<unknown>
+  setupTar?: () => Promise<unknown>
+}
+
+const defaultRcOptions: AddPathOptions = {
+  rcPath: untildifyUser("~/.cpprc"),
+  guard: "cpp",
 }
 
 /**
@@ -48,6 +63,7 @@ export async function setupBin(
   getPackageInfo: (version: string, platform: NodeJS.Platform, arch: string) => PackageInfo | Promise<PackageInfo>,
   setupDir: string,
   arch: string,
+  options: SetupBinOptions = {},
 ): Promise<InstallationInfo> {
   info(`Installing ${name} ${version} ${arch} via direct downloading`)
 
@@ -60,6 +76,12 @@ export async function setupBin(
     arch,
   )
 
+  const pathOptions = options.rcOptions ?? defaultRcOptions
+  const archiveDependencies: ArchiveToolDependencies = {
+    setupSevenZip: options.setupSevenZip,
+    setupTar: options.setupTar,
+  }
+
   // Restore from cache (if found).
   if (GITHUB_ACTIONS) {
     try {
@@ -69,7 +91,7 @@ export async function setupBin(
         const binDir = join(installDir, binRelativeDir)
         if (await pathExists(join(binDir, binFileName))) {
           info(`${name} ${version} was found in the cache at ${binDir}.`)
-          await addPath(binDir, rcOptions)
+          await addPath(binDir, pathOptions)
 
           return { installDir, binDir }
         }
@@ -83,9 +105,20 @@ export async function setupBin(
   const binDir = join(installDir, binRelativeDir)
   const binFile = join(binDir, binFileName)
 
-  await downloadExtractInstall(binDir, binFile, name, version, url, setupDir, extractFunction, arch)
+  await downloadExtractInstall(
+    binDir,
+    binFile,
+    name,
+    version,
+    url,
+    setupDir,
+    extractFunction,
+    arch,
+    pathOptions,
+    archiveDependencies,
+  )
 
-  await cacheInstallation(setupDir, name, version)
+  await cacheInstallation(setupDir, name, version, options.cacheTools)
 
   return { installDir, binDir }
 }
@@ -99,8 +132,10 @@ async function downloadExtractInstall(
   setupDir: string,
   givenExtractFunction: PackageInfo["extractFunction"],
   arch: string,
+  pathOptions: AddPathOptions,
+  archiveDependencies: ArchiveToolDependencies,
 ) {
-  // download ane extract the package into the installation directory.
+  // download and extract the package into the installation directory.
   if ((await Promise.all([pathExists(binDir), pathExists(binFile)])).includes(false)) {
     try {
       const downloaded = await tryDownload(name, version, url)
@@ -108,7 +143,7 @@ async function downloadExtractInstall(
       info(`Extracting ${downloaded} to ${setupDir}`)
 
       const extractFunction = givenExtractFunction ?? getExtractFunction(getArchiveType(url))
-      await extractFunction(downloaded, setupDir)
+      await extractFunction(downloaded, setupDir, archiveDependencies)
     } catch (err) {
       throw new Error(`Failed to download ${name} ${version} ${arch} from ${url}: ${err}`)
     }
@@ -117,7 +152,7 @@ async function downloadExtractInstall(
   // Adding the bin dir to the path
   /** The directory which the tool is installed to */
   info(`Add ${binDir} to PATH`)
-  await addPath(binDir, rcOptions)
+  await addPath(binDir, pathOptions)
 
   // Check if the binary exists after extraction
   if (!(await pathExists(binFile))) {
@@ -149,10 +184,10 @@ async function tryDownload(name: string, version: string, url: string) {
   return downloaded
 }
 
-async function cacheInstallation(setupDir: string, name: string, version: string) {
+async function cacheInstallation(setupDir: string, name: string, version: string, cacheTools?: boolean) {
   // check if inside Github Actions. If so, cache the installation
   if (GITHUB_ACTIONS && typeof process.env.RUNNER_TOOL_CACHE === "string") {
-    if (maybeGetInput("cache-tools") === "true" || process.env.CACHE_TOOLS === "true") {
+    if (cacheTools ?? process.env.CACHE_TOOLS === "true") {
       await cacheDir(setupDir, name, version)
     }
   }

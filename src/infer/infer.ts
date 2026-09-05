@@ -2,10 +2,11 @@ import path, { basename, join } from "path"
 import { fileURLToPath } from "url"
 import { info } from "ci-log"
 import { addExeExt } from "patha"
+import type { InstallationInfo, PackageInfo } from "setup-bin"
 import type { SetupOptions } from "../setup-options.js"
 import { loadAssetList, matchAsset } from "../utils/asset/load-assets.js"
 import { arm64, x86_64 } from "../utils/env/arch.js"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
+import { setupBin } from "../utils/setup-bin.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
 

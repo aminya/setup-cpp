@@ -1,14 +1,26 @@
 import { execRootSync } from "admina"
 import { info, warning } from "ci-log"
 import { execa } from "execa"
-import type { InstallationInfo } from "./setupBin.js"
 
-type DnfPackage = {
+/** The information about an installation result. */
+export type InstallationInfo = {
+  /** The install dir of the package (Defaults to `undefined`). */
+  installDir?: string
+  /** The bin dir of the package. */
+  binDir: string
+  /** The path to the package binary (Defaults to `undefined`). */
+  bin?: string
+}
+
+/** The information about a dnf package. */
+export type DnfPackage = {
+  /** The name of the package. */
   name: string
+  /** The optional package version. */
   version?: string
 }
 
-/** A function that installs a package using dnf */
+/** A function that installs packages using dnf. */
 export async function setupDnfPack(packages: DnfPackage[]): Promise<InstallationInfo> {
   for (const { name, version } of packages) {
     info(`Installing ${name} ${version ?? ""} via dnf`)

@@ -4,19 +4,20 @@ import { info } from "ci-log"
 import { execa } from "execa"
 import { addExeExt } from "patha"
 import { hasAptGet, installAptPack } from "setup-apt"
+import type { InstallationInfo, PackageInfo } from "setup-bin"
+import { hasDnf, setupDnfPack } from "setup-dnf"
+import { type ArchiveToolDependencies, extractTarByExe } from "setup-extract"
+import { isArch, setupPacmanPack } from "setup-pacman"
+import { addVPrefix, removeVPrefix } from "setup-version"
 import { untildifyUser } from "untildify-user"
 import which from "which"
 import { setupCmake } from "../cmake/cmake.js"
 import { setupNinja } from "../ninja/ninja.js"
 import type { SetupOptions } from "../setup-options.js"
-import { hasDnf } from "../utils/env/hasDnf.js"
-import { isArch } from "../utils/env/isArch.js"
+import { setupTar } from "../tar/tar.js"
+import { getLegacyArchiveSetupOptions } from "../utils/archive-bootstrap.js"
 import { ubuntuVersion } from "../utils/env/ubuntu_version.js"
-import { extractTarByExe } from "../utils/setup/extract.js"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
-import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
-import { addVPrefix, removeVPrefix } from "../utils/setup/version.js"
+import { setupBin } from "../utils/setup-bin.js"
 import { getVersion } from "../versions/versions.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
@@ -36,12 +37,16 @@ function getBuildKcovPackageInfo(version: string, _platform: NodeJS.Platform, ar
     extractedFolderName: "",
     binRelativeDir: "build/src",
     binFileName: addExeExt("kcov"),
-    extractFunction: (file, dest) => buildKcov(file, dest, arch),
+    extractFunction: (file, dest, dependencies) => buildKcov(file, dest, arch, dependencies),
   }
 }
 
-async function buildKcov(file: string, dest: string, arch: string) {
-  const out = await extractTarByExe(file, dest, 1)
+async function buildKcov(file: string, dest: string, arch: string, dependencies?: ArchiveToolDependencies) {
+  const archiveSetupOptions = getLegacyArchiveSetupOptions()
+  const out = await extractTarByExe(file, dest, 1, [], {
+    ...dependencies,
+    setupTar: () => setupTar(archiveSetupOptions.setupTar),
+  })
 
   // build after extraction using CMake
   const cmake = await getCmake(arch)

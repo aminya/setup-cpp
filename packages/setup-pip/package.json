@@ -1,0 +1,61 @@
+{
+  "name": "setup-pip",
+  "version": "1.0.0",
+  "description": "Setup Python packages with pip and pipx",
+  "repository": "https://github.com/aminya/setup-cpp",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-pip",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint.tsc.test": "tsc --noEmit --pretty -p ./__tests__/tsconfig.json",
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint '**/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml}' --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
+    "prepublishOnly": "pnpm run build",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@actions/core": "^2.0.0",
+    "@actions/exec": "^1.1.1",
+    "@types/node": "25.9.5",
+    "ci-log": "workspace:*",
+    "envosman": "workspace:*",
+    "execa": "7.2.0",
+    "memoizee": "^0.4.17",
+    "mkdirp": "^3.0.1",
+    "path-exists": "^5.0.0",
+    "patha": "^0.4.1",
+    "setup-alpine": "workspace:*",
+    "setup-apt": "workspace:*",
+    "setup-brew": "workspace:*",
+    "setup-dnf": "workspace:*",
+    "setup-pacman": "workspace:*",
+    "setup-version": "workspace:*",
+    "untildify-user": "workspace:*",
+    "which": "4.0.0"
+  },
+  "devDependencies": {
+    "@types/memoizee": "0.4.12",
+    "@types/which": "~3.0.4"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "setup",
+    "pip",
+    "pipx",
+    "python",
+    "install",
+    "package"
+  ]
+}

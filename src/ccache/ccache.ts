@@ -1,12 +1,10 @@
 import { hasApk, installApkPack } from "setup-alpine"
 import { hasAptGet, installAptPack } from "setup-apt"
 import { installBrewPack } from "setup-brew"
+import { hasDnf, setupDnfPack } from "setup-dnf"
+import { isArch, setupPacmanPack } from "setup-pacman"
 import type { SetupOptions } from "../setup-options.js"
-import { hasDnf } from "../utils/env/hasDnf.js"
-import { isArch } from "../utils/env/isArch.js"
-import { setupChocoPack } from "../utils/setup/setupChocoPack.js"
-import { setupDnfPack } from "../utils/setup/setupDnfPack.js"
-import { setupPacmanPack } from "../utils/setup/setupPacmanPack.js"
+import { setupChocoPack } from "../utils/setup-choco.js"
 
 export async function setupCcache({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
   switch (process.platform) {

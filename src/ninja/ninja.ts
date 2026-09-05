@@ -1,10 +1,11 @@
 import { addPath } from "envosman"
 import { addExeExt } from "patha"
 import { enableCommunityRepository, hasApk, installApkPack } from "setup-alpine"
+import type { InstallationInfo, PackageInfo } from "setup-bin"
 import { rcOptions } from "../options.js"
 import type { SetupOptions } from "../setup-options.js"
 import { arm64, x86, x86_64 } from "../utils/env/arch.js"
-import { type InstallationInfo, type PackageInfo, setupBin } from "../utils/setup/setupBin.js"
+import { setupBin } from "../utils/setup-bin.js"
 
 /** Get the platform name Ninja uses in their download links */
 function getNinjaPlatformArch(platform: NodeJS.Platform, arch: string) {

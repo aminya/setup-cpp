@@ -1,0 +1,48 @@
+{
+  "name": "setup-bin",
+  "version": "1.0.0",
+  "description": "Download, extract, and configure binary tools",
+  "repository": "https://github.com/aminya/setup-cpp",
+  "homepage": "https://github.com/aminya/setup-cpp/tree/master/packages/setup-bin",
+  "license": "Apache-2.0",
+  "author": "Amin Yahyaabadi",
+  "main": "./dist/index.js",
+  "source": "./src/index.ts",
+  "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc --pretty",
+    "dev": "tsc --watch --pretty",
+    "lint.tsc.test": "tsc --noEmit --pretty -p ./__tests__/tsconfig.json",
+    "lint.tsc": "tsc --noEmit --pretty",
+    "lint.eslint": "eslint '**/*.{ts,tsx,js,jsx,cjs,mjs,json,yaml}' --no-error-on-unmatched-pattern --cache --cache-location ./.cache/eslint/ --fix",
+    "prepublishOnly": "pnpm run build",
+    "test": "jest --coverage"
+  },
+  "dependencies": {
+    "@actions/tool-cache": "^2.0.2",
+    "@types/node": "25.9.5",
+    "ci-info": "^4.1.0",
+    "ci-log": "workspace:*",
+    "envosman": "workspace:*",
+    "path-exists": "^5.0.0",
+    "retry-as-promised": "^7.1.1",
+    "setup-extract": "workspace:*",
+    "untildify-user": "workspace:*"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "keywords": [
+    "setup",
+    "download",
+    "extract",
+    "binary",
+    "archive"
+  ],
+  "devDependencies": {}
+}
