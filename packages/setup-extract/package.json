@@ -24,9 +24,9 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@actions/tool-cache": "^2.0.2",
-    "@types/node": "25.9.5",
-    "admina": "^1.0.1",
+    "@actions/tool-cache": "^4.0.0",
+    "@types/node": "26.4.1",
+    "admina": "^2.0.0",
     "ci-log": "workspace:*",
     "execa": "7.2.0",
     "fs-extra": "^11.3.0",
