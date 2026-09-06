@@ -74,10 +74,23 @@ async function buildKcov(file: string, dest: string, arch: string, dependencies?
   }
 
   const buildDir = join(out, "build")
-  await execa(cmake, ["-S", out, "-B", buildDir, "-DCMAKE_BUILD_TYPE=Release", "-G", "Ninja"], {
-    cwd: out,
-    stdio: "inherit",
-  })
+  await execa(
+    cmake,
+    [
+      "-S",
+      out,
+      "-B",
+      buildDir,
+      "-DCMAKE_BUILD_TYPE=Release",
+      "-DCMAKE_POLICY_VERSION_MINIMUM=3.5",
+      "-G",
+      "Ninja",
+    ],
+    {
+      cwd: out,
+      stdio: "inherit",
+    },
+  )
   await execa(cmake, ["--build", buildDir, "--config", "Release"], { cwd: out, stdio: "inherit" })
   //   execRootSync(cmake, ["--install", buildDir], out)
   //   return "user/local/bin" // the cmake install prefix
