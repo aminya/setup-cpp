@@ -132,7 +132,7 @@ describe("setup-llvm", () => {
 
       const file = join(dirname, "main.cpp")
       const main_exe = join(dirname, addExeExt("main"))
-      await execa("clang++", ["-std=c++17", file, "-o", main_exe], { cwd: dirname })
+      await execa("clang++", ["-std=c++17", "-fno-aligned-new", file, "-o", main_exe], { cwd: dirname })
       await chmod(main_exe, "755")
       await execa(main_exe, { cwd: dirname, stdio: "inherit" })
     }
