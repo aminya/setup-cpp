@@ -117,10 +117,10 @@ describe("setup-llvm", () => {
     await io.rmRF(directory)
   })
 
-  it("should setup LLVM 5 from llvm.org", async () => {
+  it("should setup LLVM 12 from llvm.org", async () => {
     const directory = await setupTmpDir("llvm")
 
-    const { binDir } = await setupLLVM({ version: "5", setupDir: directory, arch: process.arch })
+    const { binDir } = await setupLLVM({ version: "12", setupDir: directory, arch: process.arch })
     await testBin("clang++", ["--version"], binDir)
 
     expect(process.env.CC?.includes("clang")).toBeTruthy()
