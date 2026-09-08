@@ -18,6 +18,7 @@ words:
   - aminya
   - applellvm
   - armv
+  - autoreconf
   - bazel
   - bazelisk
   - binfmt
@@ -33,7 +34,6 @@ words:
   - cmakeformat
   - cmakelang
   - cmakelint
-  - autoreconf
   - cobertura
   - copr
   - CPATH
@@ -82,6 +82,7 @@ words:
   - mdimporterdir
   - memoizee
   - mkdirp
+  - mlir
   - msbuild
   - msvc
   - msvcrt
