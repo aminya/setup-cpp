@@ -1,4 +1,5 @@
 import { join } from "path"
+import { warning } from "ci-log"
 import { addPath } from "envosman"
 import { hasApk, installApkPack } from "setup-alpine"
 import { hasAptGet, installAptPack } from "setup-apt"
@@ -11,6 +12,11 @@ import type { SetupOptions } from "../setup-options.js"
 const packages = ["autoconf", "autoconf-archive", "automake", "libtool"] as const
 
 export async function setupAutoreconf({ version }: Partial<Pick<SetupOptions, "version">> = {}) {
+  if (process.platform === "win32") {
+    warning("Autoreconf is not available on Windows. Skipping installation.")
+    return undefined
+  }
+
   switch (process.platform) {
     case "darwin": {
       for (const name of packages) {
