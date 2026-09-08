@@ -551,13 +551,15 @@ main().catch(err => {
 
 ## Usage Examples
 
-- [cpp_vcpkg_project project](https://github.com/aminya/cpp_vcpkg_project)
 - [project_options](https://github.com/aminya/project_options)
-- [cpp-best-practices starter project](https://github.com/cpp-best-practices/cpp_starter_project)
-- [ftxui](https://github.com/ArthurSonzogni/FTXUI)
-- [inja](https://github.com/pantor/inja)
+- [llvm-project](https://github.com/llvm/llvm-project/blob/4b11439e535eb820d2f4cc5ac9694bf539d8213f/.github/workflows/libcxx-pr-check-generated-files.yml#L21)
 - [teslamotors/fixed-containers](https://github.com/teslamotors/fixed-containers)
+- [Xilinx/mlir-air](https://github.com/Xilinx/mlir-air)
 - [zeromq.js](https://github.com/zeromq/zeromq.js)
+- [ftxui](https://github.com/ArthurSonzogni/FTXUI)
+- [cpp-best-practices](https://github.com/cpp-best-practices/cmake_template)
+- [inja](https://github.com/pantor/inja)
+- [dep-scan](https://github.com/owasp-dep-scan/dep-scan)
 - [json2cpp](https://github.com/lefticus/json2cpp)
 - [lefticus/tools](https://github.com/lefticus/tools)
 - [watcher](https://github.com/e-dant/watcher)
@@ -573,5 +575,6 @@ main().catch(err => {
 - [atom-community/papm](https://github.com/atom-community/papm)
 - [ecs_benchmark](https://github.com/abeimler/ecs_benchmark)
 - [smk](https://github.com/ArthurSonzogni/smk)
+- [cpp_vcpkg_project](https://github.com/aminya/cpp_vcpkg_project)
 
-See all of the usage examples on GitHub [here](https://github.com/search?q=aminya%2Fsetup-cpp+path%3A.github%2Fworkflows%2F+language%3AYAML+fork%3Atrue&type=code).
+See all of the usage examples on GitHub [here](https://github.com/search?q=aminya%2Fsetup-cpp+path%3A.github%2Fworkflows%2F+language%3AYAML+NOT+is%3Afork&type=code).
