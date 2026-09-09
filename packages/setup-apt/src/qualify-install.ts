@@ -31,7 +31,7 @@ export async function filterAndQualifyAptPackages(packages: AptPackage[], apt: s
  * If the package is already installed and upgrade is not requested, return undefined
  */
 export async function qualifiedNeededAptPackage(pack: AptPackage, apt: string = getApt()) {
-  // if not specified, let apt handle the version check
+  // By default, leave the package in the install list so apt can select the candidate.
   const upgrade = pack.upgrade ?? true
   // Qualify the package into full package name/version
   const qualified = await getAptArg(apt, pack)
@@ -120,7 +120,14 @@ async function aptCacheShowHasPackage(apt: string, arg: string) {
 }
 
 async function getAptArg(apt: string, pack: AptPackage) {
-  const { name, version, fallBackToLatest = false } = pack
+  const { name, version, upgrade = true, fallBackToLatest = false } = pack
+
+  if ((version === undefined || version === "") && upgrade) {
+    const numericVariant = await findHighestNumericAptPackage(apt, name)
+    if (numericVariant !== undefined) {
+      return numericVariant
+    }
+  }
 
   const package_type = await aptPackageType(apt, name, version, fallBackToLatest)
   switch (package_type) {
@@ -133,5 +140,26 @@ async function getAptArg(apt: string, pack: AptPackage) {
     }
     default:
       throw new Error(`Could not find package '${name}' ${version ?? "with unspecified version"}`)
+  }
+}
+
+async function findHighestNumericAptPackage(apt: string, name: string) {
+  const packageNamePattern = new RegExp(`^${escapeRegex(name)}-([0-9]+)$`, "u")
+
+  try {
+    const { stdout } = await execa("apt-cache", [
+      "search",
+      "--names-only",
+      `^${escapeRegex(name)}-[0-9]+$`,
+    ], { env: getAptEnv(apt), stdio: "pipe" })
+    const candidates = stdout.split("\n").flatMap((line) => {
+      const packageName: string | undefined = line.trim().split(/\s+/u)[0]
+      const match = packageName.match(packageNamePattern)
+      return match === null ? [] : [{ packageName, version: Number.parseInt(match[1], 10) }]
+    })
+
+    return candidates.sort((first, second) => second.version - first.version)[0]?.packageName
+  } catch {
+    return undefined
   }
 }
