@@ -28,13 +28,15 @@ export async function filterAndQualifyAptPackages(packages: AptPackage[], apt: s
 /**
  * Qualify the package into full package name/version.
  * If the package is not installed, return the full package name/version.
- * If the package is already installed, return undefined
+ * If the package is already installed and upgrade is not requested, return undefined
  */
 export async function qualifiedNeededAptPackage(pack: AptPackage, apt: string = getApt()) {
+  // if not specified, let apt handle the version check
+  const upgrade = pack.upgrade ?? true
   // Qualify the package into full package name/version
   const qualified = await getAptArg(apt, pack)
-  // filter out the package that are already installed
-  return (await isAptPackInstalled(qualified)) ? undefined : qualified
+  // Filter out packages that are already installed unless they should be upgraded.
+  return (await isAptPackInstalled(qualified)) && !upgrade ? undefined : qualified
 }
 
 async function aptPackageType(
