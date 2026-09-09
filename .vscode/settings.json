@@ -75,5 +75,6 @@
   "eslint.useESLintClass": true,
   "yaml.schemas": {
     "https://json.schemastore.org/container-structure-test.json": "/dev/docker/ci/tests/*.yml"
-  }
+  },
+  "js/ts.tsdk.path": "node_modules/typescript/lib"
 }
