@@ -30,6 +30,11 @@ export type AptPackage = {
   name: string
   /** The version of the package (optional) */
   version?: string
+  /**
+   * Whether to allow apt to upgrade the latest package available in the default repositories.
+   * This would could do a major upgrade for unversioned meta packages (e.g. gcc) or minor upgrade for versioned packages (e.g. gcc-9)
+   */
+  upgrade?: boolean
   /** The repository to add before installing the package (optional) */
   repository?: string
   /** The key to add before installing the package (optional) */
