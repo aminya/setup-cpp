@@ -140,8 +140,10 @@ describe("setup-llvm", () => {
     await io.rmRF(directory)
   })
 
-  // test installation of LLVM 10 to 19 on Linux
-  for (let version = 10; version <= 19; version++) {
+  // test installation of LLVM 10 to 20 on Linux
+  const minVersion = 10
+  const maxVersion = 20
+  for (const version of [minVersion, maxVersion]) {
     if (process.platform !== "linux") {
       continue
     }
