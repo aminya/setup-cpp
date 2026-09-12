@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@actions/tool-cache": "^2.0.2",
-    "@types/node": "25.9.5",
+    "@types/node": "25.9.6",
     "ci-info": "^4.1.0",
     "ci-log": "workspace:*",
     "envosman": "workspace:*",
