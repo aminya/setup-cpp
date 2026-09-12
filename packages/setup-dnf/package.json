@@ -24,8 +24,8 @@
     "test": "jest --coverage"
   },
   "dependencies": {
-    "@types/node": "25.9.6",
-    "admina": "^1.0.1",
+    "@types/node": "26.5.1",
+    "admina": "^2.0.0",
     "ci-log": "workspace:*",
     "execa": "7.2.0",
     "which": "4.0.0"
