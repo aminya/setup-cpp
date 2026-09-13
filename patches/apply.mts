@@ -33,10 +33,16 @@ async function applyPatch(patch: string) {
   }
 
   console.log(`Applying patch ${patchFilePath} to ${patchedDir}`)
-  const result = applyPatchToDir({
-    patchedDir,
-    patchFilePath,
-  })
+  let result = false
+  try {
+    result = applyPatchToDir({
+      patchedDir,
+      patchFilePath,
+    })
+  } catch (err) {
+    console.error("pnpm patch failed. Maybe your node version is old", err)
+    result = false
+  }
   // create .patched file in the patchedDir
   await fs.writeFile(path.join(patchedDir, ".patched"), patch)
   if (!result) {

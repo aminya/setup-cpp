@@ -4,6 +4,7 @@ import ciInfo from "ci-info"
 const { GITHUB_ACTIONS } = ciInfo
 import { info, warning } from "ci-log"
 import { addEnv } from "envosman"
+import { execa } from "execa"
 import memoize from "memoizee"
 import { pathExists } from "path-exists"
 import { addExeExt } from "patha"
@@ -23,6 +24,7 @@ import { trySetupLLVMBrew } from "./llvm_brew_installer.js"
 import { majorLLVMVersion } from "./utils.js"
 
 const dirname = typeof __dirname === "string" ? __dirname : path.dirname(fileURLToPath(import.meta.url))
+const APT_DEFAULT_GCC_DEPENDENCY = /^[\t ]+Depends:[\t ]+gcc-(\d+)[\t ]*$/mu
 
 export async function setupLLVM({ version, setupDir, arch }: SetupOptions): Promise<InstallationInfo> {
   const installationInfo = await setupLLVMOnly(version, setupDir, arch)
@@ -68,10 +70,23 @@ async function setupGccForLLVM_(arch: string) {
   if (process.platform === "linux") {
     // using llvm requires ld, an up to date libstdc++, etc. So, install gcc first,
     // but with a lower priority than the one used by activateLLVM()
-    await setupGcc({ version: getVersion("gcc", undefined, await ubuntuVersion()), setupDir: "", arch, priority: 40 })
+    const distroVersion = await ubuntuVersion()
+    const defaultGccVersion = getVersion("gcc", undefined, distroVersion)
+    const gccVersion = hasAptGet() ? await getAptDefaultGccVersion(defaultGccVersion) : defaultGccVersion
+    await setupGcc({ version: gccVersion, setupDir: "", arch, priority: 40 })
   }
 }
 const setupGccForLLVM = memoize(setupGccForLLVM_, { promise: true })
+
+async function getAptDefaultGccVersion(fallback: string) {
+  try {
+    const { stdout } = await execa("apt-cache", ["depends", "gcc"], { stdio: "pipe" })
+    return stdout.match(APT_DEFAULT_GCC_DEPENDENCY)?.[1] ?? fallback
+  } catch {
+    // Preserve the existing default when APT metadata cannot be queried.
+    return fallback
+  }
+}
 
 export async function activateLLVM(directory: string, version: string) {
   const ld = process.env.LD_LIBRARY_PATH ?? ""

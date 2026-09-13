@@ -3,6 +3,7 @@ FROM aminya/setup-cpp-ubuntu:latest AS setup-cpp-ubuntu-mingw
 # install mingw/powershell
 RUN setup-cpp \
     --compiler mingw \
+    --gcc true \
     --powershell true && \
 # cleanup
     apt-get clean autoclean && \
