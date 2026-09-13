@@ -17,6 +17,7 @@ RUN apt-get update -qq && \
         --autoreconf true \
         --nala true \
         --compiler mingw \
+        --gcc true \
         --cmake true \
         --ninja true \
         --task true \
