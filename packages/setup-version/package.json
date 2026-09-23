@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@actions/exec": "^1.1.1",
-    "@types/node": "25.9.6",
+    "@types/node": "25.9.8",
     "ci-log": "workspace:*",
     "is-url-online": "^1.5.0",
     "semver": "7.8.5"
