@@ -98,7 +98,7 @@
         "ts-node": "^10.9.2",
         "ts-readme": "^1.1.3",
         "tsx": "^4.20.3",
-        "turbo": "2.11.3",
+        "turbo": "2.11.4",
         "typescript": "^5.8.2",
         "ubuntu-version": "^2.0.0",
         "untildify-user": "workspace:*",
@@ -954,17 +954,17 @@
 
     "@tsconfig/node16": ["@tsconfig/node16@1.0.4", "", {}, "sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA=="],
 
-    "@turbo/darwin-64": ["@turbo/darwin-64@2.11.3", "", { "os": "darwin", "cpu": "x64" }, "sha512-D4EIKTgPpxFQL5aZNbNqy57XOiRldM+mwP1ME9ZLM4DJoV3oNK7GKyQWVusz1umjiFNmLvunNGw7Jq4RUyYL3A=="],
+    "@turbo/darwin-64": ["@turbo/darwin-64@2.11.4", "", { "os": "darwin", "cpu": "x64" }, "sha512-fEmcQVa95k79tZjcay5b2A4cpR/VrlNUki4AN7EbA+32vj5C5rBUE1q3i2yOFxsB2n01sOlzIZ+s2p2zADCTig=="],
 
-    "@turbo/darwin-arm64": ["@turbo/darwin-arm64@2.11.3", "", { "os": "darwin", "cpu": "arm64" }, "sha512-WOvgWIO86LzBQmL9aRFekROing1CZMVDjmdD7Dk6R65qFAFdrlKkufojenjW1AbUAqytpG6xsXzq8UEScdSdDQ=="],
+    "@turbo/darwin-arm64": ["@turbo/darwin-arm64@2.11.4", "", { "os": "darwin", "cpu": "arm64" }, "sha512-SgXCVgBC1v+bdE6+KQGV6Kob7nBYo75zxzNFFuA4jLdM0J8lYamdTUoZSHLR0dy+kXVEYZqSC98CKqC17NG3Og=="],
 
-    "@turbo/linux-64": ["@turbo/linux-64@2.11.3", "", { "os": [ "linux", "android", ], "cpu": "x64" }, "sha512-zIgNl9KkMnsdU54JrnazELatpMJDSktKjD3kjKVliUNMl/5uhFRrqQ+Z1qaACKw/2ybL7xzlsHir9s5q7sYlQg=="],
+    "@turbo/linux-64": ["@turbo/linux-64@2.11.4", "", { "os": [ "linux", "android", ], "cpu": "x64" }, "sha512-MWM7Au6NPJMBmHJAzFzQ/PACYNRpBOqnBkj+7csdR+YhJ+0XBg4Z64wFwLnGFDac0gc+YlasWOZ5t05bGs54aQ=="],
 
-    "@turbo/linux-arm64": ["@turbo/linux-arm64@2.11.3", "", { "os": [ "linux", "android", ], "cpu": "arm64" }, "sha512-aJToWHx5JYvpPwIrAt1DuYrHWcpQGjGf0XVPRMKQBHou//JUYR6oowHeUZp9Oq7e3XDWA75E37C2GnNaBqCVnA=="],
+    "@turbo/linux-arm64": ["@turbo/linux-arm64@2.11.4", "", { "os": [ "linux", "android", ], "cpu": "arm64" }, "sha512-rRVOh0UNlLbKPuf70FokqjahO/hCGgBmgvZcNXUPayn8Wk0zXIsVoNKpr0UQUhhR+KMiibvBKkVAGDViDFQHKA=="],
 
-    "@turbo/windows-64": ["@turbo/windows-64@2.11.3", "", { "os": "win32", "cpu": "x64" }, "sha512-hu5biiwVGdMvHB/vvaoPjtudNBn3TqcsKK2A06ap3O0wnSZwAtTXe92tKTckpecDeVs+IC+4r8s2wXpbdSPWoA=="],
+    "@turbo/windows-64": ["@turbo/windows-64@2.11.4", "", { "os": "win32", "cpu": "x64" }, "sha512-COr+++1GwDg09XbJdm3sP1gEQApeV43UknYP9h82qet1tAGJrGQAxKVTMrf2JMsMw8MkJRnQj3gAVuQmV1kIyQ=="],
 
-    "@turbo/windows-arm64": ["@turbo/windows-arm64@2.11.3", "", { "os": "win32", "cpu": "arm64" }, "sha512-naDEb/31UmOOJOChi+LebLMKWKa1kId0yig1yTRZzDViDg1lBw1Ptu5iQYCvOfOOrx6swUUucf3zPWuPGWz7Jw=="],
+    "@turbo/windows-arm64": ["@turbo/windows-arm64@2.11.4", "", { "os": "win32", "cpu": "arm64" }, "sha512-gh5lwDA2d4aBdLvTANhFsFEgxbBqKZ4m4dCyChw9GoX8b+Esk8H3p25Q+rlWCUVJ2o6Hne10ZTL0QSFfWD4gIA=="],
 
     "@types/argparse": ["@types/argparse@1.0.38", "", {}, "sha512-ebDJ9b0e702Yr7pWgB0jzm+CX4Srzz8RcXtLJDJB+BSccqMa36uyH/zUsSYao5+BD1ytv3k3rPYCq4mAE1hsXA=="],
 
@@ -2440,7 +2440,7 @@
 
     "tunnel": ["tunnel@0.0.6", "", {}, "sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg=="],
 
-    "turbo": ["turbo@2.11.3", "", { "optionalDependencies": { "@turbo/darwin-64": "2.11.3", "@turbo/darwin-arm64": "2.11.3", "@turbo/linux-64": "2.11.3", "@turbo/linux-arm64": "2.11.3", "@turbo/windows-64": "2.11.3", "@turbo/windows-arm64": "2.11.3" }, "bin": { "turbo": "bin/turbo" } }, "sha512-Pfg2dWNOUPwJYbR+eYAcjoBbo4Kmoc8uQb80hzKrBgNEQtxvwf2ucXG7C28MyLVhV/zJSKvChrR+2CP/BONpoA=="],
+    "turbo": ["turbo@2.11.4", "", { "optionalDependencies": { "@turbo/darwin-64": "2.11.4", "@turbo/darwin-arm64": "2.11.4", "@turbo/linux-64": "2.11.4", "@turbo/linux-arm64": "2.11.4", "@turbo/windows-64": "2.11.4", "@turbo/windows-arm64": "2.11.4" }, "bin": { "turbo": "bin/turbo" } }, "sha512-nedZtJ2hjWpU/JBFq7Aj1GQBxQ56si+kIUmNZBUX35O35TIuhSBR6/u3yHHmk81U+RBdBcVjvLQ3/iOFzMwKsA=="],
 
     "type": ["type@2.7.3", "", {}, "sha512-8j+1QmAbPvLZow5Qpi6NCaN8FB60p/6x8/vfNqOk/hC+HuvFZhL4+WfekuhQLiqFZXOgQdrs3B+XxEmCc6b3FQ=="],
 
