@@ -25,10 +25,10 @@
   },
   "dependencies": {
     "@actions/exec": "^1.1.1",
-    "@types/node": "25.9.8",
+    "@types/node": "25.9.9",
     "ci-log": "workspace:*",
     "is-url-online": "^1.5.0",
-    "semver": "7.8.5"
+    "semver": "7.8.6"
   },
   "devDependencies": {
     "@types/semver": "^7.5.8"
