@@ -122,7 +122,7 @@ jobs:
             "setupcpp-node_modules-cache-OS:${{ matrix.os }}-"
 
       - name: Cache Turbo
-        uses: rharkor/caching-for-turbo@v2.5.1
+        uses: rharkor/caching-for-turbo@v2.5.2
 
       - name: Cache .cache
         uses: actions/cache@v6
