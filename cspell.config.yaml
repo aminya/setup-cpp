@@ -11,6 +11,7 @@ ignorePaths:
   - "**/node_modules/"
   - .vscode/extensions.json
   - patches/*.patch
+  - bun-patches/*.patch
   - "**/github_*.json"
   - "**/llvm_org_releases.json"
 words:
