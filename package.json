@@ -47,14 +47,13 @@
     "test.lint.dprint": "dprint check",
     "test.docker": "tsx ./dev/docker/ci/tests/index.mts",
     "test": "turbo test && jest --runInBand --forceExit --coverage",
-    "build.docker-ci": "node ./dev/docker/ci/docker-ci.mjs",
-    "prepare": "bun ./patches/apply.mts"
+    "build.docker-ci": "node ./dev/docker/ci/docker-ci.mjs"
   },
   "devDependencies": {
     "@actions/cache": "^4.0.2",
     "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
-    "@actions/http-client": "2.2.3",
+    "@actions/http-client": "4.0.1",
     "@actions/io": "^1.1.3",
     "@actions/tool-cache": "^2.0.2",
     "@aminya/minijson": "1.1.3",
@@ -69,7 +68,6 @@
     "@octokit/plugin-rest-endpoint-methods": "^16.0.0",
     "@octokit/rest": "^22.0.0",
     "@octokit/types": "^14.0.0",
-    "@pnpm/patching.apply-patch": "^1000.0.7",
     "@shockpkg/archive-files": "3.2.5",
     "@swc/jest": "^0.2.37",
     "@types/babel__core": "~7.20.5",
@@ -233,5 +231,8 @@
     "cmake",
     "ninja",
     "meson"
-  ]
+  ],
+  "patchedDependencies": {
+    "@actions/http-client@4.0.1": "bun-patches/@actions%2Fhttp-client@4.0.1.patch"
+  }
 }

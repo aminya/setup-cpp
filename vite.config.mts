@@ -15,7 +15,12 @@ const viteConfig = defineConfig((configEnv) => {
     )
   }
 
-  let aliasOpts: AliasOptions = {}
+  let aliasOpts: AliasOptions = {
+    "@actions/http-client/lib/auth": "./node_modules/@actions/http-client/lib/auth.js",
+    "@actions/http-client/lib/proxy": "./node_modules/@actions/http-client/lib/proxy.js",
+    "@actions/http-client/lib/interfaces": "./node_modules/@actions/http-client/lib/interfaces.js",
+    "@actions/http-client": "./node_modules/@actions/http-client/lib/index.js",
+  }
   if (isLegacy) {
     aliasOpts = {
       ...aliasOpts,

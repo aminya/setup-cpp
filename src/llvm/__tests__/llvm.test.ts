@@ -39,6 +39,8 @@ describe("setup-llvm", () => {
   it("Finds valid LLVM URLs", async () => {
     await Promise.all(
       [
+        "23",
+        "22",
         "21",
         "20",
         "19",
@@ -142,7 +144,7 @@ describe("setup-llvm", () => {
 
   // test installation of LLVM 10 to 20 on Linux
   const minVersion = 10
-  const maxVersion = 20
+  const maxVersion = 23
   for (const version of [minVersion, maxVersion]) {
     if (process.platform !== "linux") {
       continue
